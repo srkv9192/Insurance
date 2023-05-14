@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      color: #343a40;
+      font-family: Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .navbar-light .navbar-brand {
+      color: #343a40;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .navbar-light .navbar-nav .nav-link {
+      color: #343a40;
+      font-size: 1rem;
+      transition: color 0.3s;
+    }
+
+    .navbar-light .navbar-nav .nav-link:hover,
+    .navbar-light .navbar-nav .nav-link:focus {
+      color: #0062cc;
+    }
+
+    .container {
+      margin-top: 50px;
+    }
+
+    .card {
+      border: none;
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.3s;
+    }
+
+    .card:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-header {
+      background-color: #f8f9fa;
+      border-bottom: none;
+    }
+
+    .card-header button {
+      color: #343a40;
+      font-size: 1.2rem;
+      text-decoration: none;
+      padding: 0;
+      transition: color 0.3s;
+    }
+
+    .card-header button:hover,
+    .card-header button:focus {
+      color: #0062cc;
+      outline: none;
+      text-decoration: none;
+    }
+
+    .card-body {
+      display: none;
+      padding: 1rem;
+    }
+
+    .card.active .card-body {
+      display: block;
+    }
+
+    /* Animation */
+    .animated {
+      animation-duration: 0.5s;
+      animation-fill-mode: both;
+    }
+
+    .fadeInDown {
+      animation-name: fadeInDown;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translate3d(0, -100%, 0);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="style.css">
+  <title>View Data Entries</title>
+</head>
+
+<body>
+  <nav class="navbar navbar-light bg-light">
+    <div class="container">
+      <a class="navbar-brand" href="#">Logo</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+       
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Contact</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 offset-md-2">
+        <div class="accordion" id="dataEntries">
+          <!-- Sample data entries (replace with your dynamic data) -->
+          <div class="card">
+            <div class="card-header">
+              <h2 class="mb-0">
+                <button class="btn btn-link collapsed" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapse1">
+                  <i class="fas fa-chevron-down"></i> Data Entry #1
+                </button>
+              </h2>
+            </div>
+            <div id="collapse1" class="collapse" data-bs-parent="#dataEntries">
+              <div class="card-body">
+                <!-- Replace the sample data with dynamic data -->
+                <p><strong>Customer Name:</strong> John Doe</p>
+                <p><strong>Customer Address:</strong> 123 Main St</p>
+                <p><strong>Customer Phone:</strong> (123) 456-7890</p>
+                <!-- Add more fields as needed -->
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h2 class="mb-0">
+                <button class="btn btn-link collapsed" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                  <i class="fas fa-chevron-down"></i> Data Entry #2
+                </button>
+              </h2>
+            </div>
+            <div id="collapse2" class="collapse" data-bs-parent="#dataEntries">
+              <div class="card-body">
+                <!-- Replace the sample data with dynamic data -->
+                <p><strong>Customer Name:</strong> Jane Smith</p>
+                <p><strong>Customer Address:</strong> 456 Oak Ave</p>
+                <p><strong>Customer Phone:</strong> (987) 654-3210</p>
+                <!-- Add more fields as needed -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js"></script>
+  <script>
+    // Add event listener to handle accordion behavior
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+      card.addEventListener('click', function () {
+        const isActive = this.classList.contains('active');
+        cards.forEach(card => card.classList.remove('active'));
+        if (!isActive) {
+          this.classList.add('active');
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>
