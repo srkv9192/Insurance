@@ -1,11 +1,53 @@
 const express = require('express')
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 const app = express()
 const port = process.env.PORT || 80
 
-var bodyParser = require('body-parser')
+// Connect to local MongoDB database
+mongoose.connect('mongodb://127.0.0.1:27017/test', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
-        app.use(bodyParser.urlencoded({ extended: false }))
-        app.use(bodyParser.json())
+// Create a schema
+const dataSchema = new mongoose.Schema({
+  customerName: String,
+  customerAddress: String,
+  customerPhone: String,
+  claimNumber: String,
+  insuranceCompanyName: String,
+  // Add more fields as needed
+});
+
+// Create a model based on the schema
+const dataSchemaObject = mongoose.model('Data', dataSchema);
+
+// Parse JSON bodies for POST requests
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+// Define the API endpoint to save data
+app.post('/api/data', async(req, res) => {
+  try{
+        console.error(req.body.customerName);
+        const newData = new dataSchemaObject({
+                        'customerName' : req.body.customerName,
+                        'customerAddress' : req.body.customerAddress,
+                        'customerPhone' : req.body.customerPhone,
+                        'claimNumber' : req.body.claimNumber,
+                        'insuranceCompanyName' : req.body.insuranceCompanyName});
+        const savedData = newData.save();
+        res.json({ message: 'Data saved successfully', data: savedData });
+      }
+    catch(err)
+    {
+      console.error(err);
+      res.status(500).json({ error: 'Error saving data' });
+    }
+  
+});
+
 
 app.use(express.static('public'));
 
