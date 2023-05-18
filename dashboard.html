@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.0/dist/chart.min.js"></script>
+  <title>Dashboard</title>
+  <style>
+    /* Custom styles */
+    .dashboard {
+      margin: 20px;
+    }
+    .card {
+      border-radius: 10px;
+    }
+    .card-header {
+      background-color: black;
+      border-bottom: none;
+    }
+    .card-body {
+      padding: 20px;
+    }
+    .chart-container {
+      height: 400px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .prospects {
+      background-color: #FF6384;
+      color: #fff;
+    }
+    .active-cases {
+      background-color: #36A2EB;
+      color: #fff;
+    }
+    .completed-cases {
+      background-color: #4BC0C0;
+      color: #fff;
+    }
+    .manager-chart {
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="dashboard">
+    <div class="row">
+      <div class="col-lg-3 col-md-6">
+        <div class="card prospects">
+          <div class="card-header">
+            <h5 class="card-title">Prospects</h5>
+          </div>
+          <div class="card-body">
+            <h3 class="card-text">87</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="card active-cases">
+          <div class="card-header">
+            <h5 class="card-title">Active Cases</h5>
+          </div>
+          <div class="card-body">
+            <h3 class="card-text">156</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="card completed-cases">
+          <div class="card-header">
+            <h5 class="card-title">Completed Cases</h5>
+          </div>
+          <div class="card-body">
+            <h3 class="card-text">489</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title manager-chart">Case Distribution</h5>
+          </div>
+          <div class="card-body">
+            <canvas id="statusChart" class="chart-container"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-12 mt-4">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title">Daily Status Updates</h5>
+          </div>
+          <div class="card-body">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Employee</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>John Doe</td>
+                  <td>In Progress</td>
+                </tr>
+                <tr>
+                  <td>Jane Smith</td>
+                  <td>Completed</td>
+                </tr>
+                <!-- Add more rows as needed -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Chart.js configuration
+    var statusChart = new Chart(document.getElementById('statusChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Direct', 'Managers', 'Agents'],
+        datasets: [{
+          label: '',
+          data: [48, 82, 34],
+          backgroundColor: ['#36a2eb', '#ff6384', '#ff6388']
+        }]
+      },
+      options: {
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            ticks: {
+              stepSize: 1
+            }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>
