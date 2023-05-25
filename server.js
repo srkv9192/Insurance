@@ -172,8 +172,19 @@ app.post('/api/addinsurancecompany', async(req, res) => {
     } 
 });
 
+app.get("/api/getinsurancecompany", async(req, res) => {
+  try {
+    // Retrieve all insurance company list from the database
+    const users = await  insurancecompanySchemaObject.find({});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get insurance company details' });
+  }
+});
 
-app.post('/api/addtpa', async(req, res) => {
+
+app.post('/api/addtpadetail', async(req, res) => {
   try{
         const newData = new tpaSchemaObject({
                         'tpaName' : req.body.tpaName
@@ -186,6 +197,17 @@ app.post('/api/addtpa', async(req, res) => {
       console.error(err);
       res.status(500).json({ error: 'Error saving TPA data' });
     } 
+});
+
+app.get("/api/gettpadetail", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  tpaSchemaObject.find({});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get tpa details' });
+  }
 });
 
 
