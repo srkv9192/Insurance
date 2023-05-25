@@ -71,36 +71,37 @@ app.use(bodyParser.json());
 
 app.post('/api/login', async(req, res) => {
   try{
-      loginSchemaObject.findOne({ userId: req.body.userID , password: req.body.userPassword, userType: req.body.userType}, function (err, docs) {
-      if (err){
-          //console.log(err)
-          res.send(err);
-      }
-      else{
-          //console.log("Result : ", docs);
-          if (docs == null) {
-              res.json({message : 'Login not found, please try again with valid credentials'})
-          }
-          else
-          {
-              session=req.session;
-              session.userId=req.body.userId;
-              session.userType=docs.userType;
-              session.userName = docs.userName;
-              //res.sendFile(__dirname+'/index.html')
-              res.json({message : 'loginsuccess'})
-          }
-          //res.send(docs);
-      }
-  });
-        res.json({ message: 'Data saved successfully', data: savedData });
+        const docs = await loginSchemaObject.findOne({userID: req.body.userID});
+        if (!docs) {
+          res.json({message : 'Login not found, please try again with valid credentials'})
+        }
+        else
+        {
+            session=req.session;
+            session.userId=req.body.userID;
+            session.userType=docs.userType;
+            session.userName = docs.userName;
+            //res.sendFile(__dirname+'/index.html')
+            res.json({message : 'loginsuccess'})
+        }
+
       }
     catch(err)
     {
-      console.error(err);
       res.status(500).json({ error: 'Error while login' });
     }
   
+});
+
+app.get('api/logout', async(req, res) => {
+  try{
+    req.session.destroy()
+    res.json({message : 'Old session removed'})
+  }
+catch(err)
+{
+  res.status(500).json({ error: 'Failed to logout' });
+}
 });
 
 

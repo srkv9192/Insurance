@@ -93,7 +93,7 @@
     <div class="row justify-content-center">
       <div class="col-lg-4 col-md-6 col-sm-8">
         <h2 class="text-center mb-4">Login</h2>
-        <form>
+        <form id="loginForm">
           <div class="mb-3">
             <label for="username" class="form-label">Username</label>
             <input type="text" class="form-control" id="username" placeholder="Enter your username">
@@ -109,4 +109,45 @@
   </div>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6
+  <script>
+    $(document).ready(function () {
+      $('#loginForm').on('submit', function (event) {
+        event.preventDefault();
+
+        var username = $('#username').val();
+        var password = $('#password').val();
+
+        // Make an API call with the username and password
+        $.ajax({
+          url: '/api/login',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          data: {
+            userID: username,
+            userPassword: password
+          },
+          success: function (response) {
+            if(response.message == "loginsuccess")
+              {
+                //window.location.href = "/"
+                alert("Login Success- " + response.message)
+              }
+              else{
+                alert(response.message)
+                //document.getElementById('myform').reset();
+              }
+            //alert("login success");
+            // Redirect to the dashboard or perform any other actions
+          },
+          error: function (error) {
+            console.error('Login failed:', error);
+            alert("login failed");
+            // Display an error message to the user
+          }
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>
