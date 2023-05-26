@@ -1,6 +1,17 @@
 const express = require('express')
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const multer = require('multer');
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); // Specify the destination folder for uploaded files
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname); // Use the original filename
+  },
+});
+
+const upload = multer({ storage: storage });
 const app = express()
 const port = process.env.PORT || 80
 
@@ -52,6 +63,22 @@ const tpaSchema = new mongoose.Schema({
   // Add more fields as needed
 });
 
+const policyCardSchema = new mongoose.Schema({
+  customerName: String,
+  customerAddress: String,
+  customerPhone: Number,
+  customerEmail: String,
+  insuranceCompany:String,
+  tpaName: String,
+  policyNumber: String,
+  policyStartDate: Date,
+  policyEndDate: Date,
+  policyDependents: String,
+  policyUpload: String, 
+});
+
+const policyCardSchemaObject = mongoose.model('policycard', policyCardSchema);
+
 
 // Create a model based on the schema
 const dataSchemaObject = mongoose.model('Data', dataSchema);
@@ -71,7 +98,7 @@ app.use(bodyParser.json());
 
 app.post('/api/login', async(req, res) => {
   try{
-        const docs = await loginSchemaObject.findOne({userID: req.body.userID});
+        const docs = await loginSchemaObject.findOne({userID: req.body.userID, userPassword: req.body.userPassword});
         if (!docs) {
           res.json({message : 'Login not found, please try again with valid credentials'})
         }
@@ -211,6 +238,41 @@ app.get("/api/gettpadetail", async(req, res) => {
   }
 });
 
+app.post("/api/save-policy", async (req, res) => {
+  try{
+    const newData = new policyCardSchemaObject({
+                  'customerName': req.body.customerName,
+                  'customerAddress': req.body.customerAddress,
+                  'customerPhone': req.body.customerPhone,
+                  'customerEmail': req.body.customerEmail,
+                  'insuranceCompany':req.body.insuranceCompany,
+                  'tpaName': req.body.tpaName,
+                  'policyNumber': req.body.policyNumber,
+                  'policyStartDate': req.body.policyStartDate,
+                  'policyEndDate': req.body.policyEndDate,
+                  'policyDependents': req.body.policyDependents,
+                  'policyUpload': req.body.policyUpload, 
+                    });
+    const savedData = newData.save();
+    res.json({ message: 'success', cardnumber:"53534500",data: savedData });
+  }
+catch(err)
+{
+  console.error(err);
+  res.status(500).json({ error: 'Error saving new card data' });
+} 
+});
+
+app.get("/api/getallpolicydetail", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  policyCardSchemaObject.find({});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get tpa details' });
+  }
+});
 
 app.use(express.static('public'));
 
@@ -220,5 +282,6 @@ app.get('/login.html', (req, res) => res.sendfile(__dirname+'/login.html'))
 app.get('/newcase.html', (req, res) => res.sendfile(__dirname+'/newcase.html'))
 app.get('/viewdata.html', (req, res) => res.sendfile(__dirname+'/viewdata.html'))
 app.get('/dashboard.html', (req, res) => res.sendfile(__dirname+'/dashboard.html'))
+app.get('/newcard.html', (req, res) => res.sendfile(__dirname+'/newcard.html'))
 
 app.listen(port, () => console.log(`Insurance app listening on port ${port}!`))
