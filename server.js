@@ -75,10 +75,21 @@ const policyCardSchema = new mongoose.Schema({
   policyEndDate: Date,
   policyDependents: String,
   policyUpload: String, 
+  cardNumber: String,
+  referenceNumber:String
+});
+
+//third party admin details
+const counterSchema = new mongoose.Schema({
+  referenceNumberCount: Number,
+  cardNumberCount: Number,
+  searchId : String,
+  // Add more fields as needed
 });
 
 const policyCardSchemaObject = mongoose.model('policycard', policyCardSchema);
 
+const counterSchemaObject = mongoose.model('counter', counterSchema);
 
 // Create a model based on the schema
 const dataSchemaObject = mongoose.model('Data', dataSchema);
@@ -183,7 +194,59 @@ app.get("/api/getlogin", async(req, res) => {
   }
 });
 
+app.get("/api/getcounter", async(req, res) => {
+  try {
+    // Retrieve all users login from the database
+    const data = await counterSchemaObject.find({});
+    res.json(data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get counter details' });
+  }
+});
 
+//should be used only once, while setting initial values for counters
+app.post('/api/setcountervalues', async(req, res) => {
+  try{
+        const newData = new counterSchemaObject({
+                        'referenceNumberCount' : req.body.referenceNumberCount,
+                        'cardNumberCount' : req.body.cardNumberCount,
+                        'searchId' : "keywordforsearch"});
+        const savedData = newData.save();
+        res.json({ message: 'Initial counter data saved successfully', data: savedData });
+      }
+    catch(err)
+    {
+      console.error(err);
+      res.status(500).json({ error: 'Error saving counter data' });
+    } 
+});
+
+app.post('/api/incrementcardcount', async(req, res) => {
+  try{
+        const newData = await counterSchemaObject.findOneAndUpdate({searchId: "keywordforsearch"}, {$inc:{ cardNumberCount: 1}});
+        const savedData = newData.save();
+        res.json({ message: 'Card count incremented successfully', data: savedData });
+      }
+    catch(err)
+    {
+      console.error(err);
+      res.status(500).json({ error: 'Error incrementing card count' });
+    } 
+});
+
+app.post('/api/incrementreferencecount', async(req, res) => {
+  try{
+    const newData = await counterSchemaObject.findOneAndUpdate({searchId: "keywordforsearch"}, {$inc:{ referenceNumberCount: 1}});
+    const savedData = newData.save();
+    res.json({ message: 'Reference count incremented successfully', data: savedData });
+  }
+catch(err)
+{
+  console.error(err);
+  res.status(500).json({ error: 'Error incrementing reference count' });
+} 
+});
 
 app.post('/api/addinsurancecompany', async(req, res) => {
   try{
