@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #343a40;
+      color: #fff;
+    }
+
+    .navbar-light .navbar-brand {
+      color: #fff;
+    }
+
+    .navbar-light .navbar-nav .nav-link {
+      color: #fff;
+    }
+
+    .navbar-light .navbar-nav .nav-link:hover,
+    .navbar-light .navbar-nav .nav-link:focus {
+      color: #e9ecef;
+    }
+    
+    .navbar-dark .navbar-brand {
+      color: #343a40;
+    }
+
+    .navbar-dark .navbar-nav .nav-link {
+      color: #343a40;
+    }
+
+    .navbar-dark .navbar-nav .nav-link:hover,
+    .navbar-dark .navbar-nav .nav-link:focus {
+      color: #343a40;
+    }
+
+    .form-control {
+      background-color: #495057;
+      color: #fff;
+    }
+
+    .form-control:focus {
+      background-color: #343a40;
+      color: #fff;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      border-color: #007bff;
+    }
+
+    .btn-primary:hover,
+    .btn-primary:focus {
+      background-color: #0062cc;
+      border-color: #005cbf;
+    }
+  </style>
+  <title>Buy policy Card Page</title>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark " style="background-color: black;">
+    <div class="container">
+      <img src="/images/logo.png" class="navbar-brand" href="/"  width="100" height="100">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/dashboard.html" style="color: aqua;">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/login.html" style="color: aqua;">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/newcase.html" style="color: aqua;">Newcase</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/viewdata.html" style="color: aqua;">View Case</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-6">
+        <h2 class="text-center mb-4">Data Entry</h2>
+        <form id="newpolicyform">
+          <div class="row mb-3">
+            <div class="col-sm-6">
+              <label for="customer-name" class="form-label">Customer Name</label>
+              <input type="text" class="form-control" id="customer-name">
+            </div>
+            <div class="col-sm-6">
+              <label for="customer-address" class="form-label">Customer Address</label>
+              <input type="text" class="form-control" id="customer-address">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-sm-6">
+              <label for="customer-phone" class="form-label">Customer Phone</label>
+              <input type="tel" class="form-control" id="customer-phone">
+            </div>
+            <div class="col-sm-6">
+              <label for="customer-email" class="form-label">Customer Email</label>
+              <input type="email" class="form-control" id="customer-email">
+            </div>
+          </div>
+          <div class="row mb-3">
+
+            <div class="col-sm-6">
+              <label for="insurance-company" class="form-label">Insurance Company Name</label>
+              <div class="input-group">
+                <select class="form-control" id="insurance-company-dropdown">
+                  <option value="Company 1">Company 1</option>
+                  <option value="Company 2">Company 2</option>
+                  <option value="Company 3">Company 3</option>
+                  <option value="Other">Other</option>
+                </select>
+                <input type="text" class="form-control" id="insurance-company-other" placeholder="Enter other insurance company name" style="display: none;">
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <label for="policy-dependents" class="form-label">Policy Dependents</label>
+              <input type="text" class="form-control" id="policy-dependents" placeholder="Enter policy dependents (comma-separated)">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-sm-6">
+              <label for="tpa-name" class="form-label">TPA Name</label>
+              <div class="input-group">
+                <select class="form-control" id="tpa-name-dropdown">
+                  <option value="TPA 1">TPA 1</option>
+                  <option value="TPA 2">TPA 2</option>
+                  <option value="TPA 3">TPA 3</option>
+                  <option value="Other">Other</option>
+                </select>
+                <input type="text" class="form-control" id="tpa-name-other" placeholder="Enter other TPA name" style="display: none;">
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <label for="policy-number" class="form-label">Policy Number</label>
+              <input type="text" class="form-control" id="policy-number">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-sm-6">
+              <label for="policy-start-date" class="form-label">Policy Start Date</label>
+              <input type="date" class="form-control" id="policy-start-date">
+            </div>
+            <div class="col-sm-6">
+              <label for="policy-end-date" class="form-label">Policy End Date</label>
+              <input type="date" class="form-control" id="policy-end-date">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-sm-6">
+              <label for="policy-upload" class="form-label">Policy Upload</label>
+              <input type="file" class="form-control" id="policy-upload">
+            </div>
+
+          </div>
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      // Show/hide input field based on the selected option for insurance company name
+      $('#insurance-company-dropdown').change(function () {
+        if ($(this).val() === 'Other') {
+          $('#insurance-company-other').show();
+        } else {
+          $('#insurance-company-other').hide();
+        }
+      });
+
+      // Show/hide input field based on the selected option for TPA name
+      $('#tpa-name-dropdown').change(function () {
+        if ($(this).val() === 'Other') {
+          $('#tpa-name-other').show();
+        } else {
+          $('#tpa-name-other').hide();
+        }
+      });
+
+      $('#newpolicyform').on('submit', function (event) {
+        event.preventDefault();
+
+        var customername = $('#customer-name').val();
+        var customeraddress= $('#customer-address').val();
+       var customerphone = $('#customer-phone').val();
+       var customeremail = $('#customer-email').val();
+  
+        var insurancecompany=""
+        if( $('#insurance-company-dropdown').val() ==="Other")
+        {
+          insurancecompany =  $('#insurance-company-other').val()
+        }
+        else{
+          insurancecompany =  $('#insurance-company-dropdown').val()
+        }
+
+        var tpaname=""
+        if( $('#tpa-name-dropdown').val() ==="Other")
+        {
+          tpaname =  $('#tpa-name-other').val()
+        }
+        else{
+          insurancecompany =  $('#tpa-name-dropdown').val()
+        }
+        var policynumber = $('#policy-number').val();
+        var policystartdate = $('#policy-start-date').val();
+        var policyenddate = $('#policy-end-date').val();
+       var policyupload =$('#policy-upload').val();
+       var policydependents =$('#policy-dependents').val();
+
+
+        // Make an API call with the username and password
+        $.ajax({
+          url: '/api/save-policy',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          data: {
+          customerName: customername,
+          customerAddress: customeraddress,
+          customerPhone: customerphone,
+          customerEmail: customeremail,
+          insuranceCompany: insurancecompany,
+          tpaName: tpaname,
+          policyNumber: policynumber,
+          policyStartDate: policystartdate,
+          policyEndDate: policyenddate,
+          policyDependents: policydependents,
+          policyUpload: policyupload, 
+          },
+          success: function (response) {
+            if(response.message == "success")
+              {
+                //window.location.href = "/dashboard.html"
+                alert("Reference number- " + response.referencenumber)
+              }
+              else{
+                alert(response.message)
+                //document.getElementById('loginForm').reset();
+              }
+            //alert("login success");
+            // Redirect to the dashboard or perform any other actions
+          },
+          error: function (error) {
+            //document.getElementById('loginForm').reset();
+            alert("card generation failed");
+            // Display an error message to the user
+          }
+        });
+      });
+    });
+
+  </script>
+</body>
+
+</html>

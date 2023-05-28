@@ -303,7 +303,13 @@ app.get("/api/gettpadetail", async(req, res) => {
 
 app.post("/api/save-policy", async (req, res) => {
   try{
-    const newData = new policyCardSchemaObject({
+    const refNumber= await getReferenceCount();
+    if(refNumber == -1)
+    {
+      res.status(500).json({ error: 'Error saving new card data' });
+      return;
+    }
+    const newData = await new policyCardSchemaObject({
                   'customerName': req.body.customerName,
                   'customerAddress': req.body.customerAddress,
                   'customerPhone': req.body.customerPhone,
@@ -315,9 +321,11 @@ app.post("/api/save-policy", async (req, res) => {
                   'policyEndDate': req.body.policyEndDate,
                   'policyDependents': req.body.policyDependents,
                   'policyUpload': req.body.policyUpload, 
+                  'referenceNumber': refNumber,
                     });
     const savedData = newData.save();
-    res.json({ message: 'success', cardnumber:"53534500",data: savedData });
+    incrementReferenceCount();
+    res.json({ message: 'success', referencenumber:refNumber,data: savedData });
   }
 catch(err)
 {
@@ -337,6 +345,53 @@ app.get("/api/getallpolicydetail", async(req, res) => {
   }
 });
 
+
+ async function getReferenceCount () {
+  try {
+    const data = await counterSchemaObject.find();
+    return data[0].referenceNumberCount;
+  } catch (error) {
+    console.error(error);
+    return -1;
+  }
+};
+
+  async function incrementReferenceCount ()  {
+  try{
+    const newData = await counterSchemaObject.findOneAndUpdate({searchId: "keywordforsearch"}, {$inc:{ referenceNumberCount: 1}});
+    return newData.referenceNumberCount;
+  }
+  catch(err)
+  {
+    console.error(err);
+    return -1;
+  } 
+};
+
+ async function getCardCount()  {
+  try {
+    const data = await counterSchemaObject.find();
+    return data[0].cardNumberCount;
+  } catch (error) {
+    console.error(error);
+    return -1;
+  }
+};
+
+ function incrementCardCount ()  {
+  try{
+    const newData =   counterSchemaObject.findOneAndUpdate({searchId: "keywordforsearch"}, {$inc:{ cardNumberCount: 1}});
+    //const savedData = newData.save();
+    return newData.cardNumberCount;
+  }
+  catch(err)
+  {
+    console.error(err);
+    return -1;
+  } 
+};
+
+
 app.use(express.static('public'));
 
 app.get('/', (req, res) => res.sendfile(__dirname+'/index.html'))
@@ -346,5 +401,8 @@ app.get('/newcase.html', (req, res) => res.sendfile(__dirname+'/newcase.html'))
 app.get('/viewdata.html', (req, res) => res.sendfile(__dirname+'/viewdata.html'))
 app.get('/dashboard.html', (req, res) => res.sendfile(__dirname+'/dashboard.html'))
 app.get('/newcard.html', (req, res) => res.sendfile(__dirname+'/newcard.html'))
+app.get('/paymentinfo.html', (req, res) => res.sendfile(__dirname+'/paymentinfo.html'))
+
+app.get('/menubar.html', (req, res) => res.sendfile(__dirname+'/menubar.html'))
 
 app.listen(port, () => console.log(`Insurance app listening on port ${port}!`))
