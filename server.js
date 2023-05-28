@@ -406,3 +406,66 @@ app.get('/paymentinfo.html', (req, res) => res.sendfile(__dirname+'/paymentinfo.
 app.get('/menubar.html', (req, res) => res.sendfile(__dirname+'/menubar.html'))
 
 app.listen(port, () => console.log(`Insurance app listening on port ${port}!`))
+
+
+// code to generate pdf
+const PDFDocument = require('pdfkit');
+const fs = require('fs');const doc = new PDFDocument({
+  layout: 'landscape',
+  size: 'A4',
+});
+
+
+
+
+
+
+doc.pipe(fs.createWriteStream('output.pdf'));doc.rect(0, 0, doc.page.width, doc.page.height).fill('#fff');
+
+
+const distanceMargin = 18;doc
+  .fillAndStroke('#0e8cc3')
+  .lineWidth(20)
+  .lineJoin('round')
+  .rect(
+    distanceMargin,
+    distanceMargin,
+    doc.page.width - distanceMargin * 2,
+    doc.page.height - distanceMargin * 2,
+  )
+  .stroke();
+
+
+
+  const maxWidth = 400;
+const maxHeight = 300;doc.image(
+  './public/images/logofull.jpg',
+  doc.page.width / 3.4 - maxWidth / 2,
+  60, 
+  {
+    fit: [maxWidth, maxHeight],
+    align: 'left',
+   }
+);
+
+doc.moveDown();
+doc.moveDown();
+doc.moveDown();
+doc.moveDown();
+doc
+  .font('Times-Roman')
+  .fontSize(16)
+  .fill('#021c27')
+  .text('79/A, Dravid Nagar, Ranjeet Hanuman Mandir', {
+    align: 'right',
+  }
+);
+
+doc.lineWidth(1);
+doc.lineCap('butt')
+   .moveTo(0, doc.page.width/4.5)
+   .lineTo(900, doc.page.width/4.5)
+   .stroke();
+
+
+doc.end();
