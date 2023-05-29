@@ -409,6 +409,11 @@ app.listen(port, () => console.log(`Insurance app listening on port ${port}!`))
 
 
 // code to generate pdf
+
+//https://blog.logrocket.com/managing-pdfs-node-pdf-lib/
+// we can use pdf-lib instead of pdf-kit to modify an existing pdf
+
+/*
 const PDFDocument = require('pdfkit');
 const fs = require('fs');const doc = new PDFDocument({
   layout: 'landscape',
@@ -417,10 +422,9 @@ const fs = require('fs');const doc = new PDFDocument({
 
 
 
+doc.pipe(fs.createWriteStream('output2.pdf'));
 
-
-
-doc.pipe(fs.createWriteStream('output.pdf'));doc.rect(0, 0, doc.page.width, doc.page.height).fill('#fff');
+//doc.rect(0, 0, doc.page.width, doc.page.height).fill('#fff');
 
 
 const distanceMargin = 18;doc
@@ -469,3 +473,161 @@ doc.lineCap('butt')
 
 
 doc.end();
+
+*/
+
+
+app.post("/api/getlegalpdf", async (req, res) => {
+  try{
+
+    createPDF(req);
+
+    res.json({ message: 'success' });
+  }
+catch(err)
+{
+  console.error(err);
+  res.status(500).json({ error: 'Error saving new card data' });
+} 
+});
+
+const { PDFDocument, StandardFonts, rgb } = require("pdf-lib");
+const { writeFileSync, readFileSync } = require("fs");
+
+async function createPDF(req) {
+  const document = await PDFDocument.load(readFileSync("./agreementtemplate4.pdf"));
+
+  const courierBoldFont = await document.embedFont(StandardFonts.Courier);
+  const firstPage = document.getPage(0);
+
+  console.log( firstPage.getHeight() + " " +  firstPage.getWidth());
+
+ // firstPage.moveTo(62, 500);
+  firstPage.moveTo(360, 670);
+
+  firstPage.drawText(new Date().toUTCString(), {
+    font: courierBoldFont,
+    size: 12,
+  });
+
+  firstPage.moveTo(240, 617);
+  firstPage.drawText(req.body.clientName, {
+    font: courierBoldFont,
+    size: 12,
+  });
+
+//name second time
+  firstPage.moveTo(280, 582);
+  firstPage.drawText(req.body.clientName, {
+    font: courierBoldFont,
+    size: 12,
+  });
+
+  // claim no. and company name-
+  firstPage.moveTo(150, 552);
+  firstPage.drawText(req.body.claimNumber + " , " + req.body.insuranceCompanyName , {
+    font: courierBoldFont,
+    size: 12,
+  });
+
+
+    //Processing fees
+    firstPage.moveTo(285, 441);
+    firstPage.drawText("Rs."+ req.body.processingFee, {
+      font: courierBoldFont,
+      size: 12,
+    });
+
+        //consultation percentage fees
+        firstPage.moveTo(515, 441);
+        firstPage.drawText(req.body.consultationCharge + "%", {
+          font: courierBoldFont,
+          size: 12,
+        });
+
+          //Total claimed amount
+          firstPage.moveTo(180, 425);
+          firstPage.drawText("Rs."+ req.body.claimAmount, {
+            font: courierBoldFont,
+            size: 12,
+          });
+
+         //cheque amount
+         firstPage.moveTo(320, 364);
+          firstPage.drawText("Rs."+ req.body.chequeAmount, {
+          font: courierBoldFont,
+         size: 12,
+          });
+
+          //cheque number
+         firstPage.moveTo(460, 364);
+           firstPage.drawText(req.body.chequeNumber, {
+         font: courierBoldFont,
+          size: 12,
+          });
+  
+          //Bank name 
+          firstPage.moveTo(130, 348);
+          firstPage.drawText(req.body.bankName, {
+        font: courierBoldFont,
+         size: 12,
+         });
+
+
+         //get day, month and year
+
+         var agreementdate = (new Date());
+         firstPage.moveTo(235, 240);
+         firstPage.drawText(agreementdate.getDate().toString(), {
+           font: courierBoldFont,
+           size: 12,
+         });
+
+         const monthName = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+         firstPage.moveTo(320, 240);
+         firstPage.drawText((monthName[agreementdate.getMonth()] ), {
+          font: courierBoldFont,
+          size: 12,
+        });
+        firstPage.moveTo(350, 240);
+        firstPage.drawText(agreementdate.getFullYear().toString(), {
+          font: courierBoldFont,
+          size: 12,
+        });
+
+
+          //name of first party 
+          firstPage.moveTo(110, 175);
+          firstPage.drawText(req.body.clientName, {
+        font: courierBoldFont,
+         size: 12,
+         });
+
+          //Address first party 
+          firstPage.moveTo(115, 145);
+          firstPage.drawText(req.body.clientAddress, {
+        font: courierBoldFont,
+         size: 12,
+         });
+
+          //Mobile first party 
+          firstPage.moveTo(130, 115);
+          firstPage.drawText(req.body.clientPhone, {
+        font: courierBoldFont,
+         size: 12,
+         });
+
+          //witness name
+          firstPage.moveTo(405, 176);
+          firstPage.drawText(req.body.witnessName, {
+        font: courierBoldFont,
+         size: 12,
+         });
+
+
+
+
+  writeFileSync("jane-doe.pdf", await document.save());
+}
+
+//createPDF().catch((err) => console.log(err));
