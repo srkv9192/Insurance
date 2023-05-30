@@ -403,6 +403,9 @@ app.get('/dashboard.html', (req, res) => res.sendfile(__dirname+'/dashboard.html
 app.get('/newcard.html', (req, res) => res.sendfile(__dirname+'/newcard.html'))
 app.get('/paymentinfo.html', (req, res) => res.sendfile(__dirname+'/paymentinfo.html'))
 
+
+app.get('/generatelegalpdf.html', (req, res) => res.sendfile(__dirname+'/generatelegalpdf.html'))
+
 app.get('/menubar.html', (req, res) => res.sendfile(__dirname+'/menubar.html'))
 
 app.listen(port, () => console.log(`Insurance app listening on port ${port}!`))
@@ -480,14 +483,22 @@ doc.end();
 app.post("/api/getlegalpdf", async (req, res) => {
   try{
 
-    createPDF(req);
+    const response = await createPDF(req);
+    var fileName = 'file.pdf';
 
-    res.json({ message: 'success' });
+      console.log(response);
+      res.set('Content-Type', 'application/pdf');
+      res.set('Content-Disposition', 'attachment; filename="' + fileName + '"');
+      res.download("./Legal.pdf");
+    
+
+    //res.download("./Legal.pdf");
+    //res.json({ message: 'success' });
   }
 catch(err)
 {
   console.error(err);
-  res.status(500).json({ error: 'Error saving new card data' });
+  res.status(500).json({ error: 'Error Generating PDF' });
 } 
 });
 
@@ -627,7 +638,9 @@ async function createPDF(req) {
 
 
 
-  writeFileSync("jane-doe.pdf", await document.save());
+  writeFileSync("Legal.pdf", await document.save());
+
+  return true;
 }
 
 //createPDF().catch((err) => console.log(err));
