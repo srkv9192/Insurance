@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="css/menubar.css">
+  <style>
+    body {
+      background-color: #343a40;
+      color: #fff;
+    }
+
+    .navbar-light .navbar-brand {
+      color: #fff;
+    }
+
+    .navbar-light .navbar-nav .nav-link {
+      color: #fff;
+    }
+
+    .navbar-light .navbar-nav .nav-link:hover,
+    .navbar-light .navbar-nav .nav-link:focus {
+      color: #e9ecef;
+    }
+
+    .navbar-dark .navbar-brand {
+      color: #343a40;
+    }
+
+    .navbar-dark .navbar-nav .nav-link {
+      color: #343a40;
+    }
+
+    .navbar-dark .navbar-nav .nav-link:hover,
+    .navbar-dark .navbar-nav .nav-link:focus {
+      color: #343a40;
+    }
+
+    .form-control {
+      background-color: #495057;
+      color: #fff;
+    }
+
+    .form-control:focus {
+      background-color: #343a40;
+      color: #fff;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      border-color: #007bff;
+    }
+
+    .btn-primary:hover,
+    .btn-primary:focus {
+      background-color: #0062cc;
+      border-color: #005cbf;
+    }
+
+    .table-dark {
+      background-color: #343a40;
+    }
+
+    .table-dark th,
+    .table-dark td {
+      color: #fff;
+    }
+
+    .table-dark tbody tr.card-missing td {
+      background-color: #dc3545;
+    }
+
+    .table-dark tbody tr.card-present td {
+      background-color: #28a745;
+    }
+
+    div.dataTables_info {
+  color: white !important;
+
+}
+
+div.dataTables_paginate {
+  color: white !important;
+
+}
+
+div.dataTables_length {
+  color: white !important;
+
+}
+
+div.dataTables_filter {
+  color: white !important;
+
+}
+  </style>
+  <title>Card Details</title>
+</head>
+
+<body>
+
+  <div class='dashboard'>
+    <div class="dashboard-nav">
+      <header>
+        <a href="#"class="brand-logo"> 
+          <img src="/images/logoround.png" class="navbar-brand" href="/" align="left" width="130" height="130">
+         </a>
+         <a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a>
+        </header>
+      <nav class="dashboard-nav-list"><a href="/" class="dashboard-nav-item"><i class="fas fa-home"></i>
+          Home </a>
+          <nav class="dashboard-nav-list"><a href="/paymentinfo.html" class="dashboard-nav-item"><i class="fas fa-inr"></i>
+            Payment Info </a>
+        <div class="nav-item-divider"></div>
+        <a href="/login.html" class="dashboard-nav-item"><i class="fas fa-sign-in "></i> Login </a>
+      </nav>
+    </div>
+    <div class='dashboard-app'>
+        <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
+        <div class="container mt-5">
+          <div class="row justify-content-center">
+            <div class="col-lg-12">
+              <h2 class="text-center mb-4">Card Details</h2>
+              <div class="table-responsive">
+                <table id ="dataTable" class="table table-dark table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Reference Number</th>
+                      <th>Card Number</th>
+                      <th>Customer Name</th>
+                      <th>Customer Phone</th>
+                      <th>Customer Email</th>
+                      <th>Insurance Company</th>
+                      <th>TPA Name</th>
+                      <th>Policy Number</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="card-missing">
+                      <td>REF-001</td>
+                      <td></td>
+                      <td>John Doe</td>
+                      <td>555-1234</td>
+                      <td>johndoe@example.com</td>
+                      <td>ABC Insurance</td>
+                      <td>TPA 1</td>
+                      <td>123456789</td>
+                      <td>
+                        <button class="btn btn-primary btn-sm" onclick="generateCard('REF-001')">Generate Card</button>
+                      </td>
+                    </tr>
+                    <tr class="card-present">
+                      <td>REF-002</td>
+                      <td>1234 5678 9012 3456</td>
+                      <td>Jane Smith</td>
+                      <td>555-5678</td>
+                      <td>janesmith@example.com</td>
+                      <td>XYZ Insurance</td>
+                      <td>TPA 2</td>
+                      <td>987654321</td>
+                      <td>
+                        <button class="btn btn-primary btn-sm" onclick="sendCard('REF-002')">Send Card</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      const mobileScreen = window.matchMedia("(max-width: 990px)");
+
+      $(".dashboard-nav-dropdown-toggle").click(function () {
+        $(this).closest(".dashboard-nav-dropdown")
+            .toggleClass("show")
+            .find(".dashboard-nav-dropdown")
+            .removeClass("show");
+        $(this).parent()
+            .siblings()
+            .removeClass("show");
+      });
+
+      $(".menu-toggle").click(function () {
+        if (mobileScreen.matches) {
+            $(".dashboard-nav").toggleClass("mobile-show");
+        } else {
+            $(".dashboard").toggleClass("dashboard-compact");
+        }
+      });
+
+      $('#dataTable').DataTable({
+
+        "paging": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "scrollX": true,
+      });
+      
+
+      function generateCard(referenceNumber) {
+        // Code to generate card
+        alert("Generating card for reference number: " + referenceNumber);
+      }
+
+      function sendCard(referenceNumber) {
+        // Code to send card via email
+        alert("Sending card via email for reference number: " + referenceNumber);
+      }
+    });
+  </script>
+</body>
+
+</html>

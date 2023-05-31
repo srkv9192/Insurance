@@ -402,6 +402,7 @@ app.get('/viewdata.html', (req, res) => res.sendfile(__dirname+'/viewdata.html')
 app.get('/dashboard.html', (req, res) => res.sendfile(__dirname+'/dashboard.html'))
 app.get('/newcard.html', (req, res) => res.sendfile(__dirname+'/newcard.html'))
 app.get('/paymentinfo.html', (req, res) => res.sendfile(__dirname+'/paymentinfo.html'))
+app.get('/viewcards.html', (req, res) => res.sendfile(__dirname+'/viewcards.html'))
 
 
 app.get('/generatelegalpdf.html', (req, res) => res.sendfile(__dirname+'/generatelegalpdf.html'))
