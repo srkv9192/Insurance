@@ -63,6 +63,26 @@ const tpaSchema = new mongoose.Schema({
   // Add more fields as needed
 });
 
+//Manager schema 
+const managerSchema = new mongoose.Schema({
+  managerID: String,
+  managerName: String,
+  phone: String,
+  email: String,
+  // Add more fields as needed
+});
+
+//Channel partner schema 
+const cpSchema = new mongoose.Schema({
+  cpID: String,
+  cpName: String,
+  managerID: String,
+  phone: String,
+  email: String,
+  // Add more fields as needed
+});
+
+
 const policyCardSchema = new mongoose.Schema({
   customerName: String,
   customerAddress: String,
@@ -76,7 +96,12 @@ const policyCardSchema = new mongoose.Schema({
   policyDependents: String,
   policyUpload: String, 
   cardNumber: String,
-  referenceNumber:String
+  referenceNumber:String,
+  managerID: String,
+  managerName: String,
+  cpID: String,
+  cpName: String,
+  directCase: String,
 });
 
 //third party admin details
@@ -84,6 +109,8 @@ const counterSchema = new mongoose.Schema({
   referenceNumberCount: Number,
   cardNumberCount: Number,
   searchId : String,
+  managerCount: Number,
+  cpCount: Number,
   // Add more fields as needed
 });
 
@@ -101,6 +128,12 @@ const insurancecompanySchemaObject = mongoose.model('insurancecompanydetails', i
 
 //table to hold tpa(third party admin) list
 const tpaSchemaObject = mongoose.model('tpadetails', tpaSchema);
+
+//table to hold manager details
+const managerSchemaObject = mongoose.model('managerdetails', managerSchema);
+
+//table to hold channel partner details
+const cpSchemaObject = mongoose.model('cpdetails', cpSchema);
 
 
 // Parse JSON bodies for POST requests
@@ -211,6 +244,8 @@ app.post('/api/setcountervalues', async(req, res) => {
         const newData = new counterSchemaObject({
                         'referenceNumberCount' : req.body.referenceNumberCount,
                         'cardNumberCount' : req.body.cardNumberCount,
+                        'managerCount': req.body.managerCount,
+                        'cpCount': req.body.cpCount,
                         'searchId' : "keywordforsearch"});
         const savedData = newData.save();
         res.json({ message: 'Initial counter data saved successfully', data: savedData });
@@ -248,6 +283,35 @@ catch(err)
 } 
 });
 
+
+app.post('/api/incrementmanagercount', async(req, res) => {
+  try{
+    const newData = await counterSchemaObject.findOneAndUpdate({searchId: "keywordforsearch"}, {$inc:{ managerCount: 1}});
+    const savedData = newData.save();
+    res.json({ message: 'Manager count incremented successfully', data: savedData });
+  }
+catch(err)
+{
+  console.error(err);
+  res.status(500).json({ error: 'Error incrementing manager count' });
+} 
+});
+
+
+app.post('/api/incrementcpcount', async(req, res) => {
+  try{
+    const newData = await counterSchemaObject.findOneAndUpdate({searchId: "keywordforsearch"}, {$inc:{ cpCount: 1}});
+    const savedData = newData.save();
+    res.json({ message: 'CP count incremented successfully', data: savedData });
+  }
+catch(err)
+{
+  console.error(err);
+  res.status(500).json({ error: 'Error incrementing CP count' });
+} 
+});
+
+
 app.post('/api/addinsurancecompany', async(req, res) => {
   try{
         const newData = new insurancecompanySchemaObject({
@@ -273,7 +337,6 @@ app.get("/api/getinsurancecompany", async(req, res) => {
     res.status(500).json({ error: 'Failed to get insurance company details' });
   }
 });
-
 
 app.post('/api/addtpadetail', async(req, res) => {
   try{
@@ -301,6 +364,83 @@ app.get("/api/gettpadetail", async(req, res) => {
   }
 });
 
+
+
+app.post('/api/addmanagerdetail', async(req, res) => {
+  try{
+        const refNumber= await getManagerCount();
+        if(refNumber == -1)
+        {
+          res.status(500).json({ error: 'Error saving manager data' });
+          return;
+        }
+        const newData = new managerSchemaObject({
+                        'managerID' : "MAN_" + refNumber,
+                        'managerName' : req.body.managerName,
+                        'phone' : req.body.phone,
+                        'email' : req.body.email,
+                        });
+        const savedData = newData.save();
+        incrementManagerCount();
+        res.json({ message: 'Manager data saved successfully', data: savedData });
+      }
+    catch(err)
+    {
+      console.error(err);
+      res.status(500).json({ error: 'Error saving Manager data' });
+    } 
+});
+
+app.get("/api/getmanagerdetail", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  managerSchemaObject.find({});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get manager details' });
+  }
+});
+
+
+app.post('/api/addcpdetail', async(req, res) => {
+  try{
+        const refNumber= await getcpCount();
+        if(refNumber == -1)
+        {
+          res.status(500).json({ error: 'Error saving manager data' });
+          return;
+        }
+        const newData = new cpSchemaObject({
+                        'cpID' : "CP_" + refNumber,
+                        'cpName' : req.body.cpName,
+                        'managerID': req.body.managerID,
+                        'phone' : req.body.phone,
+                        'email' : req.body.email,
+                        });
+        const savedData = newData.save();
+        incrementcpCount();
+        res.json({ message: 'CP data saved successfully', data: savedData });
+      }
+    catch(err)
+    {
+      console.error(err);
+      res.status(500).json({ error: 'Error saving Manager data' });
+    } 
+});
+
+app.get("/api/getcpdetail", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  cpSchemaObject.find({});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get CP details' });
+  }
+});
+
+
 app.post("/api/save-policy", async (req, res) => {
   try{
     const refNumber= await getReferenceCount();
@@ -322,6 +462,11 @@ app.post("/api/save-policy", async (req, res) => {
                   'policyDependents': req.body.policyDependents,
                   'policyUpload': req.body.policyUpload, 
                   'referenceNumber': refNumber,
+                  'managerID': req.body.managerID, 
+                  'managerName': req.body.managerName, 
+                  'cpID': req.body.cpID, 
+                  'cpName': req.body.cpName,
+                  'directCase' : req.body.directCase,
                     });
     const savedData = newData.save();
     incrementReferenceCount();
@@ -367,6 +512,53 @@ app.get("/api/getallpolicydetail", async(req, res) => {
     return -1;
   } 
 };
+
+
+ async function getManagerCount () {
+  try {
+    const data = await counterSchemaObject.find();
+    return data[0].managerCount;
+  } catch (error) {
+    console.error(error);
+    return -1;
+  }
+};
+
+  async function incrementManagerCount ()  {
+  try{
+    const newData = await counterSchemaObject.findOneAndUpdate({searchId: "keywordforsearch"}, {$inc:{ managerCount: 1}});
+    return newData.managerCount;
+  }
+  catch(err)
+  {
+    console.error(err);
+    return -1;
+  } 
+};
+
+
+ async function getcpCount () {
+  try {
+    const data = await counterSchemaObject.find();
+    return data[0].cpCount;
+  } catch (error) {
+    console.error(error);
+    return -1;
+  }
+};
+
+  async function incrementcpCount ()  {
+  try{
+    const newData = await counterSchemaObject.findOneAndUpdate({searchId: "keywordforsearch"}, {$inc:{ cpCount: 1}});
+    return newData.cpCount;
+  }
+  catch(err)
+  {
+    console.error(err);
+    return -1;
+  } 
+};
+
 
  async function getCardCount()  {
   try {
