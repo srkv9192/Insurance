@@ -293,6 +293,13 @@
        var policyupload =$('#policy-upload').val();
        var policydependents =$('#policy-dependents').val();
 
+       var selecteditem = document.getElementById("cp-name-dropdown");
+       var cpname = $("#cp-name-dropdown option:selected").text();
+
+       var cpid=   $('#cp-name-dropdown').val()
+       var managername = $("#manager-name-dropdown option:selected").text();
+       var managerid =  $('#manager-name-dropdown').val()
+
 
         // Make an API call with the username and password
         $.ajax({
@@ -311,6 +318,10 @@
           policyEndDate: policyenddate,
           policyDependents: policydependents,
           policyUpload: policyupload, 
+          cpName:cpname,
+          cpID: cpid,
+          managerName:managername,
+          managerID: managerid,
           },
           success: function (response) {
             if(response.message == "success")
