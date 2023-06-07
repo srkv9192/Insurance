@@ -479,6 +479,7 @@ app.post("/api/save-policy", async (req, res) => {
                   'policyDependents': req.body.policyDependents,
                   'policyUpload': req.body.policyUpload, 
                   'referenceNumber': refNumber,
+                  'cardNumber': "",
                   'managerID': req.body.managerID, 
                   'managerName': req.body.managerName, 
                   'cpID': req.body.cpID, 
@@ -523,6 +524,17 @@ app.get("/api/getallpolicydetail", async(req, res) => {
   try {
     // Retrieve all tpa list from database
     const users = await  policyCardSchemaObject.find({});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get tpa details' });
+  }
+});
+
+app.get("/api/getpendingpolicydetail", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  policyCardSchemaObject.find({cardNumber: ""});
     res.json(users);
   } catch (error) {
     console.error(error);
@@ -682,6 +694,7 @@ app.get('/newcard.html', (req, res) => res.sendFile(__dirname+'/newcard.html'))
 app.get('/newcarddirect.html', (req, res) => res.sendFile(__dirname+'/newcarddirect.html'))
 app.get('/paymentinfo.html', (req, res) => res.sendFile(__dirname+'/paymentinfo.html'))
 app.get('/viewcards.html', (req, res) => res.sendFile(__dirname+'/viewcards.html'))
+app.get('/viewpendingcards.html', (req, res) => res.sendFile(__dirname+'/viewpendingcards.html'))
 
 app.get('/generatelegalpdf.html', (req, res) => res.sendFile(__dirname+'/generatelegalpdf.html'))
 

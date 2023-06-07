@@ -124,7 +124,7 @@ div.dataTables_filter {
         <div class="container mt-5">
           <div class="row justify-content-center">
             <div class="col-lg-12">
-              <h2 class="text-center mb-4">Card Details</h2>
+              <h2 class="text-center mb-4">Pending Card Details</h2>
               <div class="table-responsive">
                 <table id ="dataTable" class="table table-dark table-bordered">
                   <thead>
@@ -140,34 +140,6 @@ div.dataTables_filter {
                       <th>Action</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr class="card-missing">
-                      <td>REF-001</td>
-                      <td></td>
-                      <td>John Doe</td>
-                      <td>555-1234</td>
-                      <td>johndoe@example.com</td>
-                      <td>ABC Insurance</td>
-                      <td>TPA 1</td>
-                      <td>123456789</td>
-                      <td>
-                        <button class="btn btn-primary btn-sm" onclick="generateCard('REF-001')">Generate Card</button>
-                      </td>
-                    </tr>
-                    <tr class="card-present">
-                      <td>REF-002</td>
-                      <td>1234 5678 9012 3456</td>
-                      <td>Jane Smith</td>
-                      <td>555-5678</td>
-                      <td>janesmith@example.com</td>
-                      <td>XYZ Insurance</td>
-                      <td>TPA 2</td>
-                      <td>987654321</td>
-                      <td>
-                        <button class="btn btn-primary btn-sm" onclick="sendCard('REF-002')">Send Card</button>
-                      </td>
-                    </tr>
-                  </tbody>
                 </table>
               </div>
             </div>
@@ -180,7 +152,21 @@ div.dataTables_filter {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
   <script>
+
+function generateCard(referenceNumber) {
+        // Code to generate card
+        alert("Generating card for reference number: " + referenceNumber);
+      }
+
+      function sendCard(referenceNumber) {
+        // Code to send card via email
+        alert("Sending card via email for reference number: " + referenceNumber);
+      }
+      
     $(document).ready(function () {
+
+
+
       const mobileScreen = window.matchMedia("(max-width: 990px)");
 
       $(".dashboard-nav-dropdown-toggle").click(function () {
@@ -212,7 +198,7 @@ div.dataTables_filter {
       
        // AJAX call on page load get manager details
        $.ajax({
-        url: '/api/getallpolicydetail',
+        url: '/api/getpendingpolicydetail',
         type: 'GET',
         success: function (response) {
           // Populate the options in the select element
@@ -230,6 +216,7 @@ div.dataTables_filter {
           $("#dataTable").DataTable().clear();
           var length = Object.keys(data).length;
           for(var i = 0; i < length; i++) {
+            var rfno= data[i].referenceNumber
             // You could also use an ajax property on the data table initialization
             $('#dataTable').dataTable().fnAddData( [
               data[i].referenceNumber,
@@ -240,21 +227,13 @@ div.dataTables_filter {
               data[i].insuranceCompany,
               data[i].tpaName,
               data[i].policyNumber,
-              `<button class="btn btn-primary btn-sm" onclick="sendCard(${rfno})">Send Card</button>`
+              `<button class="btn btn-primary btn-sm" onclick="sendCard(${rfno})">Generate Card</button>`
             ]);
           }
         }
       
 
-      function generateCard(referenceNumber) {
-        // Code to generate card
-        alert("Generating card for reference number: " + referenceNumber);
-      }
 
-      function sendCard(referenceNumber) {
-        // Code to send card via email
-        alert("Sending card via email for reference number: " + referenceNumber);
-      }
 
     });
   </script>
