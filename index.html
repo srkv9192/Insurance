@@ -29,14 +29,29 @@
             <nav class="dashboard-nav-list"><a href="/paymentinfo.html" class="dashboard-nav-item"><i class="fas fa-inr"></i>
               Payment Info </a>
 
-          <div class="nav-item-divider"></div>
+              <div id="showonlogin" style="display: none;">
+                <div class='dashboard-nav-dropdown'>
+                   <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+                    <i class="fas fa-photo-video">
+                      </i>Card Menu</a>
+                    <div class='dashboard-nav-dropdown-menu'>
+                        <a href="/newcard.html" class="dashboard-nav-dropdown-item">Add Card</a>
+                        <a href="/viewpendingcards.html" class="dashboard-nav-dropdown-item">View Pending</a>
+                        <a href="/viewcards.html" class="dashboard-nav-dropdown-item">View Completed</a>
+                    </div>
+                 </div>
+              </div>
+              
+          <div class="nav-item-divider">
+
+          </div>
           <a id="login-menu"
                     href="/login.html" class="dashboard-nav-item"><i class="fas  fa-sign-in "></i> Login </a>
         </nav>
     </div>
     <div class='dashboard-app'>
         <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
-        <div class='dashboard-content' style="background-image: url('/images/background5.jpg');">
+        <div class='dashboard-content' style="background-image: url('/images/background12.jpg');">
             <div class='container'>
               <!--<img src="/images/logofull.jpg">-->
        <p style="color:white; font-size: 20px; padding-top: 20px; padding-right: 20px; padding-left: 20px;">At Nidaan, our mission is to empower and advocate for our clients in their pursuit of fair and just insurance claims. We are committed to providing exceptional services and fighting tirelessly on behalf of our clients to ensure they receive the true claim they deserve. Our dedicated team of experts works diligently to navigate the complex insurance landscape, resolve disputes, and maximize claim settlements. With unwavering dedication and a client-centric approach, we strive to deliver transparency, integrity, and successful outcomes, bringing peace of mind to our valued clients during challenging times.</p>
@@ -137,6 +152,12 @@ $(document).ready(function () {
             {
               $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
               document.getElementById("login-menu").href="/logout.html"; 
+              $("#showonlogin").show();
+             
+            }
+            else
+            {
+              
             }
             
         },

@@ -65,9 +65,13 @@
       background-color: #343a40;
     }
 
-    .table-dark th,
+    .table-dark th
+    {
+      color: #fff;
+    }
     .table-dark td {
       color: #fff;
+      background-color: red;
     }
 
     .table-dark tbody tr.card-missing td {
@@ -104,6 +108,7 @@ div.dataTables_filter {
 <body>
 
   <div class='dashboard'>
+
     <div class="dashboard-nav">
       <header>
         <a href="#"class="brand-logo"> 
@@ -115,10 +120,28 @@ div.dataTables_filter {
           Home </a>
           <nav class="dashboard-nav-list"><a href="/paymentinfo.html" class="dashboard-nav-item"><i class="fas fa-inr"></i>
             Payment Info </a>
-        <div class="nav-item-divider"></div>
-        <a href="/login.html" class="dashboard-nav-item"><i class="fas fa-sign-in "></i> Login </a>
+
+            <div id="showonlogin" style="display: none;">
+              <div class='dashboard-nav-dropdown'>
+                 <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+                  <i class="fas fa-photo-video">
+                    </i>Card Menu</a>
+                  <div class='dashboard-nav-dropdown-menu'>
+                      <a href="/newcard.html" class="dashboard-nav-dropdown-item">Add Card</a>
+                      <a href="/viewpendingcards.html" class="dashboard-nav-dropdown-item">View Pending</a>
+                      <a href="/viewcards.html" class="dashboard-nav-dropdown-item">View Completed</a>
+                  </div>
+               </div>
+            </div>
+            
+        <div class="nav-item-divider">
+
+        </div>
+        <a id="login-menu"
+                  href="/login.html" class="dashboard-nav-item"><i class="fas  fa-sign-in "></i> Login </a>
       </nav>
-    </div>
+  </div>
+  
     <div class='dashboard-app'>
         <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
         <div class="container mt-5">

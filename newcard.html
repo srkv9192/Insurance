@@ -5,6 +5,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="css/menubar.css">
   <style>
 
     /* Chrome, Safari, Edge, Opera   Remove arrow buttons from number field*/
@@ -75,31 +78,42 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark " style="background-color: black;">
-    <div class="container">
-      <img src="/images/logo.png" class="navbar-brand" href="/"  width="100" height="100">
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="/dashboard.html" style="color: aqua;">Dashboard</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/login.html" style="color: aqua;">Login</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/newcase.html" style="color: aqua;">Newcase</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/viewdata.html" style="color: aqua;">View Case</a>
-          </li>
-        </ul>
+<div  class='dashboard'>
+  <div class="dashboard-nav">
+    <header>
+      <a href="#"class="brand-logo"> 
+        <img src="/images/logoround.png" class="navbar-brand" href="/" align="left" width="130" height="130">
+       </a>
+       <a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a>
+      </header>
+    <nav class="dashboard-nav-list"><a href="/" class="dashboard-nav-item"><i class="fas fa-home"></i>
+        Home </a>
+        <nav class="dashboard-nav-list"><a href="/paymentinfo.html" class="dashboard-nav-item"><i class="fas fa-inr"></i>
+          Payment Info </a>
+
+          <div id="showonlogin" style="display: none;">
+            <div class='dashboard-nav-dropdown'>
+               <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+                <i class="fas fa-photo-video">
+                  </i>Card Menu</a>
+                <div class='dashboard-nav-dropdown-menu'>
+                    <a href="/newcard.html" class="dashboard-nav-dropdown-item">Add Card</a>
+                    <a href="/viewpendingcards.html" class="dashboard-nav-dropdown-item">View Pending</a>
+                    <a href="/viewcards.html" class="dashboard-nav-dropdown-item">View Completed</a>
+                </div>
+             </div>
+          </div>
+          
+      <div class="nav-item-divider">
+
       </div>
-    </div>
-  </nav>
+      <a id="login-menu"
+                href="/login.html" class="dashboard-nav-item"><i class="fas  fa-sign-in "></i> Login </a>
+    </nav>
+</div>
+
+<div class='dashboard-app'>
+  <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
 
   <div class="container mt-5">
     <div class="row justify-content-center">
@@ -212,11 +226,36 @@
     </div>
   </div>
 
+</div>
+
+</div>
+
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js"></script>
   <script>
     $(document).ready(function () {
+
+      const mobileScreen = window.matchMedia("(max-width: 990px)");
+
+      $(".dashboard-nav-dropdown-toggle").click(function () {
+        $(this).closest(".dashboard-nav-dropdown")
+            .toggleClass("show")
+            .find(".dashboard-nav-dropdown")
+            .removeClass("show");
+        $(this).parent()
+            .siblings()
+            .removeClass("show");
+      });
+
+      $(".menu-toggle").click(function () {
+        if (mobileScreen.matches) {
+            $(".dashboard-nav").toggleClass("mobile-show");
+        } else {
+            $(".dashboard").toggleClass("dashboard-compact");
+        }
+      });
+
 
       // AJAX call on page load get manager details
       $.ajax({
