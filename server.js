@@ -102,6 +102,9 @@ const policyCardSchema = new mongoose.Schema({
   cpID: String,
   cpName: String,
   directCase: String,
+  inquiryDate: Date,
+  cardStartDate: Date,
+  cardEndDate: Date,
 });
 
 //third party admin details
@@ -164,7 +167,7 @@ app.post('/api/login', async(req, res) => {
   
 });
 
-app.get('api/logout', async(req, res) => {
+app.get('/api/logout', async(req, res) => {
   try{
     req.session.destroy()
     res.json({message : 'Old session removed'})
@@ -444,6 +447,7 @@ app.get("/api/getcpdetail", async(req, res) => {
 app.post("/api/save-policy", async (req, res) => {
   try{
     const refNumber= await getReferenceCount();
+    const inquirydate= new Date();
     if(refNumber == -1)
     {
       res.status(500).json({ error: 'Error saving new card data' });
@@ -467,10 +471,33 @@ app.post("/api/save-policy", async (req, res) => {
                   'cpID': req.body.cpID, 
                   'cpName': req.body.cpName,
                   'directCase' : req.body.directCase,
+                  'inquiryDate': inquirydate
                     });
     const savedData = newData.save();
     incrementReferenceCount();
     res.json({ message: 'success', referencenumber:refNumber,data: savedData });
+  }
+catch(err)
+{
+  console.error(err);
+  res.status(500).json({ error: 'Error saving new card data' });
+} 
+});
+
+
+app.post("/api/generatepolicycard", async (req, res) => {
+  try{
+    const refNumber= req.body.referenceNumber;
+    const cardnumber= await getCardCount();
+    if(cardnumber == -1)
+    {
+      res.status(500).json({ error: 'Error generating new card' });
+      return;
+    }
+    await updateCardDetails(refNumber, cardnumber );
+
+   await incrementCardCount();
+    res.json({ message: 'success', cardnumber:cardnumber });
   }
 catch(err)
 {
@@ -570,9 +597,9 @@ app.get("/api/getallpolicydetail", async(req, res) => {
   }
 };
 
- function incrementCardCount ()  {
+ async function incrementCardCount ()  {
   try{
-    const newData =   counterSchemaObject.findOneAndUpdate({searchId: "keywordforsearch"}, {$inc:{ cardNumberCount: 1}});
+    const newData = await  counterSchemaObject.findOneAndUpdate({searchId: "keywordforsearch"}, {$inc:{ cardNumberCount: 1}});
     //const savedData = newData.save();
     return newData.cardNumberCount;
   }
@@ -583,23 +610,56 @@ app.get("/api/getallpolicydetail", async(req, res) => {
   } 
 };
 
+async function updateCardDetails (refNumber, cardnumber)  {
+  try{
+    const cardstartdate= new Date();
+    const cardenddate= new Date() ;
+    cardenddate.setDate(cardstartdate.getDate() + 365);
+    const newData = await policyCardSchemaObject.findOneAndUpdate({referenceNumber: refNumber}, 
+      { cardStartDate: cardstartdate , cardEndDate: cardenddate, cardNumber: cardnumber}, {new : true});
+    return newData.cardNumber;
+  }
+  catch(err)
+  {
+    console.error(err);
+    return -1;
+  } 
+};
+
+app.get('/api/whoami',(req,res) => {
+  session=req.session;
+  if(session.userId && (session.userType == 'admin')){
+      res.json({message : 'admin', username : session.userName})
+  }
+  else if(session.userId && (session.userType == 'engineer')){
+      res.json({message : 'engineer', username : session.userName})
+  }
+  else if(session.userId && (session.userType == 'coordinator')){
+      res.json({message : 'coordinator', username : session.userName})
+  }
+  else
+     res.json({message : 'invalid'})
+})
+
 
 app.use(express.static('public'));
 
-app.get('/', (req, res) => res.sendfile(__dirname+'/index.html'))
+app.get('/', (req, res) => res.sendFile(__dirname+'/index.html'))
+app.get('/index.html', (req, res) => res.sendFile(__dirname+'/index.html'))
 
-app.get('/login.html', (req, res) => res.sendfile(__dirname+'/login.html'))
-app.get('/newcase.html', (req, res) => res.sendfile(__dirname+'/newcase.html'))
-app.get('/viewdata.html', (req, res) => res.sendfile(__dirname+'/viewdata.html'))
-app.get('/dashboard.html', (req, res) => res.sendfile(__dirname+'/dashboard.html'))
-app.get('/newcard.html', (req, res) => res.sendfile(__dirname+'/newcard.html'))
-app.get('/newcarddirect.html', (req, res) => res.sendfile(__dirname+'/newcarddirect.html'))
-app.get('/paymentinfo.html', (req, res) => res.sendfile(__dirname+'/paymentinfo.html'))
-app.get('/viewcards.html', (req, res) => res.sendfile(__dirname+'/viewcards.html'))
+app.get('/login.html', (req, res) => res.sendFile(__dirname+'/login.html'))
+app.get('/logout.html', (req, res) => res.sendFile(__dirname+'/logout.html'))
+app.get('/newcase.html', (req, res) => res.sendFile(__dirname+'/newcase.html'))
+app.get('/viewdata.html', (req, res) => res.sendFile(__dirname+'/viewdata.html'))
+app.get('/dashboard.html', (req, res) => res.sendFile(__dirname+'/dashboard.html'))
+app.get('/newcard.html', (req, res) => res.sendFile(__dirname+'/newcard.html'))
+app.get('/newcarddirect.html', (req, res) => res.sendFile(__dirname+'/newcarddirect.html'))
+app.get('/paymentinfo.html', (req, res) => res.sendFile(__dirname+'/paymentinfo.html'))
+app.get('/viewcards.html', (req, res) => res.sendFile(__dirname+'/viewcards.html'))
 
-app.get('/generatelegalpdf.html', (req, res) => res.sendfile(__dirname+'/generatelegalpdf.html'))
+app.get('/generatelegalpdf.html', (req, res) => res.sendFile(__dirname+'/generatelegalpdf.html'))
 
-app.get('/menubar.html', (req, res) => res.sendfile(__dirname+'/menubar.html'))
+app.get('/menubar.html', (req, res) => res.sendFile(__dirname+'/menubar.html'))
 
 app.listen(port, () => console.log(`Insurance app listening on port ${port}!`))
 

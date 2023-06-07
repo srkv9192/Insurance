@@ -30,7 +30,7 @@
               Payment Info </a>
 
           <div class="nav-item-divider"></div>
-          <a
+          <a id="login-menu"
                     href="/login.html" class="dashboard-nav-item"><i class="fas  fa-sign-in "></i> Login </a>
         </nav>
     </div>
@@ -125,6 +125,27 @@
   <script>
     const mobileScreen = window.matchMedia("(max-width: 990px)");
 $(document).ready(function () {
+
+  $.ajax({
+        url: '/api/whoami',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+            //alert(response.message)
+           
+            if(response.message !='invalid')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+            }
+            
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+
     $(".dashboard-nav-dropdown-toggle").click(function () {
         $(this).closest(".dashboard-nav-dropdown")
             .toggleClass("show")

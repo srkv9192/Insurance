@@ -100,9 +100,6 @@
               <div class="input-group">
                 <select class="form-control" id="manager-name-dropdown">
                   <option value="">None</option>
-                  <option value="Company 1">man 1</option>
-                  <option value="Company 2">man 2</option>
-                  <option value="Company 3">man 3</option>
                 </select>
               </div>
             </div>
@@ -112,9 +109,6 @@
               <div class="input-group">
                 <select class="form-control" id="cp-name-dropdown">
                   <option value="">None</option>
-                  <option value="Company 1">cp 1</option>
-                  <option value="Company 2">cp 2</option>
-                  <option value="Company 3">cp 3</option>
                 </select>
               </div>
             </div>
@@ -220,7 +214,7 @@
           const optionsSelect = $('#manager-name-dropdown');
           response.forEach(function (option) {
             optionsSelect.append($('<option>', {
-              value: option.managerName,
+              value: option.managerID,
               text: option.managerName
             }));
           });
@@ -239,7 +233,7 @@
           const optionsSelect = $('#cp-name-dropdown');
           response.forEach(function (option) {
             optionsSelect.append($('<option>', {
-              value: option.cpName,
+              value: option.cpID,
               text: option.cpName
             }));
           });
@@ -291,7 +285,7 @@
           tpaname =  $('#tpa-name-other').val()
         }
         else{
-          insurancecompany =  $('#tpa-name-dropdown').val()
+          tpaname =  $('#tpa-name-dropdown').val()
         }
         var policynumber = $('#policy-number').val();
         var policystartdate = $('#policy-start-date').val();
