@@ -11,6 +11,19 @@ const storage = multer.diskStorage({
   },
 });
 
+var nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: "nidaancard@gmail.com",
+    pass: "Nidaan@111",
+  },
+});
+
 const upload = multer({ storage: storage });
 const app = express()
 const port = process.env.PORT || 80
@@ -517,6 +530,19 @@ app.get("/api/getallpolicydetail", async(req, res) => {
   }
 });
 
+app.get("/api/sendcardemail", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    sendCompletionEmails();
+    res.json("Email sent");
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to send card email' });
+  }
+});
+
+
+
 
  async function getReferenceCount () {
   try {
@@ -668,70 +694,6 @@ app.listen(port, () => console.log(`Insurance app listening on port ${port}!`))
 
 //https://blog.logrocket.com/managing-pdfs-node-pdf-lib/
 // we can use pdf-lib instead of pdf-kit to modify an existing pdf
-
-/*
-const PDFDocument = require('pdfkit');
-const fs = require('fs');const doc = new PDFDocument({
-  layout: 'landscape',
-  size: 'A4',
-});
-
-
-
-doc.pipe(fs.createWriteStream('output2.pdf'));
-
-//doc.rect(0, 0, doc.page.width, doc.page.height).fill('#fff');
-
-
-const distanceMargin = 18;doc
-  .fillAndStroke('#0e8cc3')
-  .lineWidth(20)
-  .lineJoin('round')
-  .rect(
-    distanceMargin,
-    distanceMargin,
-    doc.page.width - distanceMargin * 2,
-    doc.page.height - distanceMargin * 2,
-  )
-  .stroke();
-
-
-
-  const maxWidth = 400;
-const maxHeight = 300;doc.image(
-  './public/images/logofull.jpg',
-  doc.page.width / 3.4 - maxWidth / 2,
-  60, 
-  {
-    fit: [maxWidth, maxHeight],
-    align: 'left',
-   }
-);
-
-doc.moveDown();
-doc.moveDown();
-doc.moveDown();
-doc.moveDown();
-doc
-  .font('Times-Roman')
-  .fontSize(16)
-  .fill('#021c27')
-  .text('79/A, Dravid Nagar, Ranjeet Hanuman Mandir', {
-    align: 'right',
-  }
-);
-
-doc.lineWidth(1);
-doc.lineCap('butt')
-   .moveTo(0, doc.page.width/4.5)
-   .lineTo(900, doc.page.width/4.5)
-   .stroke();
-
-
-doc.end();
-
-*/
-
 
 app.post("/api/getlegalpdf", async (req, res) => {
   try{
@@ -894,6 +856,34 @@ async function createPDF(req) {
   writeFileSync("Legal.pdf", await document.save());
 
   return true;
+}
+
+
+function sendCompletionEmails()
+{
+    
+  var mailOptions = {
+    from: 'nidaancard@gmail.com',
+    to: 'letscode4good@gmail.com',
+    subject: `Policy Card`,
+    text: `Please find the attached report- \n \n\ `
+    
+};
+
+//mailOptions["attachments"] = attachmentArray;
+
+transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+    //res.json({message : error})
+        console.log("could not send email" + error)
+    } else {
+        //res.json({message : 'emailsent'})
+        console.log("emailsent")
+    }
+});
+    
+      
+      
 }
 
 //createPDF().catch((err) => console.log(err));
