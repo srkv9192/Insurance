@@ -89,8 +89,16 @@
         </header>
       <nav class="dashboard-nav-list"><a href="/" class="dashboard-nav-item"><i class="fas fa-home"></i>
           Home </a>
-          <nav class="dashboard-nav-list"><a href="/paymentinfo.html" class="dashboard-nav-item"><i class="fas fa-inr"></i>
-            Payment Info </a>
+
+          <div id="hideonlogin">
+            <nav class="dashboard-nav-list"><a href="/newcarddirect.html" class="dashboard-nav-item"><i class="fas fa-inr"></i>
+              Buy Card </a>
+
+              <nav class="dashboard-nav-list"><a href="/paymentinfo.html" class="dashboard-nav-item"><i class="fas fa-inr"></i>
+                Payment Info </a>
+          </div>
+
+          
 
             <div id="showonlogin" style="display: none;">
               <div class='dashboard-nav-dropdown'>
@@ -116,8 +124,8 @@
         <div class="container mt-5">
           <div class="row justify-content-center">
             
-            <h1 class="container my-5 text-center">Bank Account Details</h1>
-            <div class="container my-5 text-center">
+            <h1 class="container my-2 text-center">Bank Account Details</h1>
+            <div class="container  text-center">
               <div class=" p-4 ">
                 
                 <div class="details mt-4" style = "font-size: large;">
@@ -160,6 +168,7 @@
               $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showonlogin").show();
+              $("#hideonlogin").hide();
              
             }
             else
