@@ -92,8 +92,22 @@
           <nav class="dashboard-nav-list"><a href="/paymentinfo.html" class="dashboard-nav-item"><i class="fas fa-inr"></i>
             Payment Info </a>
 
+            <div id="showonlogin" style="display: none;">
+              <div class='dashboard-nav-dropdown'>
+                 <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+                  <i class="fas fa-photo-video">
+                    </i>Menu</a>
+                  <div class='dashboard-nav-dropdown-menu'>
+                      <a href="/newcard.html" class="dashboard-nav-dropdown-item">Add Card</a>
+                      <a href="/viewpendingcards.html" class="dashboard-nav-dropdown-item">View Pending</a>
+                      <a href="/viewcards.html" class="dashboard-nav-dropdown-item">View Completed</a>
+                      <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
+                  </div>
+               </div>
+            </div>
+
         <div class="nav-item-divider"></div>
-        <a
+        <a  id="login-menu"
                   href="/login.html" class="dashboard-nav-item"><i class="fas  fa-sign-in "></i> Login </a>
       </nav>
   </div>
@@ -133,6 +147,33 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     $(document).ready(function () {
+
+      $.ajax({
+        url: '/api/whoami',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+            //alert(response.message)
+           
+            if(response.message !='invalid')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showonlogin").show();
+             
+            }
+            else
+            {
+              
+            }
+            
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+
       const mobileScreen = window.matchMedia("(max-width: 990px )");
 
           $(".dashboard-nav-dropdown-toggle").click(function () {

@@ -95,11 +95,12 @@
             <div class='dashboard-nav-dropdown'>
                <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
                 <i class="fas fa-photo-video">
-                  </i>Card Menu</a>
+                  </i>Menu</a>
                 <div class='dashboard-nav-dropdown-menu'>
                     <a href="/newcard.html" class="dashboard-nav-dropdown-item">Add Card</a>
                     <a href="/viewpendingcards.html" class="dashboard-nav-dropdown-item">View Pending</a>
                     <a href="/viewcards.html" class="dashboard-nav-dropdown-item">View Completed</a>
+                    <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
                 </div>
              </div>
           </div>
@@ -235,6 +236,32 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js"></script>
   <script>
     $(document).ready(function () {
+
+      $.ajax({
+        url: '/api/whoami',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+            //alert(response.message)
+           
+            if(response.message !='invalid')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showonlogin").show();
+             
+            }
+            else
+            {
+              
+            }
+            
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
 
       const mobileScreen = window.matchMedia("(max-width: 990px)");
 

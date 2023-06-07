@@ -79,102 +79,106 @@
           Home </a>
           <nav class="dashboard-nav-list"><a href="/paymentinfo.html" class="dashboard-nav-item"><i class="fas fa-inr"></i>
             Payment Info </a>
+
+            <div id="showonlogin" style="display: none;">
+              <div class='dashboard-nav-dropdown'>
+                 <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+                  <i class="fas fa-photo-video">
+                    </i>Menu</a>
+                  <div class='dashboard-nav-dropdown-menu'>
+                      <a href="/newcard.html" class="dashboard-nav-dropdown-item">Add Card</a>
+                      <a href="/viewpendingcards.html" class="dashboard-nav-dropdown-item">View Pending</a>
+                      <a href="/viewcards.html" class="dashboard-nav-dropdown-item">View Completed</a>
+                      <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
+                  </div>
+               </div>
+            </div>
+          
         <div class="nav-item-divider"></div>
-        <a
+        <a  id="login-menu"
                   href="/login.html" class="dashboard-nav-item"><i class="fas  fa-sign-in "></i> Login </a>
       </nav>
   </div>
 
+  <div class='dashboard-app'>
+    <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
 
-<!--  
-  clientName:VIrat Kohli
-clientAddress:500 delhi india nepal pak
-clientPhone:7564756575
-claimNumber:vsvsdvsdbvhbsd435
-insuranceCompanyName:Life insurance corporation
-processingFee:1800
-consultationCharge:30
-claimAmount:250000
-chequeAmount:70000
-chequeNumber:55443
-bankName:HDFC bank
-witnessName:Ashwin kaushal
--->
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-lg-6">
+          <h2 class="text-center mb-4">Legal PDF Generation Form</h2>
+          <form id="loginForm">
+            <div class="row mb-3">
+              <div class="col-sm-6">
+                <label for="client-name" class="form-label">Client Name</label>
+                <input type="text" class="form-control" id="client-name">
+              </div>
+              <div class="col-sm-6">
+                <label for="client-address" class="form-label">Client Address</label>
+                <input type="text" class="form-control" id="client-address">
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-6">
+                <label for="client-phone" class="form-label">Customer Phone</label>
+                <input type="tel" class="form-control" id="client-phone">
+              </div>
+              <div class="col-sm-6">
+                <label for="claim-number" class="form-label">Claim Number</label>
+                <input type="text" class="form-control" id="claim-number">
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-6">
+                <label for="insurance-company-name" class="form-label">Insurance Company Name</label>
+                <input type="text" class="form-control" id="insurance-company-name">
+              </div>
+              <div class="col-sm-6">
+                <label for="witness-name" class="form-label">Witness Name</label>
+                <input type="text" class="form-control" id="witness-name">
+              </div>
 
-
-  <div class="container mt-5">
-    <div class="row justify-content-center">
-      <div class="col-lg-6">
-        <h2 class="text-center mb-4">Legal PDF Generation Form</h2>
-        <form id="loginForm">
-          <div class="row mb-3">
-            <div class="col-sm-6">
-              <label for="client-name" class="form-label">Client Name</label>
-              <input type="text" class="form-control" id="client-name">
             </div>
-            <div class="col-sm-6">
-              <label for="client-address" class="form-label">Client Address</label>
-              <input type="text" class="form-control" id="client-address">
+            <div class="row mb-3">
+              <div class="col-sm-6">
+                <label for="consultation-charge" class="form-label">Consultation Charge</label>
+                <input type="number" class="form-control" id="consultation-charge">
+              </div>
+              <div class="col-sm-6">
+                <label for="processing-fee" class="form-label">Processing Fee</label>
+                <input type="text" class="form-control" id="processing-fee">
+              </div>
+              </div>
+            <div class="row mb-3">
+              <div class="col-sm-6">
+                <label for="total-claim-amount" class="form-label">Total Claim Amount</label>
+                <input type="number" class="form-control" id="total-claim-amount">
+              </div>
+              <div class="col-sm-6">
+                <label for="cheque-amount" class="form-label">Cheque Amount</label>
+                <input type="number" class="form-control" id="cheque-amount">
+              </div>
             </div>
-          </div>
-          <div class="row mb-3">
-            <div class="col-sm-6">
-              <label for="client-phone" class="form-label">Customer Phone</label>
-              <input type="tel" class="form-control" id="client-phone">
+            <div class="row mb-3">
+              <div class="col-sm-6">
+                <label for="cheque-number" class="form-label">Cheque Number</label>
+                <input type="text" class="form-control" id="cheque-number">
+              </div>
+              <div class="col-sm-6">
+                <label for="bank-name" class="form-label">Bank Name</label>
+                <input type="text" class="form-control" id="bank-name">
+              </div>
             </div>
-            <div class="col-sm-6">
-              <label for="claim-number" class="form-label">Claim Number</label>
-              <input type="text" class="form-control" id="claim-number">
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary">Submit</button>
             </div>
-          </div>
-          <div class="row mb-3">
-            <div class="col-sm-6">
-              <label for="insurance-company-name" class="form-label">Insurance Company Name</label>
-              <input type="text" class="form-control" id="insurance-company-name">
-            </div>
-            <div class="col-sm-6">
-              <label for="witness-name" class="form-label">Witness Name</label>
-              <input type="text" class="form-control" id="witness-name">
-            </div>
-
-          </div>
-          <div class="row mb-3">
-            <div class="col-sm-6">
-              <label for="consultation-charge" class="form-label">Consultation Charge</label>
-              <input type="number" class="form-control" id="consultation-charge">
-            </div>
-            <div class="col-sm-6">
-              <label for="processing-fee" class="form-label">Processing Fee</label>
-              <input type="text" class="form-control" id="processing-fee">
-            </div>
-            </div>
-          <div class="row mb-3">
-            <div class="col-sm-6">
-              <label for="total-claim-amount" class="form-label">Total Claim Amount</label>
-              <input type="number" class="form-control" id="total-claim-amount">
-            </div>
-            <div class="col-sm-6">
-              <label for="cheque-amount" class="form-label">Cheque Amount</label>
-              <input type="number" class="form-control" id="cheque-amount">
-            </div>
-          </div>
-          <div class="row mb-3">
-            <div class="col-sm-6">
-              <label for="cheque-number" class="form-label">Cheque Number</label>
-              <input type="text" class="form-control" id="cheque-number">
-            </div>
-            <div class="col-sm-6">
-              <label for="bank-name" class="form-label">Bank Name</label>
-              <input type="text" class="form-control" id="bank-name">
-            </div>
-          </div>
-          <div class="text-center">
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
-  </div>
+
+  </div> 
+
 </div>
 
 
@@ -184,6 +188,34 @@ witnessName:Ashwin kaushal
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     $(document).ready(function () {
+
+
+      $.ajax({
+        url: '/api/whoami',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+            //alert(response.message)
+           
+            if(response.message !='invalid')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showonlogin").show();
+             
+            }
+            else
+            {
+              
+            }
+            
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+
       const mobileScreen = window.matchMedia("(max-width: 990px )");
 
           $(".dashboard-nav-dropdown-toggle").click(function () {
