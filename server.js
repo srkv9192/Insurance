@@ -724,6 +724,7 @@ async function createPDF(req) {
   const document = await PDFDocument.load(readFileSync("./agreementtemplate4.pdf"));
 
   const courierBoldFont = await document.embedFont(StandardFonts.Courier);
+  const timesBoldFont = await document.embedFont(StandardFonts.TimesRomanBold);
   const firstPage = document.getPage(0);
 
   console.log( firstPage.getHeight() + " " +  firstPage.getWidth());
@@ -738,21 +739,21 @@ async function createPDF(req) {
 
   firstPage.moveTo(240, 617);
   firstPage.drawText(req.body.clientName, {
-    font: courierBoldFont,
+    font: timesBoldFont,
     size: 12,
   });
 
 //name second time
   firstPage.moveTo(280, 582);
   firstPage.drawText(req.body.clientName, {
-    font: courierBoldFont,
+    font: timesBoldFont,
     size: 12,
   });
 
   // claim no. and company name-
   firstPage.moveTo(150, 552);
   firstPage.drawText(req.body.claimNumber + " , " + req.body.insuranceCompanyName , {
-    font: courierBoldFont,
+    font: timesBoldFont,
     size: 12,
   });
 
@@ -760,42 +761,42 @@ async function createPDF(req) {
     //Processing fees
     firstPage.moveTo(285, 441);
     firstPage.drawText("Rs."+ req.body.processingFee, {
-      font: courierBoldFont,
+      font: timesBoldFont,
       size: 12,
     });
 
         //consultation percentage fees
         firstPage.moveTo(515, 441);
         firstPage.drawText(req.body.consultationCharge + "%", {
-          font: courierBoldFont,
+          font: timesBoldFont,
           size: 12,
         });
 
           //Total claimed amount
           firstPage.moveTo(180, 425);
           firstPage.drawText("Rs."+ req.body.claimAmount, {
-            font: courierBoldFont,
+            font: timesBoldFont,
             size: 12,
           });
 
          //cheque amount
          firstPage.moveTo(320, 364);
           firstPage.drawText("Rs."+ req.body.chequeAmount, {
-          font: courierBoldFont,
+          font: timesBoldFont,
          size: 12,
           });
 
           //cheque number
          firstPage.moveTo(460, 364);
            firstPage.drawText(req.body.chequeNumber, {
-         font: courierBoldFont,
+         font: timesBoldFont,
           size: 12,
           });
   
           //Bank name 
           firstPage.moveTo(130, 348);
           firstPage.drawText(req.body.bankName, {
-        font: courierBoldFont,
+        font: timesBoldFont,
          size: 12,
          });
 
@@ -805,19 +806,19 @@ async function createPDF(req) {
          var agreementdate = (new Date());
          firstPage.moveTo(235, 240);
          firstPage.drawText(agreementdate.getDate().toString(), {
-           font: courierBoldFont,
+           font: timesBoldFont,
            size: 12,
          });
 
          const monthName = ["January","February","March","April","May","June","July","August","September","October","November","December"];
          firstPage.moveTo(320, 240);
          firstPage.drawText((monthName[agreementdate.getMonth()] ), {
-          font: courierBoldFont,
+          font: timesBoldFont,
           size: 12,
         });
         firstPage.moveTo(350, 240);
         firstPage.drawText(agreementdate.getFullYear().toString(), {
-          font: courierBoldFont,
+          font: timesBoldFont,
           size: 12,
         });
 
@@ -825,28 +826,28 @@ async function createPDF(req) {
           //name of first party 
           firstPage.moveTo(110, 175);
           firstPage.drawText(req.body.clientName, {
-        font: courierBoldFont,
+        font: timesBoldFont,
          size: 12,
          });
 
           //Address first party 
           firstPage.moveTo(115, 145);
           firstPage.drawText(req.body.clientAddress, {
-        font: courierBoldFont,
+        font: timesBoldFont,
          size: 12,
          });
 
           //Mobile first party 
           firstPage.moveTo(130, 115);
           firstPage.drawText(req.body.clientPhone, {
-        font: courierBoldFont,
+        font: timesBoldFont,
          size: 12,
          });
 
           //witness name
           firstPage.moveTo(405, 176);
           firstPage.drawText(req.body.witnessName, {
-        font: courierBoldFont,
+        font: timesBoldFont,
          size: 12,
          });
 
