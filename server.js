@@ -14,14 +14,18 @@ const storage = multer.diskStorage({
 var nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true,
   auth: {
-    user: "nidaancard@gmail.com",
-    pass: "Nidaan@111",
-  },
+      type: 'OAuth2',
+      user: 'Nidaancard@gmail.com',
+      clientId: "",
+      clientSecret: "",
+      refreshToken: "",
+      accessToken: "",
+      expires: 1484314697598
+  }
 });
 
 const upload = multer({ storage: storage });

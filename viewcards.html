@@ -195,6 +195,19 @@ div.dataTables_filter {
       function sendCard(referenceNumber) {
         // Code to send card via email
         alert("Sending card via email for reference number: " + referenceNumber);
+
+            $.ajax({
+            url: '/api/sendcardemail',
+            type: 'GET',
+            success: function (response) {
+              // Populate the options in the select element
+                alert(response)
+                
+            },
+            error: function (error) {
+              console.error('Error:', error);
+            }
+          });
       }
 
     $(document).ready(function () {
