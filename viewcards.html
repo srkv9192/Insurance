@@ -159,14 +159,14 @@ div.dataTables_filter {
                 <table id ="dataTable" class="table table-dark table-bordered">
                   <thead>
                     <tr>
-                      <th>Reference Number</th>
                       <th>Card Number</th>
                       <th>Customer Name</th>
                       <th>Customer Phone</th>
                       <th>Customer Email</th>
                       <th>Insurance Company</th>
-                      <th>TPA Name</th>
                       <th>Policy Number</th>
+                      <th>Start Date</th>
+                      <th>End date</th>
                       <th>Action</th>
                     </tr>
                   </thead>
@@ -198,7 +198,7 @@ div.dataTables_filter {
 
             $.ajax({
             url: '/api/sendcardemail',
-            type: 'GET',
+            type: 'POST',
             success: function (response) {
               // Populate the options in the select element
                 alert(response)
@@ -270,7 +270,7 @@ div.dataTables_filter {
       
        // AJAX call on page load get manager details
        $.ajax({
-        url: '/api/getallpolicydetail',
+        url: '/api/getcompletedpolicydetail',
         type: 'GET',
         success: function (response) {
           // Populate the options in the select element
@@ -291,14 +291,14 @@ div.dataTables_filter {
             var cardno= data[i].cardNumber
             // You could also use an ajax property on the data table initialization
             $('#dataTable').dataTable().fnAddData( [
-              data[i].referenceNumber,
               data[i].cardNumber,
               data[i].customerName,
               data[i].customerPhone,
               data[i].customerEmail,
               data[i].insuranceCompany,
-              data[i].tpaName,
               data[i].policyNumber,
+              data[i].cardStartDate,
+              data[i].cardEndDate,
               `<button class="btn btn-primary btn-sm" onclick="sendCard(${cardno})">Send Card</button>`
             ]);
            

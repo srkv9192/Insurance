@@ -182,15 +182,36 @@ div.dataTables_filter {
   <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
   <script>
 
-function generateCard(referenceNumber) {
+function generateCard(referencenumber) {
         // Code to generate card
-        alert("Generating card for reference number: " + referenceNumber);
+       // alert("Generating card for reference number: " + referencenumber);
+
+        $.ajax({
+          url: '/api/generatepolicycard',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          data: {
+            referenceNumber: referencenumber, 
+          },
+          success: function (response) {
+            if(response.message == "success")
+              {
+                
+                alert("Card number- " + response.cardnumber)
+                window.location.reload();
+              }
+              else{
+                alert(response.message)
+              }
+          },
+          error: function (error) {
+            alert("Card Number generation failed");
+            // Display an error message to the user
+          }
+        });
+        
       }
 
-      function sendCard(referenceNumber) {
-        // Code to send card via email
-        alert("Sending card via email for reference number: " + referenceNumber);
-      }
       
     $(document).ready(function () {
 
@@ -281,7 +302,7 @@ function generateCard(referenceNumber) {
               data[i].insuranceCompany,
               data[i].tpaName,
               data[i].policyNumber,
-              `<button class="btn btn-primary btn-sm" onclick="sendCard(${rfno})">Generate Card</button>`
+              `<button class="btn btn-primary btn-sm" onclick="generateCard(${rfno})">Generate Card</button>`
             ]);
           }
         }

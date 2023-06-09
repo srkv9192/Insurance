@@ -512,10 +512,11 @@ app.post("/api/generatepolicycard", async (req, res) => {
       res.status(500).json({ error: 'Error generating new card' });
       return;
     }
-    await updateCardDetails(refNumber, cardnumber );
+    cardnumberstring = "CS_" + cardnumber
+    await updateCardDetails(refNumber, cardnumberstring );
 
    await incrementCardCount();
-    res.json({ message: 'success', cardnumber:cardnumber });
+    res.json({ message: 'success', cardnumber:cardnumberstring });
   }
 catch(err)
 {
@@ -546,18 +547,28 @@ app.get("/api/getpendingpolicydetail", async(req, res) => {
   }
 });
 
-app.get("/api/sendcardemail", async(req, res) => {
+app.get("/api/getcompletedpolicydetail", async(req, res) => {
   try {
     // Retrieve all tpa list from database
-    sendCompletionEmails();
+    const users = await  policyCardSchemaObject.find({cardNumber : {"$exists" : true, "$ne" : ""}});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get tpa details' });
+  }
+});
+
+app.post("/api/sendcardemail", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    createCardPDF(req);
+    //sendCompletionEmails();
     res.json("Email sent");
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to send card email' });
   }
 });
-
-
 
 
  async function getReferenceCount () {
@@ -872,6 +883,56 @@ async function createPDF(req) {
 
 
   writeFileSync("Legal.pdf", await document.save());
+
+  return true;
+}
+
+async function createCardPDF(req) {
+  const document = await PDFDocument.load(readFileSync("./cardtemplate.pdf"));
+
+  const courierBoldFont = await document.embedFont(StandardFonts.Courier);
+  const timesBoldFont = await document.embedFont(StandardFonts.TimesRomanBold);
+  const firstPage = document.getPage(0);
+
+  console.log( firstPage.getHeight() + " " +  firstPage.getWidth());
+
+
+  firstPage.moveTo(120, 482);
+  firstPage.drawText(req.body.customerName, {
+    font: timesBoldFont,
+    size: 20,
+  });
+
+
+//name second time
+  firstPage.moveTo(150, 382);
+  firstPage.drawText(req.body.cardNumber, {
+    font: timesBoldFont,
+    size: 20,
+  });
+
+  // claim no. and company name-
+  firstPage.moveTo(310, 282);
+  firstPage.drawText( req.body.insuranceCompany , {
+    font: timesBoldFont,
+    size: 20,
+  });
+
+  // Validity start date
+  firstPage.moveTo(240, 188);
+  firstPage.drawText( req.body.cardStartDate , {
+    font: timesBoldFont,
+    size: 20,
+  });
+
+  // Validity end date
+  firstPage.moveTo(430, 188);
+  firstPage.drawText( req.body.cardEndDate , {
+    font: timesBoldFont,
+    size: 20,
+  });
+
+  writeFileSync("CardNew.pdf", await document.save());
 
   return true;
 }
