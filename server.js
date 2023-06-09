@@ -570,6 +570,32 @@ app.post("/api/sendcardemail", async(req, res) => {
   }
 });
 
+app.post("/api/downloadcard", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const docs = await policyCardSchemaObject.findOne({cardNumber: req.body.cardNumber});
+    if (!docs) {
+      //res.json({message : 'Card number not found, Please try again with a valid number'})
+      //console.error(error);
+      res.status(500).json({ error: 'Invalid card number.' });
+    }
+    else
+    {
+      console.log(docs);
+        const response = await downloadCardPDF(docs);
+        var fileName = 'CardNew.pdf';
+        console.log(response);
+        res.set('Content-Type', 'application/pdf');
+        res.set('Content-Disposition', 'attachment; filename="' + fileName + '"');
+        res.download("./CardNew.pdf");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to download card.' });
+  }
+});
+
+
 
  async function getReferenceCount () {
   try {
@@ -712,6 +738,7 @@ app.get('/viewcards.html', (req, res) => res.sendFile(__dirname+'/viewcards.html
 app.get('/viewpendingcards.html', (req, res) => res.sendFile(__dirname+'/viewpendingcards.html'))
 
 app.get('/generatelegalpdf.html', (req, res) => res.sendFile(__dirname+'/generatelegalpdf.html'))
+app.get('/generatecardpdf.html', (req, res) => res.sendFile(__dirname+'/generatecardpdf.html'))
 
 app.get('/menubar.html', (req, res) => res.sendFile(__dirname+'/menubar.html'))
 
@@ -903,7 +930,6 @@ async function createCardPDF(req) {
     size: 20,
   });
 
-
 //name second time
   firstPage.moveTo(150, 382);
   firstPage.drawText(req.body.cardNumber, {
@@ -928,6 +954,56 @@ async function createCardPDF(req) {
   // Validity end date
   firstPage.moveTo(430, 188);
   firstPage.drawText( req.body.cardEndDate , {
+    font: timesBoldFont,
+    size: 20,
+  });
+
+  writeFileSync("CardNew.pdf", await document.save());
+
+  return true;
+}
+
+
+async function downloadCardPDF(req) {
+  const document = await PDFDocument.load(readFileSync("./cardtemplate.pdf"));
+
+  const courierBoldFont = await document.embedFont(StandardFonts.Courier);
+  const timesBoldFont = await document.embedFont(StandardFonts.TimesRomanBold);
+  const firstPage = document.getPage(0);
+
+  console.log( firstPage.getHeight() + " " +  firstPage.getWidth());
+
+
+  firstPage.moveTo(120, 482);
+  firstPage.drawText(req.customerName, {
+    font: timesBoldFont,
+    size: 20,
+  });
+
+//name second time
+  firstPage.moveTo(150, 382);
+  firstPage.drawText(req.cardNumber, {
+    font: timesBoldFont,
+    size: 20,
+  });
+
+  // claim no. and company name-
+  firstPage.moveTo(310, 282);
+  firstPage.drawText( req.insuranceCompany , {
+    font: timesBoldFont,
+    size: 20,
+  });
+
+  // Validity start date
+  firstPage.moveTo(240, 188);
+  firstPage.drawText( req.cardStartDate.toUTCString() , {
+    font: timesBoldFont,
+    size: 20,
+  });
+
+  // Validity end date
+  firstPage.moveTo(430, 188);
+  firstPage.drawText( req.cardEndDate.toUTCString() , {
     font: timesBoldFont,
     size: 20,
   });
