@@ -381,6 +381,13 @@ h1, .h1 {
     z-index: 1000;
 }
 
+.frame {
+    border: 1px solid #ced4da;
+    padding: 20px;
+    border-radius: 5px;
+    background-color: #343a40;
+  }
+
 .nav-item-divider {
     height: 1px;
     margin: 1rem 0;
