@@ -135,6 +135,31 @@
               <div class="frame">
                   <form id="newpolicyform">
                     <div class="row mb-3">
+
+                      <div class="col-sm-6">
+                        <label for="insurance-company" class="form-label">Insurance Company Name</label>
+                        <div class="input-group">
+                          <select class="form-control" id="insurance-company-dropdown" required>
+                            <option value="">None</option>
+                            <option value="Other">Other</option>
+                          </select>
+                          <input type="text" class="form-control" id="insurance-company-other" placeholder="Enter other insurance company name" style="display: none;">
+                        </div>
+                      </div>
+      
+                      <div class="col-sm-6">
+                        <label for="tpa-name" class="form-label">TPA Name</label>
+                        <div class="input-group">
+                          <select class="form-control" id="tpa-name-dropdown" required>
+                            <option value="">None</option>
+                            <option value="Other">Other</option>
+                          </select>
+                          <input type="text" class="form-control" id="tpa-name-other" placeholder="Enter other TPA name" style="display: none;">
+                        </div>
+                      </div>
+      
+                    </div>
+                    <div class="row mb-3">
                       <div class="col-sm-6">
                         <label for="customer-name" class="form-label">Customer Name</label>
                         <input type="text" class="form-control" id="customer-name" required>
@@ -154,42 +179,17 @@
                         <input type="email" class="form-control" id="customer-email" required>
                       </div>
                     </div>
+
                     <div class="row mb-3">
-          
-                      <div class="col-sm-6">
-                        <label for="insurance-company" class="form-label">Insurance Company Name</label>
-                        <div class="input-group">
-                          <select class="form-control" id="insurance-company-dropdown" required>
-                            <option value="Company 1">Company 1</option>
-                            <option value="Company 2">Company 2</option>
-                            <option value="Company 3">Company 3</option>
-                            <option value="Other">Other</option>
-                          </select>
-                          <input type="text" class="form-control" id="insurance-company-other" placeholder="Enter other insurance company name" style="display: none;">
-                        </div>
-                      </div>
-          
-                      <div class="col-sm-6">
-                        <label for="policy-dependents" class="form-label">Policy Dependents</label>
-                        <input type="text" class="form-control" id="policy-dependents" placeholder="Enter policy dependents (comma-separated)" required>
-                      </div>
-                    </div>
-                    <div class="row mb-3">
-                      <div class="col-sm-6">
-                        <label for="tpa-name" class="form-label">TPA Name</label>
-                        <div class="input-group">
-                          <select class="form-control" id="tpa-name-dropdown" required>
-                            <option value="TPA 1">TPA 1</option>
-                            <option value="TPA 2">TPA 2</option>
-                            <option value="TPA 3">TPA 3</option>
-                            <option value="Other">Other</option>
-                          </select>
-                          <input type="text" class="form-control" id="tpa-name-other" placeholder="Enter other TPA name" style="display: none;">
-                        </div>
-                      </div>
+      
                       <div class="col-sm-6">
                         <label for="policy-number" class="form-label">Policy Number</label>
                         <input type="text" class="form-control" id="policy-number" required>
+                      </div>
+      
+                      <div class="col-sm-6">
+                        <label for="policy-dependents" class="form-label">Policy Dependents</label>
+                        <input type="text" class="form-control" id="policy-dependents" placeholder="Enter policy dependents (comma-separated)" required>
                       </div>
                     </div>
                     <div class="row mb-3">
@@ -255,6 +255,42 @@
         }
       });
 
+                  // AJAX call on page load get tpa details
+                  $.ajax({
+        url: '/api/gettpadetail',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          const optionsSelect = $('#tpa-name-dropdown');
+          response.forEach(function (option) {
+            optionsSelect.append($('<option>', {
+              value: option.tpaName,
+              text: option.tpaName
+            }));
+          });
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+      $.ajax({
+        url: '/api/getinsurancecompany',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          const optionsSelect = $('#insurance-company-dropdown');
+          response.forEach(function (option) {
+            optionsSelect.append($('<option>', {
+              value: option.companyName,
+              text: option.companyName
+            }));
+          });
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
 
       const mobileScreen = window.matchMedia("(max-width: 990px)");
 
