@@ -89,7 +89,7 @@
 
 
             <div id="showonlogin" style="display: none;">
-              <div class='dashboard-nav-dropdown'>
+              <div class='dashboard-nav-dropdown show'>
                  <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
                   <i class="fas fa-photo-video">
                     </i>Menu</a>
@@ -98,6 +98,7 @@
                       <a href="/viewpendingcards.html" class="dashboard-nav-dropdown-item">View Pending</a>
                       <a href="/viewcards.html" class="dashboard-nav-dropdown-item">View Completed</a>
                       <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
+                      <a href="/generatecardpdf.html" class="dashboard-nav-dropdown-item">Download Card</a>
                   </div>
                </div>
             </div>
@@ -111,76 +112,78 @@
   <div class='dashboard-app'>
     <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
 
-    <div class="container mt-5">
-      <div class="row justify-content-center">
-        <div class="col-lg-6">
-          <h2 class="text-center mb-4">Legal PDF Generation Form</h2>
-          <form id="loginForm">
-            <div class="row mb-3">
-              <div class="col-sm-6">
-                <label for="client-name" class="form-label">Client Name</label>
-                <input type="text" class="form-control" id="client-name">
+    <div class='dashboard-content' style="background-image: url('/images/background18.jpg');">
+      <div class="container mt-5">
+        <div class="row justify-content-center">
+          <div class="col-lg-6">
+            <h2 class="text-center mb-4">Legal PDF Generation Form</h2>
+            <form id="loginForm">
+              <div class="row mb-3">
+                <div class="col-sm-6">
+                  <label for="client-name" class="form-label">Client Name</label>
+                  <input type="text" class="form-control" id="client-name">
+                </div>
+                <div class="col-sm-6">
+                  <label for="client-address" class="form-label">Client Address</label>
+                  <input type="text" class="form-control" id="client-address">
+                </div>
               </div>
-              <div class="col-sm-6">
-                <label for="client-address" class="form-label">Client Address</label>
-                <input type="text" class="form-control" id="client-address">
+              <div class="row mb-3">
+                <div class="col-sm-6">
+                  <label for="client-phone" class="form-label">Customer Phone</label>
+                  <input type="tel" class="form-control" id="client-phone">
+                </div>
+                <div class="col-sm-6">
+                  <label for="claim-number" class="form-label">Claim Number</label>
+                  <input type="text" class="form-control" id="claim-number">
+                </div>
               </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col-sm-6">
-                <label for="client-phone" class="form-label">Customer Phone</label>
-                <input type="tel" class="form-control" id="client-phone">
-              </div>
-              <div class="col-sm-6">
-                <label for="claim-number" class="form-label">Claim Number</label>
-                <input type="text" class="form-control" id="claim-number">
-              </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col-sm-6">
-                <label for="insurance-company-name" class="form-label">Insurance Company Name</label>
-                <input type="text" class="form-control" id="insurance-company-name">
-              </div>
-              <div class="col-sm-6">
-                <label for="witness-name" class="form-label">Witness Name</label>
-                <input type="text" class="form-control" id="witness-name">
-              </div>
+              <div class="row mb-3">
+                <div class="col-sm-6">
+                  <label for="insurance-company-name" class="form-label">Insurance Company Name</label>
+                  <input type="text" class="form-control" id="insurance-company-name">
+                </div>
+                <div class="col-sm-6">
+                  <label for="witness-name" class="form-label">Witness Name</label>
+                  <input type="text" class="form-control" id="witness-name">
+                </div>
 
-            </div>
-            <div class="row mb-3">
-              <div class="col-sm-6">
-                <label for="consultation-charge" class="form-label">Consultation Charge</label>
-                <input type="number" class="form-control" id="consultation-charge">
               </div>
-              <div class="col-sm-6">
-                <label for="processing-fee" class="form-label">Processing Fee</label>
-                <input type="text" class="form-control" id="processing-fee">
+              <div class="row mb-3">
+                <div class="col-sm-6">
+                  <label for="consultation-charge" class="form-label">Consultation Charge</label>
+                  <input type="number" class="form-control" id="consultation-charge">
+                </div>
+                <div class="col-sm-6">
+                  <label for="processing-fee" class="form-label">Processing Fee</label>
+                  <input type="text" class="form-control" id="processing-fee">
+                </div>
+                </div>
+              <div class="row mb-3">
+                <div class="col-sm-6">
+                  <label for="total-claim-amount" class="form-label">Total Claim Amount</label>
+                  <input type="number" class="form-control" id="total-claim-amount">
+                </div>
+                <div class="col-sm-6">
+                  <label for="cheque-amount" class="form-label">Cheque Amount</label>
+                  <input type="number" class="form-control" id="cheque-amount">
+                </div>
               </div>
+              <div class="row mb-3">
+                <div class="col-sm-6">
+                  <label for="cheque-number" class="form-label">Cheque Number</label>
+                  <input type="text" class="form-control" id="cheque-number">
+                </div>
+                <div class="col-sm-6">
+                  <label for="bank-name" class="form-label">Bank Name</label>
+                  <input type="text" class="form-control" id="bank-name">
+                </div>
               </div>
-            <div class="row mb-3">
-              <div class="col-sm-6">
-                <label for="total-claim-amount" class="form-label">Total Claim Amount</label>
-                <input type="number" class="form-control" id="total-claim-amount">
+              <div class="text-center">
+                <button type="submit" class="btn btn-primary">Submit</button>
               </div>
-              <div class="col-sm-6">
-                <label for="cheque-amount" class="form-label">Cheque Amount</label>
-                <input type="number" class="form-control" id="cheque-amount">
-              </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col-sm-6">
-                <label for="cheque-number" class="form-label">Cheque Number</label>
-                <input type="text" class="form-control" id="cheque-number">
-              </div>
-              <div class="col-sm-6">
-                <label for="bank-name" class="form-label">Bank Name</label>
-                <input type="text" class="form-control" id="bank-name">
-              </div>
-            </div>
-            <div class="text-center">
-              <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
     </div>

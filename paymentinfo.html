@@ -101,7 +101,7 @@
           
 
             <div id="showonlogin" style="display: none;">
-              <div class='dashboard-nav-dropdown'>
+              <div class='dashboard-nav-dropdown show'>
                  <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
                   <i class="fas fa-photo-video">
                     </i>Menu</a>
@@ -110,6 +110,7 @@
                       <a href="/viewpendingcards.html" class="dashboard-nav-dropdown-item">View Pending</a>
                       <a href="/viewcards.html" class="dashboard-nav-dropdown-item">View Completed</a>
                       <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
+                      <a href="/generatecardpdf.html" class="dashboard-nav-dropdown-item">Download Card</a>
                   </div>
                </div>
             </div>
@@ -121,30 +122,33 @@
   </div>
     <div class='dashboard-app'>
         <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
-        <div class="container mt-5">
-          <div class="row justify-content-center">
-            
-            <h1 class="container my-2 text-center">Bank Account Details</h1>
-            <div class="container  text-center">
-              <div class=" p-4 ">
-                
-                <div class="details mt-4" style = "font-size: large;">
-                  <b>
-                  <p>Account Number: 123456789</p>
-                  <p>IFSC Code: ABCD1234567</p>
-                  <p>UPI ID: ashwin.kaushal@okhdfcbank</p>
-                  </b>
+        <div class='dashboard-content' style="background-image: url('/images/background18.jpg');">
+          <div class="container mt-5">
+            <div class="row justify-content-center">
+              
+              <h1 class="container my-2 text-center">Bank Account Details</h1>
+              <div class="container  text-center">
+                <div class=" p-4 ">
+                  
+                  <div class="details mt-4" style = "font-size: large;">
+                    <b>
+                    <p>Account Number: 123456789</p>
+                    <p>IFSC Code: ABCD1234567</p>
+                    <p>UPI ID: ashwin.kaushal@okhdfcbank</p>
+                    </b>
+                  </div>
+                  <div class="qr-code text-center my-4">
+                    <!-- Your QR code image source here -->
+                    <img src="/images/QR.jpg" alt="QR Code for payment" style="height:200px; width:200px">
+                  </div>
                 </div>
-                <div class="qr-code text-center my-4">
-                  <!-- Your QR code image source here -->
-                  <img src="/images/QR.jpg" alt="QR Code for payment" style="height:200px; width:200px">
-                </div>
+                <b><p class="blink text-center" style = "font-size: large;">Once the payment is done, a policy card will be sent to your registered email id within 24 hours.</p></b>
               </div>
-              <b><p class="blink text-center" style = "font-size: large;">Once the payment is done, a policy card will be sent to your registered email id within 24 hours.</p></b>
-            </div>
 
+            </div>
           </div>
         </div>
+
     </div>
 </div>
 

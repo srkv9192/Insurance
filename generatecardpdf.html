@@ -11,7 +11,6 @@
   <style>
     body {
       background-color: #343a40;
-      background-image: url('/images/background18.jpg');
       color: #fff;
     }
 
@@ -62,12 +61,26 @@
       background-color: #0062cc;
       border-color: #005cbf;
     }
+    
+    .frame {
+      border: 1px solid #ced4da;
+      padding: 20px;
+      border-radius: 5px;
+      background-color: #343a40;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .btn-submit {
+      width: 100%;
+    }
   </style>
   <title>Login Page</title>
 </head>
 
 <body>
-
   <div class='dashboard'>
     <div class="dashboard-nav">
       <header>
@@ -82,10 +95,10 @@
           <div id="hideonlogin">
             <nav class="dashboard-nav-list"><a href="/newcarddirect.html" class="dashboard-nav-item"><i class="fas fa-inr"></i>
               Buy Card </a>
+
+              <nav class="dashboard-nav-list"><a href="/paymentinfo.html" class="dashboard-nav-item"><i class="fas fa-inr"></i>
+                Payment Info </a>
           </div>
-          
-          <nav class="dashboard-nav-list"><a href="/paymentinfo.html" class="dashboard-nav-item"><i class="fas fa-inr"></i>
-            Payment Info </a>
 
             <div id="showonlogin" style="display: none;">
               <div class='dashboard-nav-dropdown show'>
@@ -101,76 +114,113 @@
                   </div>
                </div>
             </div>
-
+          
         <div class="nav-item-divider"></div>
         <a  id="login-menu"
                   href="/login.html" class="dashboard-nav-item"><i class="fas  fa-sign-in "></i> Login </a>
       </nav>
   </div>
-    <div class='dashboard-app'>
-        <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
-       
-        <div class='dashboard-content' style="background-image: url('/images/background18.jpg');">
-          <div class="container mt-5">
-            <div class="row justify-content-center">
-              <div class="col-lg-4 col-md-6 col-sm-8">
-                <h2 class="text-center mb-4">Login</h2>
-                <form id="loginForm">
-                  <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="username" placeholder="Enter your username">
-                  </div>
-                  <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Enter your password">
-                  </div>
-                  <button type="submit" class="btn btn-primary">Login</button>
-                </form>
-              </div>
+
+  <div class='dashboard-app'>
+    <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
+
+    <div class='dashboard-content' style="background-image: url('/images/background18.jpg');">
+      <div class="container mt-5">
+        <div class="row justify-content-center">
+          <div class="col-lg-4">
+            <h2 class="text-center mb-4">Download Shield Card</h2>
+            <div class="frame">
+              <form id="loginForm">
+                <div class="form-group">
+                  <label for="card-number" class="form-label">Card Number</label>
+                  <input type="text" class="form-control" id="card-number">
+                </div>
+                
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary btn-submit">Submit</button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
-
+      </div>
     </div>
-</div>
 
-
-
+  </div> 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     $(document).ready(function () {
-    
-
-
-
       $.ajax({
-        url: '/api/logout',
+        url: '/api/whoami',
         type: 'GET',
         success: function (response) {
-          // Populate the options in the select element
-            //alert(response.message)
-           
-            if(response.message =='Old session removed')
+            if(response.message !='invalid')
             {
-              location.href = '/login.html';
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showonlogin").show();
+              $("#hideonlogin").hide();
             }
-            else{
-                alert("Failed to logout");
-            }
-            
         },
         error: function (error) {
           console.error('Error:', error);
         }
       });
-        
-       
+
+      const mobileScreen = window.matchMedia("(max-width: 990px )");
+
+      $(".dashboard-nav-dropdown-toggle").click(function () {
+        $(this).closest(".dashboard-nav-dropdown")
+          .toggleClass("show")
+          .find(".dashboard-nav-dropdown")
+          .removeClass("show");
+        $(this).parent()
+          .siblings()
+          .removeClass("show");
       });
 
+      $(".menu-toggle").click(function () {
+        if (mobileScreen.matches) {
+          $(".dashboard-nav").toggleClass("mobile-show");
+        } else {
+          $(".dashboard").toggleClass("dashboard-compact");
+        }
+      });
 
+      $('#loginForm').on('submit', function (event) {
+        event.preventDefault();
 
+        var cardnumber = $('#card-number').val();
+
+        $.ajax({
+          url: '/api/downloadcard',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          xhrFields: {
+            responseType: 'blob'
+          },
+          data: {
+            cardNumber: cardnumber,
+          },
+          success: function (response) {
+            var a = document.createElement('a');
+            var url = window.URL.createObjectURL(response);
+            a.href = url;
+            a.download = 'ShieldCard.pdf';
+            document.body.append(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+          },
+          error: function (error) {
+            document.getElementById('loginForm').reset();
+            alert("Invalid card number");
+          }
+        });
+      });
+    });
   </script>
 </body>
 
