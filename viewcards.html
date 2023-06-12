@@ -197,13 +197,15 @@ div.dataTables_filter {
         alert("Generating card for reference number: " + referenceNumber);
       }
 
-      function sendCard(referenceNumber) {
-        // Code to send card via email
-        alert("Sending card via email for reference number: " + referenceNumber);
+      function sendCard(cardNumber) {
 
             $.ajax({
             url: '/api/sendcardemail',
             type: 'POST',
+            contentType: "application/x-www-form-urlencoded",
+            data: {
+              policyCardNumber: cardNumber,
+            },
             success: function (response) {
               // Populate the options in the select element
                 alert(response)
@@ -304,7 +306,7 @@ div.dataTables_filter {
               data[i].policyNumber,
               data[i].cardStartDate,
               data[i].cardEndDate,
-              `<button class="btn btn-primary btn-sm" onclick="sendCard(${cardno})">Send Card</button>`
+              `<button class="btn btn-primary btn-sm" onclick="sendCard('${cardno}');">Send Card</button>`
             ]);
            
           }

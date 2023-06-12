@@ -33,6 +33,13 @@ const app = express()
 const port = process.env.PORT || 80
 
 // Connect to local MongoDB database
+//mongodb+srv://<username>:<password>@cluster0.rldiof1.mongodb.net/?retryWrites=true&w=majority
+//mongodb://127.0.0.1:27017/test
+//mongoose.connect('mongodb+srv://<username>:<password>@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority', {
+//  useNewUrlParser: true,
+//  useUnifiedTopology: true,
+//});
+
 mongoose.connect('mongodb://127.0.0.1:27017/test', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -70,7 +77,8 @@ const loginSchema = new mongoose.Schema({
 
 //insurance company details
 const insurancecompanySchema = new mongoose.Schema({
-  companyName: String
+  companyName: String,
+  insuranceType: String
   // Add more fields as needed
 });
 
@@ -86,6 +94,7 @@ const managerSchema = new mongoose.Schema({
   managerName: String,
   phone: String,
   email: String,
+  location: String,
   // Add more fields as needed
 });
 
@@ -335,7 +344,8 @@ catch(err)
 app.post('/api/addinsurancecompany', async(req, res) => {
   try{
         const newData = new insurancecompanySchemaObject({
-                        'companyName' : req.body.companyName
+                        'companyName' : req.body.companyName,
+                        'insuranceType': req.body.insuranceType
                         });
         const savedData = newData.save();
         res.json({ message: 'Insurance company data saved successfully', data: savedData });
@@ -399,6 +409,7 @@ app.post('/api/addmanagerdetail', async(req, res) => {
                         'managerName' : req.body.managerName,
                         'phone' : req.body.phone,
                         'email' : req.body.email,
+                        'location': req.body.location,
                         });
         const savedData = newData.save();
         incrementManagerCount();
@@ -561,12 +572,21 @@ app.get("/api/getcompletedpolicydetail", async(req, res) => {
 app.post("/api/sendcardemail", async(req, res) => {
   try {
     // Retrieve all tpa list from database
-    createCardPDF(req);
-    //sendCompletionEmails();
-    res.json("Email sent");
-  } catch (error) {
+    const docs = await policyCardSchemaObject.findOne({cardNumber: req.body.policyCardNumber});
+    if (!docs) {
+      res.status(500).json({ error: 'Invalid card number, cant send email.' });
+    }
+    else
+    {
+        console.log(docs);
+        const response = await downloadCardPDF(docs);
+        sendCompletionEmails(docs);
+         res.json("Email sent.");
+    }
+  }
+  catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Failed to send card email' });
+    res.status(500).json({ error: 'Failed to send card over email.'});
   }
 });
 
@@ -787,7 +807,7 @@ async function createPDF(req) {
  // firstPage.moveTo(62, 500);
   firstPage.moveTo(360, 670);
 
-  firstPage.drawText(new Date().toUTCString(), {
+  firstPage.drawText(new Date().toLocaleDateString(), {
     font: courierBoldFont,
     size: 12,
   });
@@ -977,18 +997,18 @@ async function downloadCardPDF(req) {
   firstPage.moveTo(120, 482);
   firstPage.drawText(req.customerName, {
     font: timesBoldFont,
-    size: 20,
+    size: 22,
   });
 
 //name second time
   firstPage.moveTo(150, 382);
   firstPage.drawText(req.cardNumber, {
     font: timesBoldFont,
-    size: 20,
+    size: 22,
   });
 
   // claim no. and company name-
-  firstPage.moveTo(310, 282);
+  firstPage.moveTo(10, 250);
   firstPage.drawText( req.insuranceCompany , {
     font: timesBoldFont,
     size: 20,
@@ -996,16 +1016,17 @@ async function downloadCardPDF(req) {
 
   // Validity start date
   firstPage.moveTo(240, 188);
-  firstPage.drawText( req.cardStartDate.toUTCString() , {
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  firstPage.drawText( req.cardStartDate.toLocaleDateString(undefined, options) , {
     font: timesBoldFont,
-    size: 20,
+    size: 22,
   });
 
   // Validity end date
   firstPage.moveTo(430, 188);
-  firstPage.drawText( req.cardEndDate.toUTCString() , {
+  firstPage.drawText( req.cardEndDate.toLocaleDateString(undefined, options) , {
     font: timesBoldFont,
-    size: 20,
+    size: 22,
   });
 
   writeFileSync("CardNew.pdf", await document.save());
@@ -1013,17 +1034,21 @@ async function downloadCardPDF(req) {
   return true;
 }
 
-
-function sendCompletionEmails()
+function sendCompletionEmails(docs)
 {
-    
+  var cardnumber = docs.cardNumber;
+  var custname = docs.customerName;
   var mailOptions = {
     from: 'nidaancard@gmail.com',
-    to: 'letscode4good@gmail.com',
-    subject: `Policy Card`,
-    text: `Please find the attached report- \n \n\ `
-    
-};
+    to: `${docs.customerEmail}`,
+    subject: `Claim Shield Card- ${cardnumber}`,
+    text: `Hi ${custname},\n\nPlease find the Claim Shield Card (${cardnumber}) attached with this email. \n \nThanks, \nNidaan Team `,
+    attachments: [{
+      filename: './CardNew.pdf',
+      path: './CardNew.pdf',
+      contentType: 'application/pdf'
+    }],
+    };
 
 //mailOptions["attachments"] = attachmentArray;
 
