@@ -1019,14 +1019,14 @@ async function downloadCardPDF(req) {
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
   firstPage.drawText( req.cardStartDate.toLocaleDateString(undefined, options) , {
     font: timesBoldFont,
-    size: 22,
+    size: 18,
   });
 
   // Validity end date
   firstPage.moveTo(430, 188);
   firstPage.drawText( req.cardEndDate.toLocaleDateString(undefined, options) , {
     font: timesBoldFont,
-    size: 22,
+    size: 18,
   });
 
   writeFileSync("CardNew.pdf", await document.save());
@@ -1044,7 +1044,7 @@ function sendCompletionEmails(docs)
     subject: `Claim Shield Card- ${cardnumber}`,
     text: `Hi ${custname},\n\nPlease find the Claim Shield Card (${cardnumber}) attached with this email. \n \nThanks, \nNidaan Team `,
     attachments: [{
-      filename: './CardNew.pdf',
+      filename: 'PolicyCard.pdf',
       path: './CardNew.pdf',
       contentType: 'application/pdf'
     }],
