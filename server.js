@@ -1106,39 +1106,39 @@ async function downloadCardPDF(req) {
   console.log( firstPage.getHeight() + " " +  firstPage.getWidth());
 
 
-  firstPage.moveTo(120, 482);
+  firstPage.moveTo(110, 360);
   firstPage.drawText(req.customerName, {
     font: timesBoldFont,
-    size: 22,
+    size: 24,
   });
 
 //name second time
-  firstPage.moveTo(150, 382);
+  firstPage.moveTo(130, 265);
   firstPage.drawText(req.cardNumber, {
     font: timesBoldFont,
-    size: 22,
+    size: 24,
   });
 
   // claim no. and company name-
-  firstPage.moveTo(10, 250);
+  firstPage.moveTo(260, 170);
   firstPage.drawText( req.insuranceCompany , {
     font: timesBoldFont,
-    size: 20,
+    size: 24,
   });
 
   // Validity start date
-  firstPage.moveTo(240, 188);
+  firstPage.moveTo(150, 80);
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
   firstPage.drawText( req.cardStartDate.toLocaleDateString(undefined, options) , {
     font: timesBoldFont,
-    size: 18,
+    size: 24,
   });
 
   // Validity end date
-  firstPage.moveTo(430, 188);
+  firstPage.moveTo(320, 80);
   firstPage.drawText( req.cardEndDate.toLocaleDateString(undefined, options) , {
     font: timesBoldFont,
-    size: 18,
+    size: 24,
   });
 
   writeFileSync("CardNew.pdf", await document.save());
