@@ -205,32 +205,8 @@ function movetolive(referencenumber) {
        //alert("Move to live reference number: " + referencenumber);
        localStorage['casereferencenumber'] = referencenumber; 
 
-       /*
-        $.ajax({
-          url: '/api/generatepolicycard',
-          type: 'POST',
-          contentType: "application/x-www-form-urlencoded",
-          data: {
-            referenceNumber: referencenumber, 
-          },
-          success: function (response) {
-            if(response.message == "success")
-              {
-                
-                alert("Card number- " + response.cardnumber)
-                window.location.reload();
-              }
-              else{
-                alert(response.message)
-              }
-          },
-          error: function (error) {
-            alert("Card Number generation failed");
-            // Display an error message to the user
-          }
-        });
-        
-        */
+       window.location.replace("/movecasetolive.html");
+
       }
 
       

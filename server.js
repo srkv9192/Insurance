@@ -80,6 +80,11 @@ const dataSchema = new mongoose.Schema({
   caseCity: String,
   isLive: String,
   isCompleted: String,
+  processingFee: Number,
+  consultationCharge: Number,
+  chequeAmount : Number,
+  chequeNumber : String,
+  bankName : String,
   // Add more fields as needed
 });
 
@@ -658,6 +663,67 @@ app.get("/api/getpendingcasedetail", async(req, res) => {
     res.status(500).json({ error: 'Failed to get pending case details' });
   }
 });
+
+app.get("/api/getpendingcasedetailbyref", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    console.log(req.query.casereferenceNumber)
+
+    const users = await  dataSchemaObject.find({casereferenceNumber: req.query.casereferenceNumber});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get pending case details by ref' });
+  }
+});
+
+app.post('/api/movecasetolivebyref', async(req, res) => {
+  try{
+
+    const gencaseNumber= await getCaseNumbereCount();
+    if(gencaseNumber == -1)
+    {
+      res.status(500).json({ error: 'Error saving case data' });
+      return;
+    }
+    casenumberstring = "CN_" + gencaseNumber;
+
+    const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, 
+      {  processingFee: req.body.processingFee,
+        consultationCharge: req.body.consultationCharge,
+        chequeAmount : req.body.chequeAmount,
+        chequeNumber : req.body.chequeNumber,
+        bankName : req.body.bankName,
+        caseNumber: casenumberstring,
+      }, {new : true});
+
+      incrementCaseNumberCount();
+      res.json({ message: 'Case data saved successfully', casenumberstring: casenumberstring });
+  }
+  catch(err)
+  {
+    console.error(err);
+    return -1;
+  } 
+});
+
+/*
+
+  try{
+    const cardstartdate= new Date();
+    const cardenddate= new Date() ;
+    cardenddate.setDate(cardstartdate.getDate() + 365);
+    const newData = await policyCardSchemaObject.findOneAndUpdate({referenceNumber: refNumber}, 
+      { cardStartDate: cardstartdate , cardEndDate: cardenddate, cardNumber: cardnumber}, {new : true});
+    return newData.cardNumber;
+  }
+  catch(err)
+  {
+    console.error(err);
+    return -1;
+  } 
+*/
+
 
 // add logic later to differentiate live from completed
 app.get("/api/getlivecasedetail", async(req, res) => {

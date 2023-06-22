@@ -9,6 +9,14 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="css/menubar.css">
   <style>
+
+    input.form-control:read-only {
+        background-color:  #343a40;
+    }
+    input.form-control:disabled {
+        background-color:  #343a40;
+    }
+
     body {
       background-color: #343a40;
       color: #fff;
@@ -140,22 +148,22 @@
                 <div class="row mb-3">
                   <div class="col-sm-6">
                     <label for="reference-number" class="form-label">Reference Number</label>
-                    <input type="text" class="form-control" id="reference-number">
+                    <input type="text" class="form-control" id="reference-number" readonly>
                   </div>
                   <div class="col-sm-6">
                     <label for="claim-number" class="form-label">Claim Number</label>
-                    <input type="text" class="form-control" id="claim-number">
+                    <input type="text" class="form-control" id="claim-number" readonly>
                   </div>
                 </div>
 
                 <div class="row mb-3">
                   <div class="col-sm-6">
                     <label for="client-name" class="form-label">Client Name</label>
-                    <input type="text" class="form-control" id="client-name">
+                    <input type="text" class="form-control" id="client-name" readonly required>
                   </div>
                   <div class="col-sm-6">
                     <label for="client-phone" class="form-label">Customer Phone</label>
-                    <input type="tel" class="form-control" id="client-phone">
+                    <input type="tel" class="form-control" id="client-phone" readonly required>
                   </div>
                 </div>
 
@@ -163,32 +171,32 @@
 
                   <div class="col-sm-6">
                     <label for="processing-fee" class="form-label">Processing Fee</label>
-                    <input type="text" class="form-control" id="processing-fee">
+                    <input type="text" class="form-control" id="processing-fee" required>
                   </div>
                   <div class="col-sm-6">
                     <label for="consultation-charge" class="form-label">Consultation Charge</label>
-                    <input type="number" class="form-control" id="consultation-charge">
+                    <input type="number" class="form-control" id="consultation-charge" required>
                   </div>
 
                   </div>
                 <div class="row mb-3">
                   <div class="col-sm-6">
                     <label for="total-claim-amount" class="form-label">Total Claim Amount</label>
-                    <input type="number" class="form-control" id="total-claim-amount">
+                    <input type="number" class="form-control" id="total-claim-amount" required>
                   </div>
                   <div class="col-sm-6">
                     <label for="cheque-amount" class="form-label">Cheque Amount</label>
-                    <input type="number" class="form-control" id="cheque-amount">
+                    <input type="number" class="form-control" id="cheque-amount" required>
                   </div>
                 </div>
                 <div class="row mb-3">
                   <div class="col-sm-6">
                     <label for="cheque-number" class="form-label">Cheque Number</label>
-                    <input type="text" class="form-control" id="cheque-number">
+                    <input type="text" class="form-control" id="cheque-number" required>
                   </div>
                   <div class="col-sm-6">
                     <label for="bank-name" class="form-label">Bank Name</label>
-                    <input type="text" class="form-control" id="bank-name">
+                    <input type="text" class="form-control" id="bank-name" required>
                   </div>
                 </div>
                 <div class="text-center">
@@ -215,7 +223,7 @@
     $(document).ready(function () {
 
       var casereferencenumber = localStorage['casereferencenumber'] || '';
-      alert("case ref number is -"+ casereferencenumber);
+      //alert("case ref number is -"+ casereferencenumber);
 
 
       $.ajax({
@@ -245,6 +253,30 @@
       });
 
 
+      $.ajax({
+        url: '/api/getpendingcasedetailbyref',
+        type: 'GET',
+        data: {
+          casereferenceNumber: localStorage['casereferencenumber']
+        },
+
+        success: function (response) {
+          // Populate the options in the select elemen
+                
+            document.getElementById("client-name").value = response[0].customerName;
+            document.getElementById("reference-number").value = localStorage['casereferencenumber'];
+            document.getElementById("claim-number").value = response[0].claimNumber;
+            document.getElementById("client-phone").value = response[0].customerPhone;
+            document.getElementById("total-claim-amount").value = response[0].claimAmount;
+            
+
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+      
+
       const mobileScreen = window.matchMedia("(max-width: 990px )");
 
           $(".dashboard-nav-dropdown-toggle").click(function () {
@@ -267,13 +299,6 @@
       $('#loginForm').on('submit', function (event) {
         event.preventDefault();
 
-        var clientname = $('#client-name').val();
-        var clientaddress = $('#client-address').val();
-
-        var clientphone = $('#client-phone').val();
-        var claimnumber = $('#claim-number').val();
-
-        var insurancecompanyname = $('#insurance-company-name').val();
         var processingfee = $('#processing-fee').val();
 
         var consultationcharge = $('#consultation-charge').val();
@@ -283,48 +308,37 @@
         var chequenumber = $('#cheque-number').val();
 
         var bankname = $('#bank-name').val();
-        var witnessname = $('#witness-name').val();
 
         // Make an API call with the username and password
         $.ajax({
-          url: '/api/getlegalpdf',
+          url: '/api/movecasetolivebyref',
           type: 'POST',
           contentType: "application/x-www-form-urlencoded",
-          xhrFields: {
-            responseType: 'blob'
-        },
           data: {
-          clientName:clientname,
-          clientAddress: clientaddress,
-          clientPhone: clientphone,
-          claimNumber: claimnumber,
-          insuranceCompanyName: insurancecompanyname,
+          casereferenceNumber: localStorage['casereferencenumber'],
           processingFee: processingfee,
           consultationCharge: consultationcharge,
-          claimAmount:  claimamount,
           chequeAmount: chequeamount,
           chequeNumber: chequenumber,
           bankName:  bankname,
-          witnessName: witnessname,
           },
           success: function (response) {
-            var a = document.createElement('a');
-            var url = window.URL.createObjectURL(response);
-            a.href = url;
-            a.download = 'legal.pdf';
-            document.body.append(a);
-            a.click();
-            a.remove();
-            window.URL.revokeObjectURL(url);
+           
+            alert("Case data saved successfully. Case number - " + response.casenumberstring );
+            document.getElementById('loginForm').reset();
           },
           error: function (error) {
             document.getElementById('loginForm').reset();
-            alert("PDF generation failed even after bug fix");
+            alert("Failed to save case data");
             // Display an error message to the user
           }
         });
       });
     });
+
+
+
+
   </script>
 </body>
 
