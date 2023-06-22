@@ -132,50 +132,44 @@
       <div class="container mt-5">
         <div class="row justify-content-center">
           <div class="col-lg-6">
-            <h2 class="text-center mb-4">Legal PDF Generation Form</h2>
+            <h2 class="text-center mb-4">Add pending details</h2>
 
             <div class="frame">
               <form id="loginForm">
+
                 <div class="row mb-3">
                   <div class="col-sm-6">
-                    <label for="client-name" class="form-label">Client Name</label>
-                    <input type="text" class="form-control" id="client-name">
-                  </div>
-                  <div class="col-sm-6">
-                    <label for="client-address" class="form-label">Client Address</label>
-                    <input type="text" class="form-control" id="client-address">
-                  </div>
-                </div>
-                <div class="row mb-3">
-                  <div class="col-sm-6">
-                    <label for="client-phone" class="form-label">Customer Phone</label>
-                    <input type="tel" class="form-control" id="client-phone">
+                    <label for="reference-number" class="form-label">Reference Number</label>
+                    <input type="text" class="form-control" id="reference-number">
                   </div>
                   <div class="col-sm-6">
                     <label for="claim-number" class="form-label">Claim Number</label>
                     <input type="text" class="form-control" id="claim-number">
                   </div>
                 </div>
-                <div class="row mb-3">
-                  <div class="col-sm-6">
-                    <label for="insurance-company-name" class="form-label">Insurance Company Name</label>
-                    <input type="text" class="form-control" id="insurance-company-name">
-                  </div>
-                  <div class="col-sm-6">
-                    <label for="witness-name" class="form-label">Witness Name</label>
-                    <input type="text" class="form-control" id="witness-name">
-                  </div>
 
-                </div>
                 <div class="row mb-3">
                   <div class="col-sm-6">
-                    <label for="consultation-charge" class="form-label">Consultation Charge</label>
-                    <input type="number" class="form-control" id="consultation-charge">
+                    <label for="client-name" class="form-label">Client Name</label>
+                    <input type="text" class="form-control" id="client-name">
                   </div>
+                  <div class="col-sm-6">
+                    <label for="client-phone" class="form-label">Customer Phone</label>
+                    <input type="tel" class="form-control" id="client-phone">
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+
                   <div class="col-sm-6">
                     <label for="processing-fee" class="form-label">Processing Fee</label>
                     <input type="text" class="form-control" id="processing-fee">
                   </div>
+                  <div class="col-sm-6">
+                    <label for="consultation-charge" class="form-label">Consultation Charge</label>
+                    <input type="number" class="form-control" id="consultation-charge">
+                  </div>
+
                   </div>
                 <div class="row mb-3">
                   <div class="col-sm-6">
@@ -219,6 +213,9 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     $(document).ready(function () {
+
+      var casereferencenumber = localStorage['casereferencenumber'] || '';
+      alert("case ref number is -"+ casereferencenumber);
 
 
       $.ajax({

@@ -171,19 +171,18 @@ div.dataTables_filter {
           <div class="container mt-5">
             <div class="row justify-content-center">
               <div class="col-lg-12">
-                <h2 class="text-center mb-4">Pending Card Details</h2>
+                <h2 class="text-center mb-4">Prospect Cases</h2>
                 <div class="table-responsive">
                   <table id ="dataTable" class="table table-dark table-bordered">
                     <thead>
                       <tr>
                         <th>Reference Number</th>
-                        <th>Card Number</th>
                         <th>Customer Name</th>
                         <th>Customer Phone</th>
-                        <th>Customer Email</th>
                         <th>Insurance Company</th>
                         <th>TPA Name</th>
-                        <th>Policy Number</th>
+                        <th>Claim Amount</th>
+                        <th>Claim Number</th>
                         <th>Action</th>
                       </tr>
                     </thead>
@@ -201,10 +200,12 @@ div.dataTables_filter {
   <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
   <script>
 
-function generateCard(referencenumber) {
+function movetolive(referencenumber) {
         // Code to generate card
-       // alert("Generating card for reference number: " + referencenumber);
+       //alert("Move to live reference number: " + referencenumber);
+       localStorage['casereferencenumber'] = referencenumber; 
 
+       /*
         $.ajax({
           url: '/api/generatepolicycard',
           type: 'POST',
@@ -229,6 +230,7 @@ function generateCard(referencenumber) {
           }
         });
         
+        */
       }
 
       
@@ -292,7 +294,7 @@ function generateCard(referencenumber) {
       
        // AJAX call on page load get manager details
        $.ajax({
-        url: '/api/getpendingpolicydetail',
+        url: '/api/getpendingcasedetail',
         type: 'GET',
         success: function (response) {
           // Populate the options in the select element
@@ -310,18 +312,17 @@ function generateCard(referencenumber) {
           $("#dataTable").DataTable().clear();
           var length = Object.keys(data).length;
           for(var i = 0; i < length; i++) {
-            var rfno= data[i].referenceNumber
+            var rfno= data[i].casereferenceNumber
             // You could also use an ajax property on the data table initialization
             $('#dataTable').dataTable().fnAddData( [
-              data[i].referenceNumber,
-              data[i].cardNumber,
+              data[i].casereferenceNumber,
               data[i].customerName,
               data[i].customerPhone,
-              data[i].customerEmail,
-              data[i].insuranceCompany,
+              data[i].insuranceCompanyName,
               data[i].tpaName,
-              data[i].policyNumber,
-              `<button class="btn btn-primary btn-sm" onclick="generateCard(${rfno})">Generate Card</button>`
+              data[i].claimAmount,
+              data[i].claimNumber,
+              `<button class="btn btn-primary btn-sm" onclick="movetolive(${rfno})">Move to Live</button>`
             ]);
           }
         }

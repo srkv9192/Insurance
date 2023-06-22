@@ -22,7 +22,16 @@
     }
     .card-body {
       padding: 20px;
+      text-align: center;
+      animation: blinker 1.5s linear infinite;
+      color: ivory;
+      
     }
+    @keyframes blinker {
+            50% {
+                opacity: 0;
+            }
+        }
     .chart-container {
       height: 400px;
       display: flex;
@@ -123,20 +132,36 @@
 
 
 
-              <div id="showonlogin" style="display: none;">
-                <div class='dashboard-nav-dropdown show'>
-                   <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
-                    <i class="fas fa-photo-video">
-                      </i>Menu</a>
-                    <div class='dashboard-nav-dropdown-menu' >
-                        <a href="/newcard.html" class="dashboard-nav-dropdown-item">Add Card</a>
-                        <a href="/viewpendingcards.html" class="dashboard-nav-dropdown-item">View Pending</a>
-                        <a href="/viewcards.html" class="dashboard-nav-dropdown-item">View Completed</a>
-                        <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
-                        <a href="/generatecardpdf.html" class="dashboard-nav-dropdown-item">Download Card</a>
-                    </div>
+            <div id="showonlogin" style="display: none;">
+
+              <nav class="dashboard-nav-list"><a href="/dashboard.html" class="dashboard-nav-item"><i class="fas fa-dashboard"></i>
+                Dashboard </a>
+
+              <div class='dashboard-nav-dropdown show'>
+                 <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+                  <i class="fas fa-photo-video">
+                    </i>Card Menu</a>
+                  <div class='dashboard-nav-dropdown-menu'>
+                      <a href="/newcard.html" class="dashboard-nav-dropdown-item">Add Card</a>
+                      <a href="/viewpendingcards.html" class="dashboard-nav-dropdown-item">View Pending</a>
+                      <a href="/viewcards.html" class="dashboard-nav-dropdown-item">View Completed</a>
+                      <a href="/generatecardpdf.html" class="dashboard-nav-dropdown-item">Download Card</a>
+                  </div>
+               </div>
+
+               <div class='dashboard-nav-dropdown show'>
+                <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+                 <i class="fas fa-photo-video">
+                   </i>Case Menu</a>
+                 <div class='dashboard-nav-dropdown-menu'>
+                     <a href="/addprospect.html" class="dashboard-nav-dropdown-item">Add Case</a>
+                     <a href="/viewpendingcases.html" class="dashboard-nav-dropdown-item">View Pending</a>
+                     <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
+                     <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
                  </div>
               </div>
+
+            </div>
 
           <div class="nav-item-divider"></div>
           <a id="login-menu"
@@ -150,35 +175,58 @@
 
               <div class="row">
                 <div class="col-lg-3 col-md-6">
-                  <div class="card prospects">
-                    <div class="card-header">
-                      <h5 class="card-title">Prospects</h5>
-                    </div>
-                    <div class="card-body">
-                      <h3 class="card-text">87</h3>
-                    </div>
-                  </div>
+                  <a href="/viewpendingcases.html">
+                      <div class="card prospects">
+                        <div class="card-header">
+                          <h5 class="card-title">Pending Cases</h5>
+                        </div>
+                        <div class="card-body">
+                          <h3 id="prospectcount" class="card-text"></h3>
+                        </div>
+                      </div>
+                </a>
                 </div>
                 <div class="col-lg-3 col-md-6">
-                  <div class="card active-cases">
-                    <div class="card-header">
-                      <h5 class="card-title">Active Cases</h5>
+                  <a href="/viewcases.html">
+                    <div class="card active-cases">
+                      <div class="card-header">
+                        <h5 class="card-title">Live Cases</h5>
+                      </div>
+                      <div class="card-body">
+                        <h3 id="livecount" class="card-text"></h3>
+                      </div>
                     </div>
-                    <div class="card-body">
-                      <h3 class="card-text">156</h3>
-                    </div>
-                  </div>
+                  </a>
+
+                </div>
+
+                
+                <div class="col-lg-3 col-md-6">
+                  <a href="/viewpendingcards.html">
+                        <div class="card prospects">
+                          <div class="card-header">
+                            <h5 class="card-title">Pending Cards</h5>
+                          </div>
+                          <div class="card-body">
+                            <h3 id="prospectcardcount" class="card-text"></h3>
+                          </div>
+                        </div>
+                </a>
                 </div>
                 <div class="col-lg-3 col-md-6">
-                  <div class="card completed-cases">
-                    <div class="card-header">
-                      <h5 class="card-title">Completed Cases</h5>
-                    </div>
-                    <div class="card-body">
-                      <h3 class="card-text">489</h3>
-                    </div>
-                  </div>
+
+                  <a href="/viewcards.html">
+                      <div class="card active-cases">
+                        <div class="card-header">
+                          <h5 class="card-title">Live Cards</h5>
+                        </div>
+                        <div class="card-body">
+                          <h3 id="livecardcount" class="card-text"></h3>
+                        </div>
+                      </div>
+                </a>
                 </div>
+
                
               </div>
             
@@ -220,6 +268,65 @@ $(document).ready(function () {
           console.error('Error:', error);
         }
       });
+
+
+      $.ajax({
+        url: '/api/getlivepolicyCount',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          document.getElementById("livecardcount").textContent=response;
+         
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+
+      $.ajax({
+        url: '/api/getpendingpolicyCount',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          //populateDataTable(response);
+          document.getElementById("prospectcardcount").textContent=response;
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+
+        
+
+      $.ajax({
+        url: '/api/getlivecaseCount',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          document.getElementById("livecount").textContent=response;
+         
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+
+      $.ajax({
+        url: '/api/getpendingcaseCount',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          //populateDataTable(response);
+          document.getElementById("prospectcount").textContent=response;
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
 
 
     $(".dashboard-nav-dropdown-toggle").click(function () {

@@ -79,6 +79,7 @@ const dataSchema = new mongoose.Schema({
   directCase: String,
   caseCity: String,
   isLive: String,
+  isCompleted: String,
   // Add more fields as needed
 });
 
@@ -248,6 +249,7 @@ app.post('/api/addprospect', async(req, res) => {
                         directCase: req.body.directCase,
                         caseCity: req.body.caseCity,
                         casereferenceNumber : refNumber,
+                        caseNumber: "",
                       });
         const savedData = await newData.save();
         incrementCaseReferenceCount();
@@ -624,6 +626,74 @@ app.get("/api/getpendingpolicydetail", async(req, res) => {
   }
 });
 
+app.get("/api/getpendingpolicyCount", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  policyCardSchemaObject.find({cardNumber: ""}).count();
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get pending policy count' });
+  }
+});
+
+app.get("/api/getlivepolicyCount", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  policyCardSchemaObject.find({cardNumber : {"$exists" : true, "$ne" : ""}}).count();
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get tpa details' });
+  }
+});
+
+app.get("/api/getpendingcasedetail", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  dataSchemaObject.find({caseNumber: ""});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get pending case details' });
+  }
+});
+
+// add logic later to differentiate live from completed
+app.get("/api/getlivecasedetail", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  dataSchemaObject.find({caseNumber : {"$exists" : true, "$ne" : ""}});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get live case details' });
+  }
+});
+
+
+app.get("/api/getpendingcaseCount", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  dataSchemaObject.find({caseNumber: ""}).count();
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get tpa details' });
+  }
+});
+
+app.get("/api/getlivecaseCount", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  dataSchemaObject.find({caseNumber : {"$exists" : true, "$ne" : ""}}).count();
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get tpa details' });
+  }
+});
+
 app.get("/api/getcompletedpolicydetail", async(req, res) => {
   try {
     // Retrieve all tpa list from database
@@ -860,7 +930,9 @@ app.get('/index.html', (req, res) => res.sendFile(__dirname+'/index.html'))
 app.get('/login.html', (req, res) => res.sendFile(__dirname+'/login.html'))
 app.get('/logout.html', (req, res) => res.sendFile(__dirname+'/logout.html'))
 app.get('/newcase.html', (req, res) => res.sendFile(__dirname+'/newcase.html'))
-app.get('/viewdata.html', (req, res) => res.sendFile(__dirname+'/viewdata.html'))
+app.get('/viewpendingcases.html', (req, res) => res.sendFile(__dirname+'/viewpendingcases.html'))
+app.get('/viewcases.html', (req, res) => res.sendFile(__dirname+'/viewcases.html'))
+app.get('/movecasetolive.html', (req, res) => res.sendFile(__dirname+'/movecasetolive.html'))
 app.get('/dashboard.html', (req, res) => res.sendFile(__dirname+'/dashboard.html'))
 app.get('/newcard.html', (req, res) => res.sendFile(__dirname+'/newcard.html'))
 app.get('/newcarddirect.html', (req, res) => res.sendFile(__dirname+'/newcarddirect.html'))
