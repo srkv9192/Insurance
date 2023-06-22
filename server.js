@@ -62,8 +62,23 @@ const dataSchema = new mongoose.Schema({
   customerName: String,
   customerAddress: String,
   customerPhone: String,
+  customerEmail: String,
   claimNumber: String,
+  claimAmount: Number,
+  approvedAmount:Number,
   insuranceCompanyName: String,
+  tpaName: String,
+  policyNumber: String,
+  policyUpload: String, 
+  casereferenceNumber : String,
+  caseNumber: String,
+  managerID: String,
+  managerName: String,
+  cpID: String,
+  cpName: String,
+  directCase: String,
+  caseCity: String,
+  isLive: String,
   // Add more fields as needed
 });
 
@@ -140,6 +155,8 @@ const counterSchema = new mongoose.Schema({
   searchId : String,
   managerCount: Number,
   cpCount: Number,
+  caseReferenceNumberCount: Number,
+  caseNumberCount: Number,
   // Add more fields as needed
 });
 
@@ -206,17 +223,35 @@ catch(err)
 
 
 // Define the API endpoint to save data
-app.post('/api/data', async(req, res) => {
+app.post('/api/addprospect', async(req, res) => {
   try{
-        console.error(req.body.customerName);
+        const refNumber= await getCaseReferenceCount();
+        if(refNumber == -1)
+        {
+          res.status(500).json({ error: 'Error saving prospect data' });
+          return;
+        }
+
         const newData = new dataSchemaObject({
-                        'customerName' : req.body.customerName,
-                        'customerAddress' : req.body.customerAddress,
-                        'customerPhone' : req.body.customerPhone,
-                        'claimNumber' : req.body.claimNumber,
-                        'insuranceCompanyName' : req.body.insuranceCompanyName});
-        const savedData = newData.save();
-        res.json({ message: 'Data saved successfully', data: savedData });
+                        customerName : req.body.customerName,
+                        customerAddress: req.body.customerAddress,
+                        customerPhone: req.body.customerPhone,
+                        customerEmail:req.body.customerEmail,
+                        insuranceCompanyName: req.body.insuranceCompanyName,
+                        tpaName: req.body.tpaName,
+                        claimNumber: req.body.claimNumber,
+                        claimAmount: req.body.claimAmount,
+                        cpName: req.body.cpName,
+                        cpID: req.body.cpID,
+                        managerName: req.body.managerName,
+                        managerID: req.body.managerID,
+                        directCase: req.body.directCase,
+                        caseCity: req.body.caseCity,
+                        casereferenceNumber : refNumber,
+                      });
+        const savedData = await newData.save();
+        incrementCaseReferenceCount();
+        res.json({ message: 'success', referencenumber:refNumber,data: savedData });
       }
     catch(err)
     {
@@ -225,6 +260,35 @@ app.post('/api/data', async(req, res) => {
     }
   
 });
+/*
+
+app.post('/api/addcpdetail', async(req, res) => {
+  try{
+        const refNumber= await getcpCount();
+        if(refNumber == -1)
+        {
+          res.status(500).json({ error: 'Error saving manager data' });
+          return;
+        }
+        const newData = new cpSchemaObject({
+                        'cpID' : "CP_" + refNumber,
+                        'cpName' : req.body.cpName,
+                        'managerID': req.body.managerID,
+                        'phone' : req.body.phone,
+                        'email' : req.body.email,
+                        });
+        const savedData = newData.save();
+        incrementcpCount();
+        res.json({ message: 'CP data saved successfully', data: savedData });
+      }
+    catch(err)
+    {
+      console.error(err);
+      res.status(500).json({ error: 'Error saving Manager data' });
+    } 
+});
+
+*/
 
 
 app.post('/api/addlogin', async(req, res) => {
@@ -275,6 +339,8 @@ app.post('/api/setcountervalues', async(req, res) => {
                         'cardNumberCount' : req.body.cardNumberCount,
                         'managerCount': req.body.managerCount,
                         'cpCount': req.body.cpCount,
+                        'caseReferenceNumberCount': req.body.caseReferenceNumberCount,
+                        'caseNumberCount': req.body.caseNumberCount,
                         'searchId' : "keywordforsearch"});
         const savedData = newData.save();
         res.json({ message: 'Initial counter data saved successfully', data: savedData });
@@ -685,6 +751,51 @@ app.post("/api/downloadcard", async(req, res) => {
   } 
 };
 
+ async function getCaseReferenceCount () {
+  try {
+    const data = await counterSchemaObject.find();
+    return data[0].caseReferenceNumberCount;
+  } catch (error) {
+    console.error(error);
+    return -1;
+  }
+};
+
+  async function incrementCaseReferenceCount ()  {
+  try{
+    const newData = await counterSchemaObject.findOneAndUpdate({searchId: "keywordforsearch"}, {$inc:{ caseReferenceNumberCount: 1}});
+    return newData.caseReferenceNumberCount;
+  }
+  catch(err)
+  {
+    console.error(err);
+    return -1;
+  } 
+};
+
+async function getCaseNumbereCount () {
+  try {
+    const data = await counterSchemaObject.find();
+    return data[0].caseNumberCount;
+  } catch (error) {
+    console.error(error);
+    return -1;
+  }
+};
+
+  async function incrementCaseNumberCount ()  {
+  try{
+    const newData = await counterSchemaObject.findOneAndUpdate({searchId: "keywordforsearch"}, {$inc:{ caseNumberCount: 1}});
+    return newData.caseNumberCount;
+  }
+  catch(err)
+  {
+    console.error(err);
+    return -1;
+  } 
+};
+
+
 
  async function getCardCount()  {
   try {
@@ -759,6 +870,7 @@ app.get('/viewpendingcards.html', (req, res) => res.sendFile(__dirname+'/viewpen
 
 app.get('/generatelegalpdf.html', (req, res) => res.sendFile(__dirname+'/generatelegalpdf.html'))
 app.get('/generatecardpdf.html', (req, res) => res.sendFile(__dirname+'/generatecardpdf.html'))
+app.get('/addprospect.html', (req, res) => res.sendFile(__dirname+'/addprospect.html'))
 
 app.get('/menubar.html', (req, res) => res.sendFile(__dirname+'/menubar.html'))
 
