@@ -20,10 +20,10 @@ const transporter = nodemailer.createTransport({
   auth: {
       type: 'OAuth2',
       user: 'Nidaancard@gmail.com',
-      clientId: "",
-      clientSecret: "",
-      refreshToken: "",
-      accessToken: "",
+      clientId: "157725426494-1iof3ceh6j469a7srp9obhie5e4t0u1j.apps.googleusercontent.com",
+      clientSecret: "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",
+      refreshToken: "1//04ije556NOO5jCgYIARAAGAQSNwF-L9Ir90KP5wW_GeD0p5gkYiHbIM1C5zegEs07_bWkHQuIxu4EmxlTFe9Xsz8nDDo9_laHhd8",
+      accessToken: "ya29.a0AWY7CkkTH71980bdJEprtXBTtOIJ-0gLBDvBUTETp5TlSa05HXpzr1Rq2f_OFhQQWXmsFTeyy-zlswpmyOM5vrgsE0FRNSyT-erSd3Q5j82JVRKTdfrRA52S5j-pn8l13Lkwjep3NphNPD2CKhiEOzHMqF7QaCgYKAYQSARMSFQG1tDrpCr2wQyhfhdsUGjKd22KBQQ0163",
       expires: 1484314697598
   }
 });
@@ -44,6 +44,8 @@ mongoose.connect('mongodb://127.0.0.1:27017/test', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
+
 
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
@@ -78,6 +80,8 @@ const dataSchema = new mongoose.Schema({
   cpName: String,
   directCase: String,
   caseCity: String,
+  isProspect: String,
+  isPendingAuth: String,
   isLive: String,
   isCompleted: String,
   processingFee: Number,
@@ -255,6 +259,7 @@ app.post('/api/addprospect', async(req, res) => {
                         caseCity: req.body.caseCity,
                         casereferenceNumber : refNumber,
                         caseNumber: "",
+                        isProspect:"true",
                       });
         const savedData = await newData.save();
         incrementCaseReferenceCount();
@@ -653,10 +658,10 @@ app.get("/api/getlivepolicyCount", async(req, res) => {
   }
 });
 
-app.get("/api/getpendingcasedetail", async(req, res) => {
+app.get("/api/getprospectcasedetail", async(req, res) => {
   try {
     // Retrieve all tpa list from database
-    const users = await  dataSchemaObject.find({caseNumber: ""});
+    const users = await  dataSchemaObject.find({isProspect: "true"});
     res.json(users);
   } catch (error) {
     console.error(error);
@@ -664,7 +669,7 @@ app.get("/api/getpendingcasedetail", async(req, res) => {
   }
 });
 
-app.get("/api/getpendingcasedetailbyref", async(req, res) => {
+app.get("/api/getprospectcasedetailbyref", async(req, res) => {
   try {
     // Retrieve all tpa list from database
     console.log(req.query.casereferenceNumber)
@@ -707,6 +712,24 @@ app.post('/api/movecasetolivebyref', async(req, res) => {
   } 
 });
 
+
+app.post('/api/movecasetopendingauthbyref', async(req, res) => {
+  try{
+    const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, 
+      {  isProspect:"false",
+         isPendingAuth:"true",
+      }, {new : true});
+
+      incrementCaseNumberCount();
+      res.json({ message: 'Case data updated successfully', casereferenceNumber: req.body.casereferenceNumber });
+  }
+  catch(err)
+  {
+    console.error(err);
+    return -1;
+  } 
+});
+
 /*
 
   try{
@@ -737,11 +760,34 @@ app.get("/api/getlivecasedetail", async(req, res) => {
   }
 });
 
-
-app.get("/api/getpendingcaseCount", async(req, res) => {
+// 
+app.get("/api/getpendingauthcasedetail", async(req, res) => {
   try {
     // Retrieve all tpa list from database
-    const users = await  dataSchemaObject.find({caseNumber: ""}).count();
+    const users = await  dataSchemaObject.find({isPendingAuth : {"$exists" : true, "$eq" : "true"}});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get live case details' });
+  }
+});
+
+
+app.get("/api/getprospectcaseCount", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  dataSchemaObject.find({isProspect: "true"}).count();
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get tpa details' });
+  }
+});
+
+app.get("/api/getpendingauthcaseCount", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  dataSchemaObject.find({isPendingAuth: "true"}).count();
     res.json(users);
   } catch (error) {
     console.error(error);
@@ -996,7 +1042,10 @@ app.get('/index.html', (req, res) => res.sendFile(__dirname+'/index.html'))
 app.get('/login.html', (req, res) => res.sendFile(__dirname+'/login.html'))
 app.get('/logout.html', (req, res) => res.sendFile(__dirname+'/logout.html'))
 app.get('/newcase.html', (req, res) => res.sendFile(__dirname+'/newcase.html'))
-app.get('/viewpendingcases.html', (req, res) => res.sendFile(__dirname+'/viewpendingcases.html'))
+app.get('/viewprospectcases.html', (req, res) => res.sendFile(__dirname+'/viewprospectcases.html'))
+app.get('/viewpendingauthcases.html', (req, res) => res.sendFile(__dirname+'/viewpendingauthcases.html'))
+
+
 app.get('/viewcases.html', (req, res) => res.sendFile(__dirname+'/viewcases.html'))
 app.get('/movecasetolive.html', (req, res) => res.sendFile(__dirname+'/movecasetolive.html'))
 app.get('/dashboard.html', (req, res) => res.sendFile(__dirname+'/dashboard.html'))
@@ -1265,7 +1314,7 @@ async function downloadCardPDF(req) {
   });
 
   // Validity start date
-  firstPage.moveTo(150, 80);
+  firstPage.moveTo(140, 80);
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
   firstPage.drawText( req.cardStartDate.toLocaleDateString(undefined, options) , {
     font: timesBoldFont,

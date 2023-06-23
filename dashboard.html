@@ -42,6 +42,10 @@
       background-color: #FF6384;
       color: #fff;
     }
+    .pendingauth {
+      background-color: lightgrey;
+      color: #fff;
+    }
     .active-cases {
       background-color: #36A2EB;
       color: #fff;
@@ -155,7 +159,8 @@
                    </i>Case Menu</a>
                  <div class='dashboard-nav-dropdown-menu'>
                      <a href="/addprospect.html" class="dashboard-nav-dropdown-item">Add Case</a>
-                     <a href="/viewpendingcases.html" class="dashboard-nav-dropdown-item">View Pending</a>
+                     <a href="/viewprospectcases.html" class="dashboard-nav-dropdown-item">View Prospect</a>
+                     <a href="/viewpendingauthcases.html" class="dashboard-nav-dropdown-item">View Pending Auth</a>
                      <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
                      <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
                  </div>
@@ -173,63 +178,86 @@
         <div class='dashboard-content' style="background-image: url('/images/background20.jpg');">
             <div  style=" font-size: 20px; padding-top: 50px; padding-right: 20px; padding-left: 20px;">  
 
-              <div class="row">
-                <div class="col-lg-3 col-md-6">
-                  <a href="/viewpendingcases.html">
-                      <div class="card prospects">
-                        <div class="card-header">
-                          <h5 class="card-title">Pending Cases</h5>
-                        </div>
-                        <div class="card-body">
-                          <h3 id="prospectcount" class="card-text"></h3>
-                        </div>
-                      </div>
-                </a>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                  <a href="/viewcases.html">
-                    <div class="card active-cases">
-                      <div class="card-header">
-                        <h5 class="card-title">Live Cases</h5>
-                      </div>
-                      <div class="card-body">
-                        <h3 id="livecount" class="card-text"></h3>
-                      </div>
+              
+              <div class="frame">
+
+                <h2 class="text-center mb-4">Case Data</h2>
+
+                  <div class="row">
+                    <div class="col-lg-4 col-md-6">
+                      <a href="/viewprospectcases.html">
+                          <div class="card prospects">
+                            <div class="card-header">
+                              <h5 class="card-title">Prospect Cases</h5>
+                            </div>
+                            <div class="card-body">
+                              <h3 id="prospectcount" class="card-text"></h3>
+                            </div>
+                          </div>
+                      </a>
                     </div>
-                  </a>
 
-                </div>
-
-                
-                <div class="col-lg-3 col-md-6">
-                  <a href="/viewpendingcards.html">
-                        <div class="card prospects">
+                    <div class="col-lg-4 col-md-6">
+                      <a href="/viewpendingauthcases.html">
+                        <div class="card pendingauth">
                           <div class="card-header">
-                            <h5 class="card-title">Pending Cards</h5>
+                            <h5 class="card-title">Pending Auth Cases</h5>
                           </div>
                           <div class="card-body">
-                            <h3 id="prospectcardcount" class="card-text"></h3>
+                            <h3 id="pendingauthcountcount" class="card-text"></h3>
                           </div>
                         </div>
-                </a>
-                </div>
-                <div class="col-lg-3 col-md-6">
+                      </a>
+                    </div>
 
-                  <a href="/viewcards.html">
-                      <div class="card active-cases">
-                        <div class="card-header">
-                          <h5 class="card-title">Live Cards</h5>
+                    <div class="col-lg-4 col-md-6">
+                      <a href="/viewcases.html">
+                        <div class="card active-cases">
+                          <div class="card-header">
+                            <h5 class="card-title">Live Cases</h5>
+                          </div>
+                          <div class="card-body">
+                            <h3 id="livecount" class="card-text"></h3>
+                          </div>
                         </div>
-                        <div class="card-body">
-                          <h3 id="livecardcount" class="card-text"></h3>
-                        </div>
-                      </div>
-                </a>
-                </div>
+                      </a>
 
-               
-              </div>
-            
+                    </div>
+                  
+                  </div>
+             </div>
+
+             <div class="frame" style=" margin-top: 60px;">
+              <h2 class="text-center mb-4">Claim Shield Data</h2>
+                <div class="row">
+                  <div class="col-lg-4 col-md-6" style="margin-left: 150px;">
+                    <a href="/viewpendingcards.html">
+                          <div class="card prospects">
+                            <div class="card-header">
+                              <h5 class="card-title">Pending Cards</h5>
+                            </div>
+                            <div class="card-body">
+                              <h3 id="prospectcardcount" class="card-text"></h3>
+                            </div>
+                          </div>
+                    </a>
+                  </div>
+                  <div class="col-lg-4 col-md-6">
+
+                    <a href="/viewcards.html">
+                        <div class="card active-cases">
+                          <div class="card-header">
+                            <h5 class="card-title">Live Cards</h5>
+                          </div>
+                          <div class="card-body">
+                            <h3 id="livecardcount" class="card-text"></h3>
+                          </div>
+                        </div>
+                    </a>
+                  </div>
+
+                </div>
+            </div>
              
             </div>
   
@@ -315,7 +343,7 @@ $(document).ready(function () {
 
 
       $.ajax({
-        url: '/api/getpendingcaseCount',
+        url: '/api/getprospectcaseCount',
         type: 'GET',
         success: function (response) {
           // Populate the options in the select element
@@ -326,6 +354,23 @@ $(document).ready(function () {
           console.error('Error:', error);
         }
       });
+
+      $.ajax({
+        url: '/api/getpendingauthcaseCount',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          //populateDataTable(response);
+          document.getElementById("pendingauthcountcount").textContent=response;
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+      
+
+
 
 
 

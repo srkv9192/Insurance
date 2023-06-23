@@ -149,7 +149,8 @@ div.dataTables_filter {
                  </i>Case Menu</a>
                <div class='dashboard-nav-dropdown-menu'>
                    <a href="/addprospect.html" class="dashboard-nav-dropdown-item">Add Case</a>
-                   <a href="/viewpendingcases.html" class="dashboard-nav-dropdown-item">View Pending</a>
+                   <a href="/viewprospectcases.html" class="dashboard-nav-dropdown-item">View Prospect</a>
+                   <a href="/viewpendingauthcases.html" class="dashboard-nav-dropdown-item">View Pending Auth</a>
                    <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
                    <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
                </div>
@@ -200,12 +201,26 @@ div.dataTables_filter {
   <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
   <script>
 
-function movetolive(referencenumber) {
+function movetoauth(referencenumber) {
         // Code to generate card
-       //alert("Move to live reference number: " + referencenumber);
-       localStorage['casereferencenumber'] = referencenumber; 
 
-       window.location.replace("/movecasetolive.html");
+             // Make an API call with the username and password
+             $.ajax({
+            url: '/api/movecasetopendingauthbyref',
+            type: 'POST',
+            contentType: "application/x-www-form-urlencoded",
+            data: {
+            casereferenceNumber: referencenumber,
+            },
+            success: function (response) {
+              alert("Case Moved to pending auth.");
+            },
+            error: function (error) {
+              document.getElementById('loginForm').reset();
+              alert("Failed to move case to pending auth.");
+              // Display an error message to the user
+            }
+        });
 
       }
 
@@ -270,7 +285,7 @@ function movetolive(referencenumber) {
       
        // AJAX call on page load get manager details
        $.ajax({
-        url: '/api/getpendingcasedetail',
+        url: '/api/getprospectcasedetail',
         type: 'GET',
         success: function (response) {
           // Populate the options in the select element
@@ -298,7 +313,7 @@ function movetolive(referencenumber) {
               data[i].tpaName,
               data[i].claimAmount,
               data[i].claimNumber,
-              `<button class="btn btn-primary btn-sm" onclick="movetolive(${rfno})">Move to Live</button>`
+              `<button class="btn btn-primary btn-sm" onclick="movetoauth(${rfno})">Move to Pending Auth</button>`
             ]);
           }
         }

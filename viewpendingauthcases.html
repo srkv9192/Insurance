@@ -71,7 +71,7 @@
     }
     .table-dark td {
       color: #fff;
-      background-color: green;
+      background-color: lightgrey;
     }
 
     .table-dark tbody tr.card-missing td {
@@ -172,7 +172,7 @@ div.dataTables_filter {
           <div class="container mt-5">
             <div class="row justify-content-center">
               <div class="col-lg-12">
-                <h2 class="text-center mb-4">Live Cases</h2>
+                <h2 class="text-center mb-4">Prospect Cases</h2>
                 <div class="table-responsive">
                   <table id ="dataTable" class="table table-dark table-bordered">
                     <thead>
@@ -203,34 +203,11 @@ div.dataTables_filter {
 
 function movetolive(referencenumber) {
         // Code to generate card
-       alert("Move to live reference number: " + referencenumber);
+       //alert("Move to live reference number: " + referencenumber);
+       localStorage['casereferencenumber'] = referencenumber; 
 
-       /*
-        $.ajax({
-          url: '/api/generatepolicycard',
-          type: 'POST',
-          contentType: "application/x-www-form-urlencoded",
-          data: {
-            referenceNumber: referencenumber, 
-          },
-          success: function (response) {
-            if(response.message == "success")
-              {
-                
-                alert("Card number- " + response.cardnumber)
-                window.location.reload();
-              }
-              else{
-                alert(response.message)
-              }
-          },
-          error: function (error) {
-            alert("Card Number generation failed");
-            // Display an error message to the user
-          }
-        });
-        
-        */
+       window.location.replace("/movecasetolive.html");
+
       }
 
       
@@ -294,7 +271,7 @@ function movetolive(referencenumber) {
       
        // AJAX call on page load get manager details
        $.ajax({
-        url: '/api/getlivecasedetail',
+        url: '/api/getpendingauthcasedetail',
         type: 'GET',
         success: function (response) {
           // Populate the options in the select element
@@ -322,7 +299,7 @@ function movetolive(referencenumber) {
               data[i].tpaName,
               data[i].claimAmount,
               data[i].claimNumber,
-              `<button class="btn btn-primary btn-sm" onclick="movetolive(${rfno})">View Policy</button>`
+              `<button class="btn btn-primary btn-sm" onclick="movetolive(${rfno})">Move to Live</button>`
             ]);
           }
         }
