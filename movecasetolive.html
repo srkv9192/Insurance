@@ -151,7 +151,7 @@
             <h2 class="text-center mb-4">Add pending details</h2>
 
             <div class="frame">
-              <form id="loginForm">
+              <form id="loginForm" enctype="multipart/form-data">
 
                 <div class="row mb-3">
                   <div class="col-sm-6">
@@ -206,6 +206,9 @@
                     <label for="bank-name" class="form-label">Bank Name</label>
                     <input type="text" class="form-control" id="bank-name" required>
                   </div>
+
+                  <input type="file" id="pdf-input" accept=".pdf">
+
                 </div>
                 <div class="text-center">
                   <button type="submit" class="btn btn-primary">Submit</button>
@@ -317,19 +320,25 @@
 
         var bankname = $('#bank-name').val();
 
+        var formData = new FormData();
+        formData.append('casereferenceNumber', localStorage['casereferencenumber']);
+        formData.append('processingFee', processingfee);
+        formData.append('consultationCharge', consultationcharge);
+        formData.append('chequeAmount', chequeamount);
+        formData.append('chequeNumber', chequenumber);
+        formData.append('bankName', bankname);
+
+        // Get the selected PDF file input element
+        var pdfFile = $('#pdf-input')[0].files[0];
+        formData.append('pdfFile', pdfFile);
+
         // Make an API call with the username and password
         $.ajax({
           url: '/api/movecasetolivebyref',
           type: 'POST',
-          contentType: "application/x-www-form-urlencoded",
-          data: {
-          casereferenceNumber: localStorage['casereferencenumber'],
-          processingFee: processingfee,
-          consultationCharge: consultationcharge,
-          chequeAmount: chequeamount,
-          chequeNumber: chequenumber,
-          bankName:  bankname,
-          },
+          processData: false,
+          contentType: false,
+          data: formData,
           success: function (response) {
            
             alert("Case data saved successfully. Case number - " + response.casenumberstring );

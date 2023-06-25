@@ -2,6 +2,12 @@ const express = require('express')
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const multer = require('multer');
+const AWS = require('aws-sdk');
+var fs = require('fs');
+
+// AWS S3 configuration
+const s3 = new AWS.S3()
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads/'); // Specify the destination folder for uploaded files
@@ -682,7 +688,7 @@ app.get("/api/getprospectcasedetailbyref", async(req, res) => {
   }
 });
 
-app.post('/api/movecasetolivebyref', async(req, res) => {
+app.post('/api/movecasetolivebyref', upload.single('pdfFile'), async(req, res) => {
   try{
 
     const gencaseNumber= await getCaseNumbereCount();
@@ -700,9 +706,46 @@ app.post('/api/movecasetolivebyref', async(req, res) => {
         chequeNumber : req.body.chequeNumber,
         bankName : req.body.bankName,
         caseNumber: casenumberstring,
+        isPendingAuth: "false",
+        isLive: "true",
       }, {new : true});
 
       incrementCaseNumberCount();
+
+
+      const file = req.file;
+      console.log(file)
+      console.log(__dirname)
+
+  const filePath = __dirname + '/uploads/legal.pdf';
+
+  // Read the file
+  fs.readFile(filePath, (err, data) => {
+    if (err) {
+      console.error('Error reading file:', err);
+      res.status(500).send('Error reading file');
+      return;
+    }
+
+    // Upload the file to AWS S3
+    const uploadParams = {
+      Bucket: 'cyclic-kind-pig-gloves-eu-west-3',
+      Key: `uploads/${casenumberstring}.pdf`,
+      Body: data,
+    };
+
+    s3.upload(uploadParams, (err, result) => {
+      if (err) {
+        console.error('Error uploading file to S3:', err);
+        res.status(500).send('Error uploading file to S3');
+        return;
+      }
+
+      console.log('File uploaded successfully:', result.Location);
+      //res.status(200).send('File uploaded successfully');
+    });
+  });
+
       res.json({ message: 'Case data saved successfully', casenumberstring: casenumberstring });
   }
   catch(err)
