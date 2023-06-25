@@ -38,6 +38,7 @@ const upload = multer({ storage: storage });
 const app = express()
 const port = process.env.PORT || 80
 
+
 // Connect to local MongoDB database
 //mongodb+srv://<username>:<password>@cluster0.rldiof1.mongodb.net/?retryWrites=true&w=majority
 //mongodb://127.0.0.1:27017/test
@@ -46,7 +47,7 @@ const port = process.env.PORT || 80
 //  useUnifiedTopology: true,
 //});
 
-mongoose.connect('mongodb+srv://process.env.MONGOUSER:process.env.MONGOPASS@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority', {
+mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
