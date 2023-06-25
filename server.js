@@ -805,12 +805,13 @@ app.post('/api/movecasetolivebyref', upload.single('pdfFile'), async(req, res) =
         // if no error, file has been deleted successfully
         console.log('File deleted!');
     });
-*/
+
       console.log('File uploaded successfully:', result.Location);
       //res.status(200).send('File uploaded successfully');
     });
   });
 
+  */
       res.json({ message: 'Case data saved successfully', casenumberstring: casenumberstring });
   }
   catch(err)
