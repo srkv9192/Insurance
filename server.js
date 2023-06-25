@@ -502,7 +502,7 @@ app.post('/api/addmanagerdetail', async(req, res) => {
                         'location': req.body.location,
                         });
         const savedData = newData.save();
-        incrementManagerCount();
+        await incrementManagerCount();
         res.json({ message: 'Manager data saved successfully', data: savedData });
       }
     catch(err)
@@ -540,7 +540,7 @@ app.post('/api/addcpdetail', async(req, res) => {
                         'email' : req.body.email,
                         });
         const savedData = newData.save();
-        incrementcpCount();
+        await incrementcpCount();
         res.json({ message: 'CP data saved successfully', data: savedData });
       }
     catch(err)
@@ -593,7 +593,7 @@ app.post("/api/save-policy", upload.single('pdfFile'), async (req, res) => {
                   'inquiryDate': inquirydate
                     });
     const savedData = newData.save();
-    incrementReferenceCount();
+    await incrementReferenceCount();
 
     /*
     const file = req.file;
@@ -762,7 +762,7 @@ app.post('/api/movecasetolivebyref', upload.single('pdfFile'), async(req, res) =
         isLive: "true",
       }, {new : true});
 
-      incrementCaseNumberCount();
+      await incrementCaseNumberCount();
 
 /*
       const file = req.file;
@@ -829,7 +829,7 @@ app.post('/api/movecasetopendingauthbyref', async(req, res) => {
          isPendingAuth:"true",
       }, {new : true});
 
-      incrementCaseNumberCount();
+      await incrementCaseNumberCount();
       res.json({ message: 'Case data updated successfully', casereferenceNumber: req.body.casereferenceNumber });
   }
   catch(err)
