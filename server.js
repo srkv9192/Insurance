@@ -690,7 +690,6 @@ app.get("/api/getprospectcasedetailbyref", async(req, res) => {
 
 app.post('/api/movecasetolivebyref', upload.single('pdfFile'), async(req, res) => {
   try{
-
     const gencaseNumber= await getCaseNumbereCount();
     if(gencaseNumber == -1)
     {
@@ -717,7 +716,7 @@ app.post('/api/movecasetolivebyref', upload.single('pdfFile'), async(req, res) =
       console.log(file)
       console.log(__dirname)
 
-  const filePath = __dirname + '/uploads/legal.pdf';
+  const filePath = __dirname + `/uploads/${file.originalname}`;
 
   // Read the file
   fs.readFile(filePath, (err, data) => {
@@ -737,7 +736,7 @@ app.post('/api/movecasetolivebyref', upload.single('pdfFile'), async(req, res) =
     s3.upload(uploadParams, (err, result) => {
       if (err) {
         console.error('Error uploading file to S3:', err);
-        res.status(500).send('Error uploading file to S3');
+        //res.status(500).send('Error uploading file to S3');
         return;
       }
 
@@ -751,7 +750,7 @@ app.post('/api/movecasetolivebyref', upload.single('pdfFile'), async(req, res) =
   catch(err)
   {
     console.error(err);
-    return -1;
+    res.json({ message: 'Failed to upload file.' });
   } 
 });
 
@@ -1133,6 +1132,39 @@ catch(err)
   res.status(500).json({ error: 'Error Generating PDF' });
 } 
 });
+
+
+app.post("/api/viewpolicypdf", async (req, res) => {
+  try{
+
+    let my_file = await s3.getObject({
+      Bucket: "cyclic-kind-pig-gloves-eu-west-3",
+      Key: `uploads/${req.body.casenumber}.pdf`,
+  }).promise()
+
+    //const response = await createPDF(req);
+    var fileName = 'file.pdf';
+
+      //console.log(response);
+     // res.set('Content-Type', 'application/pdf');
+      //res.set('Content-Disposition', 'attachment; filename="' + fileName + '"');
+      //res.send(my_file);
+
+      res.setHeader('Content-Type', 'application/pdf');
+      
+    res.send(my_file.Body)
+    
+
+    //res.download("./Legal.pdf");
+    //res.json({ message: 'success' });
+  }
+catch(err)
+{
+  console.error(err);
+  res.status(500).json({ error: 'Error Generating PDF' });
+} 
+});
+
 
 const { PDFDocument, StandardFonts, rgb } = require("pdf-lib");
 const { writeFileSync, readFileSync } = require("fs");
