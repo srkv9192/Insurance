@@ -164,7 +164,7 @@
 
       $.ajax({
         url: '/api/logout',
-        type: 'GET',
+        type: 'POST',
         success: function (response) {
           // Populate the options in the select element
             //alert(response.message)
@@ -181,9 +181,8 @@
         error: function (error) {
           console.error('Error:', error);
         }
-      });
-        
-       
+      }); 
+
       });
 
 

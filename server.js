@@ -229,7 +229,7 @@ app.post('/api/login', async(req, res) => {
   
 });
 
-app.get('/api/logout', async(req, res) => {
+app.post('/api/logout', async(req, res) => {
   try{
     req.session.destroy()
     res.json({message : 'Old session removed'})
