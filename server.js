@@ -595,6 +595,7 @@ app.post("/api/save-policy", upload.single('pdfFile'), async (req, res) => {
     const savedData = newData.save();
     incrementReferenceCount();
 
+    /*
     const file = req.file;
     console.log(file)
     console.log(__dirname)
@@ -639,6 +640,7 @@ app.post("/api/save-policy", upload.single('pdfFile'), async (req, res) => {
       });
     });
 
+    */
     res.json({ message: 'success', referencenumber:refNumber,data: savedData });
   }
 catch(err)
@@ -762,7 +764,7 @@ app.post('/api/movecasetolivebyref', upload.single('pdfFile'), async(req, res) =
 
       incrementCaseNumberCount();
 
-
+/*
       const file = req.file;
       console.log(file)
       console.log(__dirname)
@@ -773,7 +775,7 @@ app.post('/api/movecasetolivebyref', upload.single('pdfFile'), async(req, res) =
   fs.readFile(filePath, (err, data) => {
     if (err) {
       console.error('Error reading file:', err);
-      res.status(500).send('Error reading file');
+      //res.status(500).send('Error reading file');
       return;
     }
 
@@ -803,7 +805,7 @@ app.post('/api/movecasetolivebyref', upload.single('pdfFile'), async(req, res) =
         // if no error, file has been deleted successfully
         console.log('File deleted!');
     });
-
+*/
       console.log('File uploaded successfully:', result.Location);
       //res.status(200).send('File uploaded successfully');
     });
