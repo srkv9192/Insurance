@@ -164,7 +164,7 @@
     $(document).ready(function () {
       $.ajax({
         url: '/api/whoami',
-        type: 'GET',
+        type: 'POST',
         success: function (response) {
             if(response.message !='invalid')
             {

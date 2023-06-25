@@ -1122,7 +1122,7 @@ async function updateCardDetails (refNumber, cardnumber)  {
   } 
 };
 
-app.get('/api/whoami',(req,res) => {
+app.post('/api/whoami',(req,res) => {
   session=req.session;
   if(session.userId && (session.userType == 'admin')){
       res.json({message : 'admin', username : session.userName})
