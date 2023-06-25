@@ -829,7 +829,7 @@ app.post('/api/movecasetopendingauthbyref', async(req, res) => {
          isPendingAuth:"true",
       }, {new : true});
 
-      await incrementCaseNumberCount();
+     // await incrementCaseNumberCount();
       res.json({ message: 'Case data updated successfully', casereferenceNumber: req.body.casereferenceNumber });
   }
   catch(err)
