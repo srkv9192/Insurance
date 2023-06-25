@@ -211,7 +211,7 @@ app.post('/api/login', async(req, res) => {
         else
         {
             session=req.session;
-            session.userId=req.body.userID;
+            session.userId=docs.userID;
             session.userType=docs.userType;
             session.userName = docs.userName;
             //res.sendFile(__dirname+'/index.html')
@@ -231,7 +231,9 @@ app.post('/api/login', async(req, res) => {
 
 app.post('/api/logout', async(req, res) => {
   try{
+    console.log("raj- "+req.session.userId)
     req.session.destroy()
+    //console.log(req.session.userId)
     res.json({message : 'Old session removed'})
   }
 catch(err)
@@ -1123,15 +1125,15 @@ async function updateCardDetails (refNumber, cardnumber)  {
 };
 
 app.post('/api/whoami',(req,res) => {
-  session=req.session;
-  if(session.userId && (session.userType == 'admin')){
-      res.json({message : 'admin', username : session.userName})
+ // session=req.session;
+  if(req.session.userId && (req.session.userType == 'admin')){
+      res.json({message : 'admin', username : req.session.userName})
   }
-  else if(session.userId && (session.userType == 'engineer')){
-      res.json({message : 'engineer', username : session.userName})
+  else if(req.session.userId && (req.session.userType == 'engineer')){
+      res.json({message : 'engineer', username : req.session.userName})
   }
-  else if(session.userId && (session.userType == 'coordinator')){
-      res.json({message : 'coordinator', username : session.userName})
+  else if(req.session.userId && (req.session.userType == 'coordinator')){
+      res.json({message : 'coordinator', username : req.session.userName})
   }
   else
      res.json({message : 'invalid'})
