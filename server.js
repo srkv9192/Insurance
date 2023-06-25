@@ -263,6 +263,7 @@ app.post('/api/addprospect', async(req, res) => {
                         managerID: req.body.managerID,
                         directCase: req.body.directCase,
                         caseCity: req.body.caseCity,
+                        policyNumber:req.body.policyNumber,
                         casereferenceNumber : refNumber,
                         caseNumber: "",
                         isProspect:"true",

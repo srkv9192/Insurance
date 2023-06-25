@@ -171,6 +171,14 @@
                         <option value="indore">Indore</option>
                         <option value="bhopal">Bhopal</option>
                         <option value="dewas">Dewas</option>
+                        <option value="ujjain">Ujjain</option>
+                        <option value="gwalior">Gwalior</option>
+                        <option value="jabalpur">Jabalpur</option>
+                        <option value="satna">Satna</option>
+                        <option value="sagar">sagar</option>
+                        <option value="ratlam">Ratlam</option>
+                        <option value="biaora">Biaora</option>
+                        
                       </select>
                     </div>
                   </div>
@@ -200,21 +208,21 @@
                 <div class="row mb-3">
                   <div class="col-sm-6">
                     <label for="client-name" class="form-label">Client Name</label>
-                    <input type="text" class="form-control" id="client-name">
+                    <input type="text" class="form-control" id="client-name" required>
                   </div>
                   <div class="col-sm-6">
                     <label for="client-address" class="form-label">Client Address</label>
-                    <input type="text" class="form-control" id="client-address">
+                    <input type="text" class="form-control" id="client-address" required>
                   </div>
                 </div>
                 <div class="row mb-3">
                   <div class="col-sm-6">
                     <label for="client-phone" class="form-label">Customer Phone</label>
-                    <input type="tel" class="form-control" id="client-phone">
+                    <input type="tel" class="form-control" id="client-phone" required>
                   </div>
                   <div class="col-sm-6">
                     <label for="client-email" class="form-label">Email </label>
-                    <input type="text" class="form-control" id="client-email">
+                    <input type="text" class="form-control" id="client-email" required>
                   </div>
                 </div>
                 <div class="row mb-3">
@@ -247,15 +255,26 @@
 
                   <div class="col-sm-6">
                     <label for="claim-number" class="form-label">Claim Number</label>
-                    <input type="text" class="form-control" id="claim-number">
+                    <input type="text" class="form-control" id="claim-number" required>
                   </div>
 
                   <div class="col-sm-6">
                     <label for="total-claim-amount" class="form-label">Total Claim Amount</label>
-                    <input type="number" class="form-control" id="total-claim-amount">
+                    <input type="number" class="form-control" id="total-claim-amount" required>
                   </div>
 
                 </div>
+                <div class="row mb-3">
+
+                  <div class="col-sm-6">
+                    <label for="policy-number" class="form-label">Policy Number</label>
+                    <input type="text" class="form-control" id="policy-number" required>
+                  </div>
+
+
+                </div>
+
+                
 
                 <div class="text-center">
                   <button type="submit" class="btn btn-primary">Submit</button>
@@ -474,6 +493,7 @@
         var managerid =  $('#manager-name-dropdown').val()
 
         var clientemail = $('#client-email').val();
+        var policynumber = $('#policy-number').val();
 
         // Make an API call with the username and password
         $.ajax({
@@ -495,6 +515,7 @@
           managerID: managerid,
           directCase: directcase,
           caseCity: casecity,
+          policyNumber: policynumber,
           },
           success: function (response) {
             if(response.message == "success")

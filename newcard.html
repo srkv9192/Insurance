@@ -484,13 +484,13 @@
               }
               else{
                 alert(response.message)
-                //document.getElementById('loginForm').reset();
+                document.getElementById('newpolicyform').reset();
               }
             //alert("login success");
             // Redirect to the dashboard or perform any other actions
           },
           error: function (error) {
-            //document.getElementById('loginForm').reset();
+            document.getElementById('newpolicyform').reset();
             alert("card generation failed");
             // Display an error message to the user
           }

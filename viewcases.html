@@ -203,8 +203,6 @@ div.dataTables_filter {
 
 function movetolive(referencenumber) {
         // Code to generate card
-       alert("Move to live reference number: " + referencenumber);
-
        
         $.ajax({
           url: '/api/viewpolicypdf',
@@ -239,7 +237,7 @@ function movetolive(referencenumber) {
 
           },
           error: function (error) {
-            alert("Card Number generation failed");
+            alert("No Policy found.");
             // Display an error message to the user
           }
         });
