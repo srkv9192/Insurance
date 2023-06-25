@@ -26,10 +26,10 @@ const transporter = nodemailer.createTransport({
   auth: {
       type: 'OAuth2',
       user: 'Nidaancard@gmail.com',
-      clientId: "157725426494-1iof3ceh6j469a7srp9obhie5e4t0u1j.apps.googleusercontent.com",
-      clientSecret: "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",
-      refreshToken: "1//04ije556NOO5jCgYIARAAGAQSNwF-L9Ir90KP5wW_GeD0p5gkYiHbIM1C5zegEs07_bWkHQuIxu4EmxlTFe9Xsz8nDDo9_laHhd8",
-      accessToken: "ya29.a0AWY7CkkTH71980bdJEprtXBTtOIJ-0gLBDvBUTETp5TlSa05HXpzr1Rq2f_OFhQQWXmsFTeyy-zlswpmyOM5vrgsE0FRNSyT-erSd3Q5j82JVRKTdfrRA52S5j-pn8l13Lkwjep3NphNPD2CKhiEOzHMqF7QaCgYKAYQSARMSFQG1tDrpCr2wQyhfhdsUGjKd22KBQQ0163",
+      clientId: process.env.gmailclientid,
+      clientSecret:  process.env.gmailclientSecret,
+      refreshToken: process.env.gmailrefreshToken,
+      accessToken: process.env.gmailaccessToken,
       expires: 1484314697598
   }
 });
@@ -46,11 +46,10 @@ const port = process.env.PORT || 80
 //  useUnifiedTopology: true,
 //});
 
-mongoose.connect('mongodb://127.0.0.1:27017/test', {
+mongoose.connect('mongodb+srv://process.env.MONGOUSER:process.env.MONGOPASS@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
 
 
 const cookieParser = require("cookie-parser");
@@ -614,8 +613,19 @@ app.post("/api/save-policy", upload.single('pdfFile'), async (req, res) => {
         if (err) {
           console.error('Error uploading file to S3:', err);
           //res.status(500).send('Error uploading file to S3');
+              fs.unlink(filePath, function (err) {
+                if (err) throw err;
+                // if no error, file has been deleted successfully
+                console.log('File deleted!');
+            });
+
           return;
         }
+        fs.unlink(filePath, function (err) {
+          if (err) throw err;
+          // if no error, file has been deleted successfully
+          console.log('File deleted!');
+      });
 
         console.log('File uploaded successfully:', result.Location);
         //res.status(200).send('File uploaded successfully');
@@ -771,8 +781,21 @@ app.post('/api/movecasetolivebyref', upload.single('pdfFile'), async(req, res) =
       if (err) {
         console.error('Error uploading file to S3:', err);
         //res.status(500).send('Error uploading file to S3');
+
+        fs.unlink(filePath, function (err) {
+          if (err) throw err;
+          // if no error, file has been deleted successfully
+          console.log('File deleted!');
+      });
+
         return;
       }
+
+      fs.unlink(filePath, function (err) {
+        if (err) throw err;
+        // if no error, file has been deleted successfully
+        console.log('File deleted!');
+    });
 
       console.log('File uploaded successfully:', result.Location);
       //res.status(200).send('File uploaded successfully');
