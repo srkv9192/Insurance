@@ -164,33 +164,6 @@
   <script>
     $(document).ready(function () {
 
-      $.ajax({
-        url: '/api/whoami',
-        type: 'GET',
-        success: function (response) {
-          // Populate the options in the select element
-            //alert(response.message)
-           
-            if(response.message !='invalid')
-            {
-              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
-              document.getElementById("login-menu").href="/logout.html"; 
-              $("#showonlogin").show();
-              $("#hideonlogin").hide();
-             
-            }
-            else
-            {
-              
-            }
-            
-        },
-        error: function (error) {
-          console.error('Error:', error);
-        }
-      });
-
-
       const mobileScreen = window.matchMedia("(max-width: 990px )");
 
           $(".dashboard-nav-dropdown-toggle").click(function () {
