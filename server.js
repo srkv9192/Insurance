@@ -1125,6 +1125,9 @@ async function updateCardDetails (refNumber, cardnumber)  {
 };
 
 app.post('/api/whoami',(req,res) => {
+
+  console.log("aaru- "+req.session.userId)
+  console.log("aaru- "+req.session.userType)
  // session=req.session;
   if(req.session.userId && (req.session.userType == 'admin')){
       res.json({message : 'admin', username : req.session.userName})
