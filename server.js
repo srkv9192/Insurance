@@ -1124,7 +1124,7 @@ async function updateCardDetails (refNumber, cardnumber)  {
   } 
 };
 
-app.post('/api/whoami',(req,res) => {
+app.post('/api/whoami', async(req,res) => {
 
   console.log("aaru- "+req.session.userId)
   console.log("aaru- "+req.session.userType)
