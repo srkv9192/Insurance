@@ -556,7 +556,7 @@ app.get("/api/getcpdetail", async(req, res) => {
 });
 
 
-app.post("/api/save-policy", async (req, res) => {
+app.post("/api/save-policy", upload.single('pdfFile'), async (req, res) => {
   try{
     const refNumber= await getReferenceCount();
     const inquirydate= new Date();
@@ -588,6 +588,40 @@ app.post("/api/save-policy", async (req, res) => {
                     });
     const savedData = newData.save();
     incrementReferenceCount();
+
+    const file = req.file;
+    console.log(file)
+    console.log(__dirname)
+
+    const filePath = __dirname + `/uploads/${file.originalname}`;
+
+    // Read the file
+    fs.readFile(filePath, (err, data) => {
+      if (err) {
+        console.error('Error reading file:', err);
+        res.status(500).send('Error reading file');
+        return;
+      }
+
+      // Upload the file to AWS S3
+      const uploadParams = {
+        Bucket: 'cyclic-kind-pig-gloves-eu-west-3',
+        Key: `uploads/${refNumber}.pdf`,
+        Body: data,
+      };
+
+      s3.upload(uploadParams, (err, result) => {
+        if (err) {
+          console.error('Error uploading file to S3:', err);
+          //res.status(500).send('Error uploading file to S3');
+          return;
+        }
+
+        console.log('File uploaded successfully:', result.Location);
+        //res.status(200).send('File uploaded successfully');
+      });
+    });
+
     res.json({ message: 'success', referencenumber:refNumber,data: savedData });
   }
 catch(err)

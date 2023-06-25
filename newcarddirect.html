@@ -379,29 +379,38 @@
        var policydependents =$('#policy-dependents').val();
 
 
+
+           var formData = new FormData();
+ 
+          formData.append('customerName', customername);
+          formData.append('customerAddress', customeraddress);
+          formData.append('customerPhone', customerphone);
+          formData.append('customerEmail', customeremail);
+          formData.append('insuranceCompany', insurancecompany);
+          formData.append('tpaName', tpaname);
+          formData.append('policyNumber', policynumber);
+          formData.append('policyStartDate', policystartdate);
+          formData.append('policyEndDate', policyenddate);
+          formData.append('policyDependents', policydependents);
+
+
+          // Get the selected PDF file input element
+          var pdfFile = $('#policy-upload')[0].files[0];
+          formData.append('pdfFile', pdfFile);
+
         // Make an API call with the username and password
         $.ajax({
           url: '/api/save-policy',
           type: 'POST',
-          contentType: "application/x-www-form-urlencoded",
-          data: {
-          customerName: customername,
-          customerAddress: customeraddress,
-          customerPhone: customerphone,
-          customerEmail: customeremail,
-          insuranceCompany: insurancecompany,
-          tpaName: tpaname,
-          policyNumber: policynumber,
-          policyStartDate: policystartdate,
-          policyEndDate: policyenddate,
-          policyDependents: policydependents,
-          policyUpload: policyupload, 
-          },
+          processData: false,
+          contentType: false,
+          data: formData,
           success: function (response) {
             if(response.message == "success")
               {
                 //window.location.href = "/dashboard.html"
                 alert("Reference number- " + response.referencenumber)
+                document.getElementById('newpolicyform').reset();
               }
               else{
                 alert(response.message)
