@@ -215,6 +215,9 @@ app.post('/api/login', async(req, res) => {
             session.userType=docs.userType;
             session.userName = docs.userName;
             //res.sendFile(__dirname+'/index.html')
+            console.log(session.userId);
+            console.log(session.userType);
+            console.log(session.userName);
             res.json({message : 'loginsuccess'})
         }
 
