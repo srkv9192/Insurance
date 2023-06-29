@@ -134,6 +134,28 @@
             </div>
 
           </div>
+
+          <div id="showtocpandmanager" style="display: none;">
+
+            <div class='dashboard-nav-dropdown show'>
+               <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+                <i class="fas fa-photo-video">
+                  </i>Card Menu</a>
+                <div class='dashboard-nav-dropdown-menu'>
+                    <a href="/newcard.html" class="dashboard-nav-dropdown-item">Add Card</a>
+                </div>
+             </div>
+
+             <div class='dashboard-nav-dropdown show'>
+              <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+               <i class="fas fa-photo-video">
+                 </i>Case Menu</a>
+               <div class='dashboard-nav-dropdown-menu'>
+                   <a href="/addprospect.html" class="dashboard-nav-dropdown-item">Add Case</a>
+               </div>
+            </div>
+
+          </div>
           
         <div class="nav-item-divider"></div>
         <a  id="login-menu"
@@ -182,7 +204,7 @@
                     <input type="text" class="form-control" id="processing-fee" required>
                   </div>
                   <div class="col-sm-6">
-                    <label for="consultation-charge" class="form-label">Consultation Charge</label>
+                    <label for="consultation-charge" class="form-label">Consultation Charge (%)</label>
                     <input type="number" class="form-control" id="consultation-charge" required>
                   </div>
 
@@ -236,6 +258,17 @@
       var casereferencenumber = localStorage['casereferencenumber'] || '';
       //alert("case ref number is -"+ casereferencenumber);
 
+        // calculate cheque amount based on consulation charge percentage
+        $('#consultation-charge').change(function () {
+
+          var claimamount = $('#total-claim-amount').val();
+          var consultationcharge = $('#consultation-charge').val();
+          console.log(claimamount);
+          console.log(consultationcharge);
+
+          document.getElementById("cheque-amount").value=(claimamount * consultationcharge ) / (100);
+
+      });
 
       $.ajax({
         url: '/api/whoami',
@@ -244,13 +277,20 @@
           // Populate the options in the select element
             //alert(response.message)
            
-            if(response.message !='invalid')
+            if(response.message =='admin')
             {
               $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showonlogin").show();
               $("#hideonlogin").hide();
              
+            }
+            else if(response.message =='cp' || response.message =='manager')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtocpandmanager").show();
+              $("#hideonlogin").hide();
             }
             else
             {

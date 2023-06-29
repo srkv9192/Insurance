@@ -157,6 +157,28 @@ div.dataTables_filter {
             </div>
 
           </div>
+
+          <div id="showtocpandmanager" style="display: none;">
+
+            <div class='dashboard-nav-dropdown show'>
+               <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+                <i class="fas fa-photo-video">
+                  </i>Card Menu</a>
+                <div class='dashboard-nav-dropdown-menu'>
+                    <a href="/newcard.html" class="dashboard-nav-dropdown-item">Add Card</a>
+                </div>
+             </div>
+
+             <div class='dashboard-nav-dropdown show'>
+              <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+               <i class="fas fa-photo-video">
+                 </i>Case Menu</a>
+               <div class='dashboard-nav-dropdown-menu'>
+                   <a href="/addprospect.html" class="dashboard-nav-dropdown-item">Add Case</a>
+               </div>
+            </div>
+
+          </div>
             
         <div class="nav-item-divider">
 
@@ -199,6 +221,13 @@ div.dataTables_filter {
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+
+  <script src="  https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+
+  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+
   <script>
 
 function movetolive(referencenumber) {
@@ -255,13 +284,20 @@ function movetolive(referencenumber) {
           // Populate the options in the select element
             //alert(response.message)
            
-            if(response.message !='invalid')
+            if(response.message =='admin')
             {
               $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showonlogin").show();
               $("#hideonlogin").hide();
              
+            }
+            else if(response.message =='cp' || response.message =='manager')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtocpandmanager").show();
+              $("#hideonlogin").hide();
             }
             else
             {
@@ -302,6 +338,10 @@ function movetolive(referencenumber) {
         "ordering": true,
         "info": true,
         "scrollX": true,
+        dom: '<"container-fluid"<"row" <"col-sm-2"l> <"col-sm-1"B>  <"col"f>  >>rt     <"row" <"col-lg-9"i> <"col-sm-2"p>  >  ',
+        buttons: [
+            'excel'
+        ]
       });
       
        // AJAX call on page load get manager details

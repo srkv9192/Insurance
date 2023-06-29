@@ -47,10 +47,20 @@ const port = process.env.PORT || 80
 //  useUnifiedTopology: true,
 //});
 
+
+/*
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+*/
+
+mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+
 
 
 const cookieParser = require("cookie-parser");
@@ -215,9 +225,6 @@ app.post('/api/login', async(req, res) => {
             session.userType=docs.userType;
             session.userName = docs.userName;
             //res.sendFile(__dirname+'/index.html')
-            console.log(session.userId);
-            console.log(session.userType);
-            console.log(session.userName);
             res.json({message : 'loginsuccess'})
         }
 
@@ -1128,18 +1135,15 @@ async function updateCardDetails (refNumber, cardnumber)  {
 };
 
 app.post('/api/whoami', async(req,res) => {
-
-  console.log("aaru- "+req.session.userId)
-  console.log("aaru- "+req.session.userType)
  // session=req.session;
   if(req.session.userId && (req.session.userType == 'admin')){
       res.json({message : 'admin', username : req.session.userName})
   }
-  else if(req.session.userId && (req.session.userType == 'engineer')){
-      res.json({message : 'engineer', username : req.session.userName})
+  else if(req.session.userId && (req.session.userType == 'cp')){
+      res.json({message : 'cp', username : req.session.userName})
   }
-  else if(req.session.userId && (req.session.userType == 'coordinator')){
-      res.json({message : 'coordinator', username : req.session.userName})
+  else if(req.session.userId && (req.session.userType == 'manager')){
+      res.json({message : 'manager', username : req.session.userName})
   }
   else
      res.json({message : 'invalid'})
@@ -1249,9 +1253,9 @@ async function createPDF(req) {
   console.log( firstPage.getHeight() + " " +  firstPage.getWidth());
 
  // firstPage.moveTo(62, 500);
-  firstPage.moveTo(360, 670);
+  firstPage.moveTo(450, 670);
 
-  firstPage.drawText(new Date().toLocaleDateString(), {
+  firstPage.drawText(new Date().toLocaleDateString("en-GB"), {
     font: courierBoldFont,
     size: 12,
   });
@@ -1459,16 +1463,16 @@ async function downloadCardPDF(req) {
   });
 
   // Validity start date
-  firstPage.moveTo(140, 80);
-  const options = { year: 'numeric', month: 'long', day: 'numeric' };
-  firstPage.drawText( req.cardStartDate.toLocaleDateString(undefined, options) , {
+  firstPage.moveTo(150, 80);
+  //const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  firstPage.drawText( req.cardStartDate.toLocaleDateString("en-GB") , {
     font: timesBoldFont,
     size: 24,
   });
 
   // Validity end date
-  firstPage.moveTo(320, 80);
-  firstPage.drawText( req.cardEndDate.toLocaleDateString(undefined, options) , {
+  firstPage.moveTo(325, 80);
+  firstPage.drawText( req.cardEndDate.toLocaleDateString("en-GB") , {
     font: timesBoldFont,
     size: 24,
   });
