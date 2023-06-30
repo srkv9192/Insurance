@@ -172,6 +172,7 @@ const policyCardSchema = new mongoose.Schema({
   inquiryDate: Date,
   cardStartDate: Date,
   cardEndDate: Date,
+  paymentcomment: String,
 });
 
 //third party admin details
@@ -597,7 +598,8 @@ app.post("/api/save-policy", upload.single('pdfFile'), async (req, res) => {
                   'cpID': req.body.cpID, 
                   'cpName': req.body.cpName,
                   'directCase' : req.body.directCase,
-                  'inquiryDate': inquirydate
+                  'inquiryDate': inquirydate,
+                  'paymentcomment':"",
                     });
     const savedData = newData.save();
     await incrementReferenceCount();
@@ -654,6 +656,21 @@ catch(err)
 {
   console.error(err);
   res.status(500).json({ error: 'Error saving new card data' });
+} 
+});
+
+app.post("/api/savepaymentcomment",  async (req, res) => {
+  try{
+    const newData = await policyCardSchemaObject.findOneAndUpdate({referenceNumber: req.body.referenceNumber},       {  processingFee: req.body.processingFee,
+      paymentcomment: req.body.paymentcomment,
+    }, {new : true});
+    const savedData = newData.save();
+    res.json({ message: 'Payment comments saved successfully', data: savedData });
+  }
+catch(err)
+{
+  console.error(err);
+  res.status(500).json({ error: 'Error while saving payment data' });
 } 
 });
 

@@ -200,7 +200,7 @@ div.dataTables_filter {
                     <thead>
                       <tr>
                         <th>Reference Number</th>
-                        <th>Card Number</th>
+                        <th>Payment comments</th>
                         <th>Customer Name</th>
                         <th>Customer Phone</th>
                         <th>Customer Email</th>
@@ -340,11 +340,16 @@ function generateCard(referencenumber) {
           $("#dataTable").DataTable().clear();
           var length = Object.keys(data).length;
           for(var i = 0; i < length; i++) {
-            var rfno= data[i].referenceNumber
+            var rfno= data[i].referenceNumber;
+            var paymentcomment = data[i].paymentcomment;
+            if(paymentcomment == null)
+            {
+              paymentcomment = "None"
+            }
             // You could also use an ajax property on the data table initialization
             $('#dataTable').dataTable().fnAddData( [
               data[i].referenceNumber,
-              data[i].cardNumber,
+              paymentcomment,
               data[i].customerName,
               data[i].customerPhone,
               data[i].customerEmail,

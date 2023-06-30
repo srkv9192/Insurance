@@ -233,20 +233,14 @@
                     </div>
                     <div class="row mb-3">
                       <div class="col-sm-6">
-                        <label for="policy-start-date" class="form-label">Policy Start Date</label>
-                        <input type="date" class="form-control" id="policy-start-date" required>
-                      </div>
-                      <div class="col-sm-6">
                         <label for="policy-end-date" class="form-label">Policy End Date</label>
                         <input type="date" class="form-control" id="policy-end-date" required>
                       </div>
-                    </div>
-                    <div class="row mb-3">
                       <div class="col-sm-6">
                         <label for="policy-upload" class="form-label">Policy Upload</label>
                         <input type="file" class="form-control" id="policy-upload">
                       </div>
-          
+
                     </div>
                     <div class="text-center">
                       <button type="submit" class="btn btn-primary">Submit</button>
@@ -402,7 +396,6 @@
           tpaname =  $('#tpa-name-dropdown').val()
         }
         var policynumber = $('#policy-number').val();
-        var policystartdate = $('#policy-start-date').val();
         var policyenddate = $('#policy-end-date').val();
        var policyupload =$('#policy-upload').val();
        var policydependents =$('#policy-dependents').val();
@@ -418,7 +411,6 @@
           formData.append('insuranceCompany', insurancecompany);
           formData.append('tpaName', tpaname);
           formData.append('policyNumber', policynumber);
-          formData.append('policyStartDate', policystartdate);
           formData.append('policyEndDate', policyenddate);
           formData.append('policyDependents', policydependents);
 
@@ -439,7 +431,11 @@
               {
                 //window.location.href = "/dashboard.html"
                 alert("Reference number- " + response.referencenumber)
-                document.getElementById('newpolicyform').reset();
+
+                localStorage['newcardrefnumber'] = response.referencenumber; 
+                window.location.replace("/paymentinfo.html");
+
+                //document.getElementById('newpolicyform').reset();
               }
               else{
                 alert(response.message)

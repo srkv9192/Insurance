@@ -9,6 +9,12 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="css/menubar.css">
   <style>
+        input.form-control:read-only {
+        background-color:  #343a40;
+    }
+    input.form-control:disabled {
+        background-color:  #343a40;
+    }
     body {
       background-color: #343a40;
       background-image: url('/images/background20.jpg');
@@ -73,6 +79,22 @@
       color: lime;
       animation: blink 1s infinite;
     }
+    .framelocal {
+    border: 1px solid #ced4da;
+    padding: 20px;
+    border-radius: 5px;
+    background-color: #343a40;
+    height: 550px;
+    width:600px;
+  }
+  .framelocalsmall {
+    border: 1px solid #ced4da;
+    padding: 20px;
+    border-radius: 5px;
+    background-color: #343a40;
+    height: 550px;
+    width: 400px;
+  }
   </style>
   <title>Login Page</title>
 </head>
@@ -163,12 +185,12 @@
         <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
         <div class='dashboard-content' style="background-image: url('/images/background20.jpg');">
           <div class="container mt-5">
-            <div class="row justify-content-center">
+            <div class="row ">
               
               <h1 class="container my-2 text-center">Bank Account Details</h1>
 
-              <div class="frame">
-                <div class="container  text-center">
+              <div class="framelocal text-center" >
+                <div class="container text-center  " >
                   <div class=" p-4 ">
                     
                     <div class="details mt-4" style = "font-size: large;">
@@ -178,15 +200,55 @@
                       <p>UPI ID: ashwin.kaushal@okhdfcbank</p>
                       </b>
                     </div>
-                    <div class="qr-code text-center my-4">
+                    <div class="qr-code  my-4">
                       <!-- Your QR code image source here -->
                       <img src="/images/QR.jpg" alt="QR Code for payment" style="height:200px; width:200px">
                     </div>
                   </div>
                   <b><p class="blink text-center" style = "font-size: large;">Once the payment is done, a policy card will be sent to your registered email id within 24 hours.</p></b>
+                
                 </div>
-            </div>
+              </div>
 
+              
+              <div class="framelocalsmall text-center" style="margin-left: 50px;" >
+                <div class="container text-center  " >
+                  <div class=" p-4 ">
+                    
+                    <div class="details mt-4" style = "font-size: large;">
+                     
+                      <form id="newpolicyform">
+                        <div class="row mb-3">
+                            <div class="col-lg-12">
+                              <label for="ref-number" class="form-label">Card Reference number</label>
+                              <div class="input-group">
+                                <input type="text" class="form-control" id="ref-number" readonly>
+                              </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                          <div class="col-lg-12">
+                            <label for="pay-comment" class="form-label">Payment comments</label>
+                            <div class="input-group">
+                             
+                              <textarea  type="text" class="form-control" rows="7" id="pay-comment"></textarea>
+                            </div>
+                          </div>
+                        
+                        </div>
+
+                        <div class="text-center">
+                          <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+
+                      </form>
+
+                    </div>
+
+                  </div>                
+                </div>
+              </div>
+              
 
             </div>
           </div>
@@ -203,6 +265,8 @@
   <script>
     $(document).ready(function () {
 
+      var newcardrefnumber= localStorage['newcardrefnumber']; 
+      document.getElementById("ref-number").value = newcardrefnumber; 
       $.ajax({
         url: '/api/whoami',
         type: 'POST',
@@ -255,37 +319,31 @@
         }
     });
 
-      $('#loginForm').on('submit', function (event) {
+      $('#newpolicyform').on('submit', function (event) {
         event.preventDefault();
 
-        var username = $('#username').val();
-        var password = $('#password').val();
+        var referenceid = $('#ref-number').val();
+        var paycomments = $('#pay-comment').val();
+        //paymentcomment
 
-        // Make an API call with the username and password
+        // Make an API call to save payment comments
         $.ajax({
-          url: '/api/login',
+          url: '/api/savepaymentcomment',
           type: 'POST',
           contentType: "application/x-www-form-urlencoded",
           data: {
-            userID: username,
-            userPassword: password
+            referenceNumber: referenceid,
+            paymentcomment: paycomments
           },
           success: function (response) {
-            if(response.message == "loginsuccess")
-              {
-                window.location.href = "/dashboard.html"
-                //alert("Login Success- " + response.message)
-              }
-              else{
-                alert(response.message)
-                document.getElementById('loginForm').reset();
-              }
-            //alert("login success");
+              alert("Saved payment comments!");
+              localStorage['newcardrefnumber']="";
+              document.getElementById('newpolicyform').reset();
             // Redirect to the dashboard or perform any other actions
           },
           error: function (error) {
-            document.getElementById('loginForm').reset();
-            alert("login failed");
+            document.getElementById('newpolicyform').reset();
+            alert("Failed to save payment comments.");
             // Display an error message to the user
           }
         });
