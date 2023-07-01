@@ -65,6 +65,16 @@ app.use(sessions({
     resave: false 
 }));
 
+//gcp related includes-
+const { Storage } = require('@google-cloud/storage');
+const storagegcp = new Storage(
+  {
+    projectId: process.env.GOOGLE_CLOUD_PROJECT,
+    keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS,
+  }
+);
+const bucketName = storage.bucket(process.env.GCLOUD_STORAGE_BUCKET);
+
 // Create a schema
 const dataSchema = new mongoose.Schema({
   customerName: String,
@@ -640,6 +650,74 @@ app.post("/api/save-policy", upload.single('pdfFile'), async (req, res) => {
     });
 
     */
+    
+
+    /*
+    try uploading to gcp
+    */
+
+    const file = req.file;
+    console.log(file);
+    console.log(__dirname);
+
+    const filePath = __dirname + `/uploads/${file.originalname}`;
+
+    // Read the file
+    fs.readFile(filePath, (err, data) => {
+      if (err) {
+        console.error('Error reading file:', err);
+        res.status(500).send('Error reading file');
+        return;
+      }
+
+      // Upload the file to Google Cloud Storage
+      const destinationFilename = `uploads/${casenumberstring}.pdf`;
+
+      const bucket = storage.bucket(bucketName);
+      const fileToUpload = bucket.file(destinationFilename);
+
+      const stream = fileToUpload.createWriteStream({
+        metadata: {
+          contentType: 'application/pdf',
+        },
+      });
+
+      stream.on('error', (err) => {
+        console.error('Error uploading file to GCS:', err);
+        res.status(500).send('Error uploading file to GCS');
+
+        // Cleanup: delete the file
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.error('Error deleting file:', err);
+          } else {
+            console.log('File deleted!');
+          }
+        });
+      });
+
+      stream.on('finish', () => {
+        // Cleanup: delete the file
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.error('Error deleting file:', err);
+          } else {
+            console.log('File deleted!');
+          }
+        });
+
+        console.log('File uploaded successfully');
+        res.status(200).send('File uploaded successfully');
+      });
+
+      // Pipe the file data to the GCS stream
+      stream.end(data);
+    });
+
+
+    //
+    
+    
     res.json({ message: 'success', referencenumber:refNumber,data: savedData });
   }
 catch(err)
