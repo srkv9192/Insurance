@@ -502,7 +502,8 @@
               {
                 //window.location.href = "/dashboard.html"
                 alert("Reference number- " + response.referencenumber)
-                 document.getElementById('newpolicyform').reset();
+                localStorage['newcardrefnumber'] = response.referencenumber; 
+                window.location.replace("/paymentinfo.html");
               }
               else{
                 alert(response.message)
