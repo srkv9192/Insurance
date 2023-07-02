@@ -47,11 +47,18 @@ const port = process.env.PORT || 80
 //  useUnifiedTopology: true,
 //});
 
+
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
+/*
+mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+*/
 
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
@@ -73,7 +80,7 @@ const storagegcp = new Storage(
     keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS,
   }
 );
-const bucketName = storage.bucket(process.env.GCLOUD_STORAGE_BUCKET);
+//const bucketName = storagegcp.bucket(process.env.GCLOUD_STORAGE_BUCKET);
 
 // Create a schema
 const dataSchema = new mongoose.Schema({
@@ -671,9 +678,9 @@ app.post("/api/save-policy", upload.single('pdfFile'), async (req, res) => {
       }
 
       // Upload the file to Google Cloud Storage
-      const destinationFilename = `uploads/${casenumberstring}.pdf`;
+      const destinationFilename = `uploads/claimshield-${refNumber}.pdf`;
 
-      const bucket = storage.bucket(bucketName);
+      const bucket = storagegcp.bucket(process.env.GCLOUD_STORAGE_BUCKET);
       const fileToUpload = bucket.file(destinationFilename);
 
       const stream = fileToUpload.createWriteStream({
@@ -707,17 +714,13 @@ app.post("/api/save-policy", upload.single('pdfFile'), async (req, res) => {
         });
 
         console.log('File uploaded successfully');
-        res.status(200).send('File uploaded successfully');
       });
 
       // Pipe the file data to the GCS stream
       stream.end(data);
     });
 
-
     //
-    
-    
     res.json({ message: 'success', referencenumber:refNumber,data: savedData });
   }
 catch(err)
@@ -904,7 +907,68 @@ app.post('/api/movecasetolivebyref', upload.single('pdfFile'), async(req, res) =
   });
 
   */
-      res.json({ message: 'Case data saved successfully', casenumberstring: casenumberstring });
+      
+  //try uploading to gcp
+
+  const file = req.file;
+    console.log(file);
+    console.log(__dirname);
+
+    const filePath = __dirname + `/uploads/${file.originalname}`;
+
+    // Read the file
+    fs.readFile(filePath, (err, data) => {
+      if (err) {
+        console.error('Error reading file:', err);
+        res.status(500).send('Error reading file');
+        return;
+      }
+
+      // Upload the file to Google Cloud Storage
+      const destinationFilename = `uploads/${casenumberstring}.pdf`;
+
+      const bucket = storagegcp.bucket(process.env.GCLOUD_STORAGE_BUCKET);
+      const fileToUpload = bucket.file(destinationFilename);
+
+      const stream = fileToUpload.createWriteStream({
+        metadata: {
+          contentType: 'application/pdf',
+        },
+      });
+
+      stream.on('error', (err) => {
+        console.error('Error uploading file to GCS:', err);
+        res.status(500).send('Error uploading file to GCS');
+
+        // Cleanup: delete the file
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.error('Error deleting file:', err);
+          } else {
+            console.log('File deleted!');
+          }
+        });
+      });
+
+      stream.on('finish', () => {
+        // Cleanup: delete the file
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.error('Error deleting file:', err);
+          } else {
+            console.log('File deleted!');
+          }
+        });
+
+        console.log('File uploaded successfully');
+      });
+
+      // Pipe the file data to the GCS stream
+      stream.end(data);
+    });
+
+  
+  res.json({ message: 'Case data saved successfully', casenumberstring: casenumberstring });
   }
   catch(err)
   {
