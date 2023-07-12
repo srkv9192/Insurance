@@ -1463,7 +1463,7 @@ async function createPDF(req) {
 
 
   //Insurance company name-
-  firstPage.moveTo(368, 603);
+  firstPage.moveTo(372, 603);
   firstPage.drawText(req.body.insuranceCompanyName , {
     font: timesBoldFont,
     size: 10,
