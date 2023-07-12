@@ -240,11 +240,11 @@
                 <div class="row mb-3">
                   <div class="col-sm-6">
                     <label for="client-phone" class="form-label">Customer Phone</label>
-                    <input type="tel" class="form-control" id="client-phone" required>
+                    <input type="text" class="form-control" id="client-phone" required pattern="[0-9]{10}" required maxlength="10">
                   </div>
                   <div class="col-sm-6">
                     <label for="client-email" class="form-label">Email </label>
-                    <input type="text" class="form-control" id="client-email" required>
+                    <input type="email" class="form-control" id="client-email" required>
                   </div>
                 </div>
                 <div class="row mb-3">

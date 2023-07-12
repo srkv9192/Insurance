@@ -91,12 +91,12 @@
   <div class="container mt-5">
     <div class="row justify-content-center">
       <div class="col-lg-6">
-        <h2 class="text-center mb-4">Data Entry</h2>
+        <h2 class="text-center mb-4">Add New case</h2>
         <form>
           <div class="row mb-3">
             <div class="col-sm-6">
               <label for="customer-name" class="form-label">Customer Name</label>
-              <input type="text" class="form-control" id="customer-name">
+              <input type="text" class="form-control" id="customer-name" required>
             </div>
             <div class="col-sm-6">
               <label for="customer-address" class="form-label">Customer Address</label>
@@ -106,21 +106,21 @@
           <div class="row mb-3">
             <div class="col-sm-6">
               <label for="customer-phone" class="form-label">Customer Phone</label>
-              <input type="tel" class="form-control" id="customer-phone">
+              <input type="text" class="form-control" id="customer-phone"  pattern="[0-9]{10}" required  maxlength="10">
             </div>
             <div class="col-sm-6">
               <label for="customer-email" class="form-label">CustomerEmail</label>
-              <input type="email" class="form-control" id="customer-email">
+              <input type="email" class="form-control" id="customer-email" required>
             </div>
           </div>
           <div class="row mb-3">
             <div class="col-sm-6">
               <label for="claim-number" class="form-label">Claim Number</label>
-              <input type="text" class="form-control" id="claim-number">
+              <input type="text" class="form-control" id="claim-number" required>
             </div>
             <div class="col-sm-6">
               <label for="insurance-company" class="form-label">Insurance Company Name</label>
-              <input type="text" class="form-control" id="insurance-company">
+              <input type="text" class="form-control" id="insurance-company" required>
             </div>
           </div>
           <div class="row mb-3">

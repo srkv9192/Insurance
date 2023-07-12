@@ -207,6 +207,7 @@ div.dataTables_filter {
                         <th>Insurance Company</th>
                         <th>TPA Name</th>
                         <th>Policy Number</th>
+                        <th>Validate Policy</th>
                         <th>Action</th>
                       </tr>
                     </thead>
@@ -223,6 +224,13 @@ div.dataTables_filter {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
   <script>
+
+function viewPolicy(referencenumber) {
+
+  window.open (`https://storage.googleapis.com/rspowerimages/uploads/claimshield-${referencenumber}.pdf`);
+
+  return;
+}
 
 function generateCard(referencenumber) {
         // Code to generate card
@@ -356,7 +364,8 @@ function generateCard(referencenumber) {
               data[i].insuranceCompany,
               data[i].tpaName,
               data[i].policyNumber,
-              `<button class="btn btn-primary btn-sm" onclick="generateCard(${rfno})">Generate Card</button>`
+              `<button class="btn btn-primary btn-sm" onclick="viewPolicy(${rfno})">View Policy</button>`,
+              `<button class="btn btn-primary btn-sm" onclick="generateCard(${rfno})">Generate Card</button>`,
             ]);
           }
         }

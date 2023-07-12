@@ -170,7 +170,7 @@
       <div class="container mt-5">
         <div class="row justify-content-center">
           <div class="col-lg-6">
-            <h2 class="text-center mb-4">Add pending details</h2>
+            <h2 class="text-center mb-4">Add Pending Details</h2>
 
             <div class="frame">
               <form id="loginForm" enctype="multipart/form-data">
@@ -212,7 +212,7 @@
                 <div class="row mb-3">
                   <div class="col-sm-6">
                     <label for="total-claim-amount" class="form-label">Total Claim Amount</label>
-                    <input type="number" class="form-control" id="total-claim-amount" required>
+                    <input type="number" class="form-control" id="total-claim-amount" readonly required>
                   </div>
                   <div class="col-sm-6">
                     <label for="cheque-amount" class="form-label">Cheque Amount</label>
@@ -228,10 +228,20 @@
                     <label for="bank-name" class="form-label">Bank Name</label>
                     <input type="text" class="form-control" id="bank-name" required>
                   </div>
-
+                <!--
                   <input type="file" id="pdf-input" accept=".pdf">
+                -->
 
                 </div>
+
+
+                <div class="row mb-3">
+                  <div class="col-sm-6">
+                    <label for="pdf-input" class="form-label">Policy Upload(PDF only)</label>
+                    <input type="file" class="form-control" id="pdf-input" required>
+                  </div>
+                </div>
+
                 <div class="text-center">
                   <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
@@ -254,6 +264,17 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     $(document).ready(function () {
+
+        // check for pdf file upload
+        $('#pdf-input').change(function () {
+        Object.values(this.files).forEach(function(file) {
+          if (file.type != 'application/pdf') {
+            alert("Please upload PDF file!!!");
+            document.getElementById("pdf-input").value = "";
+          }
+        })
+      });
+
 
       var casereferencenumber = localStorage['casereferencenumber'] || '';
       //alert("case ref number is -"+ casereferencenumber);

@@ -52,12 +52,13 @@ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS
   useUnifiedTopology: true,
 });
 
-/*
 
+/*
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
 */
 
 const cookieParser = require("cookie-parser");
@@ -246,7 +247,6 @@ app.post('/api/login', async(req, res) => {
 
 app.post('/api/logout', async(req, res) => {
   try{
-    console.log("raj- "+req.session.userId)
     req.session.destroy()
     //console.log(req.session.userId)
     res.json({message : 'Old session removed'})
@@ -1117,7 +1117,7 @@ app.post("/api/downloadcard", async(req, res) => {
     }
     else
     {
-      console.log(docs);
+     // console.log(docs);
         const response = await downloadCardPDF(docs);
         var fileName = 'CardNew.pdf';
         console.log(response);
@@ -1396,7 +1396,7 @@ const { PDFDocument, StandardFonts, rgb } = require("pdf-lib");
 const { writeFileSync, readFileSync } = require("fs");
 
 async function createPDF(req) {
-  const document = await PDFDocument.load(readFileSync("./agreementtemplate4.pdf"));
+  const document = await PDFDocument.load(readFileSync("./agreementtemplate6.pdf"));
 
   const courierBoldFont = await document.embedFont(StandardFonts.Courier);
   const timesBoldFont = await document.embedFont(StandardFonts.TimesRomanBold);
@@ -1405,71 +1405,101 @@ async function createPDF(req) {
   console.log( firstPage.getHeight() + " " +  firstPage.getWidth());
 
  // firstPage.moveTo(62, 500);
-  firstPage.moveTo(450, 670);
+  firstPage.moveTo(480, 710);
 
   firstPage.drawText(new Date().toLocaleDateString("en-GB"), {
     font: courierBoldFont,
     size: 12,
   });
 
-  firstPage.moveTo(240, 617);
+  firstPage.moveTo(230, 670);
   firstPage.drawText(req.body.clientName, {
     font: timesBoldFont,
     size: 12,
   });
 
 //name second time
-  firstPage.moveTo(280, 582);
+  firstPage.moveTo(285, 636);
   firstPage.drawText(req.body.clientName, {
     font: timesBoldFont,
     size: 12,
   });
 
-  // claim no. and company name-
-  firstPage.moveTo(150, 552);
-  firstPage.drawText(req.body.claimNumber + " , " + req.body.insuranceCompanyName , {
+  // claim no.
+  firstPage.moveTo(350, 605);
+  firstPage.drawText(req.body.claimNumber , {
+    font: timesBoldFont,
+    size: 12,
+  });
+
+
+  // behalf of and complainant name
+    firstPage.moveTo(115, 605);
+    firstPage.drawText(req.body.behalfOf + " ,  " + req.body.complainantName , {
+      font: timesBoldFont,
+      size: 12,
+    });
+
+
+  //Insurance company name-
+  firstPage.moveTo(90, 588);
+  firstPage.drawText(req.body.insuranceCompanyName , {
     font: timesBoldFont,
     size: 12,
   });
 
 
     //Processing fees
-    firstPage.moveTo(285, 441);
-    firstPage.drawText("Rs."+ req.body.processingFee, {
+    firstPage.moveTo(394, 479);
+    firstPage.drawText( req.body.processingFee, {
       font: timesBoldFont,
       size: 12,
     });
 
         //consultation percentage fees
-        firstPage.moveTo(515, 441);
-        firstPage.drawText(req.body.consultationCharge + "%", {
+        firstPage.moveTo(137, 463);
+        firstPage.drawText(req.body.consultationCharge , {
           font: timesBoldFont,
           size: 12,
         });
 
           //Total claimed amount
-          firstPage.moveTo(180, 425);
-          firstPage.drawText("Rs."+ req.body.claimAmount, {
+          firstPage.moveTo(295, 462);
+          firstPage.drawText( req.body.claimAmount, {
             font: timesBoldFont,
             size: 12,
           });
 
+         //cheque amount first time
+         firstPage.moveTo(435, 462);
+         firstPage.drawText( req.body.chequeAmount, {
+         font: timesBoldFont,
+        size: 12,
+         });
+
+         //consultation percentage fees second time
+        firstPage.moveTo(383, 433);
+        firstPage.drawText(req.body.consultationCharge , {
+          font: timesBoldFont,
+          size: 12,
+        });
+
          //cheque amount
-         firstPage.moveTo(320, 364);
-          firstPage.drawText("Rs."+ req.body.chequeAmount, {
+         firstPage.moveTo(368, 385);
+          firstPage.drawText( req.body.chequeAmount, {
           font: timesBoldFont,
          size: 12,
           });
 
           //cheque number
-         firstPage.moveTo(460, 364);
+         firstPage.moveTo(75, 371);
            firstPage.drawText(req.body.chequeNumber, {
          font: timesBoldFont,
           size: 12,
           });
   
           //Bank name 
-          firstPage.moveTo(130, 348);
+          firstPage.moveTo(242, 371);
           firstPage.drawText(req.body.bankName, {
         font: timesBoldFont,
          size: 12,
@@ -1479,48 +1509,49 @@ async function createPDF(req) {
          //get day, month and year
 
          var agreementdate = (new Date());
-         firstPage.moveTo(235, 240);
+         firstPage.moveTo(277, 247);
          firstPage.drawText(agreementdate.getDate().toString(), {
            font: timesBoldFont,
            size: 12,
          });
 
          const monthName = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-         firstPage.moveTo(320, 240);
+         firstPage.moveTo(363, 247);
          firstPage.drawText((monthName[agreementdate.getMonth()] ), {
           font: timesBoldFont,
           size: 12,
         });
+        /*
         firstPage.moveTo(350, 240);
         firstPage.drawText(agreementdate.getFullYear().toString(), {
           font: timesBoldFont,
           size: 12,
         });
-
+        */
 
           //name of first party 
-          firstPage.moveTo(110, 175);
+          firstPage.moveTo(105, 194);
           firstPage.drawText(req.body.clientName, {
         font: timesBoldFont,
          size: 12,
          });
 
           //Address first party 
-          firstPage.moveTo(115, 145);
+          firstPage.moveTo(112, 167);
           firstPage.drawText(req.body.clientAddress, {
         font: timesBoldFont,
          size: 12,
          });
 
           //Mobile first party 
-          firstPage.moveTo(130, 115);
+          firstPage.moveTo(128, 142);
           firstPage.drawText(req.body.clientPhone, {
         font: timesBoldFont,
          size: 12,
          });
 
           //witness name
-          firstPage.moveTo(405, 176);
+          firstPage.moveTo(433, 168);
           firstPage.drawText(req.body.witnessName, {
         font: timesBoldFont,
          size: 12,
@@ -1535,7 +1566,7 @@ async function createPDF(req) {
 }
 
 async function createCardPDF(req) {
-  const document = await PDFDocument.load(readFileSync("./cardtemplate.pdf"));
+  const document = await PDFDocument.load(readFileSync("./cardtemplate2.pdf"));
 
   const courierBoldFont = await document.embedFont(StandardFonts.Courier);
   const timesBoldFont = await document.embedFont(StandardFonts.TimesRomanBold);
@@ -1544,35 +1575,35 @@ async function createCardPDF(req) {
   console.log( firstPage.getHeight() + " " +  firstPage.getWidth());
 
 
-  firstPage.moveTo(120, 482);
+  firstPage.moveTo(130, 432);
   firstPage.drawText(req.body.customerName, {
     font: timesBoldFont,
     size: 20,
   });
 
 //name second time
-  firstPage.moveTo(150, 382);
+  firstPage.moveTo(170, 342);
   firstPage.drawText(req.body.cardNumber, {
     font: timesBoldFont,
     size: 20,
   });
 
   // claim no. and company name-
-  firstPage.moveTo(310, 282);
+  firstPage.moveTo(330, 262);
   firstPage.drawText( req.body.insuranceCompany , {
     font: timesBoldFont,
     size: 20,
   });
 
   // Validity start date
-  firstPage.moveTo(240, 188);
+  firstPage.moveTo(270, 210);
   firstPage.drawText( req.body.cardStartDate , {
     font: timesBoldFont,
     size: 20,
   });
 
   // Validity end date
-  firstPage.moveTo(430, 188);
+  firstPage.moveTo(460, 210);
   firstPage.drawText( req.body.cardEndDate , {
     font: timesBoldFont,
     size: 20,
@@ -1585,7 +1616,7 @@ async function createCardPDF(req) {
 
 
 async function downloadCardPDF(req) {
-  const document = await PDFDocument.load(readFileSync("./cardtemplate.pdf"));
+  const document = await PDFDocument.load(readFileSync("./cardtemplate2.pdf"));
 
   const courierBoldFont = await document.embedFont(StandardFonts.Courier);
   const timesBoldFont = await document.embedFont(StandardFonts.TimesRomanBold);
@@ -1594,28 +1625,28 @@ async function downloadCardPDF(req) {
   console.log( firstPage.getHeight() + " " +  firstPage.getWidth());
 
 
-  firstPage.moveTo(110, 360);
+  firstPage.moveTo(125, 285);
   firstPage.drawText(req.customerName, {
     font: timesBoldFont,
     size: 24,
   });
 
 //name second time
-  firstPage.moveTo(130, 265);
+  firstPage.moveTo(163, 225);
   firstPage.drawText(req.cardNumber, {
     font: timesBoldFont,
     size: 24,
   });
 
   // claim no. and company name-
-  firstPage.moveTo(260, 170);
+  firstPage.moveTo(320, 160);
   firstPage.drawText( req.insuranceCompany , {
     font: timesBoldFont,
     size: 24,
   });
 
   // Validity start date
-  firstPage.moveTo(150, 80);
+  firstPage.moveTo(293, 105);
   //const options = { year: 'numeric', month: 'long', day: 'numeric' };
   firstPage.drawText( req.cardStartDate.toLocaleDateString("en-GB") , {
     font: timesBoldFont,
@@ -1623,7 +1654,7 @@ async function downloadCardPDF(req) {
   });
 
   // Validity end date
-  firstPage.moveTo(325, 80);
+  firstPage.moveTo(463, 105);
   firstPage.drawText( req.cardEndDate.toLocaleDateString("en-GB") , {
     font: timesBoldFont,
     size: 24,
