@@ -207,6 +207,7 @@ div.dataTables_filter {
                         <th>Claim Amount</th>
                         <th>Claim Number</th>
                         <th>Action</th>
+                        <th>Action</th>
                       </tr>
                     </thead>
                   </table>
@@ -280,6 +281,17 @@ function movetolive(referencenumber) {
         
       }
 
+
+
+function generateLegal(referencenumber) {
+
+localStorage['caseNumber'] = referencenumber; 
+window.open (`/generatelegalfromlive.html`);
+
+return;   
+      
+}
+ 
       
     $(document).ready(function () {
 
@@ -380,14 +392,12 @@ function movetolive(referencenumber) {
               data[i].tpaName,
               data[i].claimAmount,
               data[i].claimNumber,
-              `<button class="btn btn-primary btn-sm" onclick="movetolive('${rfno}')">View Policy</button>`
+              `<button class="btn btn-primary btn-sm" onclick="movetolive('${rfno}')">View Policy</button>`,
+              `<button class="btn btn-primary btn-sm" onclick="generateLegal('${rfno}')">Generate Legal</button>`,
             ]);
           }
         }
       
-
-
-
     });
   </script>
 </body>

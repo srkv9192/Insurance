@@ -52,8 +52,8 @@ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS
   useUnifiedTopology: true,
 });
 
-
 /*
+
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -837,6 +837,19 @@ app.get("/api/getprospectcasedetailbyref", async(req, res) => {
   }
 });
 
+app.get("/api/getlivecasedetailbynumber", async(req, res) => {
+  try {
+    
+    //console.log(req.query.caseNumber);
+
+    const users = await  dataSchemaObject.find({caseNumber: req.query.caseNumber});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get live case details by number' });
+  }
+});
+
 app.post('/api/movecasetolivebyref', upload.single('pdfFile'), async(req, res) => {
   try{
     const gencaseNumber= await getCaseNumbereCount();
@@ -1324,6 +1337,9 @@ app.get('/viewcards.html', (req, res) => res.sendFile(__dirname+'/viewcards.html
 app.get('/viewpendingcards.html', (req, res) => res.sendFile(__dirname+'/viewpendingcards.html'))
 
 app.get('/generatelegalpdf.html', (req, res) => res.sendFile(__dirname+'/generatelegalpdf.html'))
+app.get('/generatelegalfromlive.html', (req, res) => res.sendFile(__dirname+'/generatelegalfromlive.html'))
+
+
 app.get('/generatecardpdf.html', (req, res) => res.sendFile(__dirname+'/generatecardpdf.html'))
 app.get('/addprospect.html', (req, res) => res.sendFile(__dirname+'/addprospect.html'))
 
@@ -1396,7 +1412,7 @@ const { PDFDocument, StandardFonts, rgb } = require("pdf-lib");
 const { writeFileSync, readFileSync } = require("fs");
 
 async function createPDF(req) {
-  const document = await PDFDocument.load(readFileSync("./agreementtemplate6.pdf"));
+  const document = await PDFDocument.load(readFileSync("./agreementtemplate9.pdf"));
 
   const courierBoldFont = await document.embedFont(StandardFonts.Courier);
   const timesBoldFont = await document.embedFont(StandardFonts.TimesRomanBold);
@@ -1404,130 +1420,135 @@ async function createPDF(req) {
 
   console.log( firstPage.getHeight() + " " +  firstPage.getWidth());
 
- // firstPage.moveTo(62, 500);
-  firstPage.moveTo(480, 710);
+ //Add Id name to legal doc
+ firstPage.moveTo(84, 715);
+ firstPage.drawText(req.body.idNumber, {
+   font: timesBoldFont,
+   size: 11,
+ });
 
+
+  firstPage.moveTo(480, 715);
   firstPage.drawText(new Date().toLocaleDateString("en-GB"), {
-    font: courierBoldFont,
-    size: 12,
+    font: timesBoldFont,
+    size: 11,
   });
 
-  firstPage.moveTo(230, 670);
+  firstPage.moveTo(230, 668);
   firstPage.drawText(req.body.clientName, {
     font: timesBoldFont,
     size: 12,
   });
 
 //name second time
-  firstPage.moveTo(285, 636);
+  firstPage.moveTo(283, 635);
   firstPage.drawText(req.body.clientName, {
     font: timesBoldFont,
-    size: 12,
+    size: 11,
   });
 
   // claim no.
-  firstPage.moveTo(350, 605);
+  firstPage.moveTo(287, 603);
   firstPage.drawText(req.body.claimNumber , {
     font: timesBoldFont,
-    size: 12,
+    size: 10,
   });
 
-
   // behalf of and complainant name
-    firstPage.moveTo(115, 605);
-    firstPage.drawText(req.body.behalfOf + " ,  " + req.body.complainantName , {
+    firstPage.moveTo(112, 603);
+    firstPage.drawText(req.body.behalfOf + ", " + req.body.complainantName , {
       font: timesBoldFont,
-      size: 12,
+      size: 10,
     });
 
 
   //Insurance company name-
-  firstPage.moveTo(90, 588);
+  firstPage.moveTo(368, 603);
   firstPage.drawText(req.body.insuranceCompanyName , {
     font: timesBoldFont,
-    size: 12,
+    size: 10,
   });
 
 
     //Processing fees
-    firstPage.moveTo(394, 479);
+    firstPage.moveTo(370, 478);
     firstPage.drawText( req.body.processingFee, {
       font: timesBoldFont,
-      size: 12,
+      size: 10,
     });
 
         //consultation percentage fees
-        firstPage.moveTo(137, 463);
+        firstPage.moveTo(85, 462);
         firstPage.drawText(req.body.consultationCharge , {
           font: timesBoldFont,
-          size: 12,
+          size: 10,
         });
 
           //Total claimed amount
-          firstPage.moveTo(295, 462);
+          firstPage.moveTo(257, 462);
           firstPage.drawText( req.body.claimAmount, {
             font: timesBoldFont,
-            size: 12,
+            size: 10,
           });
 
          //cheque amount first time
-         firstPage.moveTo(435, 462);
+         firstPage.moveTo(360, 462);
          firstPage.drawText( req.body.chequeAmount, {
          font: timesBoldFont,
-        size: 12,
+        size: 10,
          });
 
          //consultation percentage fees second time
-        firstPage.moveTo(383, 433);
+        firstPage.moveTo(280, 431);
         firstPage.drawText(req.body.consultationCharge , {
           font: timesBoldFont,
-          size: 12,
+          size: 10,
         });
 
          //cheque amount
-         firstPage.moveTo(368, 385);
+         firstPage.moveTo(328, 384);
           firstPage.drawText( req.body.chequeAmount, {
           font: timesBoldFont,
-         size: 12,
+         size: 10,
           });
 
           //cheque number
-         firstPage.moveTo(75, 371);
+         firstPage.moveTo(465, 384);
            firstPage.drawText(req.body.chequeNumber, {
          font: timesBoldFont,
-          size: 12,
+          size: 10,
           });
   
           //Bank name 
-          firstPage.moveTo(242, 371);
+          firstPage.moveTo(105, 369);
           firstPage.drawText(req.body.bankName, {
         font: timesBoldFont,
-         size: 12,
+         size: 10,
          });
 
 
          //get day, month and year
 
          var agreementdate = (new Date());
-         firstPage.moveTo(277, 247);
+         firstPage.moveTo(277, 246);
          firstPage.drawText(agreementdate.getDate().toString(), {
            font: timesBoldFont,
-           size: 12,
+           size: 10,
          });
 
          const monthName = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-         firstPage.moveTo(363, 247);
+         firstPage.moveTo(357, 246);
          firstPage.drawText((monthName[agreementdate.getMonth()] ), {
           font: timesBoldFont,
-          size: 12,
+          size: 10,
         });
-        /*
-        firstPage.moveTo(350, 240);
+        
+        firstPage.moveTo(380, 246);
         firstPage.drawText(agreementdate.getFullYear().toString(), {
           font: timesBoldFont,
-          size: 12,
+          size: 10,
         });
-        */
+        
 
           //name of first party 
           firstPage.moveTo(105, 194);

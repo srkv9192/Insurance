@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="css/menubar.css">
+  <style>
+
+  input.form-control:disabled {
+        background-color:  #343a40;
+    }
+    input.form-control:disabled {
+        background-color:  #343a40;
+    }
+    body {
+      background-color: #343a40;
+      color: #fff;
+    }
+
+    .navbar-light .navbar-brand {
+      color: #fff;
+    }
+
+    .navbar-light .navbar-nav .nav-link {
+      color: #fff;
+    }
+
+    .navbar-light .navbar-nav .nav-link:hover,
+    .navbar-light .navbar-nav .nav-link:focus {
+      color: #e9ecef;
+    }
+
+    
+    .navbar-dark .navbar-brand {
+      color: #343a40;
+    }
+
+    .navbar-dark .navbar-nav .nav-link {
+      color: #343a40;
+    }
+
+    .navbar-dark .navbar-nav .nav-link:hover,
+    .navbar-dark .navbar-nav .nav-link:focus {
+      color: #343a40;
+    }
+
+    .form-control {
+      background-color: #495057;
+      color: #fff;
+    }
+
+    .form-control:focus {
+      background-color: #343a40;
+      color: #fff;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      border-color: #007bff;
+    }
+
+    .btn-primary:hover,
+    .btn-primary:focus {
+      background-color: #0062cc;
+      border-color: #005cbf;
+    }
+  </style>
+  <title>Login Page</title>
+</head>
+
+<body>
+
+  <div class='dashboard'>
+    <div class="dashboard-nav">
+      <header>
+        <a href="#"class="brand-logo"> 
+          <img src="/images/logoround.png" class="navbar-brand" href="/" align="left" width="130" height="130">
+         </a>
+         <a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a>
+        </header>
+      <nav class="dashboard-nav-list"><a href="/" class="dashboard-nav-item"><i class="fas fa-home"></i>
+          Home </a>
+
+          <div id="hideonlogin">
+            <nav class="dashboard-nav-list"><a href="/newcarddirect.html" class="dashboard-nav-item"><i class="fas fa-inr"></i>
+              Buy Card </a>
+
+              <nav class="dashboard-nav-list"><a href="/paymentinfo.html" class="dashboard-nav-item"><i class="fas fa-inr"></i>
+                Payment Info </a>
+          </div>
+
+
+
+          <div id="showonlogin" style="display: none;">
+
+            <nav class="dashboard-nav-list"><a href="/dashboard.html" class="dashboard-nav-item"><i class="fas fa-dashboard"></i>
+              Dashboard </a>
+
+            <div class='dashboard-nav-dropdown show'>
+               <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+                <i class="fas fa-photo-video">
+                  </i>Card Menu</a>
+                <div class='dashboard-nav-dropdown-menu'>
+                    <a href="/newcard.html" class="dashboard-nav-dropdown-item">Add Card</a>
+                    <a href="/viewpendingcards.html" class="dashboard-nav-dropdown-item">View Pending</a>
+                    <a href="/viewcards.html" class="dashboard-nav-dropdown-item">View Completed</a>
+                    <a href="/generatecardpdf.html" class="dashboard-nav-dropdown-item">Download Card</a>
+                </div>
+             </div>
+
+             <div class='dashboard-nav-dropdown show'>
+              <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+               <i class="fas fa-photo-video">
+                 </i>Case Menu</a>
+               <div class='dashboard-nav-dropdown-menu'>
+                   <a href="/addprospect.html" class="dashboard-nav-dropdown-item">Add Case</a>
+                   <a href="/viewprospectcases.html" class="dashboard-nav-dropdown-item">View Prospect</a>
+                   <a href="/viewpendingauthcases.html" class="dashboard-nav-dropdown-item">View Pending Auth</a>
+                   <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
+                   <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
+               </div>
+            </div>
+
+          </div>
+
+          <div id="showtocpandmanager" style="display: none;">
+
+            <div class='dashboard-nav-dropdown show'>
+               <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+                <i class="fas fa-photo-video">
+                  </i>Card Menu</a>
+                <div class='dashboard-nav-dropdown-menu'>
+                    <a href="/newcard.html" class="dashboard-nav-dropdown-item">Add Card</a>
+                </div>
+             </div>
+
+             <div class='dashboard-nav-dropdown show'>
+              <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+               <i class="fas fa-photo-video">
+                 </i>Case Menu</a>
+               <div class='dashboard-nav-dropdown-menu'>
+                   <a href="/addprospect.html" class="dashboard-nav-dropdown-item">Add Case</a>
+               </div>
+            </div>
+
+          </div>
+          
+        <div class="nav-item-divider"></div>
+        <a  id="login-menu"
+                  href="/login.html" class="dashboard-nav-item"><i class="fas  fa-sign-in "></i> Login </a>
+      </nav>
+  </div>
+
+  <div class='dashboard-app'>
+    <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
+
+    <div class='dashboard-content' style="background-image: url('/images/background20.jpg');">
+      <div class="container mt-5">
+        <div class="row justify-content-center">
+          <div class="col-lg-6">
+            <h2 class="text-center mb-4">Legal PDF Generation Form</h2>
+
+            <div class="frame">
+              <form id="loginForm">
+                <div class="row mb-3">
+                  <div class="col-sm-6">
+                    <label for="client-name" class="form-label">Client Name</label>
+                    <input type="text" class="form-control" id="client-name" required disabled>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="client-address" class="form-label">Client Address</label>
+                    <input type="text" class="form-control" id="client-address" required disabled>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-sm-6">
+                    <label for="client-phone" class="form-label">Client Phone</label>
+                    <input type="text" class="form-control" id="client-phone" pattern="[0-9]{10}"  maxlength="10" required disabled>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="claim-number" class="form-label">Claim Number</label>
+                    <input type="text" class="form-control" id="claim-number" required disabled>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <div class="col-sm-6">
+                    <label for="behalf-of" class="form-label">On Behalf of</label>
+                      <div class="input-group">
+                        <select class="form-control" id="behalf-of-dropdown" required>
+                          <option value="">None</option>
+                          <option value="Self">Self</option>
+                          <option value="Father">Father</option>
+                          <option value="Mother">Mother</option>
+                          <option value="Wife">Wife</option>
+                          <option value="Husband">Husband</option>
+                          <option value="Children">Children</option>
+                        </select>
+                      </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="complainant-name" class="form-label">Complainant Name</label>
+                    <input type="text" class="form-control" id="complainant-name" required>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <div class="col-sm-6">
+                    <label for="insurance-company-name" class="form-label">Insurance Company Name</label>
+                    <input type="text" class="form-control" id="insurance-company-dropdown" required disabled>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="witness-name" class="form-label">Witness Name</label>
+                    <input type="text" class="form-control" id="witness-name" required>
+                  </div>
+
+                </div>
+                <div class="row mb-3">
+                  <div class="col-sm-6">
+                    <label for="consultation-charge" class="form-label">Consultation Charge</label>
+                    <input type="number" class="form-control" id="consultation-charge" required disabled>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="processing-fee" class="form-label">Processing Fee</label>
+                    <input type="text" class="form-control" id="processing-fee" required disabled >
+                  </div>
+                  </div>
+                <div class="row mb-3">
+                  <div class="col-sm-6">
+                    <label for="total-claim-amount" class="form-label">Disputed Amount</label>
+                    <input type="number" class="form-control" id="total-claim-amount" required disabled>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="cheque-amount" class="form-label">Cheque Amount</label>
+                    <input type="number" class="form-control" id="cheque-amount" required disabled disabled >
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-sm-6">
+                    <label for="cheque-number" class="form-label">Cheque Number</label>
+                    <input type="text" class="form-control" id="cheque-number" required disabled >
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="bank-name" class="form-label">Bank Name</label>
+                    <input type="text" class="form-control" id="bank-name" required disabled >
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <div class="col-sm-6">
+                    <label for="id-number" class="form-label">ID Number</label>
+                    <input type="text" class="form-control" id="id-number" required disabled>
+                  </div>
+                </div>
+
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+              </form>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div> 
+
+</div>
+
+
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function () {
+
+
+            // behalf of change function
+            $('#behalf-of-dropdown').change(function () {
+
+            var behalfof = $('#behalf-of-dropdown').val();
+
+            if(behalfof =="Self")
+            {
+              document.getElementById("complainant-name").value = $('#client-name').val();
+            }
+            else
+            {
+              document.getElementById("complainant-name").value = "";
+            }
+
+            });
+
+
+        $.ajax({
+        url: '/api/getlivecasedetailbynumber',
+        type: 'GET',
+        data: {
+          caseNumber: localStorage['caseNumber']
+        },
+
+        success: function (response) {
+          // Populate the options in the select elemen
+                
+            document.getElementById("client-name").value = response[0].customerName;
+            document.getElementById("client-address").value = response[0].customerAddress;
+            document.getElementById("client-phone").value = response[0].customerPhone;
+
+           // document.getElementById("reference-number").value = localStorage['casereferencenumber'];
+            document.getElementById("claim-number").value = response[0].claimNumber;
+            document.getElementById("total-claim-amount").value = response[0].claimAmount;
+
+            document.getElementById("total-claim-amount").value = response[0].claimAmount;
+            document.getElementById("processing-fee").value = response[0].processingFee;
+
+            document.getElementById("consultation-charge").value = response[0].consultationCharge;
+            document.getElementById("cheque-amount").value = response[0].chequeAmount;
+            document.getElementById("cheque-number").value = response[0].chequeNumber;
+            document.getElementById("bank-name").value = response[0].bankName;
+            document.getElementById("id-number").value = response[0].caseNumber;
+            document.getElementById("insurance-company-dropdown").value = response[0].insuranceCompanyName;
+
+
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+      
+
+
+
+      // calculate cheque amount based on consulation charge percentage
+      $('#total-claim-amount').change(function () {
+
+        var claimamount = $('#total-claim-amount').val();
+        var consultationcharge = $('#consultation-charge').val();
+
+        document.getElementById("cheque-amount").value=(claimamount * consultationcharge ) / (100);
+
+        });
+
+      // calculate cheque amount based on consulation charge percentage
+      $('#consultation-charge').change(function () {
+
+        var claimamount = $('#total-claim-amount').val();
+        var consultationcharge = $('#consultation-charge').val();
+
+        document.getElementById("cheque-amount").value=(claimamount * consultationcharge ) / (100);
+
+        });
+
+
+      $.ajax({
+        url: '/api/whoami',
+        type: 'POST',
+        success: function (response) {
+          // Populate the options in the select element
+            //alert(response.message)
+           
+            if(response.message =='admin')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showonlogin").show();
+              $("#hideonlogin").hide();
+             
+            }
+            else if(response.message =='cp' || response.message =='manager')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtocpandmanager").show();
+              $("#hideonlogin").hide();
+            }
+            else
+            {
+              
+            }
+            
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+      const mobileScreen = window.matchMedia("(max-width: 990px )");
+
+          $(".dashboard-nav-dropdown-toggle").click(function () {
+        $(this).closest(".dashboard-nav-dropdown")
+            .toggleClass("show")
+            .find(".dashboard-nav-dropdown")
+            .removeClass("show");
+        $(this).parent()
+            .siblings()
+            .removeClass("show");
+    });
+    $(".menu-toggle").click(function () {
+        if (mobileScreen.matches) {
+            $(".dashboard-nav").toggleClass("mobile-show");
+        } else {
+            $(".dashboard").toggleClass("dashboard-compact");
+        }
+    });
+
+      $('#loginForm').on('submit', function (event) {
+        event.preventDefault();
+
+        var clientname = $('#client-name').val();
+        var clientaddress = $('#client-address').val();
+
+        var clientphone = $('#client-phone').val();
+        var claimnumber = $('#claim-number').val();
+
+        var behalfof = $('#behalf-of-dropdown').val();;
+        var complainantname = $('#complainant-name').val();
+
+        var insurancecompanyname = $('#insurance-company-dropdown').val();
+        var processingfee = $('#processing-fee').val();
+
+        var consultationcharge = $('#consultation-charge').val();
+        var claimamount = $('#total-claim-amount').val();
+
+        var chequeamount = $('#cheque-amount').val();
+        var chequenumber = $('#cheque-number').val();
+
+        var bankname = $('#bank-name').val();
+        var witnessname = $('#witness-name').val();
+        var idnumber = $('#id-number').val();
+
+        // Make an API call with the username and password
+        $.ajax({
+          url: '/api/getlegalpdf',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          xhrFields: {
+            responseType: 'blob'
+        },
+          data: {
+          clientName:clientname,
+          clientAddress: clientaddress,
+          clientPhone: clientphone,
+          claimNumber: claimnumber,
+          insuranceCompanyName: insurancecompanyname,
+          processingFee: processingfee,
+          consultationCharge: consultationcharge,
+          claimAmount:  claimamount,
+          chequeAmount: chequeamount,
+          chequeNumber: chequenumber,
+          bankName:  bankname,
+          witnessName: witnessname,
+          behalfOf: behalfof,
+          complainantName: complainantname,
+          idNumber: idnumber,
+          },
+          success: function (response) {
+            var a = document.createElement('a');
+            var url = window.URL.createObjectURL(response);
+            a.href = url;
+            a.download = 'legal.pdf';
+            document.body.append(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+          },
+          error: function (error) {
+            document.getElementById('loginForm').reset();
+            alert("PDF generation failed even after bug fix");
+            // Display an error message to the user
+          }
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>
+
