@@ -17,7 +17,9 @@ oAuth2Client.setCredentials({
   refresh_token: process.env.gmailrefreshToken,
 });
 
-const accessToken =  oAuth2Client.getAccessToken();
+//const accessToken =  oAuth2Client.getAccessToken();
+const accessToken = oAuth2Client.credentials.access_token;
+
 
 // AWS S3 configuration
 const s3 = new AWS.S3()
@@ -33,20 +35,7 @@ const storage = multer.diskStorage({
 
 var nodemailer = require('nodemailer');
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-      type: 'OAuth2',
-      user: 'Nidaancard@gmail.com',
-      clientId: process.env.gmailclientid,
-      clientSecret:  process.env.gmailclientSecret,
-      refreshToken: process.env.gmailrefreshToken,
-      accessToken: accessToken.token,
-  },
-  tls: {
-    rejectUnauthorized: false
-  }
-});
+
 
 const upload = multer({ storage: storage });
 const app = express()
@@ -74,7 +63,6 @@ mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
 */
 
 const cookieParser = require("cookie-parser");
@@ -1758,7 +1746,7 @@ async function downloadCardPDF(req) {
   return true;
 }
 
-function sendCompletionEmails(docs)
+async function sendCompletionEmails(docs)
 {
   var cardnumber = docs.cardNumber;
   var custname = docs.customerName;
@@ -1775,6 +1763,27 @@ function sendCompletionEmails(docs)
     };
 
 //mailOptions["attachments"] = attachmentArray;
+
+//const accessToken = oAuth2Client.credentials.access_token;
+const accessToken = await oAuth2Client.getAccessToken();
+
+console.log(accessToken);
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+      type: 'OAuth2',
+      user: 'Nidaancard@gmail.com',
+      clientId: process.env.gmailclientid,
+      clientSecret:  process.env.gmailclientSecret,
+      refreshToken: process.env.gmailrefreshToken,
+      accessToken: accessToken,
+  },
+  tls: {
+    rejectUnauthorized: false
+  }
+});
+
 
 transporter.sendMail(mailOptions, function(error, info){
     if (error) {
