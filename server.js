@@ -1422,35 +1422,47 @@ async function createPDF(req) {
 
   console.log( firstPage.getHeight() + " " +  firstPage.getWidth());
 
-  var firstline=`I/We the customer/applicant named above as ${req.body.clientName} (first party) do hereby appoint, engage and authorize 
-Nidaan The legal Consultants (second party) to act and plead in case of ${req.body.behalfOf}, ${req.body.complainantName} 
-claim No. ${req.body.claimNumber} Of ${req.body.insuranceCompanyName} Company, which shall 
-include claim filing, application for query reply, reconsideration process, setting aside of rejected/deducted claim. 
-We endeavour to get the claim settled though correspondence or Court Proceeding or Ombudsman, as may be 
-deemed necessary by the second party, for the benefit of the said claim at all its stages and agree to 
-rectify and confirm any act done by the second party,as if vicariously done by me/us as the first party.`;
+  var firstline=`I/We the customer/applicant named above as ${req.body.clientName} (first party) do hereby appoint,
+engage and authorize Nidaan The legal Consultants (second party) to act and plead in case of ${req.body.behalfOf},
+${req.body.complainantName} claim No. ${req.body.claimNumber}  of ${req.body.insuranceCompanyName} 
+Company, which shall include claim filing, application for query reply, reconsideration process, setting aside 
+of rejected/deducted claim. We endeavour to get the claim settled though correspondence or Court Proceeding 
+or Ombudsman, as may be deemed necessary by the second party, for the benefit of the said claim at all its stages
+and agree to rectify and confirm any act done by the second party,as if vicariously done by me/us as the first party.`;
  
 
   var secondline=`I/We agree to pay a non-refundable advance Processing Fee of Rs. ${req.body.processingFee} /- and a Consultation Fee amounting 
-to ${req.body.consultationCharge}% of the total claimed amount Rs. ${req.body.claimAmount}, that is, Rs. ${req.body.chequeAmount} /-, to party no. 2 within one week
-of receiving the settled claimed amount from the concerned insurance company. In case of part settlement 
-of the stated amount, the Consultation Fee of ${req.body.consultationCharge}% shall be calculated in accordance with the 
-final amount received through settlement.`;
+to ${req.body.consultationCharge}% of the total claimed amount Rs. ${req.body.claimAmount}, that is, Rs. ${req.body.chequeAmount} /-, to party no. 2 within one week of
+receiving the settled claimed amount from the concerned insurance company. In case of part settlement 
+of the stated amount, the Consultation Fee of ${req.body.consultationCharge}% shall be calculated in accordance with the final amount
+received through settlement.`;
 
-  var thirdline=`I/We further agree to deposit a Post Dated Cheque of Rs. ${req.body.chequeAmount} bearing cheque no. ${req.body.chequeNumber} 
-Bank Name ${req.body.bankName} as a security deposit of the consultation Fees, which is returnable after the actual payment 
-of the consultation Fees. In case if I/We fail to pay the actual Consultation Fees, I hereby authorize the
-second party to get the Consultation Fees realized through the above mentioned post-dated Cheque deposited 
-as a security deposit with the second party. In case if the second Party fails to secure any relief for the
-first party by non-settlement of claim, no consultation fees shall be payable to the second party, and the 
+var chequenumber = "           ";
+var bankname =  "                           ";
+
+if(req.body.chequeNumber != "")
+{
+  chequenumber = req.body.chequeNumber;
+}
+if(req.body.bankName != "")
+{
+  bankname = req.body.bankName;
+}
+
+  var thirdline=`I/We further agree to deposit a Post Dated Cheque of Rs. ${req.body.chequeAmount} bearing cheque no. ${chequenumber} 
+Bank Name ${bankname} as a security deposit of the consultation Fees, which is returnable after 
+the actual payment of the consultation Fees. In case if I/We fail to pay the actual Consultation Fees, I hereby 
+authorize the second party to get the Consultation Fees realized through the above mentioned post-dated Cheque 
+deposited as a security deposit with the second party. In case if the second Party fails to secure any relief 
+for the first party by non-settlement of claim, no consultation fees shall be payable to the second party, and the 
 post-dated cheque shall be returned to the first party or be destroyed on consent of the first party. 
 Processing Fee is non-refundable.`;
 
 var agreementdate = (new Date());
 const monthName = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 
-  var fourthline=`I affirm that all the above contents and terms & conditions have been well understood by me and in
-witness whereof I/We hereto at Indore signed on the ${agreementdate.getDate().toString()} day of month ${monthName[agreementdate.getMonth()]} ${agreementdate.getFullYear().toString()}`;
+  var fourthline=`I affirm that all the above contents and terms & conditions have been well understood by me and in witness
+whereof I/We hereto at Indore signed on the ${agreementdate.getDate().toString()} day of month ${monthName[agreementdate.getMonth()]} ${agreementdate.getFullYear().toString()}`;
  
  //first line
  firstPage.moveTo(77, 620);
@@ -1619,13 +1631,11 @@ witness whereof I/We hereto at Indore signed on the ${agreementdate.getDate().to
          });
 
           //witness name
-          firstPage.moveTo(422, 173);
+          firstPage.moveTo(422, 172);
           firstPage.drawText(req.body.witnessName, {
         font: timesBoldFont,
          size: 11,
          });
-
-
 
 
   writeFileSync("Legal.pdf", await document.save());
