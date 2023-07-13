@@ -47,6 +47,7 @@ const port = process.env.PORT || 80
 //  useUnifiedTopology: true,
 //});
 
+
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -1412,16 +1413,79 @@ const { PDFDocument, StandardFonts, rgb } = require("pdf-lib");
 const { writeFileSync, readFileSync } = require("fs");
 
 async function createPDF(req) {
-  const document = await PDFDocument.load(readFileSync("./agreementtemplate9.pdf"));
+  const document = await PDFDocument.load(readFileSync("./agreementtemplate13.pdf"));
 
   const courierBoldFont = await document.embedFont(StandardFonts.Courier);
+  const timesFont = await document.embedFont(StandardFonts.TimesRoman);
   const timesBoldFont = await document.embedFont(StandardFonts.TimesRomanBold);
   const firstPage = document.getPage(0);
 
   console.log( firstPage.getHeight() + " " +  firstPage.getWidth());
 
- //Add Id name to legal doc
- firstPage.moveTo(84, 715);
+  var firstline=`I/We the customer/applicant named above as ${req.body.clientName} (first party) do hereby appoint, engage and authorize 
+Nidaan The legal Consultants (second party) to act and plead in case of ${req.body.behalfOf}, ${req.body.complainantName} 
+claim No. ${req.body.claimNumber} Of ${req.body.insuranceCompanyName} Company, which shall 
+include claim filing, application for query reply, reconsideration process, setting aside of rejected/deducted claim. 
+We endeavour to get the claim settled though correspondence or Court Proceeding or Ombudsman, as may be 
+deemed necessary by the second party, for the benefit of the said claim at all its stages and agree to 
+rectify and confirm any act done by the second party,as if vicariously done by me/us as the first party.`;
+ 
+
+  var secondline=`I/We agree to pay a non-refundable advance Processing Fee of Rs. ${req.body.processingFee} /- and a Consultation Fee amounting 
+to ${req.body.consultationCharge}% of the total claimed amount Rs. ${req.body.claimAmount}, that is, Rs. ${req.body.chequeAmount} /-, to party no. 2 within one week
+of receiving the settled claimed amount from the concerned insurance company. In case of part settlement 
+of the stated amount, the Consultation Fee of ${req.body.consultationCharge}% shall be calculated in accordance with the 
+final amount received through settlement.`;
+
+  var thirdline=`I/We further agree to deposit a Post Dated Cheque of Rs. ${req.body.chequeAmount} bearing cheque no. ${req.body.chequeNumber} 
+Bank Name ${req.body.bankName} as a security deposit of the consultation Fees, which is returnable after the actual payment 
+of the consultation Fees. In case if I/We fail to pay the actual Consultation Fees, I hereby authorize the
+second party to get the Consultation Fees realized through the above mentioned post-dated Cheque deposited 
+as a security deposit with the second party. In case if the second Party fails to secure any relief for the
+first party by non-settlement of claim, no consultation fees shall be payable to the second party, and the 
+post-dated cheque shall be returned to the first party or be destroyed on consent of the first party. 
+Processing Fee is non-refundable.`;
+
+var agreementdate = (new Date());
+const monthName = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+  var fourthline=`I affirm that all the above contents and terms & conditions have been well understood by me and in
+witness whereof I/We hereto at Indore signed on the ${agreementdate.getDate().toString()} day of month ${monthName[agreementdate.getMonth()]} ${agreementdate.getFullYear().toString()}`;
+ 
+ //first line
+ firstPage.moveTo(77, 620);
+ firstPage.drawText(firstline, {
+   font: timesFont,
+   size: 11,
+   lineHeight: 15,
+ });
+
+  //second line
+  firstPage.moveTo(77, 500);
+  firstPage.drawText(secondline, {
+    font: timesFont,
+    size: 11,
+    lineHeight: 15,
+  });
+
+   //third line
+ firstPage.moveTo(77, 405);
+ firstPage.drawText(thirdline, {
+   font: timesFont,
+   size: 11,
+   lineHeight: 15,
+ });
+
+    //fourth line
+    firstPage.moveTo(77, 275);
+    firstPage.drawText(fourthline, {
+      font: timesFont,
+      size: 11,
+      lineHeight: 15,
+    });
+ 
+  //Add Id name to legal doc
+ firstPage.moveTo(73, 715);
  firstPage.drawText(req.body.idNumber, {
    font: timesBoldFont,
    size: 11,
@@ -1434,12 +1498,13 @@ async function createPDF(req) {
     size: 11,
   });
 
-  firstPage.moveTo(230, 668);
+  firstPage.moveTo(235, 655);
   firstPage.drawText(req.body.clientName, {
     font: timesBoldFont,
     size: 12,
   });
 
+  /*
 //name second time
   firstPage.moveTo(283, 635);
   firstPage.drawText(req.body.clientName, {
@@ -1529,53 +1594,35 @@ async function createPDF(req) {
 
          //get day, month and year
 
-         var agreementdate = (new Date());
-         firstPage.moveTo(277, 246);
-         firstPage.drawText(agreementdate.getDate().toString(), {
-           font: timesBoldFont,
-           size: 10,
-         });
-
-         const monthName = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-         firstPage.moveTo(357, 246);
-         firstPage.drawText((monthName[agreementdate.getMonth()] ), {
-          font: timesBoldFont,
-          size: 10,
-        });
-        
-        firstPage.moveTo(380, 246);
-        firstPage.drawText(agreementdate.getFullYear().toString(), {
-          font: timesBoldFont,
-          size: 10,
-        });
+*/
         
 
           //name of first party 
-          firstPage.moveTo(105, 194);
+          firstPage.moveTo(94, 199);
           firstPage.drawText(req.body.clientName, {
         font: timesBoldFont,
-         size: 12,
+         size: 11,
          });
 
           //Address first party 
-          firstPage.moveTo(112, 167);
+          firstPage.moveTo(102, 172);
           firstPage.drawText(req.body.clientAddress, {
         font: timesBoldFont,
-         size: 12,
+         size: 11,
          });
 
           //Mobile first party 
-          firstPage.moveTo(128, 142);
+          firstPage.moveTo(117, 146);
           firstPage.drawText(req.body.clientPhone, {
         font: timesBoldFont,
-         size: 12,
+         size: 11,
          });
 
           //witness name
-          firstPage.moveTo(433, 168);
+          firstPage.moveTo(422, 173);
           firstPage.drawText(req.body.witnessName, {
         font: timesBoldFont,
-         size: 12,
+         size: 11,
          });
 
 
