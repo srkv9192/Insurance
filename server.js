@@ -19,6 +19,11 @@ const storage = multer.diskStorage({
 
 var nodemailer = require('nodemailer');
 
+oauth2Client.setCredentials({
+  refresh_token:  process.env.gmailrefreshToken,
+});
+const accessToken = oauth2Client.getAccessToken()
+
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
   port: 465,
@@ -29,8 +34,10 @@ const transporter = nodemailer.createTransport({
       clientId: process.env.gmailclientid,
       clientSecret:  process.env.gmailclientSecret,
       refreshToken: process.env.gmailrefreshToken,
-      accessToken: process.env.gmailaccessToken,
-      expires: 1484314697598
+      accessToken: accessToken,
+  },
+  tls: {
+    rejectUnauthorized: false
   }
 });
 
