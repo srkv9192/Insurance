@@ -1422,8 +1422,8 @@ async function createPDF(req) {
 
   console.log( firstPage.getHeight() + " " +  firstPage.getWidth());
 
-  var firstline=`I/We the customer/applicant named above as ${req.body.clientName} (first party) do hereby appoint,
-engage and authorize Nidaan The legal Consultants (second party) to act and plead in case of ${req.body.behalfOf},
+  var firstline=`I/We the customer/applicant named above as ${req.body.clientName} (first party) do hereby
+appoint, engage and authorize Nidaan The legal Consultants (second party) to act and plead in case of ${req.body.behalfOf},
 ${req.body.complainantName} claim No. ${req.body.claimNumber}  of ${req.body.insuranceCompanyName} 
 Company, which shall include claim filing, application for query reply, reconsideration process, setting aside 
 of rejected/deducted claim. We endeavour to get the claim settled though correspondence or Court Proceeding 
