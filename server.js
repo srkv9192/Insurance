@@ -5,6 +5,20 @@ const multer = require('multer');
 const AWS = require('aws-sdk');
 var fs = require('fs');
 
+const { google } = require('googleapis');
+
+const oAuth2Client = new google.auth.OAuth2(
+  process.env.gmailclientid,
+  process.env.gmailclientSecret,
+  "https://developers.google.com/oauthplayground"
+);
+
+oAuth2Client.setCredentials({
+  refresh_token: process.env.gmailrefreshToken,
+});
+
+const accessToken =  oAuth2Client.getAccessToken();
+
 // AWS S3 configuration
 const s3 = new AWS.S3()
 
@@ -20,17 +34,14 @@ const storage = multer.diskStorage({
 var nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 465,
-  secure: true,
+  service: 'gmail',
   auth: {
       type: 'OAuth2',
       user: 'Nidaancard@gmail.com',
       clientId: process.env.gmailclientid,
       clientSecret:  process.env.gmailclientSecret,
       refreshToken: process.env.gmailrefreshToken,
-      accessToken: process.env.gmailaccessToken,
-      expires: 1484314697598
+      accessToken: accessToken,
   }
 });
 
