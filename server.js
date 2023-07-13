@@ -41,7 +41,10 @@ const transporter = nodemailer.createTransport({
       clientId: process.env.gmailclientid,
       clientSecret:  process.env.gmailclientSecret,
       refreshToken: process.env.gmailrefreshToken,
-      accessToken: accessToken,
+      accessToken: accessToken.token,
+  },
+  tls: {
+    rejectUnauthorized: false
   }
 });
 
@@ -63,6 +66,7 @@ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
 
 /*
 
