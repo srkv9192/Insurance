@@ -14,7 +14,7 @@ const oAuth2Client = new google.auth.OAuth2(
 );
 
 oAuth2Client.setCredentials({
-  refresh_token: process.env.gmailrefreshToken,
+  refresh_token: process.env.gmailrefreshtoken,
 });
 
 //const accessToken =  oAuth2Client.getAccessToken();
@@ -1767,7 +1767,7 @@ async function sendCompletionEmails(docs)
 //const accessToken = oAuth2Client.credentials.access_token;
 const accessToken = await oAuth2Client.getAccessToken();
 
-console.log(accessToken);
+//console.log(accessToken);
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -1776,7 +1776,7 @@ const transporter = nodemailer.createTransport({
       user: 'Nidaancard@gmail.com',
       clientId: process.env.gmailclientid,
       clientSecret:  process.env.gmailclientSecret,
-      refreshToken: process.env.gmailrefreshToken,
+      refreshToken: process.env.gmailrefreshtoken,
       accessToken: accessToken,
   },
   tls: {
