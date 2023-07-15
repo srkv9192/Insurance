@@ -56,11 +56,13 @@ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS
 });
 
 
+
 /*
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
 */
 
 const cookieParser = require("cookie-parser");
@@ -1647,55 +1649,6 @@ whereof I/We hereto at Indore signed on the ${agreementdate.getDate().toString()
   return true;
 }
 
-async function createCardPDF(req) {
-  const document = await PDFDocument.load(readFileSync("./cardtemplate2.pdf"));
-
-  const courierBoldFont = await document.embedFont(StandardFonts.Courier);
-  const timesBoldFont = await document.embedFont(StandardFonts.TimesRomanBold);
-  const firstPage = document.getPage(0);
-
-  console.log( firstPage.getHeight() + " " +  firstPage.getWidth());
-
-
-  firstPage.moveTo(130, 432);
-  firstPage.drawText(req.body.customerName, {
-    font: timesBoldFont,
-    size: 20,
-  });
-
-//name second time
-  firstPage.moveTo(170, 342);
-  firstPage.drawText(req.body.cardNumber, {
-    font: timesBoldFont,
-    size: 20,
-  });
-
-  // claim no. and company name-
-  firstPage.moveTo(330, 262);
-  firstPage.drawText( req.body.insuranceCompany , {
-    font: timesBoldFont,
-    size: 20,
-  });
-
-  // Validity start date
-  firstPage.moveTo(270, 210);
-  firstPage.drawText( req.body.cardStartDate , {
-    font: timesBoldFont,
-    size: 20,
-  });
-
-  // Validity end date
-  firstPage.moveTo(460, 210);
-  firstPage.drawText( req.body.cardEndDate , {
-    font: timesBoldFont,
-    size: 20,
-  });
-
-  writeFileSync("CardNew.pdf", await document.save());
-
-  return true;
-}
-
 
 async function downloadCardPDF(req) {
   const document = await PDFDocument.load(readFileSync("./cardtemplate2.pdf"));
@@ -1720,12 +1673,26 @@ async function downloadCardPDF(req) {
     size: 24,
   });
 
-  // claim no. and company name-
-  firstPage.moveTo(320, 160);
-  firstPage.drawText( req.insuranceCompany , {
-    font: timesBoldFont,
-    size: 24,
-  });
+  var companyname = req.insuranceCompany;
+
+  if(companyname.length > 25)
+  {
+      // claim no. and company name-
+      firstPage.moveTo(30, 135);
+      firstPage.drawText( req.insuranceCompany , {
+        font: timesBoldFont,
+        size: 18,
+      });
+  }
+  else
+  {
+     // claim no. and company name-
+      firstPage.moveTo(330, 150);
+      firstPage.drawText( req.insuranceCompany , {
+        font: timesBoldFont,
+        size: 18,
+      });
+  }
 
   // Validity start date
   firstPage.moveTo(293, 105);
