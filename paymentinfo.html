@@ -84,24 +84,24 @@
     padding: 5px;
     border-radius: 5px;
     background-color: #343a40;
-    height: 550px;
-    width:600px;
+    height: 100%;
+    width: 100%;
   }
   .framelocalsmall {
     border: 1px solid #ced4da;
     padding: 20px;
     border-radius: 5px;
     background-color: #343a40;
-    height: 550px;
-    width: 400px;
+    height: 100%;
+    width: 100%;
   }
   .framesupersmall {
     border: 1px solid #ced4da;
     padding: 20px;
     border-radius: 5px;
     background-color: #343a40;
-    height: 60px;
-    width: 1000px;
+    height: 100%;
+    width: 100%;
   }
   </style>
   <title>Login Page</title>
@@ -193,79 +193,66 @@
         <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
         <div class='dashboard-content' style="background-image: url('/images/background20.jpg');  background-repeat: repeat;  background-size: cover;">
           <div class="container mt-5">
-            <div class="row ">
+            <div class="row " style ="display:flex">
               
               <h1 class="container my-2 text-center">Payment Details</h1>
 
               
-              <div class="framelocal " style=" color:black;display:flex ;background-image: url('/images/background18.jpg');  font-family: monospace;font-size: larger; background-size: cover;" >
-                      <!-- Your QR code image source here -->
-                      <div>
-                      <img src="/images/QR.jpeg" alt="QR Code for payment" style="height:540px; width:330px">
-                    </div>
-                      
-                        <div style="margin-left: 20px; margin-right: 20px; ">
-                          <b>
-                          Please Pay Rs. 549 to buy claim shield card<br><br>
-                          Account Number: 6597002100006080<br><br>
-                          IFSC Code: PUNB0659700 <br><br>
-                          Branch : Gumasta Nagar Branch<br><br>
-                        </b>
-                        </div>
+              <div class="container mt-5" style ="display:flex">
 
-                        
-                       
-                        
-                      
+                <div class="framelocal " style=" color:black;display:flex ;background-image: url('/images/background18.jpg');  font-family: monospace;font-size: larger; background-size: cover;" >
+                  <!-- Your QR code image source here -->
+                  <div  style="height:100%; width:100%; margin-left: 10px; margin-right: 10px;">
+                  <img src="/images/QR.jpeg" alt="QR Code for payment"  style="height:95%; width:85%; margin-left: 10px; margin-right: 10px;">
+                </div>
                   
-                
-      
-              </div>
+                    <div style="height:100%; width:100%; margin-left: 10px; margin-right: 10px;">
+                      <b style=" height:70%; width:60% ">
+                      Please Pay Rs. 549 to buy claim shield card<br><br>
+                      Account Number: 6597002100006080<br><br>
+                      IFSC Code: PUNB0659700 <br><br>
+                      Branch : Gumasta Nagar Branch<br><br>
+                    </b>
+                    </div>
 
-            
-
-                <div class="framelocalsmall text-center" style=" color:black; margin-left: 50px; display:flex ;background-image: url('/images/background18.jpg'); font-family: monospace;font-size: larger;   background-size: cover;" >
-                  <div class="container text-center  " >
-                    <div class=" p-4 ">
-                      
-                      <div >
-                      
-                        <form id="newpolicyform">
-                          <div class="row mb-3">
-                              <div class="col-lg-12">
-                                <label for="ref-number" class="form-label"><b>Card Reference number</b></label>
-                                <div class="input-group">
-                                  <input type="text" class="form-control" id="ref-number" readonly>
-                                </div>
-                              </div>
-                          </div>
-                          <div class="row mb-3">
-                            <div class="col-lg-12">
-                              <label for="pay-comment" class="form-label"><b>Payment comments</b></label>
-                              <div class="input-group">
-                                <textarea  type="text" class="form-control" rows="7" id="pay-comment" required></textarea>
-                              </div>
-                            </div>
-                          
-                          </div>
-
-                          <div class="text-center">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                          </div>
-
-                        </form>
-
-                      <b> <p class=" text-center" style = " margin-top: 23px; font-size: large;">Please make payment and update transaction number and payment mode in the above text box.</p></b>
-
-                      </div>
-
-                    </div>                
-                  </div>
+                  
+  
                 </div>
 
-              
 
-              
+                  <div class="framelocalsmall text-center" style=" width:40%;color:black; margin-left: 50px; display:flex ;background-image: url('/images/background18.jpg'); font-family: monospace;font-size: larger;   background-size: cover;" >
+                    <div class="container text-center  " >
+                                    
+                          <form id="newpolicyform" style="height:100%; width:100%">
+                            <div class="row mb-3">
+                                <div class="col-lg-12">
+                                  <label  for="ref-number" class="form-label" style="height:20%; width:80%; "><b>Card Reference number</b></label>
+                                  <div class="input-group" >
+                                    <input  type="text" style="height:20%; width:80%;" class="form-control" id="ref-number" readonly>
+                                  </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3" >
+                              <div class="col-lg-12">
+                                <label  for="pay-comment" style="height:20%; width:80%; " class="form-label"><b>Transaction Number</b></label>
+                                <div class="input-group">
+                                  <textarea style="height:20%; width:80%; "  type="text" class="form-control" rows="5" id="pay-comment" required></textarea>
+                                </div>
+                              </div>
+                            
+                            </div>
+
+                            <div class="text-center"  >
+                              <button type="submit" class="btn btn-primary" style=" height:40%;width:80%; margin-top: 20px;">Submit</button>
+                            </div>
+
+                          </form>
+
+                                      
+                    </div>
+                  </div>
+
+              </div>
 
               
 
