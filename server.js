@@ -20,7 +20,6 @@ oAuth2Client.setCredentials({
 //const accessToken =  oAuth2Client.getAccessToken();
 const accessToken = oAuth2Client.credentials.access_token;
 
-
 // AWS S3 configuration
 const s3 = new AWS.S3()
 
@@ -58,7 +57,6 @@ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS
 
 
 /*
-
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -185,6 +183,7 @@ const policyCardSchema = new mongoose.Schema({
   cardStartDate: Date,
   cardEndDate: Date,
   paymentcomment: String,
+  emailSent : String,
 });
 
 //third party admin details
@@ -610,6 +609,7 @@ app.post("/api/save-policy", upload.single('pdfFile'), async (req, res) => {
                   'directCase' : req.body.directCase,
                   'inquiryDate': inquirydate,
                   'paymentcomment':"",
+                  'emailSent':"false",
                     });
     const savedData = newData.save();
     await incrementReferenceCount();
@@ -741,7 +741,7 @@ app.post("/api/savepaymentcomment",  async (req, res) => {
       paymentcomment: req.body.paymentcomment,
     }, {new : true});
     const savedData = newData.save();
-    res.json({ message: 'Payment comments saved successfully', data: savedData });
+    res.json({ message: 'Payment details saved successfully', data: savedData });
   }
 catch(err)
 {
@@ -1337,6 +1337,7 @@ app.get('/dashboard.html', (req, res) => res.sendFile(__dirname+'/dashboard.html
 app.get('/newcard.html', (req, res) => res.sendFile(__dirname+'/newcard.html'))
 app.get('/newcarddirect.html', (req, res) => res.sendFile(__dirname+'/newcarddirect.html'))
 app.get('/paymentinfo.html', (req, res) => res.sendFile(__dirname+'/paymentinfo.html'))
+app.get('/paymentcomplete.html', (req, res) => res.sendFile(__dirname+'/paymentcomplete.html'))
 app.get('/viewcards.html', (req, res) => res.sendFile(__dirname+'/viewcards.html'))
 app.get('/viewpendingcards.html', (req, res) => res.sendFile(__dirname+'/viewpendingcards.html'))
 
@@ -1416,7 +1417,7 @@ const { PDFDocument, StandardFonts, rgb } = require("pdf-lib");
 const { writeFileSync, readFileSync } = require("fs");
 
 async function createPDF(req) {
-  const document = await PDFDocument.load(readFileSync("./agreementtemplate13.pdf"));
+  const document = await PDFDocument.load(readFileSync("./agreementtemplate15.pdf"));
 
   const courierBoldFont = await document.embedFont(StandardFonts.Courier);
   const timesFont = await document.embedFont(StandardFonts.TimesRoman);
@@ -1513,7 +1514,7 @@ whereof I/We hereto at Indore signed on the ${agreementdate.getDate().toString()
     size: 11,
   });
 
-  firstPage.moveTo(235, 655);
+  firstPage.moveTo(221, 671);
   firstPage.drawText(req.body.clientName, {
     font: timesBoldFont,
     size: 12,
@@ -1613,28 +1614,28 @@ whereof I/We hereto at Indore signed on the ${agreementdate.getDate().toString()
         
 
           //name of first party 
-          firstPage.moveTo(94, 199);
+          firstPage.moveTo(94, 184);
           firstPage.drawText(req.body.clientName, {
         font: timesBoldFont,
          size: 11,
          });
 
           //Address first party 
-          firstPage.moveTo(102, 172);
+          firstPage.moveTo(102, 156);
           firstPage.drawText(req.body.clientAddress, {
         font: timesBoldFont,
          size: 11,
          });
 
           //Mobile first party 
-          firstPage.moveTo(117, 146);
+          firstPage.moveTo(115, 129);
           firstPage.drawText(req.body.clientPhone, {
         font: timesBoldFont,
          size: 11,
          });
 
           //witness name
-          firstPage.moveTo(422, 172);
+          firstPage.moveTo(379, 183);
           firstPage.drawText(req.body.witnessName, {
         font: timesBoldFont,
          size: 11,
@@ -1791,7 +1792,18 @@ transporter.sendMail(mailOptions, function(error, info){
         console.log("could not send email" + error)
     } else {
         //res.json({message : 'emailsent'})
-        console.log("emailsent")
+        console.log("emailsent");
+        try{
+          const newData = policyCardSchemaObject.findOneAndUpdate({cardNumber: cardnumber},  {  emailSent: "true"
+          }, {new : true});
+          const savedData = newData.save();
+        }
+          catch(err)
+          {
+            console.error(err);
+          }
+
+        
     }
 });
     

@@ -84,8 +84,8 @@
     padding: 5px;
     border-radius: 5px;
     background-color: #343a40;
-    height: 550px;
-    width:600px;
+    height: 250px;
+    width:100%;
   }
   .framelocalsmall {
     border: 1px solid #ced4da;
@@ -193,98 +193,31 @@
         <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
         <div class='dashboard-content' style="background-image: url('/images/background20.jpg');  background-repeat: repeat;  background-size: cover;">
           <div class="container mt-5">
-            <div class="row ">
+            <div class="row " >
               
-              <h1 class="container my-2 text-center">Payment Details</h1>
 
               
-              <div class="framelocal " style=" color:black;display:flex ;background-image: url('/images/background18.jpg');  font-family: monospace;font-size: larger; background-size: cover;" >
-                      <!-- Your QR code image source here -->
-                      <div>
-                      <img src="/images/QR.jpeg" alt="QR Code for payment" style="height:540px; width:330px">
-                    </div>
+              <div class="framelocal  " style=" color:black;display:flex ;background-image: url('/images/background18.jpg');  font-family: monospace;font-size: larger; background-size: cover;" >
+ 
                       
-                        <div style="margin-left: 20px; margin-right: 20px; ">
+                        <div style="margin-left: 180px; margin-right: 20px; margin-top:50px ;">
                           <b>
-                          Please Pay Rs. 549 to buy claim shield card<br><br>
-                          Account Number: 6597002100006080<br><br>
-                          IFSC Code: PUNB0659700 <br><br>
-                          Branch : Gumasta Nagar Branch<br><br>
+                          Payment Details Saved Successfully.<br><br>
+                          Card Will Be Went Within 24 hours, After Payment Confirmation.<br><br>
+                          For Nidan Claim Shield Card Issuance Related Queries Contact - 9826011116<br><br>
+
                         </b>
                         </div>
-
-                        
-                       
-                        
-                      
-                  
-                
       
               </div>
 
-            
-
-                <div class="framelocalsmall text-center" style=" color:black; margin-left: 50px; display:flex ;background-image: url('/images/background18.jpg'); font-family: monospace;font-size: larger;   background-size: cover;" >
-                  <div class="container text-center  " >
-                    <div class=" p-4 ">
-                      
-                      <div >
-                      
-                        <form id="newpolicyform">
-                          <div class="row mb-3">
-                              <div class="col-lg-12">
-                                <label for="ref-number" class="form-label"><b>Card Reference number</b></label>
-                                <div class="input-group">
-                                  <input type="text" class="form-control" id="ref-number" readonly>
-                                </div>
-                              </div>
-                          </div>
-                          <div class="row mb-3">
-                            <div class="col-lg-12">
-                              <label for="pay-comment" class="form-label"><b>Payment comments</b></label>
-                              <div class="input-group">
-                                <textarea  type="text" class="form-control" rows="7" id="pay-comment" required></textarea>
-                              </div>
-                            </div>
-                          
-                          </div>
-
-                          <div class="text-center">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                          </div>
-
-                        </form>
-
-                      <b> <p class=" text-center" style = " margin-top: 23px; font-size: large;">Please make payment and update transaction number and payment mode in the above text box.</p></b>
-
-                      </div>
-
-                    </div>                
-                  </div>
-                </div>
-
-              
-
-              
-
-              
 
             </div>
 
 
 
           </div>
-          <div class="container mt-3">
-            <div class="framesupersmall "  style=" color:black; display:flex ;background-image: url('/images/background18.jpg');  font-family: monospace;font-size: larger; background-size: cover;">
-
-              <div class="row ">
-                <p>For queries reach out to us at- <b>Nidaanhelp@gmail.com</b> 
-                  or call us at - <b> 9826011116</b> </p>
-              </div>
-            </div>
-            
-          </div>
-
+ 
         </div>
 
     </div>
@@ -298,8 +231,7 @@
   <script>
     $(document).ready(function () {
 
-      var newcardrefnumber= localStorage['newcardrefnumber']; 
-      document.getElementById("ref-number").value = newcardrefnumber; 
+
       $.ajax({
         url: '/api/whoami',
         type: 'POST',
@@ -350,40 +282,6 @@
         }
     });
 
-      $('#newpolicyform').on('submit', function (event) {
-        event.preventDefault();
-
-        var referenceid = $('#ref-number').val();
-        var paycomments = $('#pay-comment').val();
-
-        if(referenceid == "undefined" || referenceid == "")
-        {
-          alert("Can not submit payment comments without reference number!!");
-          return;
-        }
-
-        // Make an API call to save payment comments
-        $.ajax({
-          url: '/api/savepaymentcomment',
-          type: 'POST',
-          contentType: "application/x-www-form-urlencoded",
-          data: {
-            referenceNumber: referenceid,
-            paymentcomment: paycomments
-          },
-          success: function (response) {
-            localStorage['newcardrefnumber']="";
-            window.location.href = "/paymentcomplete.html";
-              
-            // Redirect to the dashboard or perform any other actions
-          },
-          error: function (error) {
-            document.getElementById('newpolicyform').reset();
-            alert("Failed to save payment comments.");
-            // Display an error message to the user
-          }
-        });
-      });
     });
   </script>
 </body>

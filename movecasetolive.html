@@ -166,7 +166,7 @@
   <div class='dashboard-app'>
     <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
 
-    <div class='dashboard-content' style="background-image: url('/images/background20.jpg');">
+    <div class='dashboard-content' style="background-image: url('/images/background20.jpg');  background-repeat: repeat;  background-size: cover;">
       <div class="container mt-5">
         <div class="row justify-content-center">
           <div class="col-lg-6">
@@ -287,7 +287,7 @@
           console.log(claimamount);
           console.log(consultationcharge);
 
-          document.getElementById("cheque-amount").value=(claimamount * consultationcharge ) / (100);
+          document.getElementById("cheque-amount").value=Math.round((claimamount * consultationcharge ) / (100));
 
       });
 

@@ -158,13 +158,13 @@
   <div class='dashboard-app'>
     <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
 
-    <div class='dashboard-content' style="background-image: url('/images/background20.jpg');">
+    <div class='dashboard-content' style="background-image: url('/images/background20.jpg');  background-repeat: repeat;  background-size: cover;">
       <div class="container mt-5">
         <div class="row justify-content-center">
           <div class="col-lg-6">
             <h2 class="text-center mb-4">Legal PDF Generation Form</h2>
 
-            <div class="frame">
+            <div class="frame" style="color:black;background-image: url('/images/background18.jpg');  font-weight: bold;  font-family: monospace;font-size: large; background-size: cover;">
               <form id="loginForm">
                 <div class="row mb-3">
                   <div class="col-sm-6">
@@ -309,7 +309,7 @@
         var claimamount = $('#total-claim-amount').val();
         var consultationcharge = $('#consultation-charge').val();
 
-        document.getElementById("cheque-amount").value=(claimamount * consultationcharge ) / (100);
+        document.getElementById("cheque-amount").value=Math.round((claimamount * consultationcharge ) / (100));
 
         });
 
@@ -319,7 +319,7 @@
         var claimamount = $('#total-claim-amount').val();
         var consultationcharge = $('#consultation-charge').val();
 
-        document.getElementById("cheque-amount").value=(claimamount * consultationcharge ) / (100);
+        document.getElementById("cheque-amount").value=Math.round((claimamount * consultationcharge ) / (100));
 
         });
 

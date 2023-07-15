@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
+<!--
+  modal popup image code example
+  https://codepen.io/sinisag/pen/vPEajE
+-->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +15,88 @@
   <link rel="stylesheet" href="css/pricing.css">
 
 <style>
+
+.modal-target {
+  width: 400px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.modal-target:hover {opacity: 0.7;}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.8); /* Black w/ opacity */
+}
+
+/* Modal Content (image) */
+.modal-content {
+  margin: auto;
+  display: block;
+  width: 80%;
+  opacity: 1 !important;
+  max-width: 1200px;
+}
+
+/* Caption of Modal Image */
+.modal-caption {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 1200px;
+  text-align: center;
+  color: white;
+  font-weight: 700;
+  font-size: 1em;
+  margin-top: 32px;
+}
+
+/* Add Animation */
+.modal-content, .modal-caption {  
+  -webkit-animation-name: zoom;
+  -webkit-animation-duration: 0.6s;
+  animation-name: zoom;
+  animation-duration: 0.6s;
+}
+
+@-webkit-keyframes zoom {
+  from {-webkit-atransform:scale(0)} 
+  to {-webkit-transform:scale(1)}
+}
+
+@keyframes zoom {
+  from {transform:scale(0)} 
+  to {transform:scale(1)}
+}
+
+/* The Close Button */
+.modal-close {
+  position: absolute;
+  top: 50px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.modal-close:hover,
+.modal-close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
 
 </style>
   <title>Menu Bar</title>
@@ -97,7 +184,7 @@
     </div>
     <div class='dashboard-app'>
         <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
-        <div class='dashboard-content' style="background-image: url('/images/background20.jpg');">
+        <div class='dashboard-content' style="background-image: url('/images/background20.jpg');  background-repeat: repeat;  background-size: cover;">
             <div class='container'>
               <!--<img src="/images/logofull.jpg">-->
        <p style="color:white; font-size: 20px; padding-top: 40px; padding-right: 20px; padding-left: 20px;">At Nidaan, our mission is to empower and advocate for our clients in their pursuit of fair and just insurance claims. We are committed to providing exceptional services and fighting tirelessly on behalf of our clients to ensure they receive the true claim they deserve. Our dedicated team of experts works diligently to navigate the complex insurance landscape, resolve disputes, and maximize claim settlements. With unwavering dedication and a client-centric approach, we strive to deliver transparency, integrity, and successful outcomes, bringing peace of mind to our valued clients during challenging times.</p>
@@ -114,41 +201,33 @@
                  
                   <!-- "Basic" Plan -->
                   <div class="pricing-plan">
-                    <h2 class="plan-price ">Nidaan Claim Shield Card</h2>
+                    <h2 class="plan-price ">Nidaan Claim Shield Card</h2><br>
 
-                    <!--
-                    <div class="plan-cost">
-                      <p class="plan-price">549</p>
-                      <span>|</span> 
-                      <p class="plan-type">Yearly</p>
+                    <div class="lightbox">
+                      <div class="row">
+                        <div class="col-lg-6">
+                          <img
+                            src="/images/cardenglish.png"
+                            data-mdb-img="/images/cardenglish.png"                            
+                            class="modal-target"
+                          />
+                        </div>
+                        <div class="col-lg-6">
+                          <img
+                            src="/images/cardhindi.png"
+                            data-mdb-img="/images/cardhindi.png"
+                            class="modal-target"
+                          />
+                        </div>
+  
+                      </div>
                     </div>
-                    
-                    <ul class="plan-features">
-                      <li>CARD COVERS FIRST THREE CLAMS PER YEAR</li>
-                      <li>VALIDITY OF THE CARD SHALL BE 1 (ONE) YEAR FROM THE DATE
-                        OF PURCHASE</li>
-                      <li>ANY CLAIM PRIOR TO PURCHASE OF
-                        THIS CARD SHALL NOT BE COVERED,
-                        BUT IT CAN BE COVERED IN ROUTINE WITH
-                        PROCESSING FEES AND CONSULTATION FEES 15 TO 20% ETC.</li>
-                      <li><span>THIS CARD COVERS OUR FREE GUIDANCE IN CASE OF CASHLESS HOSPITALISATION
-                        AS WELL AS REIMBURSEMENT.
-                        UNTIL FINAL DISPOSAL/SETTLEMENT
-                        OF THE CLAIM.</span></li>
-                      <li><span> CARD HOLDER SHALL NOT BE CHARGED WITH PROCESSING FEES FOR CLAIM SETTLEMENT
-                        IN ANY CIRCUMSTANCE.</span></li>
-                      <li><span>CUSTOMER CAN CONTACT OUR DEDICATED PHONE NUMBER AT ANYTIME DURING
-                        OFFICE HOURS FROM 10:00 A.M. TO 6:00 P.M.</span></li>
 
-                        <li><span>CONTACT US AT - 8889296179, 7987856486,  0731-3528624</span></li>
-                        <li><span>REG. OFFICE ADDRESS:
-                          79 / A DRAVID NAGAR
-                          RANJIT HANUMAN MANDIR ROAD INDORE (MP) -452009</span></li>
-                    </ul>
-                    -->
-
-                    <img src="/images/cardenglish.png">
-                    <img src="/images/cardhindi.png">
+                    <div id="modal" class="modal">
+                      <span id="modal-close" class="modal-close">&times;</span>
+                      <img id="modal-content" class="modal-content">
+                      <div id="modal-caption" class="modal-caption"></div>
+                    </div>
 
                   </div>
  
@@ -218,6 +297,27 @@ $(document).ready(function () {
             $(".dashboard").toggleClass("dashboard-compact");
         }
     });
+});
+
+
+// Modal Setup
+var modal = document.getElementById('modal');
+
+var modalClose = document.getElementById('modal-close');
+modalClose.addEventListener('click', function() { 
+  modal.style.display = "none";
+});
+
+// global handler
+document.addEventListener('click', function (e) { 
+  if (e.target.className.indexOf('modal-target') !== -1) {
+      var img = e.target;
+      var modalImg = document.getElementById("modal-content");
+      var captionText = document.getElementById("modal-caption");
+      modal.style.display = "block";
+      modalImg.src = img.src;
+      captionText.innerHTML = img.alt;
+   }
 });
 
 
