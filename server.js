@@ -50,14 +50,14 @@ const port = process.env.PORT || 80
 //});
 
 
+
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
-
-
 /*
+
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -1116,6 +1116,15 @@ app.post("/api/sendcardemail", async(req, res) => {
         console.log(docs);
         const response = await downloadCardPDF(docs);
         sendCompletionEmails(docs);
+          try{
+            const newData = policyCardSchemaObject.findOneAndUpdate({cardNumber: cardnumber},  {  emailSent: "true"
+            }, {new : true});
+            const savedData = newData.save();
+          }
+          catch(err)
+          {
+            console.error(err);
+          }
          res.json("Email sent.");
     }
   }
@@ -1758,19 +1767,8 @@ transporter.sendMail(mailOptions, function(error, info){
     //res.json({message : error})
         console.log("could not send email" + error)
     } else {
-        //res.json({message : 'emailsent'})
-        console.log("emailsent");
-        try{
-          const newData = policyCardSchemaObject.findOneAndUpdate({cardNumber: cardnumber},  {  emailSent: "true"
-          }, {new : true});
-          const savedData = newData.save();
-        }
-          catch(err)
-          {
-            console.error(err);
-          }
-
-        
+        //res.json({message : 'mongoose'})
+        console.log("emailsent");        
     }
 });
     
