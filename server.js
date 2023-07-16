@@ -1117,7 +1117,7 @@ app.post("/api/sendcardemail", async(req, res) => {
         const response = await downloadCardPDF(docs);
         sendCompletionEmails(docs);
           try{
-            const newData = policyCardSchemaObject.findOneAndUpdate({cardNumber: req.body.policyCardNumber},  {  emailSent: "true"
+            const newData = await policyCardSchemaObject.findOneAndUpdate({cardNumber: req.body.policyCardNumber},  {  emailSent: "true"
             }, {new : true});
             const savedData = newData.save();
           }
