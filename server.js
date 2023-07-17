@@ -51,10 +51,12 @@ const port = process.env.PORT || 80
 
 
 
+
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
 
 /*
 
@@ -1660,7 +1662,7 @@ whereof I/We hereto at Indore signed on the ${agreementdate.getDate().toString()
 
 
 async function downloadCardPDF(req) {
-  const document = await PDFDocument.load(readFileSync("./cardtemplate2.pdf"));
+  const document = await PDFDocument.load(readFileSync("./cardtemplate3.pdf"));
 
   const courierBoldFont = await document.embedFont(StandardFonts.Courier);
   const timesBoldFont = await document.embedFont(StandardFonts.TimesRomanBold);
@@ -1696,10 +1698,10 @@ async function downloadCardPDF(req) {
   else
   {
      // claim no. and company name-
-      firstPage.moveTo(330, 150);
+      firstPage.moveTo(330, 162);
       firstPage.drawText( req.insuranceCompany , {
         font: timesBoldFont,
-        size: 18,
+        size: 19,
       });
   }
 
