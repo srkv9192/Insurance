@@ -11,6 +11,7 @@
   <style>
     body {
       background-color: #343a40;
+      background-image: url('/images/background20.jpg');
       color: #fff;
     }
 
@@ -27,6 +28,7 @@
       color: #e9ecef;
     }
 
+    
     .navbar-dark .navbar-brand {
       color: #343a40;
     }
@@ -60,55 +62,13 @@
       background-color: #0062cc;
       border-color: #005cbf;
     }
-
-    .table-dark {
-      background-color: #343a40;
-    }
-
-    .table-dark th
-    {
-      color: #fff;
-    }
-    .table-dark td {
-      color: #fff;
-      background-color: red;
-    }
-
-    .table-dark tbody tr.card-missing td {
-      background-color: #dc3545;
-    }
-
-    .table-dark tbody tr.card-present td {
-      background-color: #28a745;
-    }
-
-    div.dataTables_info {
-  color: white !important;
-
-}
-
-div.dataTables_paginate {
-  color: white !important;
-
-}
-
-div.dataTables_length {
-  color: white !important;
-
-}
-
-div.dataTables_filter {
-  color: white !important;
-
-}
   </style>
-  <title>Prospect Cases</title>
+  <title>Login Page</title>
 </head>
 
 <body>
 
   <div class='dashboard'>
-
     <div class="dashboard-nav">
       <header>
         <a href="#"class="brand-logo"> 
@@ -118,12 +78,15 @@ div.dataTables_filter {
         </header>
       <nav class="dashboard-nav-list"><a href="/" class="dashboard-nav-item"><i class="fas fa-home"></i>
           Home </a>
+
           <div id="hideonlogin">
             <nav class="dashboard-nav-list"><a href="/newcarddirect.html" class="dashboard-nav-item"><i class="fas fa-inr"></i>
               Buy Card </a>
+
               <nav class="dashboard-nav-list"><a href="/paymentinfo.html" class="dashboard-nav-item"><i class="fas fa-inr"></i>
                 Payment Info </a>
           </div>
+
           
 
           <div id="showonlogin" style="display: none;">
@@ -158,7 +121,7 @@ div.dataTables_filter {
 
             <div class='dashboard-nav-dropdown show'>
               <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
-               <i class="fas  fa-user-secret ">
+               <i class="fas  fa-user-secret">
                  </i>Admin Menu</a>
                <div class='dashboard-nav-dropdown-menu'>
                    <a href="/changepassword.html" class="dashboard-nav-dropdown-item">Change Password</a>
@@ -189,135 +152,70 @@ div.dataTables_filter {
 
           </div>
 
-          <div id="showtocoordinator" style="display: none;">
-
-            <div class='dashboard-nav-dropdown show'>
-               <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
-                <i class="fas fa-photo-video">
-                  </i>Card Menu</a>
-                <div class='dashboard-nav-dropdown-menu'>
-                    <a href="/newcard.html" class="dashboard-nav-dropdown-item">Add Card</a>
-                </div>
-             </div>
-
-             <div class='dashboard-nav-dropdown show'>
-              <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
-               <i class="fas fa-photo-video">
-                 </i>Case Menu</a>
-               <div class='dashboard-nav-dropdown-menu'>
-                   <a href="/addprospect.html" class="dashboard-nav-dropdown-item">Add Case</a>
-                   <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
-               </div>
-            </div>
-
-          </div>
-            
-        <div class="nav-item-divider">
-
-        </div>
-        <a id="login-menu"
+        <div class="nav-item-divider"></div>
+        <a  id="login-menu"
                   href="/login.html" class="dashboard-nav-item"><i class="fas  fa-sign-in "></i> Login </a>
       </nav>
   </div>
-
     <div class='dashboard-app'>
         <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
         <div class='dashboard-content' style="background-image: url('/images/background20.jpg');  background-repeat: repeat;  background-size: cover;">
           <div class="container mt-5">
             <div class="row justify-content-center">
-              <div class="col-lg-12">
-                <h2 class="text-center mb-4">Prospect Cases</h2>
-                <div class="table-responsive">
-                  <table id ="dataTable" class="table table-dark table-bordered">
-                    <thead>
-                      <tr>
-                        <th>Reference Number</th>
-                        <th>Customer Name</th>
-                        <th>Customer Phone</th>
-                        <th>Insurance Company</th>
-                        <th>TPA Name</th>
-                        <th>Claim Amount</th>
-                        <th>Claim Number</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                  </table>
+              <div class="col-lg-4 col-md-6 col-sm-8">
+                <h2 class="text-center mb-4">Create New Account</h2>
+                <div class="frame" style=" color:black;display:flex ;background-image: url('/images/background18.jpg');  font-family: monospace;font-size: large; background-size: cover;">
+
+                  <form id="loginForm">
+                    <div class="mb-3">
+                      <label for="username" class="form-label">Name</label>
+                      <input type="text" class="form-control" id="username" placeholder="Enter name">
+                    </div>
+                    <div class="mb-3">
+                      <label for="userid" class="form-label">User Name</label>
+                      <input type="text" class="form-control" id="userid" placeholder="Enter User Name">
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="userpassword" class="form-label">Password</label>
+                      <input type="text" class="form-control" id="userpassword" placeholder="Enter password">
+                    </div>
+
+                    <div class="mb-3">
+                      
+                        <label for="user-type" class="form-label">User Type</label>
+                        <div class="input-group">
+                          <select class="form-control" id="user-type-dropdown" required>
+                            <option value="admin">Admin</option>
+                            <option value="manager">Manager</option>
+                            <option value="cp">Channel Partner</option>
+                            <option value="operation">Operation</option>
+                          </select>
+                         </div>
+                    
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </form>
                 </div>
+
               </div>
             </div>
           </div>
         </div>
+
     </div>
-  </div>
+</div>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
-
-function movetoauth(referencenumber) {
-        // Code to generate card
-
-             // Make an API call with the username and password
-             $.ajax({
-            url: '/api/movecasetopendingauthbyref',
-            type: 'POST',
-            contentType: "application/x-www-form-urlencoded",
-            data: {
-            casereferenceNumber: referencenumber,
-            },
-            success: function (response) {
-              alert("Case Moved to pending auth.");
-            },
-            error: function (error) {
-              document.getElementById('loginForm').reset();
-              alert("Failed to move case to pending auth.");
-              // Display an error message to the user
-            }
-        });
-
-      }
-
-      
     $(document).ready(function () {
 
-      $.ajax({
-        url: '/api/whoami',
-        type: 'POST',
-        success: function (response) {
-          // Populate the options in the select element
-            //alert(response.message)
-           
-            if(response.message =='admin')
-            {
-              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
-              document.getElementById("login-menu").href="/logout.html"; 
-              $("#showonlogin").show();
-              $("#hideonlogin").hide();
-             
-            }
-            else if(response.message =='cp' || response.message =='manager')
-            {
-              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
-              document.getElementById("login-menu").href="/logout.html"; 
-              $("#showtocpandmanager").show();
-              $("#hideonlogin").hide();
-            }
-            else
-            {
-              
-            }
-            
-        },
-        error: function (error) {
-          console.error('Error:', error);
-        }
-      });
+      const mobileScreen = window.matchMedia("(max-width: 990px )");
 
-
-      const mobileScreen = window.matchMedia("(max-width: 990px)");
-
-      $(".dashboard-nav-dropdown-toggle").click(function () {
+          $(".dashboard-nav-dropdown-toggle").click(function () {
         $(this).closest(".dashboard-nav-dropdown")
             .toggleClass("show")
             .find(".dashboard-nav-dropdown")
@@ -325,63 +223,55 @@ function movetoauth(referencenumber) {
         $(this).parent()
             .siblings()
             .removeClass("show");
-      });
-
-      $(".menu-toggle").click(function () {
+    });
+    $(".menu-toggle").click(function () {
         if (mobileScreen.matches) {
             $(".dashboard-nav").toggleClass("mobile-show");
         } else {
             $(".dashboard").toggleClass("dashboard-compact");
         }
-      });
+    });
 
-      $('#dataTable').DataTable({
+      $('#loginForm').on('submit', function (event) {
+        event.preventDefault();
 
-        "paging": true,
-        "searching": true,
-        "ordering": true,
-        "info": true,
-        "scrollX": true,
-      });
-      
-       // AJAX call on page load get manager details
-       $.ajax({
-        url: '/api/getprospectcasedetail',
-        type: 'GET',
-        success: function (response) {
-          // Populate the options in the select element
-          populateDataTable(response);
-        },
-        error: function (error) {
-          console.error('Error:', error);
-        }
-      });
+        var username = $('#username').val();
+        var userid = $('#userid').val();
+        var userpassword = $('#userpassword').val();
+        var usertype = $('#user-type-dropdown').val();
 
-          // populate the data table with JSON data
-          function populateDataTable(data) {
-          console.log("populating data table...");
-          // clear the table before populating it with more data
-          $("#dataTable").DataTable().clear();
-          var length = Object.keys(data).length;
-          for(var i = 0; i < length; i++) {
-            var rfno= data[i].casereferenceNumber
-            // You could also use an ajax property on the data table initialization
-            $('#dataTable').dataTable().fnAddData( [
-              data[i].casereferenceNumber,
-              data[i].customerName,
-              data[i].customerPhone,
-              data[i].insuranceCompanyName,
-              data[i].tpaName,
-              data[i].claimAmount,
-              data[i].claimNumber,
-              `<button class="btn btn-primary btn-sm" onclick="movetoauth(${rfno})">Move to Pending Auth</button>`
-            ]);
+        // Make an API call with the username and password
+        $.ajax({
+          url: '/api/addlogin',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          data: {
+            userID: userid,
+            userPassword: userpassword,
+            userName: username,
+            userType: usertype,
+          },
+          success: function (response) {
+            if(response.message == "success")
+              {
+                alert("New account added successfully!!")
+                document.getElementById('loginForm').reset();
+              }
+              if(response.message == "duplicate")
+              {
+                alert("Account with same username exist, Use a different one!!")
+                document.getElementById('loginForm').reset();
+              }
+            //alert("login success");
+            // Redirect to the dashboard or perform any other actions
+          },
+          error: function (error) {
+            document.getElementById('loginForm').reset();
+            alert("Failed to add account");
+            // Display an error message to the user
           }
-        }
-      
-
-
-
+        });
+      });
     });
   </script>
 </body>

@@ -49,19 +49,22 @@ const port = process.env.PORT || 80
 //  useUnifiedTopology: true,
 //});
 
+
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
-
 /*
+
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
 */
+
+
 
 
 const cookieParser = require("cookie-parser");
@@ -333,22 +336,49 @@ app.post('/api/addcpdetail', async(req, res) => {
 
 */
 
-
 app.post('/api/addlogin', async(req, res) => {
   try{
+
+    const docs = await loginSchemaObject.findOne({userID: req.body.userID});
+    if (docs) {
+      res.json({message : 'duplicate'});
+      return;
+    }
         const newData = new loginSchemaObject({
                         'userName' : req.body.userName,
                         'userPassword' : req.body.userPassword,
                         'userID' : req.body.userID,
                         'userType' : req.body.userType});
         const savedData = newData.save();
-        res.json({ message: 'Login Data saved successfully', data: savedData });
+        res.json({ message: 'success'});
       }
     catch(err)
     {
       console.error(err);
       res.status(500).json({ error: 'Error saving Login data' });
     } 
+});
+
+app.post('/api/changeloginpass', async(req, res) => {
+  try{
+      const newData = await loginSchemaObject.findOneAndUpdate({userID: req.body.userID}, {$set:{ userPassword:req.body.newPassword }});
+
+      if(newData == null)
+      {
+        res.json({ message: 'invaliduser'});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error updating password' });
+  } 
+
 });
 
 //Not needed added for testing purpose
@@ -469,7 +499,7 @@ app.post('/api/addinsurancecompany', async(req, res) => {
 app.get("/api/getinsurancecompany", async(req, res) => {
   try {
     // Retrieve all insurance company list from the database
-    const users = await  insurancecompanySchemaObject.find({});
+    const users = await  insurancecompanySchemaObject.find({}).sort({ companyName: 'desc' });
     res.json(users);
   } catch (error) {
     console.error(error);
@@ -1339,6 +1369,9 @@ app.get('/logout.html', (req, res) => res.sendFile(__dirname+'/logout.html'))
 app.get('/newcase.html', (req, res) => res.sendFile(__dirname+'/newcase.html'))
 app.get('/viewprospectcases.html', (req, res) => res.sendFile(__dirname+'/viewprospectcases.html'))
 app.get('/viewpendingauthcases.html', (req, res) => res.sendFile(__dirname+'/viewpendingauthcases.html'))
+
+app.get('/changepassword.html', (req, res) => res.sendFile(__dirname+'/changepassword.html'))
+app.get('/createaccount.html', (req, res) => res.sendFile(__dirname+'/createaccount.html'))
 
 
 app.get('/viewcases.html', (req, res) => res.sendFile(__dirname+'/viewcases.html'))
