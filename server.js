@@ -499,7 +499,7 @@ app.post('/api/addinsurancecompany', async(req, res) => {
 app.get("/api/getinsurancecompany", async(req, res) => {
   try {
     // Retrieve all insurance company list from the database
-    const users = await  insurancecompanySchemaObject.find({}).sort({ companyName: 'desc' });
+    const users = await  insurancecompanySchemaObject.find({}).sort({ companyName: 1 });
     res.json(users);
   } catch (error) {
     console.error(error);
