@@ -101,6 +101,87 @@ div.dataTables_filter {
   color: white !important;
 
 }
+
+/*for pop up box
+
+*/
+
+
+.overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  transition: opacity 500ms;
+  visibility: hidden;
+  opacity: 0;
+}
+.overlay:target {
+  visibility: visible;
+  opacity: 1;
+}
+
+.popup {
+  margin: 70px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 5px;
+  width: 30%;
+  position: relative;
+  transition: all 5s ease-in-out;
+}
+
+.popup h2 {
+  margin-top: 0;
+  color: #333;
+  font-family: Tahoma, Arial, sans-serif;
+}
+.popup ul {
+  margin-top: 0;
+  color: #333;
+  font-family: Tahoma, Arial, sans-serif;
+}
+.popup li {
+  margin-top: 0;
+  color: #333;
+  font-family: Tahoma, Arial, sans-serif;
+}
+
+.popup .close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  transition: all 200ms;
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #333;
+}
+.popup .close:hover {
+  color: #06D85F;
+}
+.popup .content {
+  max-height: 30%;
+  overflow: auto;
+}
+
+@media screen and (max-width: 700px){
+  .box{
+    width: 70%;
+  }
+  .popup{
+    width: 70%;
+  }
+}
+
+/*pop up box end*/
+
+
+
+
+
   </style>
   <title>Prospect Cases</title>
 </head>
@@ -232,17 +313,44 @@ div.dataTables_filter {
                     <thead>
                       <tr>
                         <th>Reference Number</th>
-                        <th>Customer Name</th>
-                        <th>Customer Phone</th>
-                        <th>Insurance Company</th>
-                        <th>TPA Name</th>
+                        <th>Patient Name</th>
+                        <th>Patient Phone</th>
+                        <th>Complainant Name</th>
+                        <th>Complainant Phone</th>
                         <th>Claim Amount</th>
                         <th>Claim Number</th>
+                        <th>Insurance Company</th>
+                        <th>Action</th>
                         <th>Action</th>
                       </tr>
                     </thead>
                   </table>
                 </div>
+
+                <div id="popup1" class="overlay">
+                  <div class="popup">
+                    <h2  id = "remarkcontent">Remarks-</h2>
+                    <ul id="remarkcontentlist"></ul>
+
+                    
+                    <a class="close" href="#">&times;</a>
+                  </div>
+                </div>
+
+                <div id="popup2" class="overlay">
+                  <div class="popup">
+                    <h2  id = "remarkcontent">Remarks-</h2>
+                    <ul id="remarkcontentlist"></ul>
+
+                      <input type="text" placeholder="Enter remark" id="newremark" required>
+                      <button type="submit" onclick="addremarkInDB()" class="btn">Save Remark</button>
+                    
+                    <a class="close" href="#">&times;</a>
+                  </div>
+                </div>
+
+
+
               </div>
             </div>
           </div>
@@ -255,29 +363,91 @@ div.dataTables_filter {
   <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
   <script>
 
-function movetoauth(referencenumber) {
+function viewremark(referencenumber) {
         // Code to generate card
 
-             // Make an API call with the username and password
-             $.ajax({
-            url: '/api/movecasetopendingauthbyref',
-            type: 'POST',
-            contentType: "application/x-www-form-urlencoded",
-            data: {
-            casereferenceNumber: referencenumber,
-            },
-            success: function (response) {
-              alert("Case Moved to pending auth.");
-            },
-            error: function (error) {
-              document.getElementById('loginForm').reset();
-              alert("Failed to move case to pending auth.");
-              // Display an error message to the user
-            }
-        });
+        let list = document.getElementById("remarkcontentlist");
+
+        // 👇️ Remove all list elements
+        list.innerHTML = '';
+
+        $.ajax({
+        url: '/api/getprospectcasedetailbyref',
+        type: 'GET',
+        data: {
+          casereferenceNumber: referencenumber
+        },
+
+        success: function (response) {
+          // Populate the options in the select eleme    
+           
+           // let text =  response[0].pf_cf_Remarkstatus;
+          //  const myArray = text.split(";");    
+
+            let list = document.getElementById("remarkcontentlist");
+              for (i = 0; i < response[0].pf_cf_Remarkstatus.length ; i++) {
+                let li = document.createElement('li');
+                li.innerText = response[0].pf_cf_Remarkstatus[i];
+                list.appendChild(li);
+               }
+
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
 
       }
 
+
+function addremark(referencenumber) {
+        // Code to generate card
+        localStorage['addRemarkForRefNumber'] =referencenumber; 
+  }
+
+  function addremarkInDB() {
+
+        $.ajax({
+          url: '/api/addprospectcaseremark',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          data: {
+            referencenumber: localStorage['addRemarkForRefNumber'],
+            pf_cf_Remarkstatus:  document.getElementById("newremark").value
+          },
+          success: function (response) {
+            if(response.message == "success")
+              {
+               // window.location.href = "/index.html"
+                //localStorage['userID'] = username;
+                alert("Remark saved!")
+                localStorage.removeItem("addRemarkForRefNumber");
+
+                document.getElementById("newremark").value ="";
+                window.location.href = "/viewprospectcases.html";
+                
+               
+ 
+              }
+              else{
+                alert("Error saving remark!")
+                //document.getElementById('loginForm').reset();
+              }
+            //alert("login success");
+            // Redirect to the dashboard or perform any other actions
+          },
+          error: function (error) {
+            document.getElementById('loginForm').reset();
+            alert("login failed");
+            // Display an error message to the user
+          }
+        });
+      
+
+
+       // alert(  document.getElementById("newremark").value);
+
+  }
       
     $(document).ready(function () {
 
@@ -368,13 +538,15 @@ function movetoauth(referencenumber) {
             // You could also use an ajax property on the data table initialization
             $('#dataTable').dataTable().fnAddData( [
               data[i].casereferenceNumber,
-              data[i].customerName,
-              data[i].customerPhone,
-              data[i].insuranceCompanyName,
-              data[i].tpaName,
+              data[i].patientName,
+              data[i].patientMobile,
+              data[i].complainantName,
+              data[i].complainantMobile,
               data[i].claimAmount,
               data[i].claimNumber,
-              `<button class="btn btn-primary btn-sm" onclick="movetoauth(${rfno})">Move to Pending Auth</button>`
+              data[i].insuranceCompanyName,
+              `<a href="#popup1"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
+              `<a href="#popup2"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Add Remarks</button> </a>`
             ]);
           }
         }

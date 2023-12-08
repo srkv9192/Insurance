@@ -55,15 +55,14 @@ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS
   useUnifiedTopology: true,
 });
 
-/*
 
+/*
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
 */
-
 
 
 
@@ -91,34 +90,80 @@ const storagegcp = new Storage(
 
 // Create a schema
 const dataSchema = new mongoose.Schema({
-  customerName: String,
-  customerAddress: String,
-  customerPhone: String,
-  customerEmail: String,
-  claimNumber: String,
-  claimAmount: Number,
-  approvedAmount:Number,
+  prospectDate: Date,
+  prospectZone: String,
+  patientName: String,
+  patientMobile:Number,
+  complainantName: String,
+  complainantMobile : Number,
+  caseHandler: String,
   insuranceCompanyName: String,
-  tpaName: String,
-  policyNumber: String,
-  policyUpload: String, 
-  casereferenceNumber : String,
-  caseNumber: String,
+  claimAmount: Number,
+  claimNumber: String,
+  pf_cf_Remarkstatus: Array,
+  extraRemarks: String,
+  payeeName: String,
+  pfAmount: Number,
+  pfReceived: String,
+  cfPercentage: Number,
+  cfAmount: Number,
+  cfReceived: String,
+  cfChequeNumber: String,
+  cfBankName: String,
+  paymentRemarks: String,
+  hospitalName: String,
+  isRejection: String,
+  isDedecution: String,
+  dateOfRejectionLetter: Date,
+  caseEmail: String,
+  caseEmailPassword: String,
+  dateofEscalationToInsurer: Date,
+  companyRevertDate: Date,
+  onlineLokpalComplaintNumber: String,
+  lokpalComplaintDate: String,
+  lokpalComplaintNumber: String,
+  lokpalCaseStatus: String,
+  dateOfLokpalHearing: Date,
+  isProspect: String,
+  isPendingAuth: String,
+  isLive: String,
+  legalCollected: String,
+  pdcCollected: String,
+  liveEntryBy: String,
+  medicalOpinionOfficer: String,
+  directCase: String,
   managerID: String,
   managerName: String,
   cpID: String,
   cpName: String,
+
+
+
+  policyNumber: String,
+  policyUpload: String, 
+  casereferenceNumber : String,
+  caseNumber: String,
   directCase: String,
-  caseCity: String,
   isProspect: String,
   isPendingAuth: String,
   isLive: String,
   isCompleted: String,
-  processingFee: Number,
-  consultationCharge: Number,
-  chequeAmount : Number,
-  chequeNumber : String,
-  bankName : String,
+
+  // Add stages of case here based on thier colour coding
+  isEmailGenerated: String,
+  isGistGenerated: String,
+  isMedicalOpinionGenerated: String,
+  isDraftGenerated: String,
+  isEscalatedInCompany: String,
+  isEscalationDeadlineDone: String,
+  isLokpalDraftDone: String,
+  islokpalRegistrationPending: String,
+  islokpalRegistered: String,
+  //
+
+  caseEmail: String,
+  caseEmailPassword: String,
+
   // Add more fields as needed
 });
 
@@ -147,6 +192,17 @@ const tpaSchema = new mongoose.Schema({
 const managerSchema = new mongoose.Schema({
   managerID: String,
   managerName: String,
+  phone: String,
+  email: String,
+  location: String,
+  // Add more fields as needed
+});
+
+
+//employee schema 
+const employeeSchema = new mongoose.Schema({
+  employeeID: String,
+  employeeName: String,
   phone: String,
   email: String,
   location: String,
@@ -199,6 +255,7 @@ const counterSchema = new mongoose.Schema({
   cpCount: Number,
   caseReferenceNumberCount: Number,
   caseNumberCount: Number,
+  employeeCount: Number,
   // Add more fields as needed
 });
 
@@ -219,6 +276,9 @@ const tpaSchemaObject = mongoose.model('tpadetails', tpaSchema);
 
 //table to hold manager details
 const managerSchemaObject = mongoose.model('managerdetails', managerSchema);
+
+//table to hold manager details
+const employeeSchemaObject = mongoose.model('employeedetails', employeeSchema);
 
 //table to hold channel partner details
 const cpSchemaObject = mongoose.model('cpdetails', cpSchema);
@@ -276,12 +336,11 @@ app.post('/api/addprospect', async(req, res) => {
         }
 
         const newData = new dataSchemaObject({
-                        customerName : req.body.customerName,
-                        customerAddress: req.body.customerAddress,
-                        customerPhone: req.body.customerPhone,
-                        customerEmail:req.body.customerEmail,
+                        patientName : req.body.patientName,
+                        patientMobile: req.body.patientMobile,
+                        complainantName : req.body.complainantName,
+                        complainantMobile: req.body.complainantMobile,
                         insuranceCompanyName: req.body.insuranceCompanyName,
-                        tpaName: req.body.tpaName,
                         claimNumber: req.body.claimNumber,
                         claimAmount: req.body.claimAmount,
                         cpName: req.body.cpName,
@@ -289,8 +348,7 @@ app.post('/api/addprospect', async(req, res) => {
                         managerName: req.body.managerName,
                         managerID: req.body.managerID,
                         directCase: req.body.directCase,
-                        caseCity: req.body.caseCity,
-                        policyNumber:req.body.policyNumber,
+                        prospectZone: req.body.prospectZone,
                         casereferenceNumber : refNumber,
                         caseNumber: "",
                         isProspect:"true",
@@ -306,6 +364,31 @@ app.post('/api/addprospect', async(req, res) => {
     }
   
 });
+
+
+app.post('/api/addprospectcaseremark', async(req, res) => {
+  try{
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ pf_cf_Remarkstatus:req.body.pf_cf_Remarkstatus}});
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not save remark', refnum:req.body.referencenumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding remark' });
+  } 
+
+});
+
+
 /*
 
 app.post('/api/addcpdetail', async(req, res) => {
@@ -414,6 +497,7 @@ app.post('/api/setcountervalues', async(req, res) => {
                         'cpCount': req.body.cpCount,
                         'caseReferenceNumberCount': req.body.caseReferenceNumberCount,
                         'caseNumberCount': req.body.caseNumberCount,
+                        'employeeCount' : req.body.employeeCount,
                         'searchId' : "keywordforsearch"});
         const savedData = newData.save();
         res.json({ message: 'Initial counter data saved successfully', data: savedData });
@@ -462,6 +546,20 @@ catch(err)
 {
   console.error(err);
   res.status(500).json({ error: 'Error incrementing manager count' });
+} 
+});
+
+
+app.post('/api/incrementemployeecount', async(req, res) => {
+  try{
+    const newData = await counterSchemaObject.findOneAndUpdate({searchId: "keywordforsearch"}, {$inc:{ employeeCount: 1}});
+    const savedData = newData.save();
+    res.json({ message: 'Employee count incremented successfully', data: savedData });
+  }
+catch(err)
+{
+  console.error(err);
+  res.status(500).json({ error: 'Error incrementing employee count' });
 } 
 });
 
@@ -560,6 +658,45 @@ app.post('/api/addmanagerdetail', async(req, res) => {
       res.status(500).json({ error: 'Error saving Manager data' });
     } 
 });
+
+
+app.post('/api/addemployeedetail', async(req, res) => {
+  try{
+        const refNumber= await getEmployeeCount();
+        if(refNumber == -1)
+        {
+          res.status(500).json({ error: 'Error saving employee data' });
+          return;
+        }
+        const newData = new employeeSchemaObject({
+                        'employeeID' : "EMP_" + refNumber,
+                        'employeeName' : req.body.employeeName,
+                        'phone' : req.body.phone,
+                        'email' : req.body.email,
+                        'location': req.body.location,
+                        });
+        const savedData = newData.save();
+        await incrementEmployeeCount();
+        res.json({ message: 'Employee data saved successfully', data: savedData });
+      }
+    catch(err)
+    {
+      console.error(err);
+      res.status(500).json({ error: 'Error saving employee data' });
+    } 
+});
+
+app.get("/api/getemployeedetail", async(req, res) => {
+  try {
+    // Retrieve all employeefrom database
+    const users = await  employeeSchemaObject.find({});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get employee details' });
+  }
+});
+
 
 app.get("/api/getmanagerdetail", async(req, res) => {
   try {
@@ -1223,10 +1360,32 @@ app.post("/api/downloadcard", async(req, res) => {
   }
 };
 
+async function getEmployeeCount () {
+  try {
+    const data = await counterSchemaObject.find();
+    return data[0].employeeCount;
+  } catch (error) {
+    console.error(error);
+    return -1;
+  }
+};
+
   async function incrementManagerCount ()  {
   try{
     const newData = await counterSchemaObject.findOneAndUpdate({searchId: "keywordforsearch"}, {$inc:{ managerCount: 1}});
     return newData.managerCount;
+  }
+  catch(err)
+  {
+    console.error(err);
+    return -1;
+  } 
+};
+
+async function incrementEmployeeCount ()  {
+  try{
+    const newData = await counterSchemaObject.findOneAndUpdate({searchId: "keywordforsearch"}, {$inc:{ employeeCount: 1}});
+    return newData.employeeCount;
   }
   catch(err)
   {
@@ -1376,6 +1535,9 @@ app.get('/createaccount.html', (req, res) => res.sendFile(__dirname+'/createacco
 
 app.get('/viewcases.html', (req, res) => res.sendFile(__dirname+'/viewcases.html'))
 app.get('/movecasetolive.html', (req, res) => res.sendFile(__dirname+'/movecasetolive.html'))
+
+app.get('/movecasetomedicalopinion.html', (req, res) => res.sendFile(__dirname+'/movecasetomedicalopinion.html'))
+
 app.get('/dashboard.html', (req, res) => res.sendFile(__dirname+'/dashboard.html'))
 app.get('/newcard.html', (req, res) => res.sendFile(__dirname+'/newcard.html'))
 app.get('/newcarddirect.html', (req, res) => res.sendFile(__dirname+'/newcarddirect.html'))

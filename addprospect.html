@@ -196,9 +196,9 @@
                   </div>
   
                   <div class="col-sm-6">
-                    <label for="city-name" class="form-label">City</label>
+                    <label for="prospectZone" class="form-label">Zone</label>
                     <div class="input-group">
-                      <select class="form-control" id="city-name-dropdown">
+                      <select class="form-control" id="prospectZone-dropdown">
                         <option value="indore">Indore</option>
                         <option value="bhopal">Bhopal</option>
                         <option value="dewas">Dewas</option>
@@ -238,24 +238,26 @@
 
                 <div class="row mb-3">
                   <div class="col-sm-6">
-                    <label for="client-name" class="form-label">Client Name</label>
-                    <input type="text" class="form-control" id="client-name" required>
+                    <label for="patient-name" class="form-label">Patient Name</label>
+                    <input type="text" class="form-control" id="patient-name" required>
                   </div>
                   <div class="col-sm-6">
-                    <label for="client-address" class="form-label">Client Address</label>
-                    <input type="text" class="form-control" id="client-address" required>
+                    <label for="patient-phone" class="form-label">Patient Phone</label>
+                    <input type="text" class="form-control" id="patient-phone" required pattern="[0-9]{10}" required maxlength="10">
                   </div>
                 </div>
+
                 <div class="row mb-3">
                   <div class="col-sm-6">
-                    <label for="client-phone" class="form-label">Customer Phone</label>
-                    <input type="text" class="form-control" id="client-phone" required pattern="[0-9]{10}" required maxlength="10">
+                    <label for="complainant-name" class="form-label">Complainant Name</label>
+                    <input type="text" class="form-control" id="complainant-name" required>
                   </div>
                   <div class="col-sm-6">
-                    <label for="client-email" class="form-label">Email </label>
-                    <input type="email" class="form-control" id="client-email" required>
+                    <label for="complainant-phone" class="form-label">Complainant Phone</label>
+                    <input type="text" class="form-control" id="complainant-phone" required pattern="[0-9]{10}" required maxlength="10">
                   </div>
                 </div>
+
                 <div class="row mb-3">
 
                   <div class="col-sm-6">
@@ -268,17 +270,17 @@
                       <input type="text" class="form-control" id="insurance-company-other" placeholder="Enter other insurance company name" style="display: none;">
                     </div>
                   </div>
-  
+
+
                   <div class="col-sm-6">
-                    <label for="tpa-name" class="form-label">TPA Name</label>
+                    <label for="caretaker-name" class="form-label">Assign To</label>
                     <div class="input-group">
-                      <select class="form-control" id="tpa-name-dropdown">
+                      <select class="form-control" id="caretaker-name-dropdown">
                         <option value="">None</option>
-                        <option value="Other">Other</option>
                       </select>
-                      <input type="text" class="form-control" id="tpa-name-other" placeholder="Enter other TPA name" style="display: none;">
                     </div>
                   </div>
+
   
                 </div>
 
@@ -290,22 +292,11 @@
                   </div>
 
                   <div class="col-sm-6">
-                    <label for="total-claim-amount" class="form-label">Disputed Amount</label>
+                    <label for="total-claim-amount" class="form-label">Claim Amount</label>
                     <input type="number" class="form-control" id="total-claim-amount" required>
                   </div>
 
                 </div>
-                <div class="row mb-3">
-
-                  <div class="col-sm-6">
-                    <label for="policy-number" class="form-label">Policy Number</label>
-                    <input type="text" class="form-control" id="policy-number" required>
-                  </div>
-
-
-                </div>
-
-                
 
                 <div class="text-center">
                   <button type="submit" class="btn btn-primary">Submit</button>
@@ -370,6 +361,28 @@
           console.error('Error:', error);
         }
       });
+
+
+        // AJAX call on page load get manager details
+        $.ajax({
+        url: '/api/getemployeedetail',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          const optionsSelect = $('#caretaker-name-dropdown');
+          response.forEach(function (option) {
+            optionsSelect.append($('<option>', {
+              value: option.employeeID,
+              text: option.employeeName
+            }));
+          });
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+      
 
 
 
@@ -486,7 +499,12 @@
       $('#loginForm').on('submit', function (event) {
         event.preventDefault();
 
-        var clientname = $('#client-name').val();
+        var patientname = $('#patient-name').val();
+        var patientphone = $('#patient-phone').val();
+
+        var complainantname = $('#complainant-name').val();
+        var complainantphone = $('#complainant-phone').val();
+        
         var clientaddress = $('#client-address').val();
 
         var clientphone = $('#client-phone').val();
@@ -522,7 +540,7 @@
         var witnessname = $('#witness-name').val();
 
         var directcase = $('#direct-case-dropdown').val()
-        var casecity = $('#city-name-dropdown').val()
+        var prospectzone = $('#prospectZone-dropdown').val()
 
         var cpname = $("#cp-name-dropdown option:selected").text();
 
@@ -539,21 +557,19 @@
           type: 'POST',
           contentType: "application/x-www-form-urlencoded",
           data: {
-          customerName:clientname,
-          customerAddress: clientaddress,
-          customerPhone: clientphone,
-          customerEmail:clientemail,
-          insuranceCompanyName: insurancecompany,
-          tpaName: tpaname,
-          claimNumber: claimnumber,
-          claimAmount: claimamount,
           cpName:cpname,
           cpID: cpid,
           managerName:managername,
           managerID: managerid,
           directCase: directcase,
-          caseCity: casecity,
-          policyNumber: policynumber,
+          prospectZone:prospectzone,
+          patientName:patientname,
+          patientMobile:patientphone,
+          complainantName:complainantname,
+          complainantMobile:complainantphone,
+          claimNumber: claimnumber,
+          claimAmount: claimamount,
+          insuranceCompanyName: insurancecompany,
           },
           success: function (response) {
             if(response.message == "success")
