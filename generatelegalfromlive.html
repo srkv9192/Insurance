@@ -119,7 +119,7 @@
                <div class='dashboard-nav-dropdown-menu'>
                    <a href="/addprospect.html" class="dashboard-nav-dropdown-item">Add Case</a>
                    <a href="/viewprospectcases.html" class="dashboard-nav-dropdown-item">View Prospect</a>
-                   <a href="/viewpendingauthcases.html" class="dashboard-nav-dropdown-item">View Pending Auth</a>
+                   
                    <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
                    <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
                </div>
@@ -317,9 +317,9 @@
         success: function (response) {
           // Populate the options in the select elemen
                 
-            document.getElementById("client-name").value = response[0].customerName;
+            document.getElementById("client-name").value = response[0].patientName;
             document.getElementById("client-address").value = response[0].customerAddress;
-            document.getElementById("client-phone").value = response[0].customerPhone;
+            document.getElementById("client-phone").value = response[0].patientMobile;
 
            // document.getElementById("reference-number").value = localStorage['casereferencenumber'];
             document.getElementById("claim-number").value = response[0].claimNumber;

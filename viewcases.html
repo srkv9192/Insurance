@@ -99,8 +99,86 @@ div.dataTables_length {
 
 div.dataTables_filter {
   color: white !important;
-
 }
+
+
+/*for pop up box
+
+*/
+
+
+.overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  transition: opacity 500ms;
+  visibility: hidden;
+  opacity: 0;
+}
+.overlay:target {
+  visibility: visible;
+  opacity: 1;
+}
+
+.popup {
+  margin: 70px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 5px;
+  width: 30%;
+  position: relative;
+  transition: all 5s ease-in-out;
+}
+
+.popup h2 {
+  margin-top: 0;
+  color: #333;
+  font-family: Tahoma, Arial, sans-serif;
+}
+.popup ul {
+  margin-top: 0;
+  color: #333;
+  font-family: Tahoma, Arial, sans-serif;
+}
+.popup li {
+  margin-top: 0;
+  color: #333;
+  font-family: Tahoma, Arial, sans-serif;
+}
+
+.popup .close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  transition: all 200ms;
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #333;
+}
+.popup .close:hover {
+  color: #06D85F;
+}
+.popup .content {
+  max-height: 30%;
+  overflow: auto;
+}
+
+@media screen and (max-width: 700px){
+  .box{
+    width: 70%;
+  }
+  .popup{
+    width: 70%;
+  }
+}
+
+/*pop up box end*/
+
+
   </style>
   <title>Live Cases</title>
 </head>
@@ -150,7 +228,7 @@ div.dataTables_filter {
                <div class='dashboard-nav-dropdown-menu'>
                    <a href="/addprospect.html" class="dashboard-nav-dropdown-item">Add Case</a>
                    <a href="/viewprospectcases.html" class="dashboard-nav-dropdown-item">View Prospect</a>
-                   <a href="/viewpendingauthcases.html" class="dashboard-nav-dropdown-item">View Pending Auth</a>
+                   
                    <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
                    <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
                </div>
@@ -232,18 +310,37 @@ div.dataTables_filter {
                     <thead>
                       <tr>
                         <th>Case Number</th>
-                        <th>Customer Name</th>
-                        <th>Customer Phone</th>
+                        <th>Patient Name</th>
+                        <th>Patient Phone</th>
                         <th>Insurance Company</th>
-                        <th>TPA Name</th>
                         <th>Claim Amount</th>
                         <th>Claim Number</th>
-                        <th>Action</th>
+                        <th>PF Received</th>
+                        <th>Email Generated</th>
+                        <th>Gist Generated</th>
+                      <!---   <th>Action</th> -->
                         <th>Action</th>
                       </tr>
                     </thead>
                   </table>
                 </div>
+
+                <div id="popup2" class="overlay">
+                  <div class="popup">
+                    <h2  id = "remarkcontent">PF Remarks-</h2>
+                    <ul id="remarkcontentlist"></ul>
+
+                      <input type="text" placeholder="Payee Name" id="payeename" required  style="margin-top: 5px;margin-bottom: 5px;"> 
+                      <br>
+                      <input type="text" placeholder="PF Amount" id="pfamount" required style="margin-top: 5px;margin-bottom: 5px;"> <br>
+                      <input type="text" placeholder="payment Remarks" id="paymentremarks" required style="margin-top: 5px;margin-bottom: 5px;"> <br>
+                      
+                      <button type="submit" onclick="addremarkInDB()" class="btn btn-primary btn-sm">Save Detail</button>
+                    
+                    <a class="close" href="#">&times;</a>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
@@ -262,6 +359,57 @@ div.dataTables_filter {
   <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
 
   <script>
+
+
+
+function addremark(referencenumber) {
+        // Code to generate card
+        localStorage['caseNumber'] =referencenumber; 
+  }
+
+function addremarkInDB() {
+
+  $.ajax({
+    url: '/api/addpfremark',
+    type: 'POST',
+    contentType: "application/x-www-form-urlencoded",
+    data: {
+      caseNumber: localStorage['caseNumber'],
+      pfAmount: document.getElementById("pfamount").value ,
+      pfpaymentRemarks: document.getElementById("paymentremarks").value ,
+      pfpayeeName: document.getElementById("payeename").value,
+
+    },
+    success: function (response) {
+      if(response.message == "success")
+        {
+        // window.location.href = "/index.html"
+          //localStorage['userID'] = username;
+          alert("Remark saved!")
+          localStorage.removeItem("caseNumber");
+
+          document.getElementById("pfamount").value ="";
+          document.getElementById("paymentremarks").value ="";
+          document.getElementById("payeename").value ="";
+          window.location.href = "/viewcases.html";
+          
+        }
+        else{
+          alert("Error saving remark!")
+          //document.getElementById('loginForm').reset();
+        }
+      //alert("login success");
+      // Redirect to the dashboard or perform any other actions
+    },
+    error: function (error) {
+      document.getElementById('loginForm').reset();
+      alert("login failed");
+      // Display an error message to the user
+    }
+  });
+
+}
+
 
 function movetolive(referencenumber) {
 
@@ -418,14 +566,16 @@ return;
             // You could also use an ajax property on the data table initialization
             $('#dataTable').dataTable().fnAddData( [
               data[i].caseNumber,
-              data[i].customerName,
-              data[i].customerPhone,
+              data[i].patientName,
+              data[i].patientMobile,
               data[i].insuranceCompanyName,
-              data[i].tpaName,
               data[i].claimAmount,
               data[i].claimNumber,
-              `<button class="btn btn-primary btn-sm" onclick="movetolive('${rfno}')">View Policy</button>`,
-              `<button class="btn btn-primary btn-sm" onclick="generateLegal('${rfno}')">Generate Legal</button>`,
+              data[i].pfReceived,
+              data[i].isEmailGenerated,
+              data[i].isGistGenerated,
+            /*  `<button class="btn btn-primary btn-sm" onclick="movetolive('${rfno}')">View Policy</button>`, */
+              `<a href="#popup2"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Add PF Remarks</button> </a>`,
             ]);
           }
         }

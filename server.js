@@ -57,13 +57,13 @@ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS
 
 
 /*
+
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
 */
-
 
 
 const cookieParser = require("cookie-parser");
@@ -102,9 +102,10 @@ const dataSchema = new mongoose.Schema({
   claimNumber: String,
   pf_cf_Remarkstatus: Array,
   extraRemarks: String,
-  payeeName: String,
+  pfpayeeName: String,
   pfAmount: Number,
   pfReceived: String,
+  pfpaymentRemarks: String,
   cfPercentage: Number,
   cfAmount: Number,
   cfReceived: String,
@@ -352,6 +353,9 @@ app.post('/api/addprospect', async(req, res) => {
                         casereferenceNumber : refNumber,
                         caseNumber: "",
                         isProspect:"true",
+                        pfReceived: "NO",
+                        isEmailGenerated: "NO",
+                        isGistGenerated: "NO",
                       });
         const savedData = await newData.save();
         incrementCaseReferenceCount();
@@ -387,6 +391,30 @@ app.post('/api/addprospectcaseremark', async(req, res) => {
   } 
 
 });
+
+
+app.post('/api/addpfremark', async(req, res) => {
+  try{
+      const newData = await dataSchemaObject.findOneAndUpdate({caseNumber: req.body.caseNumber}, {$set:{ pfpayeeName:req.body.pfpayeeName, pfAmount:req.body.pfAmount, pfpaymentRemarks:req.body.pfpaymentRemarks, pfReceived: "YES" }});
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not save pf remark', refnum:req.body.caseNumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding pf remark' });
+  } 
+
+});
+
 
 
 /*
@@ -463,6 +491,7 @@ app.post('/api/changeloginpass', async(req, res) => {
   } 
 
 });
+
 
 //Not needed added for testing purpose
 app.get("/api/getlogin", async(req, res) => {
@@ -1175,6 +1204,34 @@ app.post('/api/movecasetopendingauthbyref', async(req, res) => {
 
      // await incrementCaseNumberCount();
       res.json({ message: 'Case data updated successfully', casereferenceNumber: req.body.casereferenceNumber });
+  }
+  catch(err)
+  {
+    console.error(err);
+    return -1;
+  } 
+});
+
+app.post('/api/movecasetolivefromprospectbyref', async(req, res) => {
+  try{
+    const gencaseNumber= await getCaseNumbereCount();
+    if(gencaseNumber == -1)
+    {
+      res.status(500).json({ error: 'Error saving case data' });
+      return;
+    }
+    casenumberstring = "CN_" + gencaseNumber;
+
+    const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, 
+      {  isProspect:"false",
+         isPendingAuth:"true",
+         caseNumber: casenumberstring,
+         isLive: "true",
+      }, {new : true});
+
+      await incrementCaseNumberCount();
+
+      res.json({ message: 'success', casereferenceNumber: req.body.casereferenceNumber });
   }
   catch(err)
   {

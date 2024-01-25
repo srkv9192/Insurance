@@ -231,7 +231,7 @@ div.dataTables_filter {
                <div class='dashboard-nav-dropdown-menu'>
                    <a href="/addprospect.html" class="dashboard-nav-dropdown-item">Add Case</a>
                    <a href="/viewprospectcases.html" class="dashboard-nav-dropdown-item">View Prospect</a>
-                   <a href="/viewpendingauthcases.html" class="dashboard-nav-dropdown-item">View Pending Auth</a>
+                   
                    <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
                    <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
                </div>
@@ -322,6 +322,7 @@ div.dataTables_filter {
                         <th>Insurance Company</th>
                         <th>Action</th>
                         <th>Action</th>
+                        <th>Action</th>
                       </tr>
                     </thead>
                   </table>
@@ -342,8 +343,8 @@ div.dataTables_filter {
                     <h2  id = "remarkcontent">Remarks-</h2>
                     <ul id="remarkcontentlist"></ul>
 
-                      <input type="text" placeholder="Enter remark" id="newremark" required>
-                      <button type="submit" onclick="addremarkInDB()" class="btn">Save Remark</button>
+                      <input type="text" placeholder="Enter remark" id="newremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                      <button type="submit" onclick="addremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
                     
                     <a class="close" href="#">&times;</a>
                   </div>
@@ -404,6 +405,39 @@ function addremark(referencenumber) {
         // Code to generate card
         localStorage['addRemarkForRefNumber'] =referencenumber; 
   }
+
+  function movetolive(referencenumber) {
+
+        $.ajax({
+          url: '/api/movecasetolivefromprospectbyref',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          data: {
+            casereferenceNumber: referencenumber,
+          },
+          success: function (response) {
+            if(response.message == "success")
+              {
+               // window.location.href = "/index.html"
+                //localStorage['userID'] = username;
+                alert("Case moved to Live!")
+
+                window.location.href = "/viewprospectcases.html";
+              }
+              else{
+                alert("Error moving case to Live!")
+              }
+          },
+          error: function (error) {
+            alert("Error moving case to Live!");
+            // Display an error message to the user
+          }
+        });
+      
+  }
+
+
+  
 
   function addremarkInDB() {
 
@@ -546,7 +580,8 @@ function addremark(referencenumber) {
               data[i].claimNumber,
               data[i].insuranceCompanyName,
               `<a href="#popup1"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
-              `<a href="#popup2"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Add Remarks</button> </a>`
+              `<a href="#popup2"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Add Remarks</button> </a>`,
+              `<a href=""><button class="btn btn-primary btn-sm"  onclick="movetolive('${rfno}')" >Move to live</button> </a>`
             ]);
           }
         }
