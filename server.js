@@ -65,7 +65,6 @@ mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
 
 */
 
-
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
 app.use(cookieParser());
@@ -128,6 +127,7 @@ const dataSchema = new mongoose.Schema({
   isProspect: String,
   isPendingAuth: String,
   isLive: String,
+  isInMedicalOpinion: String,
   legalCollected: String,
   pdcCollected: String,
   liveEntryBy: String,
@@ -155,6 +155,7 @@ const dataSchema = new mongoose.Schema({
   isGistGenerated: String,
   isMedicalOpinionGenerated: String,
   isDraftGenerated: String,
+  isInEscalationStage: String,
   isEscalatedInCompany: String,
   isEscalationDeadlineDone: String,
   isLokpalDraftDone: String,
@@ -415,6 +416,50 @@ app.post('/api/addpfremark', async(req, res) => {
 
 });
 
+
+app.post('/api/addemailremark', async(req, res) => {
+  try{
+      const newData = await dataSchemaObject.findOneAndUpdate({caseNumber: req.body.caseNumber}, {$set:{ caseEmailPassword:req.body.caseEmailPassword, caseEmail:req.body.caseEmail, isEmailGenerated: "YES" }});
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not save email remark', refnum:req.body.caseNumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding email remark' });
+  } 
+
+});
+
+app.post('/api/addmedicalremark', async(req, res) => {
+  try{
+      const newData = await dataSchemaObject.findOneAndUpdate({caseNumber: req.body.caseNumber}, {$set:{ medicalOpinionOfficer:req.body.medicalOpinionOfficer }});
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not save medical officer details', refnum:req.body.caseNumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding medical officer details' });
+  } 
+
+});
 
 
 /*
@@ -811,56 +856,6 @@ app.post("/api/save-policy", upload.single('pdfFile'), async (req, res) => {
     const savedData = newData.save();
     await incrementReferenceCount();
 
-    /*
-    const file = req.file;
-    console.log(file)
-    console.log(__dirname)
-
-    const filePath = __dirname + `/uploads/${file.originalname}`;
-
-    // Read the file
-    fs.readFile(filePath, (err, data) => {
-      if (err) {
-        console.error('Error reading file:', err);
-        res.status(500).send('Error reading file');
-        return;
-      }
-
-      // Upload the file to AWS S3
-      const uploadParams = {
-        Bucket: 'cyclic-kind-pig-gloves-eu-west-3',
-        Key: `uploads/${refNumber}.pdf`,
-        Body: data,
-      };
-
-      s3.upload(uploadParams, (err, result) => {
-        if (err) {
-          console.error('Error uploading file to S3:', err);
-          //res.status(500).send('Error uploading file to S3');
-              fs.unlink(filePath, function (err) {
-                if (err) throw err;
-                // if no error, file has been deleted successfully
-                console.log('File deleted!');
-            });
-
-          return;
-        }
-        fs.unlink(filePath, function (err) {
-          if (err) throw err;
-          // if no error, file has been deleted successfully
-          console.log('File deleted!');
-      });
-
-        console.log('File uploaded successfully:', result.Location);
-        //res.status(200).send('File uploaded successfully');
-      });
-    });
-
-    */
-    
-    /*
-    try uploading to gcp
-    */
 
     const file = req.file;
     console.log(file);
@@ -931,6 +926,203 @@ catch(err)
   res.status(500).json({ error: 'Error saving new card data' });
 } 
 });
+
+
+app.post("/api/upload-gist", upload.single('pdfFile'), async (req, res) => {
+  try{
+   
+    const file = req.file;
+    console.log(file);
+    console.log(__dirname);
+
+    if(file != undefined)
+    {
+      const filePath = __dirname + `/uploads/${file.originalname}`;
+
+      // Read the file
+      fs.readFile(filePath, (err, data) => {
+        if (err) {
+          console.error('Error reading file:', err);
+          //res.status(500).send('Error reading file');
+          return;
+        }
+  
+        // Upload the file to Google Cloud Storage
+
+        const caseNumber = req.body.caseNumber;
+        const destinationFilename = `uploads/${caseNumber}-gist.pdf`;
+  
+        const bucket = storagegcp.bucket(process.env.GCLOUD_STORAGE_BUCKET);
+        const fileToUpload = bucket.file(destinationFilename);
+  
+        const stream = fileToUpload.createWriteStream({
+          metadata: {
+            contentType: 'application/pdf',
+          },
+        });
+  
+        stream.on('error', (err) => {
+          console.error('Error uploading file to GCS:', err);
+          //res.status(500).send('Error uploading file to GCS');
+  
+          // Cleanup: delete the file
+          fs.unlink(filePath, (err) => {
+            if (err) {
+              console.error('Error deleting file:', err);
+            } else {
+              console.log('File deleted!');
+            }
+          });
+
+          res.json({ message: 'Could not upload gist', refnum:req.body.caseNumber});
+
+        });
+  
+        stream.on('finish', () => {
+          // Cleanup: delete the file
+          fs.unlink(filePath, (err) => {
+            if (err) {
+              console.error('Error deleting file:', err);
+            } else {
+              console.log('File deleted!');
+            }
+          });
+
+          try{
+            const newData = dataSchemaObject.findOneAndUpdate({caseNumber: req.body.caseNumber}, {$set:{ isGistGenerated: "YES" }});
+      
+            if(newData == null)
+            {
+              res.json({ message: 'Could not upload gist', refnum:req.body.caseNumber});
+            }
+            else
+            {
+              const savedData = newData.save();
+              res.json({ message: 'success'});
+            }
+          }
+          catch(err)
+          {
+            console.error(err);
+            res.status(500).json({ error: 'Error uploading gist' });
+          } 
+  
+          console.log('File uploaded successfully');
+        });
+  
+        // Pipe the file data to the GCS stream
+        stream.end(data);
+      });
+    }
+
+    //
+
+  }
+catch(err)
+{
+  console.error(err);
+  res.status(500).json({ error: 'Error saving Gist data.' });
+} 
+});
+
+
+app.post("/api/upload-draft", upload.single('pdfFile'), async (req, res) => {
+  try{
+   
+    const file = req.file;
+    console.log(file);
+    console.log(__dirname);
+
+    if(file != undefined)
+    {
+      const filePath = __dirname + `/uploads/${file.originalname}`;
+
+      // Read the file
+      fs.readFile(filePath, (err, data) => {
+        if (err) {
+          console.error('Error reading file:', err);
+          //res.status(500).send('Error reading file');
+          return;
+        }
+  
+        // Upload the file to Google Cloud Storage
+
+        const caseNumber = req.body.caseNumber;
+        const destinationFilename = `uploads/${caseNumber}-draft.pdf`;
+  
+        const bucket = storagegcp.bucket(process.env.GCLOUD_STORAGE_BUCKET);
+        const fileToUpload = bucket.file(destinationFilename);
+  
+        const stream = fileToUpload.createWriteStream({
+          metadata: {
+            contentType: 'application/pdf',
+          },
+        });
+  
+        stream.on('error', (err) => {
+          console.error('Error uploading file to GCS:', err);
+          //res.status(500).send('Error uploading file to GCS');
+  
+          // Cleanup: delete the file
+          fs.unlink(filePath, (err) => {
+            if (err) {
+              console.error('Error deleting file:', err);
+            } else {
+              console.log('File deleted!');
+            }
+          });
+
+          res.json({ message: 'Could not upload draft', refnum:req.body.caseNumber});
+
+        });
+  
+        stream.on('finish', () => {
+          // Cleanup: delete the file
+          fs.unlink(filePath, (err) => {
+            if (err) {
+              console.error('Error deleting file:', err);
+            } else {
+              console.log('File deleted!');
+            }
+          });
+
+          try{
+            const newData = dataSchemaObject.findOneAndUpdate({caseNumber: req.body.caseNumber}, {$set:{ isDraftGenerated: "YES" }});
+      
+            if(newData == null)
+            {
+              res.json({ message: 'Could not upload draft', refnum:req.body.caseNumber});
+            }
+            else
+            {
+              const savedData = newData.save();
+              res.json({ message: 'success'});
+            }
+          }
+          catch(err)
+          {
+            console.error(err);
+            res.status(500).json({ error: 'Error uploading draft' });
+          } 
+  
+          console.log('File uploaded successfully');
+        });
+  
+        // Pipe the file data to the GCS stream
+        stream.end(data);
+      });
+    }
+
+    //
+
+  }
+catch(err)
+{
+  console.error(err);
+  res.status(500).json({ error: 'Error saving Draft data.' });
+} 
+});
+
 
 app.post("/api/savepaymentcomment",  async (req, res) => {
   try{
@@ -1050,6 +1242,30 @@ app.get("/api/getlivecasedetailbynumber", async(req, res) => {
     res.status(500).json({ error: 'Failed to get live case details by number' });
   }
 });
+
+
+app.get("/api/getmedicalopinioncasedetail", async(req, res) => {
+  try {
+    // Retrieve all medical opinion case list from database
+    const users = await  dataSchemaObject.find({isInMedicalOpinion : {"$exists" : true, "$eq" : "true"}});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get medical opinion case details' });
+  }
+});
+
+app.get("/api/getescalationcasedetail", async(req, res) => {
+  try {
+    // Retrieve all medical opinion case list from database
+    const users = await  dataSchemaObject.find({isInEscalationStage : {"$exists" : true, "$eq" : "true"}});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get escalation case details' });
+  }
+});
+
 
 app.post('/api/movecasetolivebyref', upload.single('pdfFile'), async(req, res) => {
   try{
@@ -1240,6 +1456,48 @@ app.post('/api/movecasetolivefromprospectbyref', async(req, res) => {
   } 
 });
 
+app.post('/api/movecasetomedicalfromlivebycasenumber', async(req, res) => {
+  try{
+    const newData = await dataSchemaObject.findOneAndUpdate({caseNumber: req.body.caseNumber}, 
+      {  
+         isPendingAuth:"true",
+         isLive: "false",
+         isInMedicalOpinion: "true",
+         medicalOpinionOfficer: "NONE",
+         isDraftGenerated: "NO",
+      }, {new : true});
+
+      res.json({ message: 'success', casereferenceNumber: req.body.casereferenceNumber });
+  }
+  catch(err)
+  {
+    console.error(err);
+    return -1;
+  } 
+});
+
+
+app.post('/api/movecasetoescalationfrommedicalbyref', async(req, res) => {
+  try{
+    const newData = await dataSchemaObject.findOneAndUpdate({caseNumber: req.body.caseNumber}, 
+      {  
+         isInMedicalOpinion: "false",
+         isInEscalationStage: "true",
+         isEscalatedInCompany: "NO",
+      }, {new : true});
+
+      res.json({ message: 'success', casereferenceNumber: req.body.casereferenceNumber });
+  }
+  catch(err)
+  {
+    console.error(err);
+    return -1;
+  } 
+});
+
+
+
+
 /*
 
   try{
@@ -1257,17 +1515,17 @@ app.post('/api/movecasetolivefromprospectbyref', async(req, res) => {
   } 
 */
 
-
 // add logic later to differentiate live from completed
 app.get("/api/getlivecasedetail", async(req, res) => {
   try {
     // Retrieve all tpa list from database
-    const users = await  dataSchemaObject.find({caseNumber : {"$exists" : true, "$ne" : ""}});
+    const users = await  dataSchemaObject.find({isLive : {"$exists" : true, "$eq" : "true"}});
     res.json(users);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to get live case details' });
   }
+
 });
 
 // 
@@ -1279,6 +1537,17 @@ app.get("/api/getpendingauthcasedetail", async(req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to get live case details' });
+  }
+});
+
+app.get("/api/getmedicalopinioncasedetail", async(req, res) => {
+  try {
+    // Retrieve all medical opinion case list from database
+    const users = await  dataSchemaObject.find({isInMedicalOpinion : {"$exists" : true, "$eq" : "true"}});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get medical opinion case details' });
   }
 });
 
@@ -1570,6 +1839,9 @@ app.post('/api/whoami', async(req,res) => {
   else if(req.session.userId && (req.session.userType == 'manager')){
       res.json({message : 'manager', username : req.session.userName})
   }
+  else if(req.session.userId && (req.session.userType == 'medicalofficer')){
+    res.json({message : 'medicalofficer', username : req.session.userName})
+  }
   else
      res.json({message : 'invalid'})
 })
@@ -1589,8 +1861,13 @@ app.get('/viewpendingauthcases.html', (req, res) => res.sendFile(__dirname+'/vie
 app.get('/changepassword.html', (req, res) => res.sendFile(__dirname+'/changepassword.html'))
 app.get('/createaccount.html', (req, res) => res.sendFile(__dirname+'/createaccount.html'))
 
-
 app.get('/viewcases.html', (req, res) => res.sendFile(__dirname+'/viewcases.html'))
+app.get('/viewmedicalopinioncases.html', (req, res) => res.sendFile(__dirname+'/viewmedicalopinioncases.html'))
+app.get('/viewescalationcases.html', (req, res) => res.sendFile(__dirname+'/viewescalationcases.html'))
+
+app.get('/viewmyopinioncases.html', (req, res) => res.sendFile(__dirname+'/viewmyopinioncases.html'))
+
+
 app.get('/movecasetolive.html', (req, res) => res.sendFile(__dirname+'/movecasetolive.html'))
 
 app.get('/movecasetomedicalopinion.html', (req, res) => res.sendFile(__dirname+'/movecasetomedicalopinion.html'))

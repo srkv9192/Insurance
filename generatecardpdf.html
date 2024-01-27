@@ -119,6 +119,8 @@
                    <a href="/viewprospectcases.html" class="dashboard-nav-dropdown-item">View Prospect</a>
                    
                    <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
+                   <a href="/viewmedicalopinioncases.html" class="dashboard-nav-dropdown-item">View Medical</a>
+                   <a href="/viewescalationcases.html" class="dashboard-nav-dropdown-item">View Escalation</a>
                    <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
                </div>
             </div>
@@ -155,6 +157,19 @@
             </div>
 
           </div>
+
+          <div id="showtomedicalofficer" style="display: none;">
+
+            <div class='dashboard-nav-dropdown show'>
+             <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+              <i class="fas fa-photo-video">
+                </i>Case Menu</a>
+              <div class='dashboard-nav-dropdown-menu'>
+                  <a href="/viewmyopinioncases.html" class="dashboard-nav-dropdown-item">My Cases</a>
+              </div>
+           </div>
+
+         </div>
           
         <div class="nav-item-divider"></div>
         <a  id="login-menu"
@@ -210,6 +225,13 @@
               $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showtocpandmanager").show();
+              $("#hideonlogin").hide();
+            }
+            else if(response.message =='medicalofficer')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtomedicalofficer").show();
               $("#hideonlogin").hide();
             }
             else
