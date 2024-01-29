@@ -989,25 +989,26 @@ app.post("/api/upload-gist", upload.single('pdfFile'), async (req, res) => {
           });
 
           try{
-            const newData = await dataSchemaObject.findOneAndUpdate({caseNumber: req.body.caseNumber}, {$set:{ isGistGenerated: "YES" }});
+            const newData = dataSchemaObject.findOneAndUpdate({caseNumber: req.body.caseNumber}, {$set:{ isGistGenerated: "YES" }});
       
             if(newData == null)
             {
-              res.json({ message: 'Could not upload gist', refnum:req.body.caseNumber});
+              //res.json({ message: 'Could not upload gist', refnum:req.body.caseNumber});
             }
             else
             {
               const savedData = newData.save();
-              res.json({ message: 'success'});
+              //res.json({ message: 'success'});
             }
           }
           catch(err)
           {
             console.error(err);
-            res.status(500).json({ error: 'Error uploading gist' });
+            //res.status(500).json({ error: 'Error uploading gist' });
           } 
   
           console.log('File uploaded successfully');
+          res.json({ message: 'success'});
         });
   
         // Pipe the file data to the GCS stream
@@ -1087,25 +1088,26 @@ app.post("/api/upload-draft", upload.single('pdfFile'), async (req, res) => {
           });
 
           try{
-            const newData = await dataSchemaObject.findOneAndUpdate({caseNumber: req.body.caseNumber}, {$set:{ isDraftGenerated: "YES" }});
+            const newData =  dataSchemaObject.findOneAndUpdate({caseNumber: req.body.caseNumber}, {$set:{ isDraftGenerated: "YES" }});
       
             if(newData == null)
             {
-              res.json({ message: 'Could not upload draft', refnum:req.body.caseNumber});
+             // res.json({ message: 'Could not upload draft', refnum:req.body.caseNumber});
             }
             else
             {
               const savedData = newData.save();
-              res.json({ message: 'success'});
+              //res.json({ message: 'success'});
             }
           }
           catch(err)
           {
             console.error(err);
-            res.status(500).json({ error: 'Error uploading draft' });
+            //res.status(500).json({ error: 'Error uploading draft' });
           } 
   
           console.log('File uploaded successfully');
+          res.json({ message: 'success'});
         });
   
         // Pipe the file data to the GCS stream
