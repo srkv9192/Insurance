@@ -989,7 +989,7 @@ app.post("/api/upload-gist", upload.single('pdfFile'), async (req, res) => {
           });
 
           try{
-            const newData = dataSchemaObject.findOneAndUpdate({caseNumber: req.body.caseNumber}, {$set:{ isGistGenerated: "YES" }});
+            const newData = await dataSchemaObject.findOneAndUpdate({caseNumber: req.body.caseNumber}, {$set:{ isGistGenerated: "YES" }});
       
             if(newData == null)
             {
@@ -1087,7 +1087,7 @@ app.post("/api/upload-draft", upload.single('pdfFile'), async (req, res) => {
           });
 
           try{
-            const newData = dataSchemaObject.findOneAndUpdate({caseNumber: req.body.caseNumber}, {$set:{ isDraftGenerated: "YES" }});
+            const newData = await dataSchemaObject.findOneAndUpdate({caseNumber: req.body.caseNumber}, {$set:{ isDraftGenerated: "YES" }});
       
             if(newData == null)
             {
