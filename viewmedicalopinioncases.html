@@ -231,9 +231,15 @@ div.dataTables_filter {
                    <a href="/addprospect.html" class="dashboard-nav-dropdown-item">Add Case</a>
                    <a href="/viewprospectcases.html" class="dashboard-nav-dropdown-item">View Prospect</a>
                    
-                   <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
+                  
                    <a href="/viewmedicalopinioncases.html" class="dashboard-nav-dropdown-item">View Medical</a>
+                   <a href="/viewpendingauthcases.html" class="dashboard-nav-dropdown-item">View Pending Auth</a>
+                   
+                                     <!-- 
+                   <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
                    <a href="/viewescalationcases.html" class="dashboard-nav-dropdown-item">View Escalation</a>
+                    -->
+
                    <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
                </div>
             </div>
@@ -326,14 +332,16 @@ div.dataTables_filter {
                   <table id ="dataTable" class="table table-dark table-bordered">
                     <thead>
                       <tr>
-                        <th>Case Number</th>
-                        <th>Customer Name</th>
-                        <th>Customer Phone</th>
-                        <th>Insurance Company</th>
+
+                        <th>Reference Number</th>
+                        <th>Manager Name</th>
+                        <th>CP Name</th>
                         <th>Claim Amount</th>
-                        <th>Claim Number</th>
                         <th>Medical Officer</th>
-                        <th>Draft Ready</th>
+                        <th>Case Status</th>
+                        <th>Action</th>
+                        <th>Action</th>
+                        <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
@@ -342,19 +350,23 @@ div.dataTables_filter {
                   </table>
                 </div>
 
-                <div id="popup2" class="overlay">
+                <div id="popup1" class="overlay">
                   <div class="popup">
-                    <h2  id = "remarkcontent">Assign Medical Officer-</h2>
+                    <h2  id = "remarkcontent">Remarks-</h2>
                     <ul id="remarkcontentlist"></ul>
 
-                      <select name="medicalofficer" id="medicalofficer"  style="margin-top: 5px;margin-bottom: 5px;">
-                        <option value="Khan Sir">Khan Sir</option>
-                        <option value="Ashish Sir">Ashish Sir</option>
-                      </select>
+                    
+                    <a class="close" href="#">&times;</a>
+                  </div>
+                </div>
 
-                      <br>        
-                      <br>              
-                      <button type="submit" onclick="addmedicalremarkInDB()" class="btn btn-primary btn-sm">Save Detail</button>
+                <div id="popup2" class="overlay">
+                  <div class="popup">
+                    <h2  id = "remarkcontent">Remarks-</h2>
+                    <ul id="remarkcontentlist"></ul>
+
+                      <input type="text" placeholder="Enter remark" id="newremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                      <button type="submit" onclick="addremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
                     
                     <a class="close" href="#">&times;</a>
                   </div>
@@ -362,21 +374,15 @@ div.dataTables_filter {
 
                 <div id="popup3" class="overlay">
                   <div class="popup">
-                    <h2  id = "remarkcontent">Upload Draft (PDF only)</h2>
-                    <ul id="remarkcontentlist"></ul>
+                    <h2  id = "remarkcontent">Case Data</h2>
+                    <ul id="documentlist"></ul>
 
-                      <div class="col-sm-6">
-                        <label for="draft-upload" class="form-label">Draft Upload</label>
-                        <input type="file" class="form-control" id="draft-upload" required>
-                      </div>
 
-                      <br>        
-                      <br>              
-                      <button type="submit" onclick="addmedicalremarkInDB()" class="btn btn-primary btn-sm">Upload</button>
-                    
+                     
                     <a class="close" href="#">&times;</a>
                   </div>
                 </div>
+
 
               </div>
             </div>
@@ -392,10 +398,174 @@ div.dataTables_filter {
 
 
 
+function addremarkInDB() {
+
+  const today = new Date();
+    const yyyy = today.getFullYear();
+    let mm = today.getMonth() + 1; // Months start at 0!
+    let dd = today.getDate();
+
+    if (dd < 10) dd = '0' + dd;
+    if (mm < 10) mm = '0' + mm;
+
+    const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+$.ajax({
+  url: '/api/addprospectcaseremark',
+  type: 'POST',
+  contentType: "application/x-www-form-urlencoded",
+  data: {
+    referencenumber: localStorage['addRemarkForRefNumber'],
+    pf_cf_Remarkstatus:  formattedToday + " - " + "[Medical] - "+  document.getElementById("newremark").value
+  },
+  success: function (response) {
+    if(response.message == "success")
+      {
+       // window.location.href = "/index.html"
+        //localStorage['userID'] = username;
+        alert("Remark saved!")
+        localStorage.removeItem("addRemarkForRefNumber");
+
+        document.getElementById("newremark").value ="";
+        window.location.href = "/viewmedicalopinioncases.html";
+        
+      }
+      else{
+        alert("Error saving remark!")
+        //document.getElementById('loginForm').reset();
+      }
+    //alert("login success");
+    // Redirect to the dashboard or perform any other actions
+  },
+  error: function (error) {
+    document.getElementById('loginForm').reset();
+    alert("login failed");
+    // Display an error message to the user
+  }
+});
+
+// alert(  document.getElementById("newremark").value);
+
+}
+
+function viewremark(referencenumber) {
+        // Code to generate card
+
+        let list = document.getElementById("remarkcontentlist");
+
+        // 👇️ Remove all list elements
+        list.innerHTML = '';
+
+        $.ajax({
+        url: '/api/getprospectcasedetailbyref',
+        type: 'GET',
+        data: {
+          casereferenceNumber: referencenumber
+        },
+
+        success: function (response) {
+          // Populate the options in the select eleme    
+           
+           // let text =  response[0].pf_cf_Remarkstatus;
+          //  const myArray = text.split(";");    
+
+            let list = document.getElementById("remarkcontentlist");
+              for (i = 0; i < response[0].pf_cf_Remarkstatus.length ; i++) {
+                let li = document.createElement('li');
+                li.innerText = response[0].pf_cf_Remarkstatus[i];
+                list.appendChild(li);
+               }
+
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+      }
+
+
+
+
+
 function addremark(referencenumber) {
         // Code to generate card
-        localStorage['caseNumber'] =referencenumber; 
+        localStorage['addRemarkForRefNumber'] =referencenumber; 
   }
+
+function addCaseVerdict(referencenumber, status){
+
+  $.ajax({
+  url: '/api/addcaseverdictmedical',
+  type: 'POST',
+  contentType: "application/x-www-form-urlencoded",
+  data: {
+    casereferenceNumber: referencenumber,
+    casestatus: status,
+  },
+  success: function (response) {
+    if(response.message == "success")
+      {
+      // window.location.href = "/index.html"
+        //localStorage['userID'] = username;
+        alert("Medical Opinion saved!")
+       
+        window.location.href = "/viewmedicalopinioncases.html";
+      }
+      else{
+        alert("Error saving details!")
+        //document.getElementById('loginForm').reset();
+      }
+    //alert("login success");
+    // Redirect to the dashboard or perform any other actions
+  },
+  error: function (error) {
+    document.getElementById('loginForm').reset();
+    alert("Failed to save medical opinion");
+    // Display an error message to the user
+  }
+});
+
+  
+}
+
+
+
+function viewdocuments(referencenumber)
+{
+  let list = document.getElementById("documentlist");
+
+// 👇️ Remove all list elements
+list.innerHTML = '';
+
+$.ajax({
+url: '/api/getprospectcasedetailbyref',
+type: 'GET',
+data: {
+  casereferenceNumber: referencenumber
+},
+
+success: function (response) {
+  // Populate the options in the select eleme    
+   
+   // let text =  response[0].pf_cf_Remarkstatus;
+  //  const myArray = text.split(";");    
+
+    let list = document.getElementById("documentlist");
+      for (i = 0; i < response[0].docUrl.length ; i++) {
+        let li = document.createElement('li');
+        li.innerHTML = "<a target='_blank' href='"+response[0].docUrl[i]+"' >Document - "+ i +"</a>";
+        list.appendChild(li);
+       }
+
+},
+error: function (error) {
+  console.error('Error:', error);
+}
+});
+ 
+}
+
 
 function addmedicalremarkInDB() {
 
@@ -435,30 +605,30 @@ function addmedicalremarkInDB() {
 
 
 
-function movetoescalation(referencenumber) {
+function movetoprospectforquery(referencenumber) {
 
 $.ajax({
-  url: '/api/movecasetoescalationfrommedicalbyref',
+  url: '/api/movecasetoprospectformedicalquerybyref',
   type: 'POST',
   contentType: "application/x-www-form-urlencoded",
   data: {
-    caseNumber: referencenumber,
+    casereferenceNumber: referencenumber,
   },
   success: function (response) {
     if(response.message == "success")
       {
        // window.location.href = "/index.html"
         //localStorage['userID'] = username;
-        alert("Case moved to Escalation!")
+        alert("Case moved to Prospect for medical query!")
 
         window.location.href = "/viewmedicalopinioncases.html";
       }
       else{
-        alert("Error moving case to Live!")
+        alert("Error moving case to prospect for medical query!")
       }
   },
   error: function (error) {
-    alert("Error moving case to Escalation!");
+    alert("Error moving case to prospect for medical query!");
     // Display an error message to the user
   }
 });
@@ -571,20 +741,21 @@ function movetolive(referencenumber) {
           $("#dataTable").DataTable().clear();
           var length = Object.keys(data).length;
           for(var i = 0; i < length; i++) {
-            var rfno= data[i].caseNumber
+            var rfno= data[i].casereferenceNumber
             // You could also use an ajax property on the data table initialization
             $('#dataTable').dataTable().fnAddData( [
-              data[i].caseNumber,
-              data[i].patientName,
-              data[i].patientMobile,
-              data[i].insuranceCompanyName,
+              data[i].casereferenceNumber,
+              data[i].managerName,
+              data[i].cpName,
               data[i].claimAmount,
-              data[i].claimNumber,
               data[i].medicalOpinionOfficer,
-              data[i].isDraftGenerated,
-              `<a href="#popup2"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Assign Officer</button> </a>`,
-              `<a href="#popup3"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Draft</button> </a>`,
-              `<button class="btn btn-primary btn-sm" onclick="movetoescalation('${rfno}')">Move to Escalation</button>`
+              data[i].newCaseStatus,
+              `<a href="#popup3"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Dcouments</button> </a>`,
+              `<a href="#popup1"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
+              `<a href="#popup2"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Add Remarks</button> </a>`,
+              `<a><button class="btn btn-primary btn-sm"  onclick="addCaseVerdict('${rfno}','Approved' )" >Approve</button> </a>`,
+              `<a ><button class="btn btn-primary btn-sm"  onclick="addCaseVerdict('${rfno}', 'Rejected')" >Reject</button> </a>`,
+              `<button class="btn btn-primary btn-sm" onclick="movetoprospectforquery('${rfno}')">Raise Query</button>`
             ]);
           }
         }

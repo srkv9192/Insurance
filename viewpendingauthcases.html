@@ -151,9 +151,15 @@ div.dataTables_filter {
                    <a href="/addprospect.html" class="dashboard-nav-dropdown-item">Add Case</a>
                    <a href="/viewprospectcases.html" class="dashboard-nav-dropdown-item">View Prospect</a>
                    
-                   <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
+                   
                    <a href="/viewmedicalopinioncases.html" class="dashboard-nav-dropdown-item">View Medical</a>
+                   <a href="/viewpendingauthcases.html" class="dashboard-nav-dropdown-item">View Pending Auth</a>
+                  
+                                     <!-- 
+                   <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
                    <a href="/viewescalationcases.html" class="dashboard-nav-dropdown-item">View Escalation</a>
+                    -->
+
                    <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
                </div>
             </div>
@@ -247,13 +253,14 @@ div.dataTables_filter {
                     <thead>
                       <tr>
                         <th>Reference Number</th>
-                        <th>Customer Name</th>
-                        <th>Customer Phone</th>
-                        <th>Insurance Company</th>
-                        <th>TPA Name</th>
+                        <th>Manager Name</th>
+                        <th>CP Name</th>
+                        <th>Complainant Name</th>
+                        <th>Complainant Phone</th>
                         <th>Claim Amount</th>
-                        <th>Claim Number</th>
-                        <th>Action</th>
+                        <th>Medical Officer</th>
+                        <th>Case Status</th>
+                       <!-- <th>Action</th>-->
                       </tr>
                     </thead>
                   </table>
@@ -375,13 +382,14 @@ function movetolive(referencenumber) {
             var rfno= data[i].casereferenceNumber
             // You could also use an ajax property on the data table initialization
             $('#dataTable').dataTable().fnAddData( [
-              data[i].casereferenceNumber,
-              data[i].customerName,
-              data[i].customerPhone,
-              data[i].insuranceCompanyName,
-              data[i].tpaName,
+            data[i].casereferenceNumber,
+              data[i].managerName,
+              data[i].cpName,
+              data[i].complainantName,
+              data[i].complainantMobile,
               data[i].claimAmount,
-              data[i].claimNumber,
+              data[i].medicalOpinionOfficer,
+              data[i].newCaseStatus,
               `<button class="btn btn-primary btn-sm" onclick="movetolive('${rfno}')">Move to Live</button>`
             ]);
           }

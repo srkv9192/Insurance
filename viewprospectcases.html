@@ -178,8 +178,12 @@ div.dataTables_filter {
 
 /*pop up box end*/
 
-
-
+#uploadingdiv {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
 
 
   </style>
@@ -232,9 +236,15 @@ div.dataTables_filter {
                    <a href="/addprospect.html" class="dashboard-nav-dropdown-item">Add Case</a>
                    <a href="/viewprospectcases.html" class="dashboard-nav-dropdown-item">View Prospect</a>
                    
-                   <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
+                   
                    <a href="/viewmedicalopinioncases.html" class="dashboard-nav-dropdown-item">View Medical</a>
+                   <a href="/viewpendingauthcases.html" class="dashboard-nav-dropdown-item">View Pending Auth</a>
+                   
+                  <!-- 
+                   <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
                    <a href="/viewescalationcases.html" class="dashboard-nav-dropdown-item">View Escalation</a>
+                    -->
+
                    <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
                </div>
             </div>
@@ -328,13 +338,17 @@ div.dataTables_filter {
                     <thead>
                       <tr>
                         <th>Reference Number</th>
-                        <th>Patient Name</th>
-                        <th>Patient Phone</th>
+                        <th>Manager Name</th>
+                        <th>CP Name</th>
                         <th>Complainant Name</th>
                         <th>Complainant Phone</th>
                         <th>Claim Amount</th>
-                        <th>Claim Number</th>
-                        <th>Insurance Company</th>
+                        <th>Medical Officer</th>
+                        <th>Case Status</th>
+                        <th>Action</th>
+                        <th>Action</th>
+                        <th>Action</th>
+                        <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
@@ -365,6 +379,57 @@ div.dataTables_filter {
                   </div>
                 </div>
 
+                <div id="popup3" class="overlay">
+                  <div class="popup">
+                    <h2 >Assign Medical Officer-</h2>
+
+                      <select name="medicalofficer" id="medicalofficer"  style="margin-top: 5px;margin-bottom: 5px;">
+                        <option value="Khan Sir">Khan Sir</option>
+                        <option value="Ashish Sir">Ashish Sir</option>
+                      </select>
+
+                      <br>        
+                      <br>              
+                      <button type="submit" onclick="addmedicalremarkInDB()" class="btn btn-primary btn-sm">Save Detail</button>
+                    
+                    <a class="close" href="#">&times;</a>
+                  </div>
+                </div>
+
+                <div id="popup4" class="overlay">
+                  <div class="popup">
+                    <h2 >Upload document-</h2>
+
+                    <form id="loginForm" enctype="multipart/form-data">
+                      <div class="col-sm-6">
+                        <label for="pdf-input" class="form-label">Documents</label>
+                          <input type="file" class="form-control" id="pdf-input"  multiple>
+                      </div>
+                      <br>        
+                      <br>
+                      <button type="submit" onclick="uploadDocsInDB()" class="btn btn-primary btn-sm">Upload</button>
+                    </form>
+                                   
+                     
+                    
+                    <a class="close" href="#">&times;</a>
+                  </div>
+                </div>
+
+                <div id="popup5" class="overlay">
+                  <div class="popup">
+                    <h2  id = "remarkcontent">Case Data</h2>
+                    <ul id="documentlist"></ul>
+
+
+                     
+                    <a class="close" href="#">&times;</a>
+                  </div>
+                </div>
+
+                <div id="uploadingdiv" style="display: none;">
+                  <img src="/images/uploading3.webp">
+                </div>
 
 
               </div>
@@ -378,6 +443,125 @@ div.dataTables_filter {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
   <script>
+
+
+
+function viewdocuments(referencenumber)
+{
+  let list = document.getElementById("documentlist");
+
+// 👇️ Remove all list elements
+list.innerHTML = '';
+
+$.ajax({
+url: '/api/getprospectcasedetailbyref',
+type: 'GET',
+data: {
+  casereferenceNumber: referencenumber
+},
+
+success: function (response) {
+  // Populate the options in the select eleme    
+   
+   // let text =  response[0].pf_cf_Remarkstatus;
+  //  const myArray = text.split(";");    
+
+    let list = document.getElementById("documentlist");
+      for (i = 0; i < response[0].docUrl.length ; i++) {
+        let li = document.createElement('li');
+        li.innerHTML = "<a target='_blank' href='"+response[0].docUrl[i]+"' >Document - "+ i +"</a>";
+        list.appendChild(li);
+       }
+
+},
+error: function (error) {
+  console.error('Error:', error);
+}
+});
+ 
+}
+
+
+
+function uploadDocsInDB()
+{
+
+  $('#uploadingdiv').show();
+
+  var formData = new FormData();
+        formData.append('casereferenceNumber', localStorage['addRemarkForRefNumber']);
+       
+        $.each($('#pdf-input')[0].files, function(i, file) {
+          formData.append('pdfFile', file);
+      });
+
+      $.ajax({
+          url: '/api/uploadadditionaldocs',
+          type: 'POST',
+          contentType: false,
+          processData: false,
+          data: formData,
+          success: function (response) {
+            if(response.message == "success")
+              {
+                //window.location.href = "/dashboard.html"
+                $('#uploadingdiv').hide({done: function() { alert("Additional docs uploaded."); } });
+               // alert("Case added reference number- " + response.referencenumber);
+                document.getElementById('loginForm').reset();
+              }
+              else{
+                $('#uploadingdiv').hide({done: function() { alert(response.error); } });
+               // alert(response.message);
+                document.getElementById('loginForm').reset();
+                //document.getElementById('loginForm').reset();
+              }
+          },
+          error: function (error) {
+            $('#uploadingdiv').hide({done: function() { alert("Failed to upload docs!!!"); } });
+            document.getElementById('loginForm').reset();
+           // alert("Failed to add case!!!");
+            // Display an error message to the user
+          }
+        });
+
+
+}
+
+function addmedicalremarkInDB() {
+
+     $.ajax({
+    url: '/api/addmedicalremark',
+    type: 'POST',
+    contentType: "application/x-www-form-urlencoded",
+    data: {
+      referencenumber: localStorage['addRemarkForRefNumber'],
+      medicalOpinionOfficer: $("#medicalofficer option:selected").text(),
+    },
+    success: function (response) {
+      if(response.message == "success")
+        {
+        // window.location.href = "/index.html"
+          //localStorage['userID'] = username;
+          alert("Medical Officer assigned saved!")
+          localStorage.removeItem("addRemarkForRefNumber");
+          window.location.href = "/viewprospectcases.html";
+        }
+        else{
+          alert("Error saving details!")
+          //document.getElementById('loginForm').reset();
+        }
+      //alert("login success");
+      // Redirect to the dashboard or perform any other actions
+    },
+    error: function (error) {
+      document.getElementById('loginForm').reset();
+      alert("login failed");
+      // Display an error message to the user
+    }
+  });
+
+}
+
 
 function viewremark(referencenumber) {
         // Code to generate card
@@ -421,10 +605,10 @@ function addremark(referencenumber) {
         localStorage['addRemarkForRefNumber'] =referencenumber; 
   }
 
-  function movetolive(referencenumber) {
+  function movetopendingauth(referencenumber) {
 
         $.ajax({
-          url: '/api/movecasetolivefromprospectbyref',
+          url: '/api/movecasetopendingauthbyref',
           type: 'POST',
           contentType: "application/x-www-form-urlencoded",
           data: {
@@ -435,16 +619,16 @@ function addremark(referencenumber) {
               {
                // window.location.href = "/index.html"
                 //localStorage['userID'] = username;
-                alert("Case moved to Live!")
+                alert("Case moved to Pending Auth!")
 
-                window.location.href = "/viewprospectcases.html";
+                window.location.href = "/viewpendingauthcases.html";
               }
               else{
-                alert("Error moving case to Live!")
+                alert("Error moving case to Pending Auth!")
               }
           },
           error: function (error) {
-            alert("Error moving case to Live!");
+            alert("Error moving case to Pending Auth!");
             // Display an error message to the user
           }
         });
@@ -452,9 +636,49 @@ function addremark(referencenumber) {
   }
 
 
+
+function movetomedical(referencenumber) {
+
+$.ajax({
+  url: '/api/movecasetomedicalfromprospectbyrefnumber',
+  type: 'POST',
+  contentType: "application/x-www-form-urlencoded",
+  data: {
+    casereferenceNumber: referencenumber,
+  },
+  success: function (response) {
+    if(response.message == "success")
+      {
+       // window.location.href = "/index.html"
+        //localStorage['userID'] = username;
+        alert("Case moved to Medical!")
+
+        window.location.href = "/viewprospectcases.html";
+      }
+      else{
+        alert("Error moving case to Medical!")
+      }
+  },
+  error: function (error) {
+    alert("Error moving case to Medical!");
+    // Display an error message to the user
+  }
+});
+
+}
   
 
   function addremarkInDB() {
+
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    let mm = today.getMonth() + 1; // Months start at 0!
+    let dd = today.getDate();
+
+    if (dd < 10) dd = '0' + dd;
+    if (mm < 10) mm = '0' + mm;
+
+    const formattedToday = dd + '/' + mm + '/' + yyyy;
 
         $.ajax({
           url: '/api/addprospectcaseremark',
@@ -462,7 +686,7 @@ function addremark(referencenumber) {
           contentType: "application/x-www-form-urlencoded",
           data: {
             referencenumber: localStorage['addRemarkForRefNumber'],
-            pf_cf_Remarkstatus:  document.getElementById("newremark").value
+            pf_cf_Remarkstatus: formattedToday + " - " + document.getElementById("newremark").value
           },
           success: function (response) {
             if(response.message == "success")
@@ -594,16 +818,20 @@ function addremark(referencenumber) {
             // You could also use an ajax property on the data table initialization
             $('#dataTable').dataTable().fnAddData( [
               data[i].casereferenceNumber,
-              data[i].patientName,
-              data[i].patientMobile,
+              data[i].managerName,
+              data[i].cpName,
               data[i].complainantName,
               data[i].complainantMobile,
               data[i].claimAmount,
-              data[i].claimNumber,
-              data[i].insuranceCompanyName,
+              data[i].medicalOpinionOfficer,
+              data[i].newCaseStatus,
+              `<a href="#popup3"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Assign Officer</button> </a>`,
               `<a href="#popup1"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
               `<a href="#popup2"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Add Remarks</button> </a>`,
-              `<a href=""><button class="btn btn-primary btn-sm"  onclick="movetolive('${rfno}')" >Move to live</button> </a>`
+              `<a href=""><button class="btn btn-primary btn-sm"  onclick="movetomedical('${rfno}')" >Move to Medical</button> </a>`,
+              `<a href=""><button class="btn btn-primary btn-sm"  onclick="movetopendingauth('${rfno}')" >Move to Pending Auth</button> </a>`,
+              `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
+              `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Dcouments</button> </a>`,
             ]);
           }
         }
@@ -612,6 +840,8 @@ function addremark(referencenumber) {
 
 
     });
+  
+  
   </script>
 </body>
 

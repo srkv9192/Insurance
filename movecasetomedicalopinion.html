@@ -9,15 +9,23 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="css/menubar.css">
   <style>
-        input.form-control:read-only {
+
+    input.form-control:read-only {
         background-color:  #343a40;
     }
     input.form-control:disabled {
         background-color:  #343a40;
     }
+    
+    select.form-control:read-only {
+        background-color:  #343a40;
+    }
+    select.form-control:disabled {
+        background-color:  #343a40;
+    }
+
     body {
       background-color: #343a40;
-      background-image: url('/images/background20.jpg');
       color: #fff;
     }
 
@@ -68,43 +76,8 @@
       background-color: #0062cc;
       border-color: #005cbf;
     }
-
-    @keyframes blink {
-      0% {opacity: 1;}
-      50% {opacity: 0;}
-      100% {opacity: 1;}
-    }
-
-    .blink {
-      color: lime;
-      animation: blink 1s infinite;
-    }
-    .framelocal {
-    border: 1px solid #ced4da;
-    padding: 5px;
-    border-radius: 5px;
-    background-color: #343a40;
-    height: 250px;
-    width:100%;
-  }
-  .framelocalsmall {
-    border: 1px solid #ced4da;
-    padding: 20px;
-    border-radius: 5px;
-    background-color: #343a40;
-    height: 550px;
-    width: 400px;
-  }
-  .framesupersmall {
-    border: 1px solid #ced4da;
-    padding: 20px;
-    border-radius: 5px;
-    background-color: #343a40;
-    height: 60px;
-    width: 1000px;
-  }
   </style>
-  <title>Payment Complete </title>
+  <title>Login Page</title>
 </head>
 
 <body>
@@ -128,7 +101,7 @@
                 Payment Info </a>
           </div>
 
-          
+
 
           <div id="showonlogin" style="display: none;">
 
@@ -155,10 +128,10 @@
                    <a href="/addprospect.html" class="dashboard-nav-dropdown-item">Add Case</a>
                    <a href="/viewprospectcases.html" class="dashboard-nav-dropdown-item">View Prospect</a>
                    
-                  
+                   
                    <a href="/viewmedicalopinioncases.html" class="dashboard-nav-dropdown-item">View Medical</a>
                    <a href="/viewpendingauthcases.html" class="dashboard-nav-dropdown-item">View Pending Auth</a>
-                  
+                   
                                    <!-- 
                    <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
                    <a href="/viewescalationcases.html" class="dashboard-nav-dropdown-item">View Escalation</a>
@@ -236,44 +209,119 @@
             </div>
 
           </div>
-
+          
         <div class="nav-item-divider"></div>
         <a  id="login-menu"
                   href="/login.html" class="dashboard-nav-item"><i class="fas  fa-sign-in "></i> Login </a>
       </nav>
   </div>
-    <div class='dashboard-app'>
-        <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
-        <div class='dashboard-content' style="background-image: url('/images/background20.jpg');  background-repeat: repeat;  background-size: cover;">
-          <div class="container mt-5">
-            <div class="row " >
-              
 
-              
-              <div class="framelocal  " style=" color:black;display:flex ;background-image: url('/images/background18.jpg');  font-family: monospace;font-size: larger; background-size: cover;" >
- 
-                      
-                        <div style="margin-left: 180px; margin-right: 20px; margin-top:50px ;">
-                          <b>
-                          Payment Details Saved Successfully.<br><br>
-                          Card Will Be Sent Within 24 hours, After Payment Confirmation.<br><br>
-                          For Nidaan Claim Shield Card Issuance Related Queries Contact - 9826011116<br><br>
+  <div class='dashboard-app'>
+    <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
 
-                        </b>
-                        </div>
-      
-              </div>
+    <div class='dashboard-content' style="background-image: url('/images/background20.jpg');  background-repeat: repeat;  background-size: cover;">
+      <div class="container mt-5">
+        <div class="row justify-content-center">
+          <div class="col-lg-6">
+            <h2 class="text-center mb-4">Add Case Details</h2>
+
+            <div class="frame">
+              <form id="loginForm" enctype="multipart/form-data">
+
+                <div class="row mb-3">
+                  <div class="col-sm-6">
+                    <label for="reference-number" class="form-label">Reference Number</label>
+                    <input type="text" class="form-control" id="reference-number" readonly>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="claim-number" class="form-label">Claim Number</label>
+                    <input type="text" class="form-control" id="claim-number" readonly>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <div class="col-sm-6">
+                    <label for="client-name" class="form-label">Client Name</label>
+                    <input type="text" class="form-control" id="client-name" readonly required>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="client-phone" class="form-label">Customer Phone</label>
+                    <input type="tel" class="form-control" id="client-phone" readonly required>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+
+                  <div class="col-sm-6">
+                    <label for="processing-fee" class="form-label">Processing Fee</label>
+                    <input type="text" class="form-control" id="processing-fee" required>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="consultation-charge" class="form-label">Consultation Charge (%)</label>
+                    <input type="number" class="form-control" id="consultation-charge" required>
+                  </div>
+
+                  </div>
+                <div class="row mb-3">
+                  <div class="col-sm-6">
+                    <label for="total-claim-amount" class="form-label">Disputed Amount</label>
+                    <input type="number" class="form-control" id="total-claim-amount" readonly required>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="cheque-amount" class="form-label">Cheque Amount</label>
+                    <input type="number" class="form-control" id="cheque-amount" required>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-sm-6">
+                    <label for="cheque-number" class="form-label">Cheque Number</label>
+                    <input type="text" class="form-control" id="cheque-number" >
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="bank-name" class="form-label">Bank Name</label>
+                    <input type="text" class="form-control" id="bank-name" >
+                  </div>
+                <!--
+                  <input type="file" id="pdf-input" accept=".pdf">
+                -->
+
+                </div>
 
 
+                <div class="row mb-3">
+                  <div class="col-sm-6">
+                    <label for="case-email" class="form-label">Case Email ID</label>
+                    <input type="text" class="form-control" id="case-email" >
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="case-email-pass" class="form-label">Case Email Password</label>
+                    <input type="text" class="form-control" id="case-email-pass" >
+                  </div>
+
+                </div>
+                
+
+
+                <div class="row mb-3">
+                  <div class="col-sm-6">
+                    <label for="pdf-input" class="form-label">Gist Upload(PDF only)</label>
+                    <input type="file" class="form-control" id="pdf-input" required>
+                  </div>
+                </div>
+
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+              </form>
             </div>
 
-
-
           </div>
- 
         </div>
-
+      </div>
     </div>
+
+  </div> 
+
 </div>
 
 
@@ -284,11 +332,38 @@
   <script>
     $(document).ready(function () {
 
+        // check for pdf file upload
+        $('#pdf-input').change(function () {
+        Object.values(this.files).forEach(function(file) {
+          if (file.type != 'application/pdf') {
+            alert("Please upload PDF file!!!");
+            document.getElementById("pdf-input").value = "";
+          }
+        })
+      });
+
+
+      var casereferencenumber = localStorage['casereferencenumber'] || '';
+      //alert("case ref number is -"+ casereferencenumber);
+
+        // calculate cheque amount based on consulation charge percentage
+        $('#consultation-charge').change(function () {
+
+          var claimamount = $('#total-claim-amount').val();
+          var consultationcharge = $('#consultation-charge').val();
+          console.log(claimamount);
+          console.log(consultationcharge);
+
+          document.getElementById("cheque-amount").value=Math.round((claimamount * consultationcharge ) / (100));
+
+      });
 
       $.ajax({
         url: '/api/whoami',
         type: 'POST',
         success: function (response) {
+          // Populate the options in the select element
+            //alert(response.message)
            
             if(response.message =='admin')
             {
@@ -323,6 +398,31 @@
         }
       });
 
+
+      $.ajax({
+        url: '/api/getprospectcasedetailbyref',
+        type: 'GET',
+        data: {
+          casereferenceNumber: localStorage['casereferencenumber']
+        },
+
+        success: function (response) {
+          // Populate the options in the select elemen
+                
+            document.getElementById("client-name").value = response[0].customerName;
+            document.getElementById("reference-number").value = localStorage['casereferencenumber'];
+            document.getElementById("claim-number").value = response[0].claimNumber;
+            document.getElementById("client-phone").value = response[0].customerPhone;
+            document.getElementById("total-claim-amount").value = response[0].claimAmount;
+            
+
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+      
+
       const mobileScreen = window.matchMedia("(max-width: 990px )");
 
           $(".dashboard-nav-dropdown-toggle").click(function () {
@@ -342,7 +442,55 @@
         }
     });
 
+      $('#loginForm').on('submit', function (event) {
+        event.preventDefault();
+
+        var processingfee = $('#processing-fee').val();
+
+        var consultationcharge = $('#consultation-charge').val();
+        var claimamount = $('#total-claim-amount').val();
+
+        var chequeamount = $('#cheque-amount').val();
+        var chequenumber = $('#cheque-number').val();
+
+        var bankname = $('#bank-name').val();
+
+        var formData = new FormData();
+        formData.append('casereferenceNumber', localStorage['casereferencenumber']);
+        formData.append('processingFee', processingfee);
+        formData.append('consultationCharge', consultationcharge);
+        formData.append('chequeAmount', chequeamount);
+        formData.append('chequeNumber', chequenumber);
+        formData.append('bankName', bankname);
+
+        // Get the selected PDF file input element
+        var pdfFile = $('#pdf-input')[0].files[0];
+        formData.append('pdfFile', pdfFile);
+
+        // Make an API call with the username and password
+        $.ajax({
+          url: '/api/movecasetolivebyref',
+          type: 'POST',
+          processData: false,
+          contentType: false,
+          data: formData,
+          success: function (response) {
+           
+            alert("Case data saved successfully. Case number - " + response.casenumberstring );
+            document.getElementById('loginForm').reset();
+          },
+          error: function (error) {
+            document.getElementById('loginForm').reset();
+            alert("Failed to save case data");
+            // Display an error message to the user
+          }
+        });
+      });
     });
+
+
+
+
   </script>
 </body>
 

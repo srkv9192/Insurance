@@ -76,6 +76,14 @@
       background-color: #0062cc;
       border-color: #005cbf;
     }
+
+    #uploadingdiv {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
   </style>
   <title>Add Prospect</title>
 </head>
@@ -128,11 +136,13 @@
                    <a href="/addprospect.html" class="dashboard-nav-dropdown-item">Add Case</a>
                    <a href="/viewprospectcases.html" class="dashboard-nav-dropdown-item">View Prospect</a>
                    
-                   <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
                    <a href="/viewmedicalopinioncases.html" class="dashboard-nav-dropdown-item">View Medical</a>
+                   <a href="/viewpendingauthcases.html" class="dashboard-nav-dropdown-item">View Pending Auth</a>
 
-                   <a href="/viewescalationcases.html" class="dashboard-nav-dropdown-item">View Escalation</a>
-
+                   <!-- 
+                     <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
+                      <a href="/viewescalationcases.html" class="dashboard-nav-dropdown-item">View Escalation</a>
+                  -->
                    <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
                </div>
             </div>
@@ -197,8 +207,9 @@
         <div class="row justify-content-center">
           <div class="col-lg-6">
             <h2 class="text-center mb-4">Add Prospect Case</h2>
+
             <div class="frame" style="color:black;background-image: url('/images/background18.jpg');  font-weight: bold;  font-family: monospace;font-size: large; background-size: cover;">
-              <form id="loginForm">
+              <form id="loginForm" enctype="multipart/form-data">
 
                 <div class="row mb-3">
 
@@ -290,14 +301,22 @@
 
 
                   <div class="col-sm-6">
+
+                    <!--  
                     <label for="caretaker-name" class="form-label">Assign To</label>
                     <div class="input-group">
                       <select class="form-control" id="caretaker-name-dropdown">
                         <option value="">None</option>
                       </select>
                     </div>
-                  </div>
+                    -->
 
+                    <div class="col-sm-6">
+                      <label for="pdf-input" class="form-label">Documents</label>
+                        <input type="file" class="form-control" id="pdf-input"  multiple>
+                    </div>
+
+                  </div>
   
                 </div>
 
@@ -315,6 +334,7 @@
 
                 </div>
 
+
                 <div class="text-center">
                   <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
@@ -323,6 +343,10 @@
 
           </div>
         </div>
+      </div>
+
+      <div id="uploadingdiv" style="display: none;">
+        <img src="/images/uploading3.webp">
       </div>
     </div>
 
@@ -338,7 +362,7 @@
   <script>
     $(document).ready(function () {
 
-
+      $('#uploadingdiv').hide();
       
       // AJAX call on page load get manager details
       $.ajax({
@@ -398,10 +422,6 @@
           console.error('Error:', error);
         }
       });
-
-      
-
-
 
                   // AJAX call on page load get tpa details
                   $.ajax({
@@ -523,6 +543,9 @@
       $('#loginForm').on('submit', function (event) {
         event.preventDefault();
 
+        $('#uploadingdiv').show();
+
+
         var patientname = $('#patient-name').val();
         var patientphone = $('#patient-phone').val();
 
@@ -575,46 +598,67 @@
         var clientemail = $('#client-email').val();
         var policynumber = $('#policy-number').val();
 
+
+    
+        var formData = new FormData();
+        formData.append('casereferenceNumber', localStorage['casereferencenumber']);
+        formData.append('cpName', cpname);
+        formData.append('cpID', cpid);
+
+        formData.append('managerName', managername);
+        formData.append('managerID', managerid);
+        formData.append('directCase', directcase);
+
+
+        formData.append('prospectZone', prospectzone);
+        formData.append('patientName', patientname);
+        formData.append('patientMobile', patientphone);
+
+
+        formData.append('complainantName', complainantname);
+        formData.append('complainantMobile', complainantphone);
+
+        formData.append('claimAmount', claimamount);
+        formData.append('insuranceCompanyName', insurancecompany);
+        formData.append('claimNumber', claimnumber);
+
+        $.each($('#pdf-input')[0].files, function(i, file) {
+          formData.append('pdfFile', file);
+         });
+
         // Make an API call with the username and password
         $.ajax({
           url: '/api/addprospect',
           type: 'POST',
-          contentType: "application/x-www-form-urlencoded",
-          data: {
-          cpName:cpname,
-          cpID: cpid,
-          managerName:managername,
-          managerID: managerid,
-          directCase: directcase,
-          prospectZone:prospectzone,
-          patientName:patientname,
-          patientMobile:patientphone,
-          complainantName:complainantname,
-          complainantMobile:complainantphone,
-          claimNumber: claimnumber,
-          claimAmount: claimamount,
-          insuranceCompanyName: insurancecompany,
-          },
+          contentType: false,
+          processData: false,
+          data: formData,
           success: function (response) {
             if(response.message == "success")
               {
                 //window.location.href = "/dashboard.html"
-                alert("Case added reference number- " + response.referencenumber);
+                $('#uploadingdiv').hide({done: function() { alert("Case added reference number- " + response.referencenumber); } });
+               // alert("Case added reference number- " + response.referencenumber);
                 document.getElementById('loginForm').reset();
               }
               else{
-                alert(response.message);
+                $('#uploadingdiv').hide({done: function() { alert(response.message); } });
+               // alert(response.message);
                 document.getElementById('loginForm').reset();
                 //document.getElementById('loginForm').reset();
               }
           },
           error: function (error) {
+            $('#uploadingdiv').hide({done: function() { alert("Failed to add case!!!"); } });
             document.getElementById('loginForm').reset();
-            alert("Failed to add case!!!");
+           // alert("Failed to add case!!!");
             // Display an error message to the user
           }
         });
+
       });
+
+
     });
 
 

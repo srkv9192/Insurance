@@ -7,6 +7,9 @@ var fs = require('fs');
 
 const { google } = require('googleapis');
 
+//for getting file extension such as pdf png etc
+const path = require('path');
+
 const oAuth2Client = new google.auth.OAuth2(
   process.env.gmailclientid,
   process.env.gmailclientSecret,
@@ -50,6 +53,7 @@ const port = process.env.PORT || 80
 //});
 
 
+
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -87,6 +91,62 @@ const storagegcp = new Storage(
 );
 //const bucketName = storagegcp.bucket(process.env.GCLOUD_STORAGE_BUCKET);
 
+
+
+//for upload in background to gcp
+const {spawn} = require('child_process');
+const crypto = require('crypto');
+
+// Initialize Google Cloud Storage
+//const storage = new Storage({keyFilename: 'path/to/your/service-account-file.json'});
+//const bucketName = 'your-bucket-name';
+ const bucketName = process.env.GCLOUD_STORAGE_BUCKET;
+
+// Function to upload file to Google Cloud Storage
+
+/*
+function uploadFileToGCS(filePath, originalName) {
+  console.log(`inside uploadtogcs `);
+  const randomString = crypto.randomBytes(16).toString('hex');
+  const destination = `${originalName}-${randomString}`;
+  console.log(`after uploadtogcs `);
+  async function uploadFile() {
+    console.log(`inside inside uploadtogcs `);
+    await storage.bucket(bucketName).upload(filePath, {
+      destination: destination,
+    });
+    console.log(`${filePath} uploaded to ${bucketName}`);
+
+    // should add logic here to save filenames to db
+  }
+
+  uploadFile().catch(console.error);
+}
+
+*/
+
+async function uploadFileToGCS(filePath, destination , referencenumber) {
+  await storagegcp.bucket(String(bucketName)).upload(filePath, {
+      destination: destination,
+  });
+  console.log(`${filePath} uploaded to ${bucketName} as ${destination}`);
+  // After upload, delete the file locally to clean up
+
+  const url = `https://storage.googleapis.com/rspowerimages/${destination}`; 
+
+  console.log(url);
+  await addDocURLInDBbyref(referencenumber , url)
+
+  await fs.promises.unlink(filePath);
+}
+
+//
+
+
+
+
+
+
 // Create a schema
 const dataSchema = new mongoose.Schema({
   prospectDate: Date,
@@ -100,6 +160,7 @@ const dataSchema = new mongoose.Schema({
   claimAmount: Number,
   claimNumber: String,
   pf_cf_Remarkstatus: Array,
+  docUrl: Array,
   extraRemarks: String,
   pfpayeeName: String,
   pfAmount: Number,
@@ -124,6 +185,7 @@ const dataSchema = new mongoose.Schema({
   lokpalComplaintNumber: String,
   lokpalCaseStatus: String,
   dateOfLokpalHearing: Date,
+  newCaseStatus: String,
   isProspect: String,
   isPendingAuth: String,
   isLive: String,
@@ -174,6 +236,14 @@ const loginSchema = new mongoose.Schema({
   userPassword: String,
   userID: String,
   userType: String
+  // Add more fields as needed
+});
+
+// Documents related to case
+const documentSchema = new mongoose.Schema({
+  casereferenceNumber : String,
+  caseNumber: String,
+  docUrl: Array,
   // Add more fields as needed
 });
 
@@ -270,6 +340,9 @@ const dataSchemaObject = mongoose.model('Data', dataSchema);
 //login table
 const loginSchemaObject = mongoose.model('login', loginSchema);
 
+const documentSchemaObject = mongoose.model('documentsURL', documentSchema);
+
+
 //table to hold insurance company list
 const insurancecompanySchemaObject = mongoose.model('insurancecompanydetails', insurancecompanySchema);
 
@@ -328,7 +401,7 @@ catch(err)
 
 
 // Define the API endpoint to save data
-app.post('/api/addprospect', async(req, res) => {
+app.post('/api/addprospect', upload.array('pdfFile', 10), async (req, res) => {
   try{
         const refNumber= await getCaseReferenceCount();
         if(refNumber == -1)
@@ -354,13 +427,46 @@ app.post('/api/addprospect', async(req, res) => {
                         casereferenceNumber : refNumber,
                         caseNumber: "",
                         isProspect:"true",
+                        newCaseStatus: "New Case",
                         pfReceived: "NO",
                         isEmailGenerated: "NO",
                         isGistGenerated: "NO",
+                        medicalOpinionOfficer: "NONE",
                       });
         const savedData = await newData.save();
         incrementCaseReferenceCount();
+
+        const uploadPromises = req.files.map(file => {
+          const randomString = require('crypto').randomBytes(16).toString('hex');
+          const extension = path.extname(file.originalname);
+          const destination = `uploads/${refNumber}-${randomString}${extension}`;
+          return uploadFileToGCS(file.path, destination, refNumber);
+        });
+
+      await Promise.all(uploadPromises);
         res.json({ message: 'success', referencenumber:refNumber,data: savedData });
+      }
+    catch(err)
+    {
+      console.error(err);
+      res.status(500).json({ error: 'Error saving data' });
+    }
+  
+});
+
+
+app.post('/api/uploadadditionaldocs', upload.array('pdfFile', 10), async (req, res) => {
+  try{
+        const refNumber= req.body.casereferenceNumber;
+        const uploadPromises = req.files.map(file => {
+          const randomString = require('crypto').randomBytes(16).toString('hex');
+          const extension = path.extname(file.originalname);
+          const destination = `uploads/${refNumber}-${randomString}${extension}`;
+          return uploadFileToGCS(file.path, destination, refNumber );
+        });
+
+      await Promise.all(uploadPromises);
+        res.json({ message: 'success', referencenumber:refNumber });
       }
     catch(err)
     {
@@ -392,6 +498,76 @@ app.post('/api/addprospectcaseremark', async(req, res) => {
   } 
 
 });
+
+
+
+app.post('/api/addcaseverdictmedical', async(req, res) => {
+  try{
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ isMedicalOpinionGenerated : "true", newCaseStatus: req.body.casestatus, isInMedicalOpinion: "false"}});
+
+      if(newData == null)
+      {
+        res.json({ message: 'success', refnum:req.body.referencenumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding medical opinion' });
+  } 
+
+});
+
+
+async function addDocURLInDBbyref(referencenumber , url)
+{
+  console.log(referencenumber);
+  console.log(url);
+  try{
+      const newData = await  dataSchemaObject.findOneAndUpdate({casereferenceNumber: referencenumber}, {$push:{ docUrl : url}});
+      if(newData == null)
+      {
+       console.error("Could not save doc url in db");
+      }
+      else
+      {
+        const savedData = newData.save();
+        console.error("Saved doc url in db");
+      }
+  }
+  catch(err)
+  {
+    console.error(err);
+  } 
+}
+
+
+
+async function addDocURLInDBbycasenum(casenumber , url)
+{
+  try{
+      const newData =  await documentSchemaObject.findOneAndUpdate({caseNumber: casenumber}, {$push:{ docUrl : url}});
+
+      if(newData == null)
+      {
+       console.error("Could not save doc url in db");
+      }
+      else
+      {
+        const savedData = newData.save();
+        console.error("Saved doc url in db");
+      }
+  }
+  catch(err)
+  {
+    console.error(err);
+  } 
+}
 
 
 app.post('/api/addpfremark', async(req, res) => {
@@ -441,11 +617,11 @@ app.post('/api/addemailremark', async(req, res) => {
 
 app.post('/api/addmedicalremark', async(req, res) => {
   try{
-      const newData = await dataSchemaObject.findOneAndUpdate({caseNumber: req.body.caseNumber}, {$set:{ medicalOpinionOfficer:req.body.medicalOpinionOfficer }});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$set:{ medicalOpinionOfficer:req.body.medicalOpinionOfficer }});
 
       if(newData == null)
       {
-        res.json({ message: 'Could not save medical officer details', refnum:req.body.caseNumber});
+        res.json({ message: 'Could not save medical officer details', referenceNumber:req.body.referencenumber});
       }
       else
       {
@@ -1478,14 +1654,31 @@ app.post('/api/movecasetomedicalfromlivebycasenumber', async(req, res) => {
   } 
 });
 
-
-app.post('/api/movecasetoescalationfrommedicalbyref', async(req, res) => {
+app.post('/api/movecasetomedicalfromprospectbyrefnumber', async(req, res) => {
   try{
-    const newData = await dataSchemaObject.findOneAndUpdate({caseNumber: req.body.caseNumber}, 
+    const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, 
+      {  
+         isInMedicalOpinion: "true",
+         medicalOpinionOfficer: "NONE",
+         newCaseStatus: "In Medical"
+      }, {new : true});
+
+      res.json({ message: 'success', casereferenceNumber: req.body.casereferenceNumber });
+  }
+  catch(err)
+  {
+    console.error(err);
+    return -1;
+  } 
+});
+
+
+app.post('/api/movecasetoprospectformedicalquerybyref', async(req, res) => {
+  try{
+    const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, 
       {  
          isInMedicalOpinion: "false",
-         isInEscalationStage: "true",
-         isEscalatedInCompany: "NO",
+         newCaseStatus: "Medical Query"
       }, {new : true});
 
       res.json({ message: 'success', casereferenceNumber: req.body.casereferenceNumber });
