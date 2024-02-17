@@ -238,7 +238,7 @@ div.dataTables_filter {
                    
                    
                    <a href="/viewmedicalopinioncases.html" class="dashboard-nav-dropdown-item">View Medical</a>
-                   <a href="/viewpendingauthcases.html" class="dashboard-nav-dropdown-item">View Pending Auth</a>
+                   <a href="/viewapprovedcases.html" class="dashboard-nav-dropdown-item">View Approved</a>
                    
                   <!-- 
                    <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
@@ -518,7 +518,8 @@ success: function (response) {
     let list = document.getElementById("documentlist");
       for (i = 0; i < response[0].docUrl.length ; i++) {
         let li = document.createElement('li');
-        li.innerHTML = "<a target='inlineFrameExample' href='"+response[0].docUrl[i]+"' >Document - "+ i +"</a>";
+        let filename = response[0].docUrl[i].substring(response[0].docUrl[i].lastIndexOf('/')+1);
+        li.innerHTML = `<a target='inlineFrameExample' href="${response[0].docUrl[i]}" >${filename}</a>`;
         list.appendChild(li);
        }
 
@@ -672,7 +673,7 @@ function addremark(referencenumber) {
                 //localStorage['userID'] = username;
                 alert("Case moved to Pending Auth!")
 
-                window.location.href = "/viewpendingauthcases.html";
+                window.location.href = "/viewapprovedcases.html";
               }
               else{
                 alert("Error moving case to Pending Auth!")
@@ -993,9 +994,9 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
               `<a href="#popup3"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Assign Officer</button> </a>`,
               `<a href="#popup1"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
               `<a href="#popup6"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Medical</button> </a>`,
-              `<a href="#popup7"><button class="btn btn-primary btn-sm"  ${canMovetoApproved} onclick="addremark('${rfno}')" >Move to Pending Auth</button> </a>`,
+              `<a href="#popup7"><button class="btn btn-primary btn-sm"  ${canMovetoApproved} onclick="addremark('${rfno}')" >Move to Approved</button> </a>`,
               `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
-              `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Dcouments</button> </a>`,
+              `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
             ]);
           }
         }

@@ -52,11 +52,12 @@ const port = process.env.PORT || 80
 //  useUnifiedTopology: true,
 //});
 
-
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
+
 
 /*
 
@@ -2051,7 +2052,7 @@ app.get('/login.html', (req, res) => res.sendFile(__dirname+'/login.html'))
 app.get('/logout.html', (req, res) => res.sendFile(__dirname+'/logout.html'))
 app.get('/newcase.html', (req, res) => res.sendFile(__dirname+'/newcase.html'))
 app.get('/viewprospectcases.html', (req, res) => res.sendFile(__dirname+'/viewprospectcases.html'))
-app.get('/viewpendingauthcases.html', (req, res) => res.sendFile(__dirname+'/viewpendingauthcases.html'))
+app.get('/viewapprovedcases.html', (req, res) => res.sendFile(__dirname+'/viewapprovedcases.html'))
 
 app.get('/changepassword.html', (req, res) => res.sendFile(__dirname+'/changepassword.html'))
 app.get('/createaccount.html', (req, res) => res.sendFile(__dirname+'/createaccount.html'))

@@ -233,7 +233,7 @@ div.dataTables_filter {
                    
                   
                    <a href="/viewmedicalopinioncases.html" class="dashboard-nav-dropdown-item">View Medical</a>
-                   <a href="/viewpendingauthcases.html" class="dashboard-nav-dropdown-item">View Pending Auth</a>
+                   <a href="/viewapprovedcases.html" class="dashboard-nav-dropdown-item">View Approved</a>
                    
                                      <!-- 
                    <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
@@ -395,6 +395,19 @@ div.dataTables_filter {
                   </div>
                 </div>
 
+                <div id="popup4" class="overlay">
+                  <div class="popup">
+                    <h2  id = "remarkcontent">Raise Query-</h2>
+                    <ul id="remarkcontentlist"></ul>
+
+                    
+                    <input type="text" placeholder="Add remark here" id="newremarkmedicalquery" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                    <button type="submit" onclick="addremarkInDBAndMoveToMedicalQuery()" class="btn btn-primary btn-sm">Submit</button>
+                    
+                    <a class="close" href="#">&times;</a>
+                  </div>
+                </div>
+
 
               </div>
             </div>
@@ -407,6 +420,55 @@ div.dataTables_filter {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
   <script>
+
+
+function addremarkInDBAndMoveToMedicalQuery() {
+
+const today = new Date();
+const yyyy = today.getFullYear();
+let mm = today.getMonth() + 1; // Months start at 0!
+let dd = today.getDate();
+
+if (dd < 10) dd = '0' + dd;
+if (mm < 10) mm = '0' + mm;
+
+const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+    $.ajax({
+      url: '/api/addprospectcaseremark',
+      type: 'POST',
+      contentType: "application/x-www-form-urlencoded",
+      data: {
+        referencenumber: localStorage['addRemarkForRefNumber'],
+        pf_cf_Remarkstatus: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ document.getElementById("newremarkmedicalquery").value
+      },
+      success: function (response) {
+        if(response.message == "success")
+          {
+           // window.location.href = "/index.html"
+            //localStorage['userID'] = username;
+
+            movetoprospectforquery();
+           
+          }
+          else{
+            alert("Error moving case to medical query!")
+            //document.getElementById('loginForm').reset();
+          }
+        //alert("login success");
+        // Redirect to the dashboard or perform any other actions
+      },
+      error: function (error) {
+        document.getElementById('loginForm').reset();
+        alert("Error moving case to medical query!");
+        // Display an error message to the user
+      }
+    });
+  
+   // alert(  document.getElementById("newremark").value);
+
+}
+  
 
 
 
@@ -576,8 +638,8 @@ success: function (response) {
     let list = document.getElementById("documentlist");
       for (i = 0; i < response[0].docUrl.length ; i++) {
         let li = document.createElement('li');
-         li.innerHTML = "<a target='inlineFrameExample' href='"+response[0].docUrl[i]+"' >Document - "+ i +"</a>";
-        list.appendChild(li);
+         li.innerHTML = `<a target='inlineFrameExample' href="${response[0].docUrl[i]}" >${filename}</a>`;
+         list.appendChild(li);
        }
 
 },
@@ -627,14 +689,14 @@ function addmedicalremarkInDB() {
 
 
 
-function movetoprospectforquery(referencenumber) {
+function movetoprospectforquery() {
 
 $.ajax({
   url: '/api/movecasetoprospectformedicalquerybyref',
   type: 'POST',
   contentType: "application/x-www-form-urlencoded",
   data: {
-    casereferenceNumber: referencenumber,
+    casereferenceNumber: localStorage['addRemarkForRefNumber'],
   },
   success: function (response) {
     if(response.message == "success")
@@ -775,11 +837,11 @@ function movetolive(referencenumber) {
               data[i].claimAmount,
               data[i].medicalOpinionOfficer,
               data[i].newCaseStatus,
-              `<a href="#popup3"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Dcouments</button> </a>`,
+              `<a href="#popup3"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
               `<a href="#popup1"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
               `<a><button class="btn btn-primary btn-sm"  onclick="addCaseVerdict('${rfno}','Approved' )" >Approve</button> </a>`,
               `<a ><button class="btn btn-primary btn-sm"  onclick="addCaseVerdict('${rfno}', 'Rejected')" >Reject</button> </a>`,
-              `<button class="btn btn-primary btn-sm" onclick="movetoprospectforquery('${rfno}')">Raise Query</button>`
+              `<a href="#popup4"><button class="btn btn-primary btn-sm" onclick="addremark('${rfno}')">Raise Query</button> </a>`
             ]);
           }
         }
