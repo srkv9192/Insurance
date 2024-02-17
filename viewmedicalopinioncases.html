@@ -129,7 +129,7 @@ div.dataTables_filter {
   padding: 20px;
   background: #fff;
   border-radius: 5px;
-  width: 30%;
+  width: 45%;
   position: relative;
   transition: all 5s ease-in-out;
 }
@@ -336,10 +336,12 @@ div.dataTables_filter {
                         <th>Reference Number</th>
                         <th>Manager Name</th>
                         <th>CP Name</th>
+                        <th>Patient Name</th>
+                        <th>Complainant Name</th>
+                        <th>Complainant Phone</th>
                         <th>Claim Amount</th>
                         <th>Medical Officer</th>
                         <th>Case Status</th>
-                        <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
@@ -355,31 +357,41 @@ div.dataTables_filter {
                     <h2  id = "remarkcontent">Remarks-</h2>
                     <ul id="remarkcontentlist"></ul>
 
+
+                    <input type="text" placeholder="Add new remark here" id="newremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                    <button type="submit" onclick="addremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
                     
-                    <a class="close" href="#">&times;</a>
-                  </div>
-                </div>
 
-                <div id="popup2" class="overlay">
-                  <div class="popup">
-                    <h2  id = "remarkcontent">Remarks-</h2>
-                    <ul id="remarkcontentlist"></ul>
-
-                      <input type="text" placeholder="Enter remark" id="newremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
-                      <button type="submit" onclick="addremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
                     
                     <a class="close" href="#">&times;</a>
                   </div>
                 </div>
 
                 <div id="popup3" class="overlay">
-                  <div class="popup">
-                    <h2  id = "remarkcontent">Case Data</h2>
-                    <ul id="documentlist"></ul>
+                  <div class="popup" style =" display: flex;
+                  justify-content: space-between;
+                  width: 100%;">
 
+                  <div>
+                    <h2 style="color: black;">Documents - </h2>
+                    <ul id="documentlist" style="margin-right: 100px; margin-top: 50px;"></ul>
+                  </div>
 
                      
                     <a class="close" href="#">&times;</a>
+
+                    
+                    <div id="wrapper" style="flex: 2;">
+                       
+
+                      <iframe name="inlineFrameExample" 
+                        title="Inline Frame Example" 
+                        style="width: 90%; height: 80vh; border:2px dotted; border-color: black; flex-grow: 2;"
+                        src="">
+                      </iframe>
+
+                 </div>
+
                   </div>
                 </div>
 
@@ -416,7 +428,7 @@ $.ajax({
   contentType: "application/x-www-form-urlencoded",
   data: {
     referencenumber: localStorage['addRemarkForRefNumber'],
-    pf_cf_Remarkstatus:  formattedToday + " - " + "[Medical] - "+  document.getElementById("newremark").value
+    pf_cf_Remarkstatus:  formattedToday + " - [ "  +  localStorage['userName'] + " ] - "+  document.getElementById("newremark").value
   },
   success: function (response) {
     if(response.message == "success")
@@ -449,6 +461,8 @@ $.ajax({
 }
 
 function viewremark(referencenumber) {
+
+  localStorage['addRemarkForRefNumber'] = referencenumber; 
         // Code to generate card
 
         let list = document.getElementById("remarkcontentlist");
@@ -533,6 +547,14 @@ function addCaseVerdict(referencenumber, status){
 
 function viewdocuments(referencenumber)
 {
+
+  var wrapper = document.getElementById('wrapper');
+  wrapper.innerHTML= `"<iframe name="inlineFrameExample" 
+            title="Inline Frame Example" 
+            style="width: 90%; height: 80vh; border: 2px dotted;border-color: black; flex-grow: 2;"
+            src="">
+    </iframe>"`;
+
   let list = document.getElementById("documentlist");
 
 // 👇️ Remove all list elements
@@ -554,7 +576,7 @@ success: function (response) {
     let list = document.getElementById("documentlist");
       for (i = 0; i < response[0].docUrl.length ; i++) {
         let li = document.createElement('li');
-        li.innerHTML = "<a target='_blank' href='"+response[0].docUrl[i]+"' >Document - "+ i +"</a>";
+         li.innerHTML = "<a target='inlineFrameExample' href='"+response[0].docUrl[i]+"' >Document - "+ i +"</a>";
         list.appendChild(li);
        }
 
@@ -747,12 +769,14 @@ function movetolive(referencenumber) {
               data[i].casereferenceNumber,
               data[i].managerName,
               data[i].cpName,
+              data[i].patientName,
+              data[i].complainantName,
+              data[i].complainantMobile,
               data[i].claimAmount,
               data[i].medicalOpinionOfficer,
               data[i].newCaseStatus,
               `<a href="#popup3"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Dcouments</button> </a>`,
               `<a href="#popup1"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
-              `<a href="#popup2"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Add Remarks</button> </a>`,
               `<a><button class="btn btn-primary btn-sm"  onclick="addCaseVerdict('${rfno}','Approved' )" >Approve</button> </a>`,
               `<a ><button class="btn btn-primary btn-sm"  onclick="addCaseVerdict('${rfno}', 'Rejected')" >Reject</button> </a>`,
               `<button class="btn btn-primary btn-sm" onclick="movetoprospectforquery('${rfno}')">Raise Query</button>`
