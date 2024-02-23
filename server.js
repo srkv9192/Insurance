@@ -52,6 +52,7 @@ const port = process.env.PORT || 80
 //  useUnifiedTopology: true,
 //});
 
+
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -60,13 +61,13 @@ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS
 
 
 /*
-
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
 */
+
 
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
@@ -159,6 +160,8 @@ const dataSchema = new mongoose.Schema({
   claimAmount: Number,
   claimNumber: String,
   pf_cf_Remarkstatus: Array,
+  caseRejectionReason: String,
+  caseGist: String,
   docUrl: Array,
   extraRemarks: String,
   pfpayeeName: String,
@@ -499,6 +502,30 @@ app.post('/api/addprospectcaseremark', async(req, res) => {
   } 
 
 });
+
+
+app.post('/api/addcasegistandrejectionreason', async(req, res) => {
+  try{
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ isGistGenerated: "YES", caseRejectionReason:req.body.caseRejectionReason, caseGist: req.body.caseGist }});
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not save rejection reason and gist', refnum:req.body.referencenumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding gist and rejection reason' });
+  } 
+
+});
+
 
 
 
@@ -1363,6 +1390,19 @@ app.get("/api/getpendingpolicydetail", async(req, res) => {
   }
 });
 
+
+app.get("/api/getgistdetail", async(req, res) => {
+  try {
+    const users = await  dataSchemaObject.find({casereferenceNumber: req.query.casereferenceNumber}, { caseRejectionReason: 1, caseGist: 1 });
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get gist details' });
+  }
+});
+
+
+
 app.get("/api/getpendingpolicyCount", async(req, res) => {
   try {
     // Retrieve all tpa list from database
@@ -1395,6 +1435,32 @@ app.get("/api/getprospectcasedetail", async(req, res) => {
     res.status(500).json({ error: 'Failed to get pending case details' });
   }
 });
+
+app.get("/api/getapprovedcasedetail", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  dataSchemaObject.find({newCaseStatus: "Approved"});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get approved case details' });
+  }
+});
+
+
+app.get("/api/getapprovedcasedetailbyref", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    console.log(req.query.casereferenceNumber)
+
+    const users = await  dataSchemaObject.find({casereferenceNumber: req.query.casereferenceNumber,  newCaseStatus: "Approved"});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get pending case details by ref' });
+  }
+});
+
 
 app.get("/api/getprospectcasedetailbyref", async(req, res) => {
   try {

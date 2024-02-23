@@ -101,6 +101,86 @@ div.dataTables_filter {
   color: white !important;
 
 }
+
+/*for pop up box
+
+*/
+
+
+.overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  transition: opacity 500ms;
+  visibility: hidden;
+  opacity: 0;
+}
+.overlay:target {
+  visibility: visible;
+  opacity: 1;
+}
+
+.popup {
+  margin: 70px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 5px;
+  width: 65%;
+  position: relative;
+  transition: all 5s ease-in-out;
+}
+
+.popup h2 {
+  margin-top: 0;
+  color: #333;
+  font-family: Tahoma, Arial, sans-serif;
+}
+.popup ul {
+  margin-top: 0;
+  color: #333;
+  font-family: Tahoma, Arial, sans-serif;
+}
+.popup li {
+  margin-top: 0;
+  color: #333;
+  font-family: Tahoma, Arial, sans-serif;
+}
+
+.popup .close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  transition: all 200ms;
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #333;
+}
+.popup .close:hover {
+  color: #06D85F;
+}
+.popup .content {
+  max-height: 30%;
+  overflow: auto;
+}
+
+@media screen and (max-width: 700px){
+  .box{
+    width: 70%;
+  }
+  .popup{
+    width: 70%;
+  }
+}
+
+/*pop up box end*/
+
+
+
+
   </style>
   <title>Approved Cases</title>
 </head>
@@ -260,11 +340,126 @@ div.dataTables_filter {
                         <th>Claim Amount</th>
                         <th>Medical Officer</th>
                         <th>Case Status</th>
-                       <!-- <th>Action</th>-->
+                        <th>Action</th>
                       </tr>
                     </thead>
                   </table>
                 </div>
+
+                <div id="popup1" class="overlay">
+                  <div class="popup">
+                    <!--
+                    <ul id="remarkcontentlist"></ul>
+
+                    
+                    <input type="text" placeholder="Add remark here" id="newremarkrejection" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                    <button type="submit" onclick="addremarkInDBAndReject()" class="btn btn-primary btn-sm">Submit</button>
+                    
+                  -->
+
+                  <div class="frame">
+                    <form id="loginForm">
+                      <div class="row mb-3">
+                        <div class="col-sm-4">
+                          <label for="client-name" class="form-label">Client Name</label>
+                          <input type="text" class="form-control" id="client-name" required >
+                        </div>
+                        <div class="col-sm-4">
+                          <label for="client-address" class="form-label">Client Address</label>
+                          <input type="text" class="form-control" id="client-address" required >
+                        </div>
+                        <div class="col-sm-4">
+                          <label for="client-phone" class="form-label">Client Phone</label>
+                          <input type="text" class="form-control" id="client-phone" pattern="[0-9]{10}"  maxlength="10" required >
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+
+                        <div class="col-sm-4">
+                          <label for="claim-number" class="form-label">Claim Number</label>
+                          <input type="text" class="form-control" id="claim-number" required >
+                        </div>
+
+                        <div class="col-sm-4">
+                          <label for="behalf-of" class="form-label">On Behalf of</label>
+                            <div class="input-group">
+                              <select class="form-control" id="behalf-of-dropdown" required>
+                                <option value="">None</option>
+                                <option value="Self">Self</option>
+                                <option value="Father">Father</option>
+                                <option value="Mother">Mother</option>
+                                <option value="Wife">Wife</option>
+                                <option value="Husband">Husband</option>
+                                <option value="Children">Children</option>
+                              </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                          <label for="complainant-name" class="form-label">Complainant Name</label>
+                          <input type="text" class="form-control" id="complainant-name" required>
+                        </div>
+                      </div>
+      
+      
+                      <div class="row mb-3">
+                        <div class="col-sm-4">
+                          <label for="insurance-company-name" class="form-label">Insurance Company Name</label>
+                          <input type="text" class="form-control" id="insurance-company-dropdown" required >
+                        </div>
+                        <div class="col-sm-4">
+                          <label for="witness-name" class="form-label">Witness Name</label>
+                          <input type="text" class="form-control" id="witness-name" required>
+                        </div>
+                        <div class="col-sm-4">
+                          <label for="consultation-charge" class="form-label">Consultation Charge</label>
+                          <input type="number" class="form-control" id="consultation-charge" required >
+                        </div>
+      
+                      </div>
+                      <div class="row mb-3">
+
+                        <div class="col-sm-4">
+                          <label for="processing-fee" class="form-label">Processing Fee</label>
+                          <input type="text" class="form-control" id="processing-fee" required  >
+                        </div>
+                        <div class="col-sm-4">
+                          <label for="total-claim-amount" class="form-label">Disputed Amount</label>
+                          <input type="number" class="form-control" id="total-claim-amount" required >
+                        </div>
+                        <div class="col-sm-4">
+                          <label for="cheque-amount" class="form-label">Cheque Amount</label>
+                          <input type="number" class="form-control" id="cheque-amount" required   >
+                        </div>
+                      </div>
+
+                      <div class="row mb-3">
+                        <div class="col-sm-4">
+                          <label for="cheque-number" class="form-label">Cheque Number</label>
+                          <input type="text" class="form-control" id="cheque-number" required  >
+                        </div>
+                        <div class="col-sm-4">
+                          <label for="bank-name" class="form-label">Bank Name</label>
+                          <input type="text" class="form-control" id="bank-name" required  >
+                        </div>
+
+                        <div class="col-sm-4">
+                          <label for="id-number" class="form-label">ID Number</label>
+                          <input type="text" class="form-control" id="id-number" required >
+                        </div>
+                      </div>
+      
+      
+                      <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                      </div>
+                    </form>
+                  </div>
+
+
+                    <a class="close" style=" color: white;" href="#">&times;</a>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
@@ -277,6 +472,51 @@ div.dataTables_filter {
   <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
   <script>
 
+    function viewAgreement(referencenumber)
+    {
+
+      $.ajax({
+        url: '/api/getapprovedcasedetailbyref',
+        type: 'GET',
+        data: {
+          casereferenceNumber: referencenumber
+        },
+
+        success: function (response) {
+          // Populate the options in the select elemen
+                
+            document.getElementById("client-name").value = response[0].patientName ? response[0].patientName : "";
+            document.getElementById("client-address").value = response[0].customerAddress ? response[0].customerAddress : "";
+            document.getElementById("client-phone").value = response[0].patientMobile ? response[0].patientMobile : "";
+
+            document.getElementById("complainant-name").value = response[0].complainantName ? response[0].complainantName: "";
+
+           // document.getElementById("reference-number").value = localStorage['casereferencenumber'];
+            document.getElementById("claim-number").value = response[0].claimNumber ? response[0].claimNumber : "";
+            document.getElementById("total-claim-amount").value = response[0].claimAmount ?  response[0].claimAmount : "";
+
+            document.getElementById("total-claim-amount").value = response[0].claimAmount ? response[0].claimAmount : "";
+            document.getElementById("processing-fee").value = response[0].processingFee ? response[0].processingFee : "";
+
+            document.getElementById("consultation-charge").value = response[0].consultationCharge ? response[0].consultationCharge : "";
+            document.getElementById("cheque-amount").value = response[0].chequeAmount ? response[0].chequeAmount : "";
+            document.getElementById("cheque-number").value = response[0].chequeNumber ?  response[0].chequeNumber : "";
+            document.getElementById("bank-name").value = response[0].bankName ? response[0].bankName : "";
+            document.getElementById("id-number").value = response[0].caseNumber ? response[0].caseNumber : "";
+            document.getElementById("insurance-company-dropdown").value = response[0].insuranceCompanyName ? response[0].insuranceCompanyName : "";
+
+
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+      
+
+
+
+    }
+
 function movetolive(referencenumber) {
         // Code to generate card
        //alert("Move to live reference number: " + referencenumber);
@@ -288,6 +528,110 @@ function movetolive(referencenumber) {
 
       
     $(document).ready(function () {
+
+
+      // behalf of change function
+      $('#behalf-of-dropdown').change(function () {
+
+      var behalfof = $('#behalf-of-dropdown').val();
+
+      if(behalfof =="Self")
+      {
+        document.getElementById("complainant-name").value = $('#client-name').val();
+      }
+
+      });
+
+
+      $('#loginForm').on('submit', function (event) {
+        event.preventDefault();
+
+        var clientname = $('#client-name').val();
+        var clientaddress = $('#client-address').val();
+
+        var clientphone = $('#client-phone').val();
+        var claimnumber = $('#claim-number').val();
+
+        var behalfof = $('#behalf-of-dropdown').val();;
+        var complainantname = $('#complainant-name').val();
+
+        var insurancecompanyname = $('#insurance-company-dropdown').val();
+        var processingfee = $('#processing-fee').val();
+
+        var consultationcharge = $('#consultation-charge').val();
+        var claimamount = $('#total-claim-amount').val();
+
+        var chequeamount = $('#cheque-amount').val();
+        var chequenumber = $('#cheque-number').val();
+
+        var bankname = $('#bank-name').val();
+        var witnessname = $('#witness-name').val();
+        var idnumber = $('#id-number').val();
+
+        // Make an API call with the username and password
+        $.ajax({
+          url: '/api/getlegalpdf',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          xhrFields: {
+            responseType: 'blob'
+        },
+          data: {
+          clientName:clientname,
+          clientAddress: clientaddress,
+          clientPhone: clientphone,
+          claimNumber: claimnumber,
+          insuranceCompanyName: insurancecompanyname,
+          processingFee: processingfee,
+          consultationCharge: consultationcharge,
+          claimAmount:  claimamount,
+          chequeAmount: chequeamount,
+          chequeNumber: chequenumber,
+          bankName:  bankname,
+          witnessName: witnessname,
+          behalfOf: behalfof,
+          complainantName: complainantname,
+          idNumber: idnumber,
+          },
+          success: function (response) {
+            var a = document.createElement('a');
+            var url = window.URL.createObjectURL(response);
+            a.href = url;
+            a.download = 'legal.pdf';
+            document.body.append(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+          },
+          error: function (error) {
+            document.getElementById('loginForm').reset();
+            alert("PDF generation failed even after bug fix");
+            // Display an error message to the user
+          }
+        });
+      });
+
+
+
+        // calculate cheque amount based on consulation charge percentage
+        $('#total-claim-amount').change(function () {
+
+        var claimamount = $('#total-claim-amount').val();
+        var consultationcharge = $('#consultation-charge').val();
+
+        document.getElementById("cheque-amount").value= Math.round((claimamount * consultationcharge ) / (100) );
+
+        });
+
+        // calculate cheque amount based on consulation charge percentage
+        $('#consultation-charge').change(function () {
+
+        var claimamount = $('#total-claim-amount').val();
+        var consultationcharge = $('#consultation-charge').val();
+
+        document.getElementById("cheque-amount").value=Math.round((claimamount * consultationcharge ) / (100));
+
+        });
 
       $.ajax({
         url: '/api/whoami',
@@ -390,7 +734,7 @@ function movetolive(referencenumber) {
               data[i].claimAmount,
               data[i].medicalOpinionOfficer,
               data[i].newCaseStatus,
-              `<button class="btn btn-primary btn-sm" onclick="movetolive('${rfno}')">Move to Live</button>`
+              `<a href="#popup1"> <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Generate legal</button> </a>`
             ]);
           }
         }
