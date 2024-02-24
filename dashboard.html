@@ -39,7 +39,7 @@
       align-items: center;
     }
     .prospects {
-      background-color: #FF6384;
+      background-color: darkslateblue;
       color: #fff;
     }
     .pendingauth {
@@ -165,6 +165,7 @@
                      <a href="/viewmedicalopinioncases.html" class="dashboard-nav-dropdown-item">View Medical</a>
 
                      <a href="/viewapprovedcases.html" class="dashboard-nav-dropdown-item">View Approved</a>
+                     <a href="/viewrejectedcases.html" class="dashboard-nav-dropdown-item">View Rejected</a>
                      
                                         <!-- 
                    <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
@@ -236,11 +237,82 @@
                 <h2 class="text-center mb-4">Case Data</h2>
 
                   <div class="row">
-                    <div class="col-lg-4 col-md-6" style="margin-left: 150px;">
+
+                    <div class="col-lg-2 col-md-2" style="margin-top: 5px;">
                       <a href="/viewprospectcases.html">
                           <div class="card prospects">
                             <div class="card-header">
-                              <h5 class="card-title">Prospect Cases</h5>
+                              <h5 class="card-title">New</h5>
+                            </div>
+                            <div class="card-body">
+                              <h3 id="newcasecount" class="card-text"></h3>
+                            </div>
+                          </div>
+                      </a>
+                    </div>
+
+                    <div class="col-lg-2 col-md-2" style="margin-top: 5px;">
+                      <a href="/viewprospectcases.html">
+                          <div class="card prospects">
+                            <div class="card-header">
+                              <h5 class="card-title">Medical</h5>
+                            </div>
+                            <div class="card-body">
+                              <h3 id="inmedicalcount" class="card-text"></h3>
+                            </div>
+                          </div>
+                      </a>
+                    </div>
+
+                    <div class="col-lg-2 col-md-2"style="margin-top: 5px;" >
+                      <a href="/viewprospectcases.html">
+                          <div class="card prospects">
+                            <div class="card-header">
+                              <h5 class="card-title">Query</h5>
+                            </div>
+                            <div class="card-body">
+                              <h3 id="inmedicalquerycount" class="card-text"></h3>
+                            </div>
+                          </div>
+                      </a>
+                    </div>
+
+                    <div class="col-lg-2 col-md-2"style="margin-top: 5px;" >
+                      <a href="/viewprospectcases.html">
+                          <div class="card prospects">
+                            <div class="card-header">
+                              <h5 class="card-title">Approved</h5>
+                            </div>
+                            <div class="card-body">
+                              <h3 id="approvedcount" class="card-text"></h3>
+                            </div>
+                          </div>
+                      </a>
+                    </div>
+
+
+                    <div class="col-lg-2 col-md-2"style="margin-top: 5px;" >
+                      <a href="/viewprospectcases.html">
+                          <div class="card prospects">
+                            <div class="card-header">
+                              <h5 class="card-title">Rejected</h5>
+                            </div>
+                            <div class="card-body">
+                              <h3 id="rejectedcount" class="card-text"></h3>
+                            </div>
+                          </div>
+                      </a>
+                    </div>
+
+
+                    
+
+               <!--     
+                    <div class="col-lg-2 col-md-2" style="margin-top: 5px;">
+                      <a href="/viewprospectcases.html">
+                          <div class="card prospects">
+                            <div class="card-header">
+                              <h5 class="card-title">Prospect</h5>
                             </div>
                             <div class="card-body">
                               <h3 id="prospectcount" class="card-text"></h3>
@@ -250,11 +322,11 @@
                     </div>
 
 
-                    <div class="col-lg-4 col-md-6">
+                    <div class="col-lg-2 col-md-2"  style="margin-top: 5px;">
                       <a href="/viewcases.html">
                         <div class="card active-cases">
                           <div class="card-header">
-                            <h5 class="card-title">Live Cases</h5>
+                            <h5 class="card-title">Live</h5>
                           </div>
                           <div class="card-body">
                             <h3 id="livecount" class="card-text"></h3>
@@ -263,6 +335,8 @@
                       </a>
 
                     </div>
+
+                  -->
                   
                   </div>
              </div>
@@ -409,6 +483,80 @@ $(document).ready(function () {
         }
       });
 
+
+      $.ajax({
+        url: '/api/getrejectedcaseCount',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          //populateDataTable(response);
+          document.getElementById("rejectedcount").textContent=response;
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+      $.ajax({
+        url: '/api/getapprovedcaseCount',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          //populateDataTable(response);
+          document.getElementById("approvedcount").textContent=response;
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+      
+
+      
+  
+
+      $.ajax({
+        url: '/api/getmedicalqueryCount',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          //populateDataTable(response);
+          document.getElementById("inmedicalquerycount").textContent=response;
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+      $.ajax({
+        url: '/api/getmedicalCount',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          //populateDataTable(response);
+          document.getElementById("inmedicalcount").textContent=response;
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+      $.ajax({
+        url: '/api/getnewcaseCount',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          //populateDataTable(response);
+          document.getElementById("newcasecount").textContent=response;
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+
+      
+
       $.ajax({
         url: '/api/getpendingauthcaseCount',
         type: 'GET',
@@ -423,9 +571,6 @@ $(document).ready(function () {
       });
 
       
-
-
-
 
 
     $(".dashboard-nav-dropdown-toggle").click(function () {

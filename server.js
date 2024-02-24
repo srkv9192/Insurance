@@ -59,14 +59,15 @@ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS
 });
 
 
-
 /*
+
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
 */
+
 
 
 const cookieParser = require("cookie-parser");
@@ -1436,6 +1437,17 @@ app.get("/api/getprospectcasedetail", async(req, res) => {
   }
 });
 
+app.get("/api/getrejectedcasedetail", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  dataSchemaObject.find({newCaseStatus: "Rejected"});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get rejected case details' });
+  }
+});
+
 app.get("/api/getapprovedcasedetail", async(req, res) => {
   try {
     // Retrieve all tpa list from database
@@ -1673,6 +1685,23 @@ app.post('/api/movecasetopendingauthbyref', async(req, res) => {
   } 
 });
 
+
+app.post('/api/movecasetorejectedbyref', async(req, res) => {
+  try{
+    const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, 
+      {  isProspect:"false",
+      }, {new : true});
+
+     // await incrementCaseNumberCount();
+      res.json({ message: 'success', casereferenceNumber: req.body.casereferenceNumber });
+  }
+  catch(err)
+  {
+    console.error(err);
+    return -1;
+  } 
+});
+
 app.post('/api/movecasetolivefromprospectbyref', async(req, res) => {
   try{
     const gencaseNumber= await getCaseNumbereCount();
@@ -1810,6 +1839,62 @@ app.get("/api/getmedicalopinioncasedetail", async(req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to get medical opinion case details' });
+  }
+});
+
+app.get("/api/getnewcaseCount", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  dataSchemaObject.find({newCaseStatus: "New Case"}).count();
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get new case count' });
+  }
+});
+
+app.get("/api/getmedicalCount", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  dataSchemaObject.find({newCaseStatus: "In Medical"}).count();
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get medical case count' });
+  }
+});
+
+app.get("/api/getmedicalqueryCount", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  dataSchemaObject.find({newCaseStatus: "Medical Query"}).count();
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get medical query count' });
+  }
+});
+
+
+app.get("/api/getapprovedcaseCount", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  dataSchemaObject.find({newCaseStatus: "Approved"}).count();
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get approved case count' });
+  }
+});
+
+app.get("/api/getrejectedcaseCount", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  dataSchemaObject.find({newCaseStatus: "Rejected"}).count();
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get rejected case count' });
   }
 });
 
@@ -2119,6 +2204,8 @@ app.get('/logout.html', (req, res) => res.sendFile(__dirname+'/logout.html'))
 app.get('/newcase.html', (req, res) => res.sendFile(__dirname+'/newcase.html'))
 app.get('/viewprospectcases.html', (req, res) => res.sendFile(__dirname+'/viewprospectcases.html'))
 app.get('/viewapprovedcases.html', (req, res) => res.sendFile(__dirname+'/viewapprovedcases.html'))
+app.get('/viewrejectedcases.html', (req, res) => res.sendFile(__dirname+'/viewrejectedcases.html'))
+
 
 app.get('/changepassword.html', (req, res) => res.sendFile(__dirname+'/changepassword.html'))
 app.get('/createaccount.html', (req, res) => res.sendFile(__dirname+'/createaccount.html'))

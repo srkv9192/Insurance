@@ -9,6 +9,41 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="css/menubar.css">
   <style>
+
+.btn_special {
+      background: #3498db;
+      background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
+      background-image: -moz-linear-gradient(top, #3498db, #2980b9);
+      background-image: -ms-linear-gradient(top, #3498db, #2980b9);
+      background-image: -o-linear-gradient(top, #3498db, #2980b9);
+      background-image: linear-gradient(to bottom, #3498db, #2980b9);
+      font-family: Arial;
+      color: #ffffff;
+      font-size: 16px;
+      padding: 10px 20px 10px 20px;
+      text-decoration: none;
+
+      float: left;
+      width: 150px;
+      list-style-type: none;
+      margin-left: 10px;
+    }
+
+    .btn_special:hover {
+      background: #3cb0fd;
+      background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+      background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+      background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+      background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+      background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+      text-decoration: none;
+    }
+
+    li a {
+      color: #fff;
+      text-decoration: none;
+    }
+
     body {
       background-color: #343a40;
       color: #fff;
@@ -239,6 +274,7 @@ div.dataTables_filter {
                    
                    <a href="/viewmedicalopinioncases.html" class="dashboard-nav-dropdown-item">View Medical</a>
                    <a href="/viewapprovedcases.html" class="dashboard-nav-dropdown-item">View Approved</a>
+                   <a href="/viewrejectedcases.html" class="dashboard-nav-dropdown-item">View Rejected</a>
                    
                   <!-- 
                    <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
@@ -331,8 +367,18 @@ div.dataTables_filter {
         <div class='dashboard-content' style="background-image: url('/images/background20.jpg');  background-repeat: repeat;  background-size: cover;">
           <div class="container mt-5">
             <div class="row justify-content-center">
+              <h2 class="text-center mb-4">Prospect Cases</h2>
+
+              <ul>
+                <li class="btn_special"><a href="#" class="all">All</a></li>
+                <li class="btn_special"><a href="#" >New Case</a></li>
+                <li class="btn_special"><a href="#">In Medical</a></li>
+                <li class="btn_special"><a href="#">Medical Query</a></li>
+                <li class="btn_special"><a href="#">Approved</a></li>
+                <li class="btn_special"><a href="#">Rejected</a></li>
+              </ul>
               <div class="col-lg-12">
-                <h2 class="text-center mb-4">Prospect Cases</h2>
+
                 <div class="table-responsive">
                   <table id ="dataTable" class="table table-dark table-bordered">
                     <thead>
@@ -460,6 +506,19 @@ div.dataTables_filter {
                     
                     <input type="text" placeholder="Add remark here" id="newremarkapproved" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
                     <button type="submit" onclick="addremarkInDBAndMoveToApproved()" class="btn btn-primary btn-sm">Move to approved</button>
+                    
+                    <a class="close" href="#">&times;</a>
+                  </div>
+                </div>
+
+                <div id="popup9" class="overlay">
+                  <div class="popup">
+                    <h2  id = "remarkcontent">Move to Rejected-</h2>
+                    <ul id="remarkcontentlist"></ul>
+
+                    
+                    <input type="text" placeholder="Add remark here" id="newremarkrejected" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                    <button type="submit" onclick="addremarkInDBAndMoveToRejected()" class="btn btn-primary btn-sm">Move to rejected</button>
                     
                     <a class="close" href="#">&times;</a>
                   </div>
@@ -716,6 +775,39 @@ function addGistAndReason()
 
 
 
+function movetorejected() {
+
+$.ajax({
+  url: '/api/movecasetorejectedbyref',
+  type: 'POST',
+  contentType: "application/x-www-form-urlencoded",
+  data: {
+    casereferenceNumber: localStorage['addRemarkForRefNumber'],
+  },
+  success: function (response) {
+    if(response.message == "success")
+      {
+       // window.location.href = "/index.html"
+        //localStorage['userID'] = username;
+        alert("Case moved to Rejected!")
+
+        window.location.href = "/viewprospectcases.html";
+      }
+      else{
+        alert("Error moving case to Rejected!")
+      }
+  },
+  error: function (error) {
+    alert("Error moving case to Rejected!");
+    // Display an error message to the user
+  }
+});
+
+}
+
+
+
+
   function movetopendingauth() {
 
         $.ajax({
@@ -730,16 +822,16 @@ function addGistAndReason()
               {
                // window.location.href = "/index.html"
                 //localStorage['userID'] = username;
-                alert("Case moved to Pending Auth!")
+                alert("Case moved to Approved!")
 
-                window.location.href = "/viewapprovedcases.html";
+                window.location.href = "/viewprospectcases.html";
               }
               else{
-                alert("Error moving case to Pending Auth!")
+                alert("Error moving case to Approved!")
               }
           },
           error: function (error) {
-            alert("Error moving case to Pending Auth!");
+            alert("Error moving case to Approved!");
             // Display an error message to the user
           }
         });
@@ -883,6 +975,55 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
 
 }
   
+
+function addremarkInDBAndMoveToRejected() {
+
+const today = new Date();
+const yyyy = today.getFullYear();
+let mm = today.getMonth() + 1; // Months start at 0!
+let dd = today.getDate();
+
+if (dd < 10) dd = '0' + dd;
+if (mm < 10) mm = '0' + mm;
+
+const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+    $.ajax({
+      url: '/api/addprospectcaseremark',
+      type: 'POST',
+      contentType: "application/x-www-form-urlencoded",
+      data: {
+        referencenumber: localStorage['addRemarkForRefNumber'],
+        pf_cf_Remarkstatus: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ document.getElementById("newremarkrejected").value
+      },
+      success: function (response) {
+        if(response.message == "success")
+          {
+           // window.location.href = "/index.html"
+            //localStorage['userID'] = username;
+
+            movetorejected();
+           
+          }
+          else{
+            alert("Error moving case to medical!")
+            //document.getElementById('loginForm').reset();
+          }
+        //alert("login success");
+        // Redirect to the dashboard or perform any other actions
+      },
+      error: function (error) {
+        document.getElementById('loginForm').reset();
+        alert("Error moving case to medical!");
+        // Display an error message to the user
+      }
+    });
+  
+   // alert(  document.getElementById("newremark").value);
+
+}
+  
+
 
 
 
@@ -1033,14 +1174,22 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
           for(var i = 0; i < length; i++) {
             var rfno= data[i].casereferenceNumber
             var canMovetoApproved = 'javascript:void(0)';
+            var canMovetoRejected = 'javascript:void(0)';
             var canAddGist = "#popup8";
             var gistbutton ='enabled';
             var movetoapprovedbutton= 'disabled';
+            var movetorejectedbutton= 'disabled';
 
             if(data[i].newCaseStatus == 'Approved')
             {
               canMovetoApproved = "#popup7";
               movetoapprovedbutton = 'enabled';
+            }
+
+            if(data[i].newCaseStatus == 'Rejected')
+            {
+              canMovetoRejected = "#popup9";
+              movetorejectedbutton = 'enabled';
             }
 
             if(data[i].isGistGenerated == 'YES')
@@ -1066,6 +1215,7 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
               `<a href="#popup1"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
               `<a href="#popup6"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Medical</button> </a>`,
               `<a href=${canMovetoApproved}><button class="btn btn-primary btn-sm"  ${movetoapprovedbutton} onclick="addremark('${rfno}')" >Move to Approved</button> </a>`,
+              `<a href=${canMovetoRejected}><button class="btn btn-primary btn-sm"  ${movetorejectedbutton} onclick="addremark('${rfno}')" >Move to Rejected</button> </a>`,
               `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
               `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
             ]);
@@ -1076,6 +1226,26 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
 
 
     });
+
+
+    //for  filter buttons
+
+    $('ul').on('click', 'a', function() {
+      $("#dataTable").DataTable()
+        .columns(8)
+        .search($(this).text())
+        .draw();
+      });
+
+      $('ul').on('click', 'a.all', function() {
+        $("#dataTable").DataTable()
+        .search('')
+        .columns(8)
+        .search('')
+        .draw();
+      });
+
+    // filter buttons end
   
   
   </script>
