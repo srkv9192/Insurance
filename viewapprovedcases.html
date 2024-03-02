@@ -536,6 +536,8 @@ div.dataTables_filter {
     function viewAgreement(referencenumber)
     {
 
+      localStorage['casereferencenumber'] = referencenumber; 
+
       $.ajax({
         url: '/api/getapprovedcasedetailbyref',
         type: 'GET',
@@ -586,9 +588,43 @@ div.dataTables_filter {
       });
       
 
-
-
     }
+
+function addCasaddlegalgenerateddetailseVerdict(){
+
+    $.ajax({
+    url: '/api/addcaselegalgenerateddetails',
+    type: 'POST',
+    contentType: "application/x-www-form-urlencoded",
+    data: {
+      casereferenceNumber:  localStorage['casereferencenumber'],
+    },
+    success: function (response) {
+      if(response.message == "success")
+        {
+        
+          //alert("Medical Opinion saved!")
+        
+          //window.location.href = "/viewmedicalopinioncases.html";
+        }
+        else{
+         // alert("Error saving details!")
+          //document.getElementById('loginForm').reset();
+        }
+      //alert("login success");
+      // Redirect to the dashboard or perform any other actions
+    },
+    error: function (error) {
+      //document.getElementById('loginForm').reset();
+      //alert("Failed to save medical opinion");
+      // Display an error message to the user
+    }
+    });
+
+}
+
+
+
 
 function movetolive(referencenumber) {
         // Code to generate card
@@ -641,6 +677,8 @@ function movetolive(referencenumber) {
         var witnessname = $('#witness-name').val();
         var idnumber = $('#id-number').val();
 
+        //addcaselegalgenerateddetails
+
         // Make an API call with the username and password
         $.ajax({
           url: '/api/getlegalpdf',
@@ -675,6 +713,12 @@ function movetolive(referencenumber) {
             a.click();
             a.remove();
             window.URL.revokeObjectURL(url);
+
+            addCasaddlegalgenerateddetailseVerdict();
+
+              // call another ajax to save case status as legal generated
+
+
           },
           error: function (error) {
             document.getElementById('loginForm').reset();
@@ -682,6 +726,9 @@ function movetolive(referencenumber) {
             // Display an error message to the user
           }
         });
+      
+      
+      
       });
 
 
@@ -846,7 +893,7 @@ function movetolive(referencenumber) {
       
        // AJAX call on page load get manager details
        $.ajax({
-        url: '/api/getapprovedcasedetail',
+        url: '/api/getapprovedandlegalgeneratedcasedetail',
         type: 'GET',
         success: function (response) {
           // Populate the options in the select element

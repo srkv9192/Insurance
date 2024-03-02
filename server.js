@@ -59,12 +59,14 @@ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS
 });
 
 
+
 /*
 
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
 
 */
 
@@ -546,6 +548,30 @@ app.post('/api/addcaseverdictmedical', async(req, res) => {
   {
     console.error(err);
     res.status(500).json({ error: 'Error adding medical opinion' });
+  } 
+
+});
+
+
+app.post('/api/addcaselegalgenerateddetails', async(req, res) => {
+  try{
+
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ newCaseStatus: "Legal Generated" }});
+
+      if(newData == null)
+      {
+        res.json({ message: 'success', refnum:req.body.referencenumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error saving legal generated details' });
   } 
 
 });
@@ -1450,6 +1476,17 @@ app.get("/api/getapprovedcasedetail", async(req, res) => {
   try {
     // Retrieve all tpa list from database
     const users = await  dataSchemaObject.find({newCaseStatus: "Approved"});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get approved case details' });
+  }
+});
+
+app.get("/api/getapprovedandlegalgeneratedcasedetail", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  dataSchemaObject.find({  $or: [ { newCaseStatus: "Approved" }, { newCaseStatus: "Legal Generated"} ]});
     res.json(users);
   } catch (error) {
     console.error(error);
