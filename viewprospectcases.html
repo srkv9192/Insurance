@@ -1376,10 +1376,24 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
     //for  filter buttons
 
     $('ul').on('click', 'a', function() {
-      $("#dataTable").DataTable()
-        .columns(8)
-        .search($(this).text())
-        .draw();
+      var nameFilter = $(this).text()
+      console.log(nameFilter)
+
+        switch (nameFilter)
+        {
+          case "New Case":
+          case "In Medical":
+          case "Medical Query":
+          case "Approved":
+          case "Rejected":
+          $("#dataTable").DataTable()
+          .columns(8)
+          .search($(this).text())
+          .draw();
+            break;
+
+        }
+
       });
 
       $('ul').on('click', 'a.all', function() {
