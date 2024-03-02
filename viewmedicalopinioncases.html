@@ -438,7 +438,7 @@ div.dataTables_filter {
 
                 <div id="popup7" class="overlay">
                   <div class="popup">
-                    <h2  id = "remarkcontent">Case Gist- </h2>
+                    <h2  id = "remarkcontent">Case Manual Gist- </h2>
 
                     <textarea name="text" disabled   placeholder="Add rejection reason" id="rejectionreason" rows="3" cols="60" wrap="soft" maxlength="400" required style="margin-top: 5px;margin-bottom: 5px; overflow:hidden; resize:none;"></textarea>                  
                     <textarea name="text"  disabled rows="14" cols="60" wrap="soft" maxlength="1000" required  placeholder="Add gist here" id="gistremark" style="margin-top: 5px;margin-bottom: 5px; overflow:hidden; resize:none;"></textarea>                  
@@ -1002,7 +1002,7 @@ function movetolive(referencenumber) {
               data[i].medicalOpinionOfficer,
               data[i].newCaseStatus,
               `<a href="#popup3"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
-              `<a href="#popup7"><button class="btn btn-primary btn-sm"  onclick="viewGist('${rfno}')" >View Gist</button> </a>`,
+              `<a href="#popup7"><button class="btn btn-primary btn-sm"  onclick="viewGist('${rfno}')" >View Manual Gist</button> </a>`,
               `<a href="#popup1"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
               `<a  href="#popup5"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}','Approved' )" >Approve</button> </a>`,
               `<a  href="#popup6"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}', 'Rejected')" >Reject</button> </a>`,

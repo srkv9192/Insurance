@@ -429,18 +429,18 @@ div.dataTables_filter {
                         </div>
                         <div class="col-sm-4">
                           <label for="cheque-amount" class="form-label">Cheque Amount</label>
-                          <input type="number" class="form-control" id="cheque-amount" required   >
+                          <input type="number" class="form-control" id="cheque-amount"    >
                         </div>
                       </div>
 
                       <div class="row mb-3">
                         <div class="col-sm-4">
                           <label for="cheque-number" class="form-label">Cheque Number</label>
-                          <input type="text" class="form-control" id="cheque-number" required  >
+                          <input type="text" class="form-control" id="cheque-number"   >
                         </div>
                         <div class="col-sm-4">
                           <label for="bank-name" class="form-label">Bank Name</label>
-                          <input type="text" class="form-control" id="bank-name" required  >
+                          <input type="text" class="form-control" id="bank-name"   >
                         </div>
 
                         <div class="col-sm-4">
@@ -458,6 +458,66 @@ div.dataTables_filter {
 
 
                     <a class="close" style=" color: white;" href="#">&times;</a>
+                  </div>
+                </div>
+
+                <div id="popup2" class="overlay">
+                  <div class="popup">
+                      <div class="frame">
+                        <form id="paymentForm">
+                          <div class="row mb-3">
+                            <div class="col-sm-4">
+                              <label for="pf-amount" class="form-label">PF amount</label>
+                              <input type="text" class="form-control" id="pf-amount" required >
+                            </div>
+                            <div class="col-sm-4">
+                              <label for="consultation-percentage" class="form-label">Consultation charge (%)</label>
+                              <input type="text" class="form-control" id="consultation-percentage" required >
+                            </div>
+                            <div class="col-sm-4">
+                              <label for="cf_or_cheque-amount" class="form-label">Consultation Amount</label>
+                              <input type="text" class="form-control" id="cf_or_cheque-amount" required >
+                            </div>
+                          </div>
+                          <div class="row mb-3">
+
+                            <div class="col-sm-4">
+                              <label for="cheque-number" class="form-label">Cheque Number</label>
+                              <input type="text" class="form-control" id="cheque-number" required >
+                            </div>
+
+                            <div class="col-sm-4">
+                              <label for="bank-name" class="form-label">Bank Name</label>
+                              <input type="text" class="form-control" id="bank-name" required>
+                            </div>
+
+                            <div class="col-sm-4">
+                              <label for="client-address" class="form-label">Client address</label>
+                              <input type="text" class="form-control" id="client-address" required >
+                            </div>
+
+                          </div>
+
+                          <div class="row mb-3">
+
+                            <div class="col-sm-4">
+                              <label for="pf-payment-remark" class="form-label">Payment Remark</label>
+                              <input type="text" class="form-control" id="pf-payment-remark" required >
+                            </div>
+
+                            <div class="col-sm-4">
+                              <label for="client-address" class="form-label">Client address</label>
+                              <input type="text" class="form-control" id="client-address" required >
+                            </div>
+
+                          </div>
+          
+                          <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                          </div>
+                        </form>
+                      </div>
+                      <a class="close" style=" color: white;" href="#">&times;</a>
                   </div>
                 </div>
 
@@ -503,9 +563,21 @@ div.dataTables_filter {
             document.getElementById("cheque-amount").value = response[0].chequeAmount ? response[0].chequeAmount : "";
             document.getElementById("cheque-number").value = response[0].chequeNumber ?  response[0].chequeNumber : "";
             document.getElementById("bank-name").value = response[0].bankName ? response[0].bankName : "";
-            document.getElementById("id-number").value = response[0].caseNumber ? response[0].caseNumber : "";
+            document.getElementById("id-number").value = response[0].casereferenceNumber ? response[0].casereferenceNumber : "";
             document.getElementById("insurance-company-dropdown").value = response[0].insuranceCompanyName ? response[0].insuranceCompanyName : "";
 
+            // add payment related info here-
+
+            document.getElementById("pf-amount").value = response[0].pfAmount ? response[0].pfAmount : "";
+            document.getElementById("consultation-percentage").value = response[0].cfPercentage ? response[0].cfPercentage : "";
+            document.getElementById("cheque-number").value = response[0].cfChequeNumber ? response[0].cfChequeNumber : "";
+            document.getElementById("cf_or_cheque-amount").value = response[0].cfAmount ? response[0].cfAmount : "";
+            document.getElementById("bank-name").value = response[0].cfBankName ? response[0].cfBankName : "";
+
+           
+           // pfReceived: String,
+           // pfpaymentRemarks: String,
+           
 
         },
         error: function (error) {
@@ -634,6 +706,74 @@ function movetolive(referencenumber) {
 
         });
 
+        $('#paymentForm').on('submit', function (event) {
+        event.preventDefault();
+
+        
+        document.getElementById("pf-amount").value = response[0].pfAmount ? response[0].pfAmount : "";
+        document.getElementById("consultation-percentage").value = response[0].cfPercentage ? response[0].cfPercentage : "";
+        document.getElementById("cheque-number").value = response[0].cfChequeNumber ? response[0].cfChequeNumber : "";
+        document.getElementById("cf_or_cheque-amount").value = response[0].cfAmount ? response[0].cfAmount : "";
+        document.getElementById("bank-name").value = response[0].cfBankName ? response[0].cfBankName : "";
+
+ 
+        var processingfee = $('#processing-fee').val();
+
+        var consultationcharge = $('#consultation-charge').val();
+        var claimamount = $('#total-claim-amount').val();
+        var chequeamount = $('#cheque-amount').val();
+        var chequenumber = $('#cheque-number').val();
+        var bankname = $('#bank-name').val();
+        var idnumber = $('#id-number').val();
+
+        // Make an API call with the username and password
+        $.ajax({
+          url: '/api/getlegalpdf',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          xhrFields: {
+            responseType: 'blob'
+        },
+          data: {
+          clientName:clientname,
+          clientAddress: clientaddress,
+          clientPhone: clientphone,
+          claimNumber: claimnumber,
+          insuranceCompanyName: insurancecompanyname,
+          processingFee: processingfee,
+          consultationCharge: consultationcharge,
+          claimAmount:  claimamount,
+          chequeAmount: chequeamount,
+          chequeNumber: chequenumber,
+          bankName:  bankname,
+          witnessName: witnessname,
+          behalfOf: behalfof,
+          complainantName: complainantname,
+          idNumber: idnumber,
+          },
+          success: function (response) {
+            var a = document.createElement('a');
+            var url = window.URL.createObjectURL(response);
+            a.href = url;
+            a.download = 'legal.pdf';
+            document.body.append(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+          },
+          error: function (error) {
+            document.getElementById('loginForm').reset();
+            alert("PDF generation failed even after bug fix");
+            // Display an error message to the user
+          }
+        });
+      });
+
+
+
+
+
+
       $.ajax({
         url: '/api/whoami',
         type: 'POST',
@@ -706,7 +846,7 @@ function movetolive(referencenumber) {
       
        // AJAX call on page load get manager details
        $.ajax({
-        url: '/api/getpendingauthcasedetail',
+        url: '/api/getapprovedcasedetail',
         type: 'GET',
         success: function (response) {
           // Populate the options in the select element
@@ -734,8 +874,9 @@ function movetolive(referencenumber) {
               data[i].complainantMobile,
               data[i].claimAmount,
               data[i].medicalOpinionOfficer,
-              data[i].newCaseStatus,
+              data[i].newCaseStatus, 
               `<a href="#popup1"> <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Generate legal</button> </a>`
+      //     `<a href="#popup2"> <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Add Payment Info</button> </a>`,
             ]);
           }
         }

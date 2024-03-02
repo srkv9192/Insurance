@@ -399,6 +399,7 @@ div.dataTables_filter {
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
+                        <th>Action</th>
                       </tr>
                     </thead>
                   </table>
@@ -504,8 +505,8 @@ div.dataTables_filter {
                     <ul id="remarkcontentlist"></ul>
 
                     
-                    <input type="text" placeholder="Add remark here" id="newremarkapproved" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
-                    <button type="submit" onclick="addremarkInDBAndMoveToApproved()" class="btn btn-primary btn-sm">Move to approved</button>
+                    <input type="text" placeholder="Add remark here" id="newremarkapproval" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                    <button type="submit" onclick="addremarkInDBAndApprove()" class="btn btn-primary btn-sm">Approve</button>
                     
                     <a class="close" href="#">&times;</a>
                   </div>
@@ -517,8 +518,8 @@ div.dataTables_filter {
                     <ul id="remarkcontentlist"></ul>
 
                     
-                    <input type="text" placeholder="Add remark here" id="newremarkrejected" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
-                    <button type="submit" onclick="addremarkInDBAndMoveToRejected()" class="btn btn-primary btn-sm">Move to rejected</button>
+                    <input type="text" placeholder="Add remark here" id="newremarkrejection" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                    <button type="submit" onclick="addremarkInDBAndReject()" class="btn btn-primary btn-sm">Reject</button>
                     
                     <a class="close" href="#">&times;</a>
                   </div>
@@ -526,7 +527,7 @@ div.dataTables_filter {
 
                 <div id="popup8" class="overlay">
                   <div class="popup">
-                    <h2  id = "remarkcontent">Add Case Gist- </h2>
+                    <h2  id = "remarkcontent">Add Manual Gist- </h2>
                     <ul id="remarkcontentlist"></ul>
 
                     <!--
@@ -539,9 +540,9 @@ div.dataTables_filter {
                     <!--
 
                  
-                    <input type="text" placeholder="Add gist here" id="gistremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                    <input type="text" placeholder="Add manual gist here" id="gistremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
                  -->
-                    <textarea name="text" rows="14" cols="60" wrap="soft" maxlength="1000" required  placeholder="Add gist here" id="gistremark" style="margin-top: 5px;margin-bottom: 5px; overflow:hidden; resize:none;"></textarea>                  
+                    <textarea name="text" rows="14" cols="60" wrap="soft" maxlength="1000" required  placeholder="Add manual gist here" id="gistremark" style="margin-top: 5px;margin-bottom: 5px; overflow:hidden; resize:none;"></textarea>                  
                     <button type="submit" onclick="addGistAndReason()" class="btn btn-primary btn-sm" style="display:block;">Submit</button>
                     <a class="close" href="#">&times;</a>
                   </div>
@@ -804,6 +805,144 @@ $.ajax({
 });
 
 }
+
+
+
+function addremarkInDBAndApprove() {
+
+const today = new Date();
+const yyyy = today.getFullYear();
+let mm = today.getMonth() + 1; // Months start at 0!
+let dd = today.getDate();
+
+if (dd < 10) dd = '0' + dd;
+if (mm < 10) mm = '0' + mm;
+
+const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+    $.ajax({
+      url: '/api/addprospectcaseremark',
+      type: 'POST',
+      contentType: "application/x-www-form-urlencoded",
+      data: {
+        referencenumber: localStorage['addRemarkForRefNumber'],
+        pf_cf_Remarkstatus: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ document.getElementById("newremarkapproval").value
+      },
+      success: function (response) {
+        if(response.message == "success")
+          {
+           // window.location.href = "/index.html"
+            //localStorage['userID'] = username;
+
+           // movetoprospectforquery();
+
+            addCaseVerdict('Approved');
+           
+          }
+          else{
+            alert("Error moving case to medical query!")
+            //document.getElementById('loginForm').reset();
+          }
+        //alert("login success");
+        // Redirect to the dashboard or perform any other actions
+      },
+      error: function (error) {
+        document.getElementById('loginForm').reset();
+        alert("Error moving case to medical query!");
+        // Display an error message to the user
+      }
+    });
+  
+   // alert(  document.getElementById("newremark").value);
+
+}
+  
+
+function addCaseVerdict(status){
+
+$.ajax({
+url: '/api/addcaseverdictmedical',
+type: 'POST',
+contentType: "application/x-www-form-urlencoded",
+data: {
+  casereferenceNumber:  localStorage['addRemarkForRefNumber'],
+  casestatus: status,
+},
+success: function (response) {
+  if(response.message == "success")
+    {
+    // window.location.href = "/index.html"
+      //localStorage['userID'] = username;
+      alert("Case opinion saved!")
+     
+      window.location.href = "/viewmedicalopinioncases.html";
+    }
+    else{
+      alert("Error saving details!")
+      //document.getElementById('loginForm').reset();
+    }
+  //alert("login success");
+  // Redirect to the dashboard or perform any other actions
+},
+error: function (error) {
+  document.getElementById('loginForm').reset();
+  alert("Failed to save medical opinion");
+  // Display an error message to the user
+}
+});
+
+
+}
+
+
+
+function addremarkInDBAndReject() {
+
+const today = new Date();
+const yyyy = today.getFullYear();
+let mm = today.getMonth() + 1; // Months start at 0!
+let dd = today.getDate();
+
+if (dd < 10) dd = '0' + dd;
+if (mm < 10) mm = '0' + mm;
+
+const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+    $.ajax({
+      url: '/api/addprospectcaseremark',
+      type: 'POST',
+      contentType: "application/x-www-form-urlencoded",
+      data: {
+        referencenumber: localStorage['addRemarkForRefNumber'],
+        pf_cf_Remarkstatus: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ document.getElementById("newremarkrejection").value
+      },
+      success: function (response) {
+        if(response.message == "success")
+          {
+           // window.location.href = "/index.html"
+            //localStorage['userID'] = username;
+
+            addCaseVerdict('Rejected');
+           
+          }
+          else{
+            alert("Error moving case to medical query!")
+            //document.getElementById('loginForm').reset();
+          }
+        //alert("login success");
+        // Redirect to the dashboard or perform any other actions
+      },
+      error: function (error) {
+        document.getElementById('loginForm').reset();
+        alert("Error moving case to medical query!");
+        // Display an error message to the user
+      }
+    });
+  
+   // alert(  document.getElementById("newremark").value);
+
+}
+  
 
 
 
@@ -1175,15 +1314,23 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
             var rfno= data[i].casereferenceNumber
             var canMovetoApproved = 'javascript:void(0)';
             var canMovetoRejected = 'javascript:void(0)';
+            var canMovetoMedical = '#popup6';
             var canAddGist = "#popup8";
             var gistbutton ='enabled';
             var movetoapprovedbutton= 'disabled';
             var movetorejectedbutton= 'disabled';
+            var movetomedicalbutton = 'enabled';
 
             if(data[i].newCaseStatus == 'Approved')
             {
               canMovetoApproved = "#popup7";
               movetoapprovedbutton = 'enabled';
+            }
+
+            if(data[i].newCaseStatus == 'In Medical')
+            {
+              canMovetoMedical = "javascript:void(0)";
+              movetomedicalbutton = 'disabled';
             }
 
             if(data[i].newCaseStatus == 'Rejected')
@@ -1210,20 +1357,18 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
               data[i].claimAmount,
               data[i].medicalOpinionOfficer,
               data[i].newCaseStatus,
-              `<a href="${canAddGist}"  ><button class="btn btn-primary btn-sm" ${gistbutton} onclick="addremark('${rfno}')" >Add Gist</button> </a>`,
+              `<a href="${canAddGist}"  ><button class="btn btn-primary btn-sm" ${gistbutton} onclick="addremark('${rfno}')" >Add Manual Gist</button> </a>`,
               `<a href="#popup3"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Assign Officer</button> </a>`,
               `<a href="#popup1"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
-              `<a href="#popup6"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Medical</button> </a>`,
-              `<a href=${canMovetoApproved}><button class="btn btn-primary btn-sm"  ${movetoapprovedbutton} onclick="addremark('${rfno}')" >Move to Approved</button> </a>`,
-              `<a href=${canMovetoRejected}><button class="btn btn-primary btn-sm"  ${movetorejectedbutton} onclick="addremark('${rfno}')" >Move to Rejected</button> </a>`,
+              `<a href= ${canMovetoMedical}><button class="btn btn-primary btn-sm" ${movetomedicalbutton} onclick="addremark('${rfno}')" >Move to Medical</button> </a>`,
+              `<a href="#popup7"><button class="btn btn-primary btn-sm"   onclick="addremark('${rfno}')" >Approve</button> </a>`,
+              `<a href="#popup9"><button class="btn btn-primary btn-sm"   onclick="addremark('${rfno}')" >Reject</button> </a>`,
               `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
               `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
             ]);
           }
         }
       
-
-
 
     });
 

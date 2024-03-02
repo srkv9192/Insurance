@@ -68,8 +68,6 @@ mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
 
 */
 
-
-
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
 app.use(cookieParser());
@@ -528,11 +526,11 @@ app.post('/api/addcasegistandrejectionreason', async(req, res) => {
 });
 
 
-
-
 app.post('/api/addcaseverdictmedical', async(req, res) => {
   try{
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ isMedicalOpinionGenerated : "true", newCaseStatus: req.body.casestatus, isInMedicalOpinion: "false"}});
+      // isPendingAuth:"true",
+
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ newCaseStatus: req.body.casestatus, isInMedicalOpinion: "false", isProspect:"false",}});
 
       if(newData == null)
       {
