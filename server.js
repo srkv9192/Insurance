@@ -53,7 +53,6 @@ const port = process.env.PORT || 80
 //});
 
 
-
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -2339,7 +2338,7 @@ const { PDFDocument, StandardFonts, rgb } = require("pdf-lib");
 const { writeFileSync, readFileSync } = require("fs");
 
 async function createPDF(req) {
-  const document = await PDFDocument.load(readFileSync("./agreementtemplate17.pdf"));
+  const document = await PDFDocument.load(readFileSync("./agreementtemplate18.pdf"));
 
   const courierBoldFont = await document.embedFont(StandardFonts.Courier);
   const timesFont = await document.embedFont(StandardFonts.TimesRoman);
@@ -2391,7 +2390,7 @@ const monthName = ["January","February","March","April","May","June","July","Aug
 whereof I/We hereto at Indore signed on the ${agreementdate.getDate().toString()} day of month ${monthName[agreementdate.getMonth()]} ${agreementdate.getFullYear().toString()}`;
  
  //first line
- firstPage.moveTo(77, 620);
+ firstPage.moveTo(69, 620);
  firstPage.drawText(firstline, {
    font: timesFont,
    size: 11,
@@ -2399,7 +2398,7 @@ whereof I/We hereto at Indore signed on the ${agreementdate.getDate().toString()
  });
 
   //second line
-  firstPage.moveTo(77, 500);
+  firstPage.moveTo(69, 500);
   firstPage.drawText(secondline, {
     font: timesFont,
     size: 11,
@@ -2407,7 +2406,7 @@ whereof I/We hereto at Indore signed on the ${agreementdate.getDate().toString()
   });
 
    //third line
- firstPage.moveTo(77, 405);
+ firstPage.moveTo(69, 405);
  firstPage.drawText(thirdline, {
    font: timesFont,
    size: 11,
@@ -2415,7 +2414,7 @@ whereof I/We hereto at Indore signed on the ${agreementdate.getDate().toString()
  });
 
     //fourth line
-    firstPage.moveTo(77, 275);
+    firstPage.moveTo(69, 275);
     firstPage.drawText(fourthline, {
       font: timesFont,
       size: 11,

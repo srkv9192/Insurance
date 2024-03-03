@@ -708,7 +708,7 @@ function movetolive(referencenumber) {
             var a = document.createElement('a');
             var url = window.URL.createObjectURL(response);
             a.href = url;
-            a.download = 'legal.pdf';
+            a.download = `${localStorage['casereferencenumber']}_legal.pdf`;
             document.body.append(a);
             a.click();
             a.remove();
