@@ -152,6 +152,7 @@ const dataSchema = new mongoose.Schema({
   prospectZone: String,
   patientName: String,
   patientMobile:Number,
+  patientAddress: String,
   complainantName: String,
   complainantMobile : Number,
   caseHandler: String,
@@ -167,6 +168,7 @@ const dataSchema = new mongoose.Schema({
   pfAmount: Number,
   pfReceived: String,
   pfpaymentRemarks: String,
+  pfpaymentMode: String,
   cfPercentage: Number,
   cfAmount: Number,
   cfReceived: String,
@@ -623,7 +625,8 @@ async function addDocURLInDBbycasenum(casenumber , url)
 
 app.post('/api/addpfremark', async(req, res) => {
   try{
-      const newData = await dataSchemaObject.findOneAndUpdate({caseNumber: req.body.caseNumber}, {$set:{ pfpayeeName:req.body.pfpayeeName, pfAmount:req.body.pfAmount, pfpaymentRemarks:req.body.pfpaymentRemarks, pfReceived: "YES" }});
+
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfpaymentRemarks:req.body.pfpaymentRemarks, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,  cfBankName: req.body.cfBankName, isLive: "true", newCaseStatus : "Live" }});
 
       if(newData == null)
       {
@@ -642,6 +645,31 @@ app.post('/api/addpfremark', async(req, res) => {
   } 
 
 });
+
+
+app.post('/api/addpfdetailsduringlegalgeneration', async(req, res) => {
+  try{
+
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfpaymentRemarks:req.body.pfpaymentRemarks, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,  cfBankName: req.body.cfBankName, patientAddress: req.body.patientAddress  }});
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not save pf remark', refnum:req.body.caseNumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding pf remark' });
+  } 
+
+});
+
 
 
 app.post('/api/addemailremark', async(req, res) => {
@@ -1517,6 +1545,19 @@ app.get("/api/getprospectcasedetailbyref", async(req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to get pending case details by ref' });
+  }
+});
+
+app.get("/api/getcasedetailbyref", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    console.log(req.query.casereferenceNumber)
+
+    const users = await  dataSchemaObject.find({casereferenceNumber: req.query.casereferenceNumber});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get case details by ref' });
   }
 });
 
