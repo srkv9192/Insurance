@@ -53,6 +53,7 @@ const port = process.env.PORT || 80
 //});
 
 
+
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -159,6 +160,7 @@ const dataSchema = new mongoose.Schema({
   insuranceCompanyName: String,
   claimAmount: Number,
   claimNumber: String,
+  claimType: String,
   pf_cf_Remarkstatus: Array,
   caseRejectionReason: String,
   caseGist: String,
@@ -230,6 +232,20 @@ const dataSchema = new mongoose.Schema({
 
   caseEmail: String,
   caseEmailPassword: String,
+
+  // These details are to prepare operational gist once case goes in live
+  dateOfPolicy: Date,
+  dateOfAdmission: Date,
+  dateOfDischarge: Date,
+  initialRejectionDate: Date,
+  rejectionReason: String,
+  hospitalName: String,
+  diagnosis: String,
+  patientComplainDuringAdmission: String,
+  gistComments: String,
+  gistCommentsBy: String,
+
+
 
   // Add more fields as needed
 });
@@ -646,6 +662,27 @@ app.post('/api/addpfremark', async(req, res) => {
 
 });
 
+app.post('/api/addlivegistdata', async(req, res) => {
+  try{
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ dateOfPolicy:req.body.dateOfPolicy, dateOfAdmission:req.body.dateOfAdmission, dateOfDischarge:req.body.dateOfDischarge, diagnosis: req.body.diagnosis, patientComplainDuringAdmission: req.body.patientComplainDuringAdmission,  rejectionReason: req.body.rejectionReason,  initialRejectionDate: req.body.initialRejectionDate, gistComments: req.body.gistComments, hospitalName: req.body.hospitalName, claimType:  req.body.claimType, policyNumber:  req.body.policyNumber,  }});
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not save live gist data', refnum:req.body.caseNumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding live gist data' });
+  } 
+
+});
 
 app.post('/api/addpfdetailsduringlegalgeneration', async(req, res) => {
   try{
@@ -2278,8 +2315,8 @@ app.get('/logout.html', (req, res) => res.sendFile(__dirname+'/logout.html'))
 app.get('/newcase.html', (req, res) => res.sendFile(__dirname+'/newcase.html'))
 app.get('/viewprospectcases.html', (req, res) => res.sendFile(__dirname+'/viewprospectcases.html'))
 app.get('/viewapprovedcases.html', (req, res) => res.sendFile(__dirname+'/viewapprovedcases.html'))
+app.get('/viewlivecases.html', (req, res) => res.sendFile(__dirname+'/viewlivecases.html'))
 app.get('/viewrejectedcases.html', (req, res) => res.sendFile(__dirname+'/viewrejectedcases.html'))
-
 
 app.get('/changepassword.html', (req, res) => res.sendFile(__dirname+'/changepassword.html'))
 app.get('/createaccount.html', (req, res) => res.sendFile(__dirname+'/createaccount.html'))

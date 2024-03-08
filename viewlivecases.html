@@ -182,7 +182,7 @@ div.dataTables_filter {
 
 
   </style>
-  <title>Approved Cases</title>
+  <title>Live Cases</title>
 </head>
 
 <body>
@@ -329,7 +329,7 @@ div.dataTables_filter {
           <div class="container mt-5">
             <div class="row justify-content-center">
               <div class="col-lg-12">
-                <h2 class="text-center mb-4">Approved Cases</h2>
+                <h2 class="text-center mb-4">Live Cases</h2>
                 <div class="table-responsive">
                   <table id ="dataTable" class="table table-dark table-bordered">
                     <thead>
@@ -351,156 +351,61 @@ div.dataTables_filter {
                   </table>
                 </div>
 
-                <div id="popup1" class="overlay">
-                  <div class="popup">
-                    <!--
-                    <ul id="remarkcontentlist"></ul>
-
-                    
-                    <input type="text" placeholder="Add remark here" id="newremarkrejection" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
-                    <button type="submit" onclick="addremarkInDBAndReject()" class="btn btn-primary btn-sm">Submit</button>
-                    
-                  -->
-
-                  <div class="frame">
-                    <form id="loginForm">
-                      <div class="row mb-3">
-                        <div class="col-sm-4">
-                          <label for="client-name" class="form-label">Client Name</label>
-                          <input type="text" class="form-control" id="client-name" required >
-                        </div>
-                        <div class="col-sm-4">
-                          <label for="client-address" class="form-label">Client Address</label>
-                          <input type="text" class="form-control" id="client-address" required >
-                        </div>
-                        <div class="col-sm-4">
-                          <label for="client-phone" class="form-label">Client Phone</label>
-                          <input type="text" class="form-control" id="client-phone" pattern="[0-9]{10}"  maxlength="10" required >
-                        </div>
-                      </div>
-                      <div class="row mb-3">
-
-                        <div class="col-sm-4">
-                          <label for="claim-number" class="form-label">Claim Number</label>
-                          <input type="text" class="form-control" id="claim-number" required >
-                        </div>
-
-                        <div class="col-sm-4">
-                          <label for="behalf-of" class="form-label">On Behalf of</label>
-                            <div class="input-group">
-                              <select class="form-control" id="behalf-of-dropdown" required>
-                                <option value="">None</option>
-                                <option value="Self">Self</option>
-                                <option value="Father">Father</option>
-                                <option value="Mother">Mother</option>
-                                <option value="Wife">Wife</option>
-                                <option value="Husband">Husband</option>
-                                <option value="Children">Children</option>
-                              </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                          <label for="complainant-name" class="form-label">Complainant Name</label>
-                          <input type="text" class="form-control" id="complainant-name" required>
-                        </div>
-                      </div>
-      
-      
-                      <div class="row mb-3">
-                        <div class="col-sm-4">
-                          <label for="insurance-company-name" class="form-label">Insurance Company Name</label>
-                          <input type="text" class="form-control" id="insurance-company-dropdown" required >
-                        </div>
-                        <div class="col-sm-4">
-                          <label for="witness-name" class="form-label">Witness Name</label>
-                          <input type="text" class="form-control" id="witness-name" required>
-                        </div>
-                        <div class="col-sm-4">
-                          <label for="consultation-charge" class="form-label">Consultation Charge</label>
-                          <input type="number" class="form-control" id="consultation-charge" required >
-                        </div>
-      
-                      </div>
-                      <div class="row mb-3">
-
-                        <div class="col-sm-4">
-                          <label for="processing-fee" class="form-label">Processing Fee</label>
-                          <input type="text" class="form-control" id="processing-fee" required  >
-                        </div>
-                        <div class="col-sm-4">
-                          <label for="total-claim-amount" class="form-label">Disputed Amount</label>
-                          <input type="number" class="form-control" id="total-claim-amount" required >
-                        </div>
-                        <div class="col-sm-4">
-                          <label for="cheque-amount" class="form-label">Cheque Amount</label>
-                          <input type="number" class="form-control" id="cheque-amount"    >
-                        </div>
-                      </div>
-
-                      <div class="row mb-3">
-                        <div class="col-sm-4">
-                          <label for="cheque-number" class="form-label">Cheque Number</label>
-                          <input type="text" class="form-control" id="cheque-number"   >
-                        </div>
-                        <div class="col-sm-4">
-                          <label for="bank-name" class="form-label">Bank Name</label>
-                          <input type="text" class="form-control" id="bank-name"   >
-                        </div>
-
-                        <div class="col-sm-4">
-                          <label for="id-number" class="form-label">ID Number</label>
-                          <input type="text" class="form-control" id="id-number" required >
-                        </div>
-                      </div>
-      
-      
-                      <div class="text-center">
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                      </div>
-                    </form>
-                  </div>
-
-
-                    <a class="close" style=" color: white;" href="#">&times;</a>
-                  </div>
-                </div>
-
                 <div id="popup2" class="overlay">
                   <div class="popup">
                       <div class="frame">
-                        <form id="paymentForm">
+                        <form id="gistForm">
                           <div class="row mb-3">
 
                             <div class="col-sm-4">
-                              <label for="total-claim-amount-final" class="form-label">Disputed amount</label>
-                              <input type="text" class="form-control" id="total-claim-amount-final" required >
+                              <label for="patient-name" class="form-label">Patient Name</label>
+                              <input type="text" class="form-control" id="patient-name" required >
                             </div>
 
                             <div class="col-sm-4">
-                              <label for="pf-amount-final" class="form-label">PF amount</label>
-                              <input type="text" class="form-control" id="pf-amount-final" required >
+                              <label for="complainant-name" class="form-label">Complainant name</label>
+                              <input type="text" class="form-control" id="complainant-name" required >
                             </div>
                             <div class="col-sm-4">
-                              <label for="consultation-charge-final" class="form-label">Consultation charge (%)</label>
-                              <input type="text" class="form-control" id="consultation-charge-final" required >
+                              <label for="claim-type" class="form-label">Claim Type</label>
+                              <input type="text" class="form-control" id="claim-type" required >
                             </div>
                             
                           </div>
                           <div class="row mb-3">
 
                             <div class="col-sm-4">
-                              <label for="cf_or_cheque-amount-final" class="form-label">Cheque Amount</label>
-                              <input type="text" class="form-control" id="cf_or_cheque-amount-final" required >
+                              <label for="claim-amount" class="form-label">Claim Amount</label>
+                              <input type="text" class="form-control" id="claim-amount" required >
                             </div>
 
                             <div class="col-sm-4">
-                              <label for="cheque-number-final" class="form-label">Cheque Number</label>
-                              <input type="text" class="form-control" id="cheque-number-final" required >
+                              <label for="policy-number" class="form-label">Policy Number</label>
+                              <input type="text" class="form-control" id="policy-number" required >
                             </div>
 
                             <div class="col-sm-4">
-                              <label for="bank-name-final" class="form-label">Bank Name</label>
-                              <input type="text" class="form-control" id="bank-name-final" required>
+                              <label for="claim-number" class="form-label">Claim Number</label>
+                              <input type="text" class="form-control" id="claim-number" required>
+                            </div>
+
+                          </div>
+
+                          <div class="row mb-3">
+
+                            <div class="col-sm-4">
+                              <label for="policy-date" class="form-label">Date of Policy</label>
+                              <input type="date" class="form-control" id="policy-date" required >
+                            </div>
+
+                            <div class="col-sm-4">
+                              <label for="company-name" class="form-label">Company Name</label>
+                              <input type="text" class="form-control" id="company-name" required >
+                            </div>
+
+                            <div class="col-sm-4">
+                              <label for="hospital-name" class="form-label">Hospital Name</label>
+                              <input type="text" class="form-control" id="hospital-name" required >
                             </div>
 
 
@@ -509,22 +414,50 @@ div.dataTables_filter {
                           <div class="row mb-3">
 
                             <div class="col-sm-4">
-                              <label for="payment-mode" class="form-label">Payment Mode</label>
-                                <div class="input-group">
-                                  <select class="form-control" id="payment-mode-dropdown" required>
-                                    <option value="">None</option>
-                                    <option value="Cash">Cash</option>
-                                    <option value="UPI">UPI</option>
-                                    <option value="Bank Transfer">Bank Transfer</option>
-                                  </select>
-                                </div>
-                            </div>
-                      
-                            <div class="col-sm-4">
-                              <label for="pf-payment-remark-final" class="form-label">Payment Remark</label>
-                              <input type="text" class="form-control" id="pf-payment-remark-final" required >
+                              <label for="admission-date" class="form-label">Date of Admission</label>
+                              <input type="date" class="form-control" id="admission-date" required >
                             </div>
 
+                            <div class="col-sm-4">
+                              <label for="discharge-date" class="form-label">Date of Discharge</label>
+                              <input type="date" class="form-control" id="discharge-date" required >
+                            </div>
+
+                            <div class="col-sm-4">
+                              <label for="case-diagnosis" class="form-label">Diagnosis</label>
+                              <input type="text" class="form-control" id="case-diagnosis" required >
+                            </div>
+
+
+                          </div>
+
+                          
+                          <div class="row mb-3">
+
+                            <div class="col-sm-4">
+                              <label for="patient-complain" class="form-label">Patient complain</label>
+                              <input type="text" class="form-control" id="patient-complain" required >
+                            </div>
+
+                            <div class="col-sm-4">
+                              <label for="rejection-reason" class="form-label">Rejection Reason</label>
+                              <input type="text" class="form-control" id="rejection-reason" required >
+                            </div>
+
+                            <div class="col-sm-4">
+                              <label for="rejection-date" class="form-label">Rejection date</label>
+                              <input type="date" class="form-control" id="rejection-date" required >
+                            </div>
+
+
+                          </div>
+
+                          <div class="row mb-3">
+
+                            <div class="col-sm-4">
+                              <label for="case-comment" class="form-label">Comments</label>
+                              <input type="text" class="form-control" id="case-comment" required >
+                            </div>
 
                           </div>
           
@@ -587,6 +520,42 @@ div.dataTables_filter {
 
 
                 </div>
+   
+
+                <div id="popup6" class="overlay" >
+                  <div class="popup" style="color:black; width: 70%; max-height: 90vh; overflow-y: auto;">
+                    <div style="display: flex; align-items: center; justify-content: start;">
+                      <img src="/images/logoround.png" width="130" height="130" style="margin-right: 20px;">
+                      <h2 style="margin: 0; flex-grow: 1; text-align: center;">INITIAL CLAIM ASSESSMENT SHEET</h2>
+                    </div>
+                    <div style="margin-top: 10px; margin-left:40px;">
+                      <p><strong>NAME OF PATIENT:</strong>  <span data-info="patientName">[Patient Name]</span></p>
+                      <p><strong>NAME OF COMPLAINANT:</strong>  <span data-info="complainantName">[Complainant Name]</span></p>
+                      <p><strong>Type of Claim / Rejection / Deduction:</strong> <span data-info="claimType">[Type]</span></p>
+                      <p><strong>Claim Amount:</strong><span data-info="claimAmount">[Amount]</span> </p>
+                      <p><strong>POLICY NUMBER:</strong> <span data-info="policyNumber">[Policy Number]</span> </p>
+                      <p><strong>CLAIM NUMBER:</strong> <span data-info="claimNumber">[Claim Number]</span> </p>
+                      <p><strong>DATE OF INCEPTION OF FIRST POLICY:</strong> <span data-info="dateOfPolicy">[Date]</span> </p>
+                      <p><strong>COMPANY NAME:</strong> <span data-info="companyName">[Company Name]</span> </p>
+                      <p><strong>HOSPITAL NAME:</strong> <span data-info="hospitalName">[Hospital Name]</span> </p>
+                      <p><strong>DOA:</strong> <span data-info="dateOfAdmission">[Date of Admission]</span> <strong>DOD:</strong> <span data-info="dateOfDischarge">[Date of Discharge]</span></p>
+                      <p><strong>DIAGNOSIS:</strong> <span data-info="diagnosis">[Policy Number]</span></p>
+                      <p><strong>PATIENT COMPLAINS DURING ADMISSION:</strong> <span data-info="patientComplain">[Complaints]</span></p>
+                      <p><strong>REJECTION REASON DATED:</strong> <span data-info="rejectionDate">[Rejection Reason]</span> </p>
+                      <p><strong>COMMENTS GIVEN BY:</strong> <span data-info="caseComment">[Comments]</span></p>
+                        <!-- Additional content here
+                          use the following code to fill json content
+                        document.querySelector('[data-info="patientName"]').textContent = responseData.patientName;
+
+                        document.querySelector('[data-info="patientName"]').textContent = responseData.patientName;
+
+                        -->
+                        
+                    </div>
+                    <a class="close" href="#">&times;</a>
+                  </div>
+                  
+                </div>
 
 
               </div>
@@ -599,6 +568,7 @@ div.dataTables_filter {
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
   <script>
 
 function addremark(referencenumber) {
@@ -672,63 +642,52 @@ error: function (error) {
         success: function (response) {
           // Populate the options in the select elemen
                 
-            document.getElementById("client-name").value = response[0].patientName ? response[0].patientName : "";
-            document.getElementById("client-address").value = response[0].customerAddress ? response[0].customerAddress : "";
-            document.getElementById("client-phone").value = response[0].patientMobile ? response[0].patientMobile : "";
-
+            document.getElementById("patient-name").value = response[0].patientName ? response[0].patientName : "";
             document.getElementById("complainant-name").value = response[0].complainantName ? response[0].complainantName: "";
-
-           // document.getElementById("reference-number").value = localStorage['casereferencenumber'];
+            document.getElementById("claim-type").value = response[0].claimType ? response[0].claimType : "";
+            document.getElementById("claim-amount").value = response[0].claimAmount ? response[0].claimAmount : "";
             document.getElementById("claim-number").value = response[0].claimNumber ? response[0].claimNumber : "";
-            document.getElementById("total-claim-amount").value = response[0].claimAmount ?  response[0].claimAmount : "";
+            document.getElementById("policy-number").value = response[0].policyNumber ?  response[0].policyNumber : "";
+            document.getElementById("company-name").value = response[0].insuranceCompanyName ? response[0].insuranceCompanyName : "";
+           
 
-            document.getElementById("total-claim-amount-final").value = response[0].claimAmount ? response[0].claimAmount : "";
 
 
-            document.getElementById("pf-amount-final").value = response[0].pfAmount ? response[0].pfAmount : "";
+            document.getElementById("policy-date").value = response[0].dateOfPolicy ? moment(new Date(response[0].dateOfPolicy)).utc().format('YYYY-MM-DD') : "";
+            document.getElementById("hospital-name").value = response[0].hospitalName ? response[0].hospitalName : "";
+            document.getElementById("admission-date").value = response[0].dateOfAdmission ? moment(new Date(response[0].dateOfAdmission)).utc().format('YYYY-MM-DD') : "";
+            document.getElementById("discharge-date").value = response[0].dateOfDischarge ? moment(new Date(response[0].dateOfDischarge)).utc().format('YYYY-MM-DD') : "";
+            document.getElementById("case-diagnosis").value = response[0].diagnosis ? response[0].diagnosis : "";
+            document.getElementById("patient-complain").value = response[0].patientComplainDuringAdmission ? response[0].patientComplainDuringAdmission : "";
+            document.getElementById("rejection-reason").value = response[0].rejectionReason ? response[0].rejectionReason : "";
+            document.getElementById("rejection-date").value = response[0].initialRejectionDate ? moment(new Date(response[0].initialRejectionDate)).utc().format('YYYY-MM-DD') : "";
+            document.getElementById("case-comment").value = response[0].gistComments ? response[0].gistComments : "";
 
-            document.getElementById("consultation-charge-final").value = response[0].cfPercentage ? response[0].cfPercentage : "";
 
-            document.getElementById("cf_or_cheque-amount-final").value = response[0].cfAmount ? response[0].cfAmount : "";
+            document.querySelector('[data-info="patientName"]').textContent =response[0].patientName ? response[0].patientName : "";
 
-            document.getElementById("cheque-number-final").value = response[0].cfChequeNumber ? response[0].cfChequeNumber : "";
+            document.querySelector('[data-info="complainantName"]').textContent =response[0].complainantName ? response[0].complainantName : "";
+            document.querySelector('[data-info="claimType"]').textContent = response[0].claimType ? response[0].claimType : "";
+            document.querySelector('[data-info="claimAmount"]').textContent = response[0].claimAmount ? response[0].claimAmount : "";
+            document.querySelector('[data-info="policyNumber"]').textContent =response[0].policyNumber ?  response[0].policyNumber : "";
+            document.querySelector('[data-info="claimNumber"]').textContent = response[0].claimNumber ? response[0].claimNumber : "";
+            document.querySelector('[data-info="dateOfPolicy"]').textContent =response[0].dateOfPolicy ? moment(new Date(response[0].dateOfPolicy)).utc().format('DD-MM-YYYY') : "";
+            document.querySelector('[data-info="companyName"]').textContent = response[0].insuranceCompanyName ? response[0].insuranceCompanyName : "";
+            document.querySelector('[data-info="hospitalName"]').textContent = response[0].hospitalName ? response[0].hospitalName : "";
+            document.querySelector('[data-info="dateOfAdmission"]').textContent =  response[0].dateOfAdmission ? moment(new Date(response[0].dateOfAdmission)).utc().format('DD-MM-YYYY') : "";
+            document.querySelector('[data-info="dateOfDischarge"]').textContent =  response[0].dateOfDischarge ? moment(new Date(response[0].dateOfDischarge)).utc().format('DD-MM-YYYY') : "";
             
-            document.getElementById("bank-name-final").value = response[0].cfBankName ? response[0].cfBankName : "";
-           
-
-            document.getElementById("processing-fee").value = response[0].processingFee ? response[0].processingFee : "";
-
-            document.getElementById("consultation-charge").value = response[0].consultationCharge ? response[0].consultationCharge : "";
-            document.getElementById("cheque-amount").value = response[0].chequeAmount ? response[0].chequeAmount : "";
-            document.getElementById("cheque-number").value = response[0].chequeNumber ?  response[0].chequeNumber : "";
-            document.getElementById("bank-name").value = response[0].bankName ? response[0].bankName : "";
-            document.getElementById("id-number").value = response[0].casereferenceNumber ? response[0].casereferenceNumber : "";
-            document.getElementById("insurance-company-dropdown").value = response[0].insuranceCompanyName ? response[0].insuranceCompanyName : "";
-
-            // add payment related info here-
-
-            //
-    
-                    
-
-
-            document.getElementById("processing-fee").value = response[0].pfAmount ? response[0].pfAmount : "";
-            document.getElementById("consultation-charge").value = response[0].cfPercentage ? response[0].cfPercentage : "";
-            document.getElementById("cheque-number").value = response[0].cfChequeNumber ? response[0].cfChequeNumber : "";
-            document.getElementById("cheque-amount").value = response[0].cfAmount ? response[0].cfAmount : "";
-            document.getElementById("bank-name").value = response[0].cfBankName ? response[0].cfBankName : "";
-
-           
-           // pfReceived: String,
-           // pfpaymentRemarks: String,
-           
+            
+            document.querySelector('[data-info="diagnosis"]').textContent =response[0].diagnosis ? response[0].diagnosis : "";
+            document.querySelector('[data-info="patientComplain"]').textContent = response[0].patientComplainDuringAdmission ? response[0].patientComplainDuringAdmission : "";
+            document.querySelector('[data-info="rejectionDate"]').textContent = response[0].initialRejectionDate ? moment(new Date(response[0].initialRejectionDate)).utc().format('DD-MM-YYYY') : "";
+            document.querySelector('[data-info="caseComment"]').textContent = response[0].gistComments ? response[0].gistComments : "";
 
         },
         error: function (error) {
           console.error('Error:', error);
         }
-      });
-      
+      }); 
 
     }
 
@@ -952,47 +911,50 @@ function movetolive(referencenumber) {
             });
 
 
-        $('#paymentForm').on('submit', function (event) {
+        $('#gistForm').on('submit', function (event) {
         event.preventDefault();
 
-        var processingfeeFinal = $('#pf-amount-final').val();
-        var consultationchargeFinal = $('#consultation-charge-final').val();
-        var chequeamountFinal = $('#cf_or_cheque-amount-final').val();
-        var chequenumberFinal = $('#cheque-number-final').val();
-        var banknameFinal = $('#bank-name-final').val();
-        var paymentremarkFinal = $('#pf-payment-remark-final').val();
-        var paymentmodeFinal = $('#payment-mode-dropdown').val();
+        var policydate = $('#policy-date').val();
+        var hospitalname = $('#hospital-name').val();
+        var admissiondate = $('#admission-date').val();
+        var dischargedate = $('#discharge-date').val();
+        var casediagnosis = $('#case-diagnosis').val();
+        var patientcomplain = $('#patient-complain').val();
+        var rejectionreason = $('#rejection-reason').val();
+        var rejectiondate = $('#rejection-date').val();
+        var casecomment = $('#case-comment').val();
+
+        var claimtype = $('#claim-type').val();
+        var policynumber = $('#policy-number').val();
 
           // call ajax to save these details--
 
           $.ajax({
-          url: '/api/addpfremark',
+          url: '/api/addlivegistdata',
           type: 'POST',
           contentType: "application/x-www-form-urlencoded",
           data: {
             casereferenceNumber: localStorage['casereferencenumber'], 
-            pfAmount: processingfeeFinal ,
-            pfpaymentRemarks: paymentremarkFinal ,
-            pfpaymentMode: paymentmodeFinal,
-            cfPercentage: consultationchargeFinal,
-            cfAmount: chequeamountFinal,
-            cfChequeNumber: chequenumberFinal,
-            cfBankName: banknameFinal,
-
+            dateOfPolicy: policydate ,
+            dateOfAdmission: admissiondate ,
+            dateOfDischarge: dischargedate,
+            diagnosis: casediagnosis,
+            patientComplainDuringAdmission: patientcomplain,
+            rejectionReason: rejectionreason,
+            initialRejectionDate: rejectiondate,
+            gistComments: casecomment,
+            hospitalName: hospitalname,
+            claimType: claimtype,
+            policyNumber: policynumber,
           },
           success: function (response) {
             if(response.message == "success")
               {
-              // window.location.href = "/index.html"
-                //localStorage['userID'] = username;
-                alert("Case Moved to Live!");
-                window.location.href = "/viewapprovedcases.html";
+
+                alert("Gist data Saved!");
+                window.location.href = "/viewlivecases.html";
                 //localStorage.removeItem("caseNumber");
 
-               // document.getElementById("pfamount").value ="";
-                //document.getElementById("paymentremarks").value ="";
-                //document.getElementById("payeename").value ="";
-                //window.location.href = "/viewcases.html";
                 
               }
               else{
@@ -1088,7 +1050,7 @@ function movetolive(referencenumber) {
       
        // AJAX call on page load get manager details
        $.ajax({
-        url: '/api/getapprovedandlegalgeneratedcasedetail',
+        url: '/api/getlivecasedetail',
         type: 'GET',
         success: function (response) {
           // Populate the options in the select element
@@ -1117,15 +1079,16 @@ function movetolive(referencenumber) {
               data[i].claimAmount,
               data[i].medicalOpinionOfficer,
               data[i].newCaseStatus, 
-              `<a href="#popup1"> <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Generate legal</button> </a>`,
               `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
               `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
-              `<a href="#popup2"> <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Move to Live</button> </a>`,
+              `<a href="#popup2"> <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Add Gist Data</button> </a>`,
+              `<a href="#popup6"> <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">View Case details</button> </a>`,
             ]);
           }
         }
       
-
+// https://stackoverflow.com/questions/47528857/momentjs-date-string-adds-one-day
+// for moment js reduing one day from date
 
 
     });
