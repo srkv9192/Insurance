@@ -198,6 +198,7 @@ const dataSchema = new mongoose.Schema({
   legalCollected: String,
   pdcCollected: String,
   liveEntryBy: String,
+  operationOfficer: String,
   medicalOpinionOfficer: String,
   directCase: String,
   managerID: String,
@@ -451,6 +452,7 @@ app.post('/api/addprospect', upload.array('pdfFile', 10), async (req, res) => {
                         isEmailGenerated: "NO",
                         isGistGenerated: "NO",
                         medicalOpinionOfficer: "NONE",
+                        operationOfficer: "NONE",
                       });
         const savedData = await newData.save();
         incrementCaseReferenceCount();
@@ -731,13 +733,13 @@ app.post('/api/addemailremark', async(req, res) => {
 
 });
 
-app.post('/api/addmedicalremark', async(req, res) => {
+app.post('/api/addmedicalofficertocase', async(req, res) => {
   try{
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$set:{ medicalOpinionOfficer:req.body.medicalOpinionOfficer }});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ medicalOpinionOfficer:req.body.medicalOpinionOfficer }});
 
       if(newData == null)
       {
-        res.json({ message: 'Could not save medical officer details', referenceNumber:req.body.referencenumber});
+        res.json({ message: 'Could not save medical officer details', casereferenceNumber:req.body.casereferenceNumber});
       }
       else
       {
@@ -749,6 +751,50 @@ app.post('/api/addmedicalremark', async(req, res) => {
   {
     console.error(err);
     res.status(500).json({ error: 'Error adding medical officer details' });
+  } 
+
+});
+
+app.post('/api/addmedicalofficertocaseandmovetopendingdraft', async(req, res) => {
+  try{
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ medicalOpinionOfficer:req.body.medicalOpinionOfficer, newCaseStatus: "Pending Draft" }});
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not save medical officer details', casereferenceNumber:req.body.casereferenceNumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding medical officer details' });
+  } 
+
+});
+
+app.post('/api/addoperationofficertocase', async(req, res) => {
+  try{
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ operationOfficer:req.body.operationOfficer }});
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not save operation officer details', referenceNumber:req.body.casereferenceNumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding operation officer details' });
   } 
 
 });
@@ -830,17 +876,39 @@ app.post('/api/changeloginpass', async(req, res) => {
 });
 
 
-//Not needed added for testing purpose
-app.get("/api/getlogin", async(req, res) => {
+app.get("/api/getoperationteamlist", async(req, res) => {
   try {
     // Retrieve all users login from the database
-    const users = await loginSchemaObject.find({});
+    const users = await loginSchemaObject.find({userType:"operation"}, {userName:1, userID:1});
     res.json(users);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Failed to get login details' });
+    res.status(500).json({ error: 'Failed to get operation team details' });
   }
 });
+
+app.get("/api/getmarketingteamlist", async(req, res) => {
+  try {
+    // Retrieve all users login from the database
+    const users = await loginSchemaObject.find({userType:"marketing"}, {userName:1, userID:1});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get marketing team details' });
+  }
+});
+
+app.get("/api/getmedicalteamlist", async(req, res) => {
+  try {
+    // Retrieve all users login from the database
+    const users = await loginSchemaObject.find({userType:"medicalofficer"}, {userName:1, userID:1});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get medical team details' });
+  }
+});
+
 
 app.get("/api/getcounter", async(req, res) => {
   try {
@@ -1539,6 +1607,17 @@ app.get("/api/getapprovedcasedetail", async(req, res) => {
   try {
     // Retrieve all tpa list from database
     const users = await  dataSchemaObject.find({newCaseStatus: "Approved"});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get approved case details' });
+  }
+});
+
+app.get("/api/getpendingdraftcasedetail", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  dataSchemaObject.find({newCaseStatus: "Pending Draft"});
     res.json(users);
   } catch (error) {
     console.error(error);
@@ -2316,6 +2395,7 @@ app.get('/newcase.html', (req, res) => res.sendFile(__dirname+'/newcase.html'))
 app.get('/viewprospectcases.html', (req, res) => res.sendFile(__dirname+'/viewprospectcases.html'))
 app.get('/viewapprovedcases.html', (req, res) => res.sendFile(__dirname+'/viewapprovedcases.html'))
 app.get('/viewlivecases.html', (req, res) => res.sendFile(__dirname+'/viewlivecases.html'))
+app.get('/viewpendingdraftcases.html', (req, res) => res.sendFile(__dirname+'/viewpendingdraftcases.html'))
 app.get('/viewrejectedcases.html', (req, res) => res.sendFile(__dirname+'/viewrejectedcases.html'))
 
 app.get('/changepassword.html', (req, res) => res.sendFile(__dirname+'/changepassword.html'))

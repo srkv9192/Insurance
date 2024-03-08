@@ -182,7 +182,7 @@ div.dataTables_filter {
 
 
   </style>
-  <title>Live Cases</title>
+  <title>Pending Draft Cases</title>
 </head>
 
 <body>
@@ -329,7 +329,7 @@ div.dataTables_filter {
           <div class="container mt-5">
             <div class="row justify-content-center">
               <div class="col-lg-12">
-                <h2 class="text-center mb-4">Live Cases</h2>
+                <h2 class="text-center mb-4">Pending Draft Cases</h2>
                 <div class="table-responsive">
                   <table id ="dataTable" class="table table-dark table-bordered">
                     <thead>
@@ -343,8 +343,6 @@ div.dataTables_filter {
                         <th>Operation Officer</th>
                         <th>Medical Officer</th>
                         <th>Case Status</th>
-                        <th>Action</th>
-                        <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
@@ -577,23 +575,6 @@ div.dataTables_filter {
                   </div>
                 </div>
 
-                <div id="popup8" class="overlay">
-                  <div class="popup" style="width:30%">
-                    <h2  id = "remarkcontent">Assign Medical officer</h2>
-                    <ul id="remarkcontentlist"></ul>
-
-                      <select name="medicalofficer" id="medicalofficer"  style="margin-top: 5px;margin-bottom: 5px;">
-                      <option value="NONE">NONE</option>
-                      </select>
-
-                      <br>        
-                      <br>              
-                      <button type="submit" onclick="addMedicalOfficerToCase()" class="btn btn-primary btn-sm">Save Officer</button>
-                    
-                    <a class="close" href="#">&times;</a>
-                  </div>
-                </div>
-
 
               </div>
             </div>
@@ -613,42 +594,6 @@ function addremark(referencenumber) {
         localStorage['addRemarkForRefNumber'] =referencenumber; 
   }
 
-  
-function addMedicalOfficerToCase() {
-
-$.ajax({
-url: '/api/addmedicalofficertocaseandmovetopendingdraft',
-type: 'POST',
-contentType: "application/x-www-form-urlencoded",
-data: {
-  casereferenceNumber: localStorage['addRemarkForRefNumber'],
-  medicalOpinionOfficer: $("#medicalofficer option:selected").text(),
-},
-success: function (response) {
-  if(response.message == "success")
-    {
-    // window.location.href = "/index.html"
-      //localStorage['userID'] = username;
-      alert("Case moved to pending draft!")
-      localStorage.removeItem("addRemarkForRefNumber");
-
-      window.location.href = "/viewlivecases.html";
-    }
-    else{
-      alert("Error saving details!")
-      //document.getElementById('loginForm').reset();
-    }
-  //alert("login success");
-  // Redirect to the dashboard or perform any other actions
-},
-error: function (error) {
-  document.getElementById('loginForm').reset();
-  alert("login failed");
-  // Display an error message to the user
-}
-});
-
-}
 
 function addOfficerToCase() {
 
@@ -850,27 +795,6 @@ function movetolive(referencenumber) {
 
       
     $(document).ready(function () {
-
-      
-      
-
-      $.ajax({
-        url: '/api/getmedicalteamlist',
-        type: 'GET',
-        success: function (response) {
-          // Populate the options in the select element
-          const optionsSelect = $('#medicalofficer');
-          response.forEach(function (option) {
-            optionsSelect.append($('<option>', {
-              value: option.userID,
-              text: option.userName
-            }));
-          });
-        },
-        error: function (error) {
-          console.error('Error:', error);
-        }
-      });
 
 
       $.ajax({
@@ -1202,7 +1126,7 @@ function movetolive(referencenumber) {
       
        // AJAX call on page load get manager details
        $.ajax({
-        url: '/api/getlivecasedetail',
+        url: '/api/getpendingdraftcasedetail',
         type: 'GET',
         success: function (response) {
           // Populate the options in the select element
@@ -1232,9 +1156,7 @@ function movetolive(referencenumber) {
               data[i].operationOfficer,
               data[i].medicalOpinionOfficer,
               data[i].newCaseStatus,             
-              `<a href="#popup7"> <button class="btn btn-primary btn-sm" onclick="addremark('${rfno}')">Assign Case</button> </a>`,
-              `<a href="#popup2"> <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Add Gist Data</button> </a>`,
-              `<a href="#popup8"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Pending draft</button> </a>`,
+              `<a href="#popup6"> <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">View Case Gist</button> </a>`,
               `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
               `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
             ]);
