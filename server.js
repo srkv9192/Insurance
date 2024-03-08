@@ -52,13 +52,11 @@ const port = process.env.PORT || 80
 //  useUnifiedTopology: true,
 //});
 
-
-
-
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
 
 /*
 
@@ -69,6 +67,7 @@ mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
 });
 
 */
+
 
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
@@ -163,6 +162,7 @@ const dataSchema = new mongoose.Schema({
   claimNumber: String,
   claimType: String,
   pf_cf_Remarkstatus: Array,
+  liveCaseRemark: Array,
   caseRejectionReason: String,
   caseGist: String,
   docUrl: Array,
@@ -500,6 +500,27 @@ app.post('/api/uploadadditionaldocs', upload.array('pdfFile', 10), async (req, r
   
 });
 
+app.post('/api/uploaddraftdocs', upload.array('pdfFile', 10), async (req, res) => {
+  try{
+        const refNumber= req.body.casereferenceNumber;
+        const uploadPromises = req.files.map(file => {
+          const randomString = require('crypto').randomBytes(16).toString('hex');
+          const extension = path.extname(file.originalname);
+          const destination = `uploads/${refNumber}-Company-And-Lokpal-Draft-${randomString}${extension}`;
+          return uploadFileToGCS(file.path, destination, refNumber );
+        });
+
+      await Promise.all(uploadPromises);
+        res.json({ message: 'success', referencenumber:refNumber });
+      }
+    catch(err)
+    {
+      console.error(err);
+      res.status(500).json({ error: 'Error saving data' });
+    }
+  
+});
+
 
 app.post('/api/addprospectcaseremark', async(req, res) => {
   try{
@@ -508,6 +529,73 @@ app.post('/api/addprospectcaseremark', async(req, res) => {
       if(newData == null)
       {
         res.json({ message: 'Could not save remark', refnum:req.body.referencenumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding remark' });
+  } 
+
+});
+
+app.post('/api/addlivecaseremark', async(req, res) => {
+  try{
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ liveCaseRemark:req.body.liveCaseRemark}});
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not save remark', refnum:req.body.referencenumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding remark' });
+  } 
+
+});
+
+app.post('/api/addlivecasequeryremark', async(req, res) => {
+  try{
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ liveCaseRemark:req.body.liveCaseRemark}, $set:{ newCaseStatus: "Draft Query"}});
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not save remark', refnum:req.body.referencenumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding remark' });
+  } 
+
+});
+
+
+app.post('/api/movetoescalation', async(req, res) => {
+  try{
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ liveCaseRemark:req.body.liveCaseRemark}, $set:{ newCaseStatus: "Escalation Pending", isInEscalationStage: "true", isLive: "false"}});
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not move case to escalation', refnum:req.body.referencenumber});
       }
       else
       {
@@ -1658,6 +1746,19 @@ app.get("/api/getprospectcasedetailbyref", async(req, res) => {
     console.log(req.query.casereferenceNumber)
 
     const users = await  dataSchemaObject.find({casereferenceNumber: req.query.casereferenceNumber});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get pending case details by ref' });
+  }
+});
+
+app.get("/api/getlivecaseRemarkbyref", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    console.log(req.query.casereferenceNumber)
+
+    const users = await  dataSchemaObject.find({casereferenceNumber: req.query.casereferenceNumber}, {liveCaseRemark:1});
     res.json(users);
   } catch (error) {
     console.error(error);
