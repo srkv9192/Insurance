@@ -129,7 +129,7 @@ div.dataTables_filter {
   padding: 20px;
   background: #fff;
   border-radius: 5px;
-  width: 30%;
+  width: 45%;
   position: relative;
   transition: all 5s ease-in-out;
 }
@@ -237,6 +237,7 @@ div.dataTables_filter {
                    <a href="/viewrejectedcases.html" class="dashboard-nav-dropdown-item">View Rejected</a>
                    <a href="/viewlivecases.html" class="dashboard-nav-dropdown-item">View Live</a>
                    <a href="/viewpendingdraftcases.html" class="dashboard-nav-dropdown-item">View Pending Draft</a>
+                   <a href="/viewescalationcases.html" class="dashboard-nav-dropdown-item">View Escalation</a>
                    
                                      <!-- 
                    <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
@@ -341,12 +342,9 @@ div.dataTables_filter {
                         <th>Insurance Company</th>
                         <th>Claim Amount</th>
                         <th>Claim Number</th>
-                        <th>Is Escalated</th>
-                        <!--
+                        <th>Case status</th>
                         <th>Action</th>
                         <th>Action</th>
-                        <th>Action</th>
-                        -->
                       </tr>
                     </thead>
                   </table>
@@ -354,35 +352,39 @@ div.dataTables_filter {
 
                 <div id="popup2" class="overlay">
                   <div class="popup">
-                    <h2  id = "remarkcontent">Assign Medical Officer-</h2>
-                    <ul id="remarkcontentlist"></ul>
+                      <div class="frame">
+                        <form id="paymentForm">
+                          <div class="row mb-3">
 
-                      <select name="medicalofficer" id="medicalofficer"  style="margin-top: 5px;margin-bottom: 5px;">
-                        <option value="Khan Sir">Khan Sir</option>
-                        <option value="Ashish Sir">Ashish Sir</option>
-                      </select>
+                            <div class="col-sm-4">
+                              <label for="escalationemail" class="form-label">Escalation Email</label>
+                              <input type="text" class="form-control" id="escalationemail" required >
+                            </div>
 
-                      <br>        
-                      <br>              
-                      <button type="submit" onclick="addmedicalremarkInDB()" class="btn btn-primary btn-sm">Save Detail</button>
-                    
-                    <a class="close" href="#">&times;</a>
+                            <div class="col-sm-4">
+                              <label for="escalationdate" class="form-label">Escalation Date</label>
+                              <input type="date" class="form-control" id="escalationdate" required >
+                            </div>
+                        
+                          </div>
+          
+                          <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                          </div>
+                        </form>
+                      </div>
+                      <a class="close" style=" color: white;" href="#">&times;</a>
                   </div>
                 </div>
 
-                <div id="popup3" class="overlay">
-                  <div class="popup">
-                    <h2  id = "remarkcontent">Upload Draft (PDF only)</h2>
+                <div id="popup9" class="overlay" >
+                  <div class="popup" style ="width:45%">
+                    <h2  id = "remarkcontent">Remarks-</h2>
                     <ul id="remarkcontentlist"></ul>
 
-                      <div class="col-sm-6">
-                        <label for="draft-upload" class="form-label">Draft Upload</label>
-                        <input type="file" class="form-control" id="draft-upload" required>
-                      </div>
-
-                      <br>        
-                      <br>              
-                      <button type="submit" onclick="addmedicalremarkInDB()" class="btn btn-primary btn-sm">Upload</button>
+                    
+                    <input type="text" placeholder="Add new remark here" id="newremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                    <button type="submit" onclick="addremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
                     
                     <a class="close" href="#">&times;</a>
                   </div>
@@ -400,48 +402,138 @@ div.dataTables_filter {
   <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
   <script>
 
+function addremarkInDB() {
+
+const today = new Date();
+const yyyy = today.getFullYear();
+let mm = today.getMonth() + 1; // Months start at 0!
+let dd = today.getDate();
+
+if (dd < 10) dd = '0' + dd;
+if (mm < 10) mm = '0' + mm;
+
+const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+    $.ajax({
+      url: '/api/addescalationcaseremark',
+      type: 'POST',
+      contentType: "application/x-www-form-urlencoded",
+      data: {
+        referencenumber: localStorage['addRemarkForRefNumber'],
+        escalationCaseRemark: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ document.getElementById("newremark").value
+      },
+      success: function (response) {
+        if(response.message == "success")
+          {
+           // window.location.href = "/index.html"
+            //localStorage['userID'] = username;
+            alert("Remark saved!")
+            localStorage.removeItem("addRemarkForRefNumber");
+
+            document.getElementById("newremark").value ="";
+            window.location.href = "/viewescalationcases.html";
+            
+          }
+          else{
+            alert("Error saving remark!")
+            //document.getElementById('loginForm').reset();
+          }
+        //alert("login success");
+        // Redirect to the dashboard or perform any other actions
+      },
+      error: function (error) {
+        document.getElementById('loginForm').reset();
+        alert("login failed");
+        // Display an error message to the user
+      }
+    });
+  
+}
+  
+
+
+$('#paymentForm').on('submit', function (event) {
+        event.preventDefault();
+
+        var processingfeeFinal = $('#pf-amount-final').val();
+        var consultationchargeFinal = $('#consultation-charge-final').val();
+       
+          // call ajax to save these details--
+
+          $.ajax({
+          url: '/api/addescalationdetails',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          data: {
+            casereferenceNumber: localStorage['addRemarkForRefNumber'], 
+            caseEmail: $('#escalationemail').val(),
+            dateofEscalationToInsurer: $('#escalationdate').val(),
+          },
+          success: function (response) {
+            if(response.message == "success")
+              {
+                alert("Escalation details saved!");
+                window.location.href = "/viewescalationcases.html";
+              }
+              else{
+                alert("Error saving escalation details!")
+              }
+          },
+          error: function (error) {
+            document.getElementById('loginForm').reset();
+            alert("login failed");
+            // Display an error message to the user
+          }
+        });
+
+
+      });
+
+
 
 
 function addremark(referencenumber) {
         // Code to generate card
-        localStorage['caseNumber'] =referencenumber; 
+        localStorage['addRemarkForRefNumber'] =referencenumber; 
   }
 
-function addmedicalremarkInDB() {
+  function viewremark(referencenumber) {
+        // Code to generate card
 
-  $.ajax({
-  url: '/api/addmedicalofficertocase',
-  type: 'POST',
-  contentType: "application/x-www-form-urlencoded",
-  data: {
-    caseNumber: localStorage['caseNumber'],
-    medicalOpinionOfficer: $("#medicalofficer option:selected").text(),
-  },
-  success: function (response) {
-    if(response.message == "success")
-      {
-      // window.location.href = "/index.html"
-        //localStorage['userID'] = username;
-        alert("Medical Officer assigned saved!")
-        localStorage.removeItem("caseNumber");
+        localStorage['addRemarkForRefNumber'] = referencenumber; 
 
-        window.location.href = "/viewmedicalopinioncases.html";
-      }
-      else{
-        alert("Error saving details!")
-        //document.getElementById('loginForm').reset();
-      }
-    //alert("login success");
-    // Redirect to the dashboard or perform any other actions
-  },
-  error: function (error) {
-    document.getElementById('loginForm').reset();
-    alert("login failed");
-    // Display an error message to the user
+        let list = document.getElementById("remarkcontentlist");
+
+        // 👇️ Remove all list elements
+        list.innerHTML = '';
+
+        $.ajax({
+        url: '/api/getescalationcaseRemarkbyref',
+        type: 'GET',
+        data: {
+          casereferenceNumber:  localStorage['addRemarkForRefNumber']
+        },
+
+        success: function (response) {
+          // Populate the options in the select eleme    
+           
+           // let text =  response[0].pf_cf_Remarkstatus;
+          //  const myArray = text.split(";");    
+
+            let list = document.getElementById("remarkcontentlist");
+              for (i = 0; i < response[0].escalationCaseRemark.length ; i++) {
+                let li = document.createElement('li');
+                li.innerText = response[0].escalationCaseRemark[i];
+                list.appendChild(li);
+               }
+
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
   }
-});
-
-}
 
 
 
@@ -477,18 +569,6 @@ $.ajax({
 
 
 
-
-
-function movetolive(referencenumber) {
-        // Code to generate card
-       //alert("Move to live reference number: " + referencenumber);
-       localStorage['casereferencenumber'] = referencenumber; 
-
-       window.location.replace("/movecasetolive.html");
-
-      }
-
-      
     $(document).ready(function () {
 
       $.ajax({
@@ -581,21 +661,18 @@ function movetolive(referencenumber) {
           $("#dataTable").DataTable().clear();
           var length = Object.keys(data).length;
           for(var i = 0; i < length; i++) {
-            var rfno= data[i].caseNumber
+            var rfno= data[i].casereferenceNumber
             // You could also use an ajax property on the data table initialization
             $('#dataTable').dataTable().fnAddData( [
-              data[i].caseNumber,
+              data[i].casereferenceNumber,
               data[i].patientName,
               data[i].patientMobile,
               data[i].insuranceCompanyName,
               data[i].claimAmount,
               data[i].claimNumber,
-              data[i].isEscalatedInCompany,
-              /*
-              `<a href="#popup2"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Assign Officer</button> </a>`,
-              `<a href="#popup3"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Draft</button> </a>`,
-              `<button class="btn btn-primary btn-sm" onclick="movetoescalation('${rfno}')">Move to Escalation</button>`
-              */
+              data[i].newCaseStatus,
+              `<a href="#popup2"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Add Escalation details</button> </a>`,
+              `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
             ]);
           }
         }
