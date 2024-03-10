@@ -343,6 +343,8 @@ div.dataTables_filter {
                         <th>Claim Amount</th>
                         <th>Claim Number</th>
                         <th>Case status</th>
+                        <th>Escalation Date</th>
+                        <th>Can Escalate</th>
                         <th>Action</th>
                         <th>Action</th>
                       </tr>
@@ -400,6 +402,7 @@ div.dataTables_filter {
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
   <script>
 
 function addremarkInDB() {
@@ -662,6 +665,14 @@ $.ajax({
           var length = Object.keys(data).length;
           for(var i = 0; i < length; i++) {
             var rfno= data[i].casereferenceNumber
+            var canEscalate = "NO";
+
+            //escalate if date diff is greater than 15
+            if( Math.ceil((new Date() - new Date(data[i].dateofEscalationToInsurer)) / (1000 * 60 * 60 * 24))  > 15)
+            {
+              canEscalate = "YES";
+            }
+
             // You could also use an ajax property on the data table initialization
             $('#dataTable').dataTable().fnAddData( [
               data[i].casereferenceNumber,
@@ -671,6 +682,8 @@ $.ajax({
               data[i].claimAmount,
               data[i].claimNumber,
               data[i].newCaseStatus,
+              moment(new Date(data[i].dateofEscalationToInsurer)).utc().format('DD-MM-YYYY'),
+              `${canEscalate}`,
               `<a href="#popup2"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Add Escalation details</button> </a>`,
               `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
             ]);
