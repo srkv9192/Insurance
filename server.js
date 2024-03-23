@@ -53,11 +53,11 @@ const port = process.env.PORT || 80
 //});
 
 
-
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
 
 /*
 
@@ -172,6 +172,7 @@ const dataSchema = new mongoose.Schema({
   pfReceived: String,
   pfpaymentRemarks: String,
   pfpaymentMode: String,
+  pfpaymentDate: Date,
   cfPercentage: Number,
   cfAmount: Number,
   cfReceived: String,
@@ -780,7 +781,7 @@ async function addDocURLInDBbycasenum(casenumber , url)
 app.post('/api/addpfremark', async(req, res) => {
   try{
 
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfpaymentRemarks:req.body.pfpaymentRemarks, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,  cfBankName: req.body.cfBankName, isLive: "true", newCaseStatus : "Live" }});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfpaymentRemarks:req.body.pfpaymentRemarks,  pfpaymentDate:req.body.pfpaymentDate, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,  cfBankName: req.body.cfBankName, isLive: "true", newCaseStatus : "Live" }});
 
       if(newData == null)
       {
@@ -2540,6 +2541,12 @@ app.post('/api/whoami', async(req,res) => {
   }
   else if(req.session.userId && (req.session.userType == 'medicalofficer')){
     res.json({message : 'medicalofficer', username : req.session.userName})
+  }
+  else if(req.session.userId && (req.session.userType == 'marketing')){
+    res.json({message : 'marketing', username : req.session.userName})
+  }
+  else if(req.session.userId && (req.session.userType == 'operation')){
+    res.json({message : 'operation', username : req.session.userName})
   }
   else
      res.json({message : 'invalid'})

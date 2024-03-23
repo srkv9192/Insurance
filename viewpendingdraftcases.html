@@ -548,7 +548,7 @@ div.dataTables_filter {
                       <p><strong>DOA:</strong> <span data-info="dateOfAdmission">[Date of Admission]</span> <strong>DOD:</strong> <span data-info="dateOfDischarge">[Date of Discharge]</span></p>
                       <p><strong>DIAGNOSIS:</strong> <span data-info="diagnosis">[Policy Number]</span></p>
                       <p><strong>PATIENT COMPLAINS DURING ADMISSION:</strong> <span data-info="patientComplain">[Complaints]</span></p>
-                      <p><strong>REJECTION REASON DATED:</strong> <span data-info="rejectionDate">[Rejection Reason]</span> </p>
+                      <p><strong>REJECTION REASON DATED:</strong> <span data-info="rejectionDate">[Rejection Reason]</span>  <span data-info="rejectionReason"> [Reason]</span> </p>
                       <p><strong>COMMENTS GIVEN BY:</strong> <span data-info="caseComment">[Comments]</span></p>
                         <!-- Additional content here
                           use the following code to fill json content
@@ -1012,6 +1012,9 @@ error: function (error) {
             document.querySelector('[data-info="diagnosis"]').textContent =response[0].diagnosis ? response[0].diagnosis : "";
             document.querySelector('[data-info="patientComplain"]').textContent = response[0].patientComplainDuringAdmission ? response[0].patientComplainDuringAdmission : "";
             document.querySelector('[data-info="rejectionDate"]').textContent = response[0].initialRejectionDate ? moment(new Date(response[0].initialRejectionDate)).utc().format('DD-MM-YYYY') : "";
+
+            document.querySelector('[data-info="rejectionReason"]').textContent = response[0].rejectionReason ? response[0].rejectionReason : "";
+
             document.querySelector('[data-info="caseComment"]').textContent = response[0].gistComments ? response[0].gistComments : "";
 
         },
@@ -1340,6 +1343,13 @@ function movetolive(referencenumber) {
               $("#hideonlogin").hide();
               localStorage['userName'] = response.username;
              
+            }
+            else if(response.message =='operation' || response.message =='marketing' || response.message =='medicalofficer')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showonlogin").show();
+              $("#hideonlogin").hide();
             }
             else if(response.message =='cp' || response.message =='manager')
             {

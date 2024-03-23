@@ -921,6 +921,13 @@ function movetolive(referencenumber) {
               localStorage['userName'] = response.username;
              
             }
+            else if(response.message =='operation' || response.message =='marketing' || response.message =='medicalofficer')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showonlogin").show();
+              $("#hideonlogin").hide();
+            }
             else if(response.message =='cp' || response.message =='manager')
             {
               $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
