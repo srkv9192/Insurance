@@ -53,7 +53,6 @@ const port = process.env.PORT || 80
 //});
 
 
-
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -451,6 +450,7 @@ app.post('/api/addprospect', upload.array('pdfFile', 10), async (req, res) => {
                         directCase: req.body.directCase,
                         prospectZone: req.body.prospectZone,
                         casereferenceNumber : refNumber,
+                        prospectDate: req.body.prospectDate,
                         caseNumber: "",
                         isProspect:"true",
                         newCaseStatus: "New Case",
@@ -784,7 +784,7 @@ async function addDocURLInDBbycasenum(casenumber , url)
 }
 
 
-app.post('/api/addpfremark', async(req, res) => {
+app.post('/api/addpfremark', upload.array('pdfFile', 10), async(req, res) => {
   try{
 
       const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfpaymentRemarks:req.body.pfpaymentRemarks,  pfpaymentDate:req.body.pfpaymentDate, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,  cfBankName: req.body.cfBankName, isLive: "true", newCaseStatus : "Live" }});
@@ -796,6 +796,15 @@ app.post('/api/addpfremark', async(req, res) => {
       else
       {
         const savedData = newData.save();
+         const uploadPromises = req.files.map(file => {
+          const randomString = require('crypto').randomBytes(16).toString('hex');
+          const fileNameExceptExtension =file.originalname.split('.')[0];
+          const extension = path.extname(file.originalname);
+
+          const destination = `uploads/${req.body.casereferenceNumber}-${fileNameExceptExtension}-${randomString}${extension}`;
+          return uploadFileToGCS(file.path, destination, req.body.casereferenceNumber);
+        });
+        await Promise.all(uploadPromises);
         res.json({ message: 'success'});
       }
     }
@@ -2571,6 +2580,7 @@ app.get('/viewprospectcases.html', (req, res) => res.sendFile(__dirname+'/viewpr
 app.get('/viewapprovedcases.html', (req, res) => res.sendFile(__dirname+'/viewapprovedcases.html'))
 app.get('/viewlivecases.html', (req, res) => res.sendFile(__dirname+'/viewlivecases.html'))
 app.get('/viewpendingdraftcases.html', (req, res) => res.sendFile(__dirname+'/viewpendingdraftcases.html'))
+app.get('/viewfullcasedetails.html', (req, res) => res.sendFile(__dirname+'/viewfullcasedetails.html'))
 app.get('/viewrejectedcases.html', (req, res) => res.sendFile(__dirname+'/viewrejectedcases.html'))
 
 app.get('/changepassword.html', (req, res) => res.sendFile(__dirname+'/changepassword.html'))

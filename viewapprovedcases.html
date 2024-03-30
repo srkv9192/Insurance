@@ -543,6 +543,27 @@ div.dataTables_filter {
 
 
                           </div>
+
+
+
+                          <div class="row mb-3">
+                            <div class="col-sm-6">
+                              <label for="legal-required-dropdown" class="form-label">Legal Status</label>
+                              <div class="input-group">
+                                <select class="form-control" id="legal-required-dropdown" required>
+                                  <option value="Required">Required</option>
+                                  <option value="Not Required">Not Required</option>
+                                </select>
+                              
+                              </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                              <label for="pdf-input" class="form-label">Documents</label>
+                                <input type="file" class="form-control" id="pdf-input"  multiple>
+                            </div>
+                          </div>
+
           
                           <div class="text-center">
                             <button type="submit" class="btn btn-primary">Submit</button>
@@ -1018,6 +1039,17 @@ function movetolive(referencenumber) {
 
 
         $('#paymentForm').on('submit', function (event) {
+
+
+            if($('#legal-required-dropdown').val() == "Required")
+            {
+              if($('#pdf-input')[0].files.length == 0)
+              {
+                alert("Please upload signed legal.");
+                return;
+              }
+            }
+
         event.preventDefault();
 
         var processingfeeFinal = $('#pf-amount-final').val();
@@ -1032,22 +1064,32 @@ function movetolive(referencenumber) {
 
           // call ajax to save these details--
 
+          var formData = new FormData();
+
+          formData.append('casereferenceNumber', localStorage['casereferencenumber']);
+          formData.append('pfAmount', processingfeeFinal);
+          formData.append('pfpaymentRemarks', paymentremarkFinal);
+
+          formData.append('pfpaymentDate', paymentdateFinal);
+          formData.append('pfpaymentMode', paymentmodeFinal);
+
+          formData.append('cfPercentage', consultationchargeFinal);
+          formData.append('cfAmount', chequeamountFinal);
+
+          formData.append('cfChequeNumber', chequenumberFinal);
+          formData.append('cfBankName', banknameFinal);
+
+
+          $.each($('#pdf-input')[0].files, function(i, file) {
+          formData.append('pdfFile', file);
+         });
+
           $.ajax({
           url: '/api/addpfremark',
           type: 'POST',
-          contentType: "application/x-www-form-urlencoded",
-          data: {
-            casereferenceNumber: localStorage['casereferencenumber'], 
-            pfAmount: processingfeeFinal ,
-            pfpaymentRemarks: paymentremarkFinal ,
-            pfpaymentDate: paymentdateFinal,
-            pfpaymentMode: paymentmodeFinal,
-            cfPercentage: consultationchargeFinal,
-            cfAmount: chequeamountFinal,
-            cfChequeNumber: chequenumberFinal,
-            cfBankName: banknameFinal,
-
-          },
+          contentType: false,
+          processData: false,
+          data: formData,
           success: function (response) {
             if(response.message == "success")
               {
@@ -1072,7 +1114,7 @@ function movetolive(referencenumber) {
           },
           error: function (error) {
             document.getElementById('loginForm').reset();
-            alert("login failed");
+            alert("Error saving data");
             // Display an error message to the user
           }
         });

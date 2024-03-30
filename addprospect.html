@@ -632,6 +632,9 @@
         formData.append('insuranceCompanyName', insurancecompany);
         formData.append('claimNumber', claimnumber);
 
+        formData.append('prospectDate', new Date());
+
+
         $.each($('#pdf-input')[0].files, function(i, file) {
           formData.append('pdfFile', file);
          });
