@@ -178,7 +178,12 @@ div.dataTables_filter {
 
 /*pop up box end*/
 
-
+#uploadingdiv {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
 
 
   </style>
@@ -481,7 +486,7 @@ div.dataTables_filter {
                   <div class="popup" style="width:45%">
                     <h2 >Upload document-</h2>
 
-                    <form id="loginForm" enctype="multipart/form-data">
+                    <form id="DocUploadForm" enctype="multipart/form-data">
                       <div class="col-sm-6">
                         <label for="pdf-input" class="form-label">Documents</label>
                           <input type="file" class="form-control" id="pdf-input"  multiple>
@@ -629,6 +634,50 @@ function addremark(referencenumber) {
         // Code to generate card
         localStorage['addRemarkForRefNumber'] =referencenumber; 
   }
+
+  function uploadDocsInDB()
+{
+
+  $('#uploadingdiv').show();
+
+  var formData = new FormData();
+        formData.append('casereferenceNumber', localStorage['addRemarkForRefNumber']);
+       
+        $.each($('#pdf-input')[0].files, function(i, file) {
+          formData.append('pdfFile', file);
+      });
+
+      $.ajax({
+          url: '/api/uploadadditionaldocs',
+          type: 'POST',
+          contentType: false,
+          processData: false,
+          data: formData,
+          success: function (response) {
+            if(response.message == "success")
+              {
+                //window.location.href = "/dashboard.html"
+                $('#uploadingdiv').hide({done: function() { alert("Additional docs uploaded."); } });
+               // alert("Case added reference number- " + response.referencenumber);
+                document.getElementById('loginForm').reset();
+              }
+              else{
+                $('#uploadingdiv').hide({done: function() { alert(response.error); } });
+               // alert(response.message);
+                document.getElementById('loginForm').reset();
+                //document.getElementById('loginForm').reset();
+              }
+          },
+          error: function (error) {
+            $('#uploadingdiv').hide({done: function() { alert("Failed to upload docs!!!"); } });
+            document.getElementById('loginForm').reset();
+           // alert("Failed to add case!!!");
+            // Display an error message to the user
+          }
+        });
+
+}
+
 
 
   function addremarkInDB() {

@@ -53,6 +53,7 @@ const port = process.env.PORT || 80
 //});
 
 
+
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -248,6 +249,9 @@ const dataSchema = new mongoose.Schema({
   gistComments: String,
   gistCommentsBy: String,
 
+  //
+  caseDraft: String,
+  lokpalDraft: String,
 
 
   // Add more fields as needed
@@ -484,10 +488,12 @@ app.post('/api/uploadadditionaldocs', upload.array('pdfFile', 10), async (req, r
   try{
         const refNumber= req.body.casereferenceNumber;
         const uploadPromises = req.files.map(file => {
-          const randomString = require('crypto').randomBytes(16).toString('hex');
-          const extension = path.extname(file.originalname);
-          const destination = `uploads/${refNumber}-${randomString}${extension}`;
-          return uploadFileToGCS(file.path, destination, refNumber );
+        const randomString = require('crypto').randomBytes(16).toString('hex');
+        const fileNameExceptExtension =file.originalname.split('.')[0];
+        const extension = path.extname(file.originalname);
+        const destination = `uploads/${refNumber}-${fileNameExceptExtension}-${randomString}${extension}`;
+        return uploadFileToGCS(file.path, destination, refNumber);
+
         });
 
       await Promise.all(uploadPromises);
@@ -803,7 +809,7 @@ app.post('/api/addpfremark', async(req, res) => {
 
 app.post('/api/addlivegistdata', async(req, res) => {
   try{
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ dateOfPolicy:req.body.dateOfPolicy, dateOfAdmission:req.body.dateOfAdmission, dateOfDischarge:req.body.dateOfDischarge, diagnosis: req.body.diagnosis, patientComplainDuringAdmission: req.body.patientComplainDuringAdmission,  rejectionReason: req.body.rejectionReason,  initialRejectionDate: req.body.initialRejectionDate, gistComments: req.body.gistComments, hospitalName: req.body.hospitalName, claimType:  req.body.claimType, policyNumber:  req.body.policyNumber,  }});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ dateOfPolicy:req.body.dateOfPolicy, dateOfAdmission:req.body.dateOfAdmission, dateOfDischarge:req.body.dateOfDischarge, diagnosis: req.body.diagnosis, patientComplainDuringAdmission: req.body.patientComplainDuringAdmission,  rejectionReason: req.body.rejectionReason,  initialRejectionDate: req.body.initialRejectionDate, gistComments: req.body.gistComments, hospitalName: req.body.hospitalName, claimType:  req.body.claimType, policyNumber:  req.body.policyNumber, caseDraft: req.body.caseDraft, lokpalDraft:  req.body.lokpalDraft }});
 
       if(newData == null)
       {
@@ -2663,6 +2669,7 @@ catch(err)
 
 const { PDFDocument, StandardFonts, rgb } = require("pdf-lib");
 const { writeFileSync, readFileSync } = require("fs");
+const { kStringMaxLength } = require('buffer');
 
 async function createPDF(req) {
   const document = await PDFDocument.load(readFileSync("./agreementtemplate18.pdf"));
