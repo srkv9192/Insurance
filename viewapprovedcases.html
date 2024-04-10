@@ -545,9 +545,20 @@ div.dataTables_filter {
                           </div>
 
 
-
                           <div class="row mb-3">
-                            <div class="col-sm-6">
+
+                           
+                            <div class="col-sm-4">
+                              <label for="case-email-final" class="form-label">Case Email</label>
+                              <input type="text" class="form-control" id="case-email-final" required >
+                            </div>
+                      
+                            <div class="col-sm-4">
+                              <label for="case-email-password-final" class="form-label">Email Password</label>
+                              <input type="text" class="form-control" id="case-email-password-final" required >
+                            </div>
+
+                            <div class="col-sm-4">
                               <label for="legal-required-dropdown" class="form-label">Legal Status</label>
                               <div class="input-group">
                                 <select class="form-control" id="legal-required-dropdown" required>
@@ -557,6 +568,12 @@ div.dataTables_filter {
                               
                               </div>
                             </div>
+
+                          </div>
+
+
+                          <div class="row mb-3">
+
 
                             <div class="col-sm-6">
                               <label for="pdf-input" class="form-label">Documents</label>
@@ -1060,6 +1077,9 @@ function movetolive(referencenumber) {
         var paymentremarkFinal = $('#pf-payment-remark-final').val();
         var paymentdateFinal = $('#pf-payment-date-final').val();
 
+        var caseemailFinal = $('#case-email-final').val();
+        var caseemailpasswordFinal = $('#case-email-password-final').val();
+
         var paymentmodeFinal = $('#payment-mode-dropdown').val();
 
           // call ajax to save these details--
@@ -1072,6 +1092,10 @@ function movetolive(referencenumber) {
 
           formData.append('pfpaymentDate', paymentdateFinal);
           formData.append('pfpaymentMode', paymentmodeFinal);
+
+          formData.append('caseEmail', caseemailFinal);
+          formData.append('caseEmailPassword', caseemailpasswordFinal);
+
 
           formData.append('cfPercentage', consultationchargeFinal);
           formData.append('cfAmount', chequeamountFinal);
