@@ -349,6 +349,7 @@ div.dataTables_filter {
                         <th>Password</th>
                         <th>Action</th>
                         <th>Action</th>
+                        <th>Action</th>
                       </tr>
                     </thead>
                   </table>
@@ -387,6 +388,36 @@ div.dataTables_filter {
                     
                     <a class="close" href="#">&times;</a>
                   </div>
+                </div>
+
+                <div id="popup5" class="overlay" >
+                  <div class="popup" style =" display: flex;
+                  justify-content: space-between;
+                  width: 100%;">
+                   
+                   <div>
+                    <h2 style="color: black;">Documents - </h2>
+                        <ul id="documentlist" style="margin-right: 100px; margin-top: 50px;"></ul>
+                   </div>
+                    
+
+
+                    <a class="close" href="#">&times;</a>
+
+                    <div id="wrapper" style="flex: 2;">
+                       
+
+                        <iframe name="inlineFrameExample" 
+                          title="Inline Frame Example" 
+                          style="width: 90%; height: 80vh; border:2px dotted; border-color: black; flex-grow: 2;"
+                          src="">
+                        </iframe>
+
+                   </div>
+
+                  </div>
+
+
                 </div>
 
               </div>
@@ -608,7 +639,7 @@ $.ajax({
             }
             else
             {
-              
+              window.location.href = "/login.html"
             }
             
         },
@@ -691,11 +722,63 @@ $.ajax({
               data[i].caseEmailPassword,
               `<a href="#popup2"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Add Escalation details</button> </a>`,
               `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
+              `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
             ]);
           }
         }
       
     });
+
+    function viewdocuments(referencenumber)
+{
+  let list = document.getElementById("documentlist");
+  
+  console.log("rajat....");
+
+
+  var wrapper = document.getElementById('wrapper');
+  wrapper.innerHTML= `"<iframe name="inlineFrameExample" 
+            title="Inline Frame Example" 
+            style="width: 90%; height: 80vh; border: 2px dotted;border-color: black; flex-grow: 2;"
+            src="">
+    </iframe>"`;
+  
+
+// 👇️ Remove all list elements
+list.innerHTML = '';
+
+
+$.ajax({
+url: '/api/getprospectcasedetailbyref',
+type: 'GET',
+data: {
+  casereferenceNumber: referencenumber
+},
+
+success: function (response) {
+  // Populate the options in the select eleme    
+   
+   // let text =  response[0].pf_cf_Remarkstatus;
+  //  const myArray = text.split(";");    
+
+    let list = document.getElementById("documentlist");
+      for (i = 0; i < response[0].docUrl.length ; i++) {
+        let li = document.createElement('li');
+        let filename = response[0].docUrl[i].substring(response[0].docUrl[i].lastIndexOf('/')+1);
+        li.innerHTML = `<a target='inlineFrameExample' href="${response[0].docUrl[i]}" >${filename}</a>`;
+        list.appendChild(li);
+       }
+
+},
+error: function (error) {
+  console.error('Error:', error);
+}
+});
+ 
+}
+
+
+
     
   </script>
 </body>
