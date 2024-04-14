@@ -66,6 +66,7 @@ mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
   useUnifiedTopology: true,
 });
 
+
 */
 
 const cookieParser = require("cookie-parser");
@@ -667,7 +668,7 @@ app.post('/api/addcasegistandrejectionreason', async(req, res) => {
 app.post('/api/addescalationdetails', async(req, res) => {
   try{
 
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ caseEmail: req.body.caseEmail, dateofEscalationToInsurer:req.body.dateofEscalationToInsurer, newCaseStatus: "Escalated" }});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ dateofEscalationToInsurer:req.body.dateofEscalationToInsurer, newCaseStatus: "Escalated" }});
 
       if(newData == null)
       {

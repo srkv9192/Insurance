@@ -944,7 +944,7 @@ success: function (response) {
       alert("Operation Officer assigned!")
       localStorage.removeItem("addRemarkForRefNumber");
 
-      window.location.href = "/viewlivecases.html";
+      window.location.href = "/viewpendingdraftcases.html";
     }
     else{
       alert("Error saving details!")
@@ -1380,8 +1380,8 @@ function movetolive(referencenumber) {
             if(response.message == "success")
               {
 
-                alert("Gist data Saved!");
-                window.location.href = "/viewlivecases.html";
+                alert("Draft data Saved!");
+                window.location.href = "/viewpendingdraftcases.html";
                 //localStorage.removeItem("caseNumber");
 
                 
