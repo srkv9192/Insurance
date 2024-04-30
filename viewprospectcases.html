@@ -675,7 +675,7 @@ function addmedicalremarkInDB() {
     type: 'POST',
     contentType: "application/x-www-form-urlencoded",
     data: {
-      referencenumber: localStorage['addRemarkForRefNumber'],
+      casereferenceNumber: localStorage['addRemarkForRefNumber'],
       medicalOpinionOfficer: $("#medicalofficer option:selected").text(),
     },
     success: function (response) {
