@@ -346,12 +346,14 @@ div.dataTables_filter {
                         <th>Reference Number</th>
                         <th>Manager Name</th>
                         <th>CP Name</th>
+                        <th>Patient Name</th>
                         <th>Complainant Name</th>
                         <th>Complainant Phone</th>
                         <th>Claim Amount</th>
                         <th>Operation Officer</th>
                         <th>Medical Officer</th>
                         <th>Case Status</th>
+                        <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
@@ -378,8 +380,20 @@ div.dataTables_filter {
                               <input type="text" class="form-control" id="complainant-name" required >
                             </div>
                             <div class="col-sm-4">
-                              <label for="claim-type" class="form-label">Claim Type</label>
-                              <input type="text" class="form-control" id="claim-type" required >
+                              <label for="claim-type-dropdown" class="form-label">Claim Type</label>
+                              
+
+                              <div class="input-group">
+                                <select class="form-control" id="claim-type-dropdown" required>
+                                  <option value="">None</option>
+                                  <option value="Reimbursement">Reimbursement</option>
+                                  <option value="Deduction">Deduction</option>
+                                  <option value="Rejection">Rejection</option>
+                                  <option value="Query">Query</option>
+                                  <option value="Consumer">Consumer</option>
+                                </select>
+                              </div>
+
                             </div>
                             
                           </div>
@@ -405,7 +419,7 @@ div.dataTables_filter {
                           <div class="row mb-3">
 
                             <div class="col-sm-4">
-                              <label for="policy-date" class="form-label">Date of Policy</label>
+                              <label for="policy-date" class="form-label">Date of Policy Inception</label>
                               <input type="date" class="form-control" id="policy-date" required >
                             </div>
 
@@ -467,7 +481,7 @@ div.dataTables_filter {
 
                             <div class="col-sm-4">
                               <label for="case-comment" class="form-label">Comments</label>
-                              <input type="text" class="form-control" id="case-comment" required >
+                              <input type="text" class="form-control" id="case-comment"  >
                             </div>
 
                           </div>
@@ -616,6 +630,10 @@ div.dataTables_filter {
                   </div>
                 </div>
 
+                <div id="uploadingdiv" style="display: none;">
+                  <img src="/images/uploading3.webp">
+                </div>
+
 
               </div>
             </div>
@@ -659,18 +677,18 @@ function addremark(referencenumber) {
                 //window.location.href = "/dashboard.html"
                 $('#uploadingdiv').hide({done: function() { alert("Additional docs uploaded."); } });
                // alert("Case added reference number- " + response.referencenumber);
-                document.getElementById('loginForm').reset();
+                document.getElementById('DocUploadForm').reset();
               }
               else{
                 $('#uploadingdiv').hide({done: function() { alert(response.error); } });
                // alert(response.message);
-                document.getElementById('loginForm').reset();
+                document.getElementById('DocUploadForm').reset();
                 //document.getElementById('loginForm').reset();
               }
           },
           error: function (error) {
             $('#uploadingdiv').hide({done: function() { alert("Failed to upload docs!!!"); } });
-            document.getElementById('loginForm').reset();
+            document.getElementById('DocUploadForm').reset();
            // alert("Failed to add case!!!");
             // Display an error message to the user
           }
@@ -913,7 +931,7 @@ error: function (error) {
                 
             document.getElementById("patient-name").value = response[0].patientName ? response[0].patientName : "";
             document.getElementById("complainant-name").value = response[0].complainantName ? response[0].complainantName: "";
-            document.getElementById("claim-type").value = response[0].claimType ? response[0].claimType : "";
+            document.getElementById("claim-type-dropdown").value = response[0].claimType ? response[0].claimType : "";
             document.getElementById("claim-amount").value = response[0].claimAmount ? response[0].claimAmount : "";
             document.getElementById("claim-number").value = response[0].claimNumber ? response[0].claimNumber : "";
             document.getElementById("policy-number").value = response[0].policyNumber ?  response[0].policyNumber : "";
@@ -1234,7 +1252,7 @@ function movetolive(referencenumber) {
         var rejectiondate = $('#rejection-date').val();
         var casecomment = $('#case-comment').val();
 
-        var claimtype = $('#claim-type').val();
+        var claimtype = $('#claim-type-dropdown').val();
         var policynumber = $('#policy-number').val();
 
           // call ajax to save these details--
@@ -1391,6 +1409,7 @@ function movetolive(referencenumber) {
             data[i].casereferenceNumber,
               data[i].managerName,
               data[i].cpName,
+              data[i].patientName,
               data[i].complainantName,
               data[i].complainantMobile,
               data[i].claimAmount,
