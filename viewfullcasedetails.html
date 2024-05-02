@@ -587,25 +587,25 @@ div.dataTables_filter {
 
 function populateData(response)
 {
-  //  casepfcfremarks= response[0].pf_cf_Remarkstatus;
+  //  casepfcfremarks= response[0].caseRemarks;
   document.querySelector('[data-info="casestatus"]').textContent =response[0].newCaseStatus ? response[0].newCaseStatus : "";
 
   document.querySelector('[data-info="initialcasedate"]').textContent =response[0].prospectDate ? moment(new Date(response[0].prospectDate)).utc().format('DD-MM-YYYY') : "";
 
      
   let list="<br>";
-  for (i = 0; i < response[0].pf_cf_Remarkstatus.length ; i++) {
-                list += response[0].pf_cf_Remarkstatus[i]+ "<br>";
+  for (i = 0; i < response[0].caseRemarks.length ; i++) {
+                list += response[0].caseRemarks[i]+ "<br>";
                }
-    for (i = 0; i < response[0].liveCaseRemark.length ; i++) {
-        list += response[0].liveCaseRemark[i]+ "<br>";
+    for (i = 0; i < response[0].caseRemarks.length ; i++) {
+        list += response[0].caseRemarks[i]+ "<br>";
     }
 
-    for (i = 0; i < response[0].escalationCaseRemark.length ; i++) {
-        list += response[0].escalationCaseRemark[i]+ "<br>";
+    for (i = 0; i < response[0].caseRemark.length ; i++) {
+        list += response[0].caseRemark[i]+ "<br>";
     }
 
- //   document.querySelector('[data-info="casepfcfremarks"]').textContent = response[0].pf_cf_Remarkstatus ? response[0].pf_cf_Remarkstatus : "";
+ //   document.querySelector('[data-info="casepfcfremarks"]').textContent = response[0].caseRemarks ? response[0].caseRemarks : "";
 
     document.querySelector('[data-info="casepfcfremarks"]').innerHTML = list;
 

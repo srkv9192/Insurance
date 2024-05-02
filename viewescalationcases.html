@@ -451,7 +451,7 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
       contentType: "application/x-www-form-urlencoded",
       data: {
         referencenumber: localStorage['addRemarkForRefNumber'],
-        escalationCaseRemark: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ document.getElementById("newremark").value
+        caseRemark: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ document.getElementById("newremark").value
       },
       success: function (response) {
         if(response.message == "success")
@@ -547,13 +547,13 @@ function addremark(referencenumber) {
         success: function (response) {
           // Populate the options in the select eleme    
            
-           // let text =  response[0].pf_cf_Remarkstatus;
+           // let text =  response[0].caseRemarks;
           //  const myArray = text.split(";");    
 
             let list = document.getElementById("remarkcontentlist");
-              for (i = 0; i < response[0].escalationCaseRemark.length ; i++) {
+              for (i = 0; i < response[0].caseRemark.length ; i++) {
                 let li = document.createElement('li');
-                li.innerText = response[0].escalationCaseRemark[i];
+                li.innerText = response[0].caseRemark[i];
                 list.appendChild(li);
                }
 
@@ -758,7 +758,7 @@ data: {
 success: function (response) {
   // Populate the options in the select eleme    
    
-   // let text =  response[0].pf_cf_Remarkstatus;
+   // let text =  response[0].caseRemarks;
   //  const myArray = text.split(";");    
 
     let list = document.getElementById("documentlist");

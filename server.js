@@ -54,7 +54,6 @@ const port = process.env.PORT || 80
 
 
 
-
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -162,9 +161,7 @@ const dataSchema = new mongoose.Schema({
   claimAmount: Number,
   claimNumber: String,
   claimType: String,
-  pf_cf_Remarkstatus: Array,
-  liveCaseRemark: Array,
-  escalationCaseRemark: Array,
+  caseRemarks: Array,
   caseRejectionReason: String,
   caseGist: String,
   docUrl: Array,
@@ -532,9 +529,9 @@ app.post('/api/uploaddraftdocs', upload.array('pdfFile', 10), async (req, res) =
 });
 
 
-app.post('/api/addprospectcaseremark', async(req, res) => {
+app.post('/api/addtcaseremark', async(req, res) => {
   try{
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ pf_cf_Remarkstatus:req.body.pf_cf_Remarkstatus}});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ caseRemarks:req.body.caseRemarks}});
 
       if(newData == null)
       {
@@ -556,7 +553,7 @@ app.post('/api/addprospectcaseremark', async(req, res) => {
 
 app.post('/api/addlivecaseremark', async(req, res) => {
   try{
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ liveCaseRemark:req.body.liveCaseRemark}});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ caseRemarks:req.body.caseRemarks}});
 
       if(newData == null)
       {
@@ -579,7 +576,7 @@ app.post('/api/addlivecaseremark', async(req, res) => {
 
 app.post('/api/addescalationcaseremark', async(req, res) => {
   try{
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ escalationCaseRemark : req.body.escalationCaseRemark}});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ caseRemark : req.body.caseRemark}});
 
       if(newData == null)
       {
@@ -601,7 +598,7 @@ app.post('/api/addescalationcaseremark', async(req, res) => {
 
 app.post('/api/addlivecasequeryremark', async(req, res) => {
   try{
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ liveCaseRemark:req.body.liveCaseRemark}, $set:{ newCaseStatus: "Draft Query"}});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ caseRemarks:req.body.caseRemarks}, $set:{ newCaseStatus: "Draft Query"}});
 
       if(newData == null)
       {
@@ -624,7 +621,7 @@ app.post('/api/addlivecasequeryremark', async(req, res) => {
 
 app.post('/api/movetoescalation', async(req, res) => {
   try{
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ liveCaseRemark:req.body.liveCaseRemark}, $set:{ newCaseStatus: "Escalation Pending", isInEscalationStage: "true", isLive: "false"}});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ caseRemarks:req.body.caseRemarks}, $set:{ newCaseStatus: "Escalation Pending", isInEscalationStage: "true", isLive: "false"}});
 
       if(newData == null)
       {
@@ -1824,7 +1821,7 @@ app.get("/api/getlivecaseRemarkbyref", async(req, res) => {
     // Retrieve all tpa list from database
     console.log(req.query.casereferenceNumber)
 
-    const users = await  dataSchemaObject.find({casereferenceNumber: req.query.casereferenceNumber}, {liveCaseRemark:1});
+    const users = await  dataSchemaObject.find({casereferenceNumber: req.query.casereferenceNumber}, {caseRemarks:1});
     res.json(users);
   } catch (error) {
     console.error(error);
@@ -1837,7 +1834,7 @@ app.get("/api/getescalationcaseRemarkbyref", async(req, res) => {
     // Retrieve all tpa list from database
     console.log(req.query.casereferenceNumber)
 
-    const users = await  dataSchemaObject.find({casereferenceNumber: req.query.casereferenceNumber}, {escalationCaseRemark:1});
+    const users = await  dataSchemaObject.find({casereferenceNumber: req.query.casereferenceNumber}, {caseRemark:1});
     res.json(users);
   } catch (error) {
     console.error(error);
