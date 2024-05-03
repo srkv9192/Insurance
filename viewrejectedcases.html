@@ -346,6 +346,9 @@ div.dataTables_filter {
                         <th>Claim Amount</th>
                         <th>Medical Officer</th>
                         <th>Case Status</th>
+                        <th>Action</th>
+                        <th>Action</th>
+                        <th>Action</th>
                       </tr>
                     </thead>
                   </table>
@@ -465,6 +468,64 @@ div.dataTables_filter {
                   </div>
                 </div>
 
+                <div id="popup5" class="overlay" >
+                  <div class="popup" style =" display: flex;
+                  justify-content: space-between;
+                  width: 100%;">
+                   
+                   <div>
+                    <h2 style="color: black;">Documents - </h2>
+                        <ul id="documentlist" style="margin-right: 100px; margin-top: 50px;"></ul>
+                   </div>
+                    
+
+
+                    <a class="close" href="#">&times;</a>
+
+                    <div id="wrapper" style="flex: 2;">
+                       
+
+                        <iframe name="inlineFrameExample" 
+                          title="Inline Frame Example" 
+                          style="width: 90%; height: 80vh; border:2px dotted; border-color: black; flex-grow: 2;"
+                          src="">
+                        </iframe>
+
+                   </div>
+
+                  </div>
+
+
+                </div>
+
+                <div id="popup9" class="overlay" >
+                  <div class="popup" style ="width:45%">
+                    <h2  id = "remarkcontent">Remarks-</h2>
+                    <ul id="remarkcontentlist"></ul>
+
+                    
+                    <input type="text" placeholder="Add new remark here" id="newremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                    <button type="submit" onclick="addremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
+                    
+                    <a class="close" href="#">&times;</a>
+                  </div>
+                </div>
+
+                <div id="popup7" class="overlay">
+                  <div class="popup">
+                    <h2  id = "remarkcontent">Move to Prospect-</h2>
+                    <ul id="remarkcontentlist"></ul>
+
+                    
+                    <input type="text" placeholder="Add remark here" id="newremarkapproval" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                    <button type="submit" onclick="addremarkInDBAndApprove()" class="btn btn-primary btn-sm">Move to prospect</button>
+                    
+                    <a class="close" href="#">&times;</a>
+                  </div>
+                </div>
+
+
+
               </div>
             </div>
           </div>
@@ -476,6 +537,152 @@ div.dataTables_filter {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
   <script>
+
+
+
+function addremark(referencenumber) {
+        // Code to generate card
+        localStorage['addRemarkForRefNumber'] =referencenumber; 
+  }
+
+function addremarkInDBAndApprove() {
+
+const today = new Date();
+const yyyy = today.getFullYear();
+let mm = today.getMonth() + 1; // Months start at 0!
+let dd = today.getDate();
+
+if (dd < 10) dd = '0' + dd;
+if (mm < 10) mm = '0' + mm;
+
+const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+    $.ajax({
+      url: '/api/addtcaseremarkandmovetoprospect',
+      type: 'POST',
+      contentType: "application/x-www-form-urlencoded",
+      data: {
+        referencenumber: localStorage['addRemarkForRefNumber'],
+        caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ document.getElementById("newremarkapproval").value
+      },
+      success: function (response) {
+        if(response.message == "success")
+          {
+           // window.location.href = "/index.html"
+            //localStorage['userID'] = username;
+
+           // movetoprospectforquery();
+           alert("Case moved to prospect!")
+          }
+          else{
+            alert("Error moving case to prospect!")
+            //document.getElementById('loginForm').reset();
+          }
+        //alert("login success");
+        // Redirect to the dashboard or perform any other actions
+      },
+      error: function (error) {
+        document.getElementById('loginForm').reset();
+        alert("Error moving case to medical query!");
+        // Display an error message to the user
+      }
+    });
+  
+   // alert(  document.getElementById("newremark").value);
+
+}
+  
+
+
+function viewdocuments(referencenumber)
+{
+  let list = document.getElementById("documentlist");
+  
+  console.log("rajat....");
+
+
+  var wrapper = document.getElementById('wrapper');
+  wrapper.innerHTML= `"<iframe name="inlineFrameExample" 
+            title="Inline Frame Example" 
+            style="width: 90%; height: 80vh; border: 2px dotted;border-color: black; flex-grow: 2;"
+            src="">
+    </iframe>"`;
+  
+
+// 👇️ Remove all list elements
+list.innerHTML = '';
+
+
+$.ajax({
+url: '/api/getprospectcasedetailbyref',
+type: 'GET',
+data: {
+  casereferenceNumber: referencenumber
+},
+
+success: function (response) {
+  // Populate the options in the select eleme    
+   
+   // let text =  response[0].caseRemarks;
+  //  const myArray = text.split(";");    
+
+    let list = document.getElementById("documentlist");
+      for (i = 0; i < response[0].docUrl.length ; i++) {
+        let li = document.createElement('li');
+        let filename = response[0].docUrl[i].substring(response[0].docUrl[i].lastIndexOf('/')+1);
+        li.innerHTML = `<a target='inlineFrameExample' href="${response[0].docUrl[i]}" >${filename}</a>`;
+        list.appendChild(li);
+       }
+
+},
+error: function (error) {
+  console.error('Error:', error);
+}
+});
+ 
+}
+
+
+
+function viewremark(referencenumber) {
+        // Code to generate card
+
+        localStorage['addRemarkForRefNumber'] = referencenumber; 
+
+        let list = document.getElementById("remarkcontentlist");
+
+        // 👇️ Remove all list elements
+        list.innerHTML = '';
+
+        $.ajax({
+        url: '/api/getlivecaseRemarkbyref',
+        type: 'GET',
+        data: {
+          casereferenceNumber: referencenumber
+        },
+
+        success: function (response) {
+          // Populate the options in the select eleme    
+           
+           // let text =  response[0].caseRemarks;
+          //  const myArray = text.split(";");    
+
+            let list = document.getElementById("remarkcontentlist");
+              for (i = 0; i < response[0].caseRemarks.length ; i++) {
+                let li = document.createElement('li');
+                li.innerText = response[0].caseRemarks[i];
+                list.appendChild(li);
+               }
+
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+  }
+
+
 
    
 function movetolive(referencenumber) {
@@ -599,7 +806,9 @@ function movetolive(referencenumber) {
               data[i].claimAmount,
               data[i].medicalOpinionOfficer,
               data[i].newCaseStatus,
-              `<a href="#popup1"> <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Move to Prospect</button> </a>`
+              `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
+              `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')">View Documents</button> </a>`,
+              `<a href="#popup7"><button class="btn btn-primary btn-sm"   onclick="addremark('${rfno}')" >Move to Prospect</button> </a>`,
             ]);
           }
         }

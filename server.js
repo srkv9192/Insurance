@@ -67,6 +67,7 @@ mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
   useUnifiedTopology: true,
 });
 
+
 */
 
 const cookieParser = require("cookie-parser");
@@ -550,6 +551,30 @@ app.post('/api/addtcaseremark', async(req, res) => {
   } 
 
 });
+
+
+app.post('/api/addtcaseremarkandmovetoprospect', async(req, res) => {
+  try{
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ caseRemarks:req.body.caseRemarks} , $set:{ newCaseStatus: "Reject Reconsideration",  isProspect:"true",} });
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not save remark', refnum:req.body.referencenumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding remark' });
+  } 
+
+});
+
 
 app.post('/api/addlivecaseremark', async(req, res) => {
   try{

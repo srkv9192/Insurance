@@ -598,8 +598,8 @@ div.dataTables_filter {
 
                     <form id="DocUploadForm" enctype="multipart/form-data">
                       <div class="col-sm-6">
-                        <label for="pdf-input" class="form-label">Documents</label>
-                          <input type="file" class="form-control" id="pdf-input"  multiple>
+                        <label for="pdf-input1" class="form-label">Documents</label>
+                          <input type="file" class="form-control" id="pdf-input1"  multiple>
                       </div>
                       <br>        
                       <br>
@@ -673,7 +673,7 @@ function addremark(referencenumber) {
   var formData = new FormData();
         formData.append('casereferenceNumber', localStorage['addRemarkForRefNumber']);
        
-        $.each($('#pdf-input')[0].files, function(i, file) {
+        $.each($('#pdf-input1')[0].files, function(i, file) {
           formData.append('pdfFile', file);
       });
 
