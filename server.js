@@ -67,7 +67,6 @@ mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
   useUnifiedTopology: true,
 });
 
-
 */
 
 const cookieParser = require("cookie-parser");
@@ -601,7 +600,7 @@ app.post('/api/addlivecaseremark', async(req, res) => {
 
 app.post('/api/addescalationcaseremark', async(req, res) => {
   try{
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ caseRemark : req.body.caseRemark}});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ caseRemarks : req.body.caseRemarks}});
 
       if(newData == null)
       {
@@ -692,7 +691,7 @@ app.post('/api/addcasegistandrejectionreason', async(req, res) => {
 app.post('/api/addescalationdetails', async(req, res) => {
   try{
 
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ dateofEscalationToInsurer:req.body.dateofEscalationToInsurer, newCaseStatus: "Escalated" }});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ dateofEscalationToInsurer:req.body.dateofEscalationToInsurer, newCaseStatus: "Escalated" }, $push:{ caseRemarks :req.body.caseRemarks}});
 
       if(newData == null)
       {
@@ -844,6 +843,29 @@ app.post('/api/addpfremark', upload.array('pdfFile', 10), async(req, res) => {
 app.post('/api/addlivegistdata', async(req, res) => {
   try{
       const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ dateOfPolicy:req.body.dateOfPolicy, dateOfAdmission:req.body.dateOfAdmission, dateOfDischarge:req.body.dateOfDischarge, diagnosis: req.body.diagnosis, patientComplainDuringAdmission: req.body.patientComplainDuringAdmission,  rejectionReason: req.body.rejectionReason,  initialRejectionDate: req.body.initialRejectionDate, gistComments: req.body.gistComments, hospitalName: req.body.hospitalName, claimType:  req.body.claimType, policyNumber:  req.body.policyNumber, caseDraft: req.body.caseDraft, lokpalDraft:  req.body.lokpalDraft,  newCaseStatus: "Gist Generated", }});
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not save live gist data', refnum:req.body.caseNumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding live gist data' });
+  } 
+
+});
+
+
+app.post('/api/addlivedraftdata', async(req, res) => {
+  try{
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ dateOfPolicy:req.body.dateOfPolicy, dateOfAdmission:req.body.dateOfAdmission, dateOfDischarge:req.body.dateOfDischarge, diagnosis: req.body.diagnosis, patientComplainDuringAdmission: req.body.patientComplainDuringAdmission,  rejectionReason: req.body.rejectionReason,  initialRejectionDate: req.body.initialRejectionDate, gistComments: req.body.gistComments, hospitalName: req.body.hospitalName, claimType:  req.body.claimType, policyNumber:  req.body.policyNumber, caseDraft: req.body.caseDraft, lokpalDraft:  req.body.lokpalDraft,  newCaseStatus: "Draft Generated", }});
 
       if(newData == null)
       {
@@ -1794,7 +1816,7 @@ app.get("/api/getapprovedcasedetail", async(req, res) => {
 app.get("/api/getpendingdraftcasedetail", async(req, res) => {
   try {
     // Retrieve all tpa list from database
-    const users = await  dataSchemaObject.find({newCaseStatus: "Pending Draft"});
+    const users = await  dataSchemaObject.find({  $or: [ { newCaseStatus: "Draft Generated" }, { newCaseStatus: "Pending Draft"} ]} );
     res.json(users);
   } catch (error) {
     console.error(error);
@@ -1859,7 +1881,7 @@ app.get("/api/getescalationcaseRemarkbyref", async(req, res) => {
     // Retrieve all tpa list from database
     console.log(req.query.casereferenceNumber)
 
-    const users = await  dataSchemaObject.find({casereferenceNumber: req.query.casereferenceNumber}, {caseRemark:1});
+    const users = await  dataSchemaObject.find({casereferenceNumber: req.query.casereferenceNumber}, {caseRemarks:1});
     res.json(users);
   } catch (error) {
     console.error(error);

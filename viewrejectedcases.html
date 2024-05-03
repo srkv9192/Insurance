@@ -545,6 +545,59 @@ function addremark(referencenumber) {
         localStorage['addRemarkForRefNumber'] =referencenumber; 
   }
 
+
+  function addremarkInDB() {
+
+const today = new Date();
+const yyyy = today.getFullYear();
+let mm = today.getMonth() + 1; // Months start at 0!
+let dd = today.getDate();
+
+if (dd < 10) dd = '0' + dd;
+if (mm < 10) mm = '0' + mm;
+
+const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+    $.ajax({
+      url: '/api/addlivecaseremark',
+      type: 'POST',
+      contentType: "application/x-www-form-urlencoded",
+      data: {
+        referencenumber: localStorage['addRemarkForRefNumber'],
+        caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ document.getElementById("newremark").value
+      },
+      success: function (response) {
+        if(response.message == "success")
+          {
+           // window.location.href = "/index.html"
+            //localStorage['userID'] = username;
+            alert("Remark saved!")
+            localStorage.removeItem("addRemarkForRefNumber");
+
+            document.getElementById("newremark").value ="";
+            window.location.href = "/viewrejectedcases.html";
+            
+          }
+          else{
+            alert("Error saving remark!")
+            //document.getElementById('loginForm').reset();
+          }
+        //alert("login success");
+        // Redirect to the dashboard or perform any other actions
+      },
+      error: function (error) {
+       // document.getElementById('loginForm').reset();
+        //alert("login failed");
+        // Display an error message to the user
+      }
+    });
+  
+
+
+}
+  
+
+
 function addremarkInDBAndApprove() {
 
 const today = new Date();
@@ -582,8 +635,8 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
         // Redirect to the dashboard or perform any other actions
       },
       error: function (error) {
-        document.getElementById('loginForm').reset();
-        alert("Error moving case to medical query!");
+        //document.getElementById('loginForm').reset();
+        alert("Error moving case to prospect!");
         // Display an error message to the user
       }
     });

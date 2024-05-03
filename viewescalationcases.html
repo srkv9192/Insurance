@@ -8,6 +8,10 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="css/menubar.css">
+
+    <!-- for editable text box area   https://quilljs.com/docs/quickstart-->
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.4/dist/quill.snow.css" rel="stylesheet" />
+
   <style>
     body {
       background-color: #343a40;
@@ -350,6 +354,7 @@ div.dataTables_filter {
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
+                        <th>Action</th>
                       </tr>
                     </thead>
                   </table>
@@ -364,6 +369,11 @@ div.dataTables_filter {
                             <div class="col-sm-7">
                               <label for="escalationdate"  class="form-label">First Escalation Date</label>
                               <input type="date" dateFormat: "dd/mm/yy"  class="form-control" id="escalationdate" required >
+                            </div>
+
+                            <div class="col-sm-7">
+                              <label for="escalationremark"  class="form-label">Escalation Remark</label>
+                              <input type="text"  class="form-control" id="escalationremark" required >
                             </div>
                         
                           </div>
@@ -420,6 +430,23 @@ div.dataTables_filter {
 
                 </div>
 
+                <div id="popup6" class="overlay">
+                  <div class="popup" style="width: 80%;">
+                    <div class="frame">
+                        <form id="gistForm">
+                              <label for="editor" class="form-label">Draft</label>
+                              <div id="editor">
+                              </div>
+
+                              <label for="editor1" class="form-label">Draft</label>
+                              <div id="editor1">
+                              </div>
+                        </form>
+                        <a class="close" style=" color: white;" href="#">&times;</a>
+                     </div>
+                    </div>
+                </div>
+
               </div>
             </div>
           </div>
@@ -431,7 +458,27 @@ div.dataTables_filter {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.4/dist/quill.js"></script>
+
   <script>
+
+const toolbarOptions =['bold', 'italic', 'underline'];
+
+const quill = new Quill('#editor', {
+    theme: 'snow',
+    modules: {
+    toolbar: toolbarOptions
+  }
+  });
+
+  const quill1 = new Quill('#editor1', {
+    theme: 'snow',
+    modules: {
+    toolbar: toolbarOptions
+  }
+  });
+
 
 function addremarkInDB() {
 
@@ -451,7 +498,7 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
       contentType: "application/x-www-form-urlencoded",
       data: {
         referencenumber: localStorage['addRemarkForRefNumber'],
-        caseRemark: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ document.getElementById("newremark").value
+        caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ document.getElementById("newremark").value
       },
       success: function (response) {
         if(response.message == "success")
@@ -498,6 +545,7 @@ $('#paymentForm').on('submit', function (event) {
           data: {
             casereferenceNumber: localStorage['addRemarkForRefNumber'], 
             dateofEscalationToInsurer: $('#escalationdate').val(),
+            caseRemarks: $('#escalationremark').val(),
           },
           success: function (response) {
             if(response.message == "success")
@@ -551,9 +599,9 @@ function addremark(referencenumber) {
           //  const myArray = text.split(";");    
 
             let list = document.getElementById("remarkcontentlist");
-              for (i = 0; i < response[0].caseRemark.length ; i++) {
+              for (i = 0; i < response[0].caseRemarks.length ; i++) {
                 let li = document.createElement('li');
-                li.innerText = response[0].caseRemark[i];
+                li.innerText = response[0].caseRemarks[i];
                 list.appendChild(li);
                }
 
@@ -723,11 +771,40 @@ $.ajax({
               `<a href="#popup2"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Add Escalation details</button> </a>`,
               `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
               `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
+              `<a href="#popup6"><button class="btn btn-primary btn-sm"  onclick="viewAgreement('${rfno}')" >View Draft</button> </a>`,
+
             ]);
           }
         }
       
     });
+
+
+    function viewAgreement(referencenumber)
+    {
+
+      localStorage['casereferencenumber'] = referencenumber; 
+
+      $.ajax({
+        url: '/api/getcasedetailbyref',
+        type: 'GET',
+        data: {
+          casereferenceNumber: referencenumber
+        },
+
+        success: function (response) {
+ 
+            quill.root.innerHTML= response[0].caseDraft;
+            quill1.root.innerHTML= response[0].lokpalDraft;          
+
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      }); 
+
+    }
+
 
     function viewdocuments(referencenumber)
 {
