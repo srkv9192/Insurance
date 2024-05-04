@@ -5,6 +5,12 @@ const multer = require('multer');
 const AWS = require('aws-sdk');
 var fs = require('fs');
 
+const utf8 = require('utf8');
+
+const regeneratorRuntime = require("regenerator-runtime");
+
+const fontkit = require('pdf-fontkit');
+
 const { google } = require('googleapis');
 
 //for getting file extension such as pdf png etc
@@ -53,12 +59,10 @@ const port = process.env.PORT || 80
 //});
 
 
-
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
 
 /*
 
@@ -2729,12 +2733,13 @@ const { writeFileSync, readFileSync } = require("fs");
 const { kStringMaxLength } = require('buffer');
 
 async function createPDF(req) {
-  const document = await PDFDocument.load(readFileSync("./agreementtemplate18.pdf"));
+  const document = await PDFDocument.load(readFileSync("./agreementtemplate19.pdf"));
 
   const courierBoldFont = await document.embedFont(StandardFonts.Courier);
   const timesFont = await document.embedFont(StandardFonts.TimesRoman);
   const timesBoldFont = await document.embedFont(StandardFonts.TimesRomanBold);
   const firstPage = document.getPage(0);
+  const secondPage = document.getPage(1);
 
   console.log( firstPage.getHeight() + " " +  firstPage.getWidth());
 
@@ -2780,6 +2785,43 @@ const monthName = ["January","February","March","April","May","June","July","Aug
   var fourthline=`I affirm that all the above contents and terms & conditions have been well understood by me and in witness
 whereof I/We hereto at Indore signed on the ${agreementdate.getDate().toString()} day of month ${monthName[agreementdate.getMonth()]} ${agreementdate.getFullYear().toString()}`;
  
+
+
+var firstlinehindi=`मैं/हम उपरोक्त ग्राहक/आवेदक, ${req.body.clientName} (प्रथम पक्ष) है, ऐसा करता हूं 
+${req.body.behalfOf} के मामले में कार्य करने और पैरवी करने के लिए निदान कानूनी सलाहकारों (द्वितीय पक्ष) को नियुक्त और अधिकृत करें।
+${req.body.insuranceCompanyName} का ${req.body.complainantName} दावा संख्या  ${req.body.claimNumber}
+कंपनी, जिसमें दावा दायर करना, प्रश्न उत्तर के लिए आवेदन, पुनर्विचार प्रक्रिया, अलग करना शामिल होगा
+अस्वीकृत/कटौती किए गए दावे का. हम पत्राचार या अदालती कार्यवाही के माध्यम से दावे का निपटारा करने का प्रयास करते हैं
+या लोकपाल, जैसा कि दूसरे पक्ष द्वारा अपने सभी चरणों में उक्त दावे के लाभ के लिए आवश्यक समझा जा सकता है
+और दूसरे पक्ष द्वारा किए गए किसी भी कार्य को सुधारने और पुष्टि करने के लिए सहमत हूं, जैसे कि प्रथम पक्ष के रूप में
+ मेरे/हमारे द्वारा किया गया हो।`;
+ 
+
+  var secondlinehindi=`मैं/हम रुपये की गैर-वापसी योग्य अग्रिम प्रसंस्करण शुल्क का भुगतान करने के लिए सहमत हैं। ${req.body.processingFee}/- और एक परामर्श शुल्क राशि
+  कुल दावा की गई राशि का ${req.body.consultationCharge}% रु. ${req.body.claimAmount} यानि कि रु. ${req.body.chequeAmount}/-, पार्टी नं. एक सप्ताह के अंदर 2
+  संबंधित बीमा कंपनी से निर्धारित दावा राशि प्राप्त करना। आंशिक निपटान के मामले में
+  बताई गई राशि में से ${req.body.consultationCharge}% परामर्श शुल्क की गणना अंतिम राशि के अनुसार की जाएगी
+  निपटान के माध्यम से प्राप्त किया गया।`;
+
+
+var thirdlinehindi=`मैं/हम रुपये का पोस्ट डेटेड चेक जमा करने के लिए भी सहमत हैं। ${req.body.chequeAmount} जिसका चेक नं.  ${chequenumber}
+बैंक का नाम ${bankname} परामर्श शुल्क की सुरक्षा जमा राशि के रूप में, जिसे बाद में वापस किया जा सकता है
+परामर्श शुल्क का वास्तविक भुगतान। यदि मैं/हम वास्तविक परामर्श शुल्क का भुगतान करने में विफल रहते हैं, तो मैं एतद्द्वारा
+उपर्युक्त पोस्ट-डेटेड चेक के माध्यम से परामर्श शुल्क प्राप्त करने के लिए दूसरे पक्ष को अधिकृत करें
+दूसरे पक्ष के पास सुरक्षा जमा के रूप में जमा किया गया। यदि दूसरा पक्ष कोई राहत प्राप्त करने में विफल रहता है
+दावे का निपटान न करने पर प्रथम पक्ष के लिए, दूसरे पक्ष को कोई परामर्श शुल्क देय नहीं होगा, और
+उत्तर दिनांकित चेक प्रथम पक्ष को वापस कर दिया जाएगा या प्रथम पक्ष की सहमति पर नष्ट कर दिया जाएगा।
+प्रोसेसिंग शुल्क वापसी योग्य नहीं है।`;
+
+var fourthlinehindi = `मैं पुष्टि करता हूं कि उपरोक्त सभी सामग्री और नियम एवं शर्तें मेरे द्वारा और साक्षी रूप से अच्छी तरह से समझी गई हैं
+जिस पर मैंने/हमने इंदौर में माह ${monthName[agreementdate.getMonth()]} ${agreementdate.getFullYear().toString()} की ${agreementdate.getDate().toString()} तारीख को हस्ताक्षर किए`;
+
+
+document.registerFontkit(fontkit);
+
+
+ const customFont = await document.embedFont(fs.readFileSync('./public/TiroDevanagariHindi-Regular.ttf'), { subset: true })
+
  //first line
  firstPage.moveTo(69, 620);
  firstPage.drawText(firstline, {
@@ -2832,98 +2874,6 @@ whereof I/We hereto at Indore signed on the ${agreementdate.getDate().toString()
     size: 12,
   });
 
-  /*
-//name second time
-  firstPage.moveTo(283, 635);
-  firstPage.drawText(req.body.clientName, {
-    font: timesBoldFont,
-    size: 11,
-  });
-
-  // claim no.
-  firstPage.moveTo(287, 603);
-  firstPage.drawText(req.body.claimNumber , {
-    font: timesBoldFont,
-    size: 10,
-  });
-
-  // behalf of and complainant name
-    firstPage.moveTo(112, 603);
-    firstPage.drawText(req.body.behalfOf + ", " + req.body.complainantName , {
-      font: timesBoldFont,
-      size: 10,
-    });
-
-
-  //Insurance company name-
-  firstPage.moveTo(372, 603);
-  firstPage.drawText(req.body.insuranceCompanyName , {
-    font: timesBoldFont,
-    size: 10,
-  });
-
-
-    //Processing fees
-    firstPage.moveTo(370, 478);
-    firstPage.drawText( req.body.processingFee, {
-      font: timesBoldFont,
-      size: 10,
-    });
-
-        //consultation percentage fees
-        firstPage.moveTo(85, 462);
-        firstPage.drawText(req.body.consultationCharge , {
-          font: timesBoldFont,
-          size: 10,
-        });
-
-          //Total claimed amount
-          firstPage.moveTo(257, 462);
-          firstPage.drawText( req.body.claimAmount, {
-            font: timesBoldFont,
-            size: 10,
-          });
-
-         //cheque amount first time
-         firstPage.moveTo(360, 462);
-         firstPage.drawText( req.body.chequeAmount, {
-         font: timesBoldFont,
-        size: 10,
-         });
-
-         //consultation percentage fees second time
-        firstPage.moveTo(280, 431);
-        firstPage.drawText(req.body.consultationCharge , {
-          font: timesBoldFont,
-          size: 10,
-        });
-
-         //cheque amount
-         firstPage.moveTo(328, 384);
-          firstPage.drawText( req.body.chequeAmount, {
-          font: timesBoldFont,
-         size: 10,
-          });
-
-          //cheque number
-         firstPage.moveTo(465, 384);
-           firstPage.drawText(req.body.chequeNumber, {
-         font: timesBoldFont,
-          size: 10,
-          });
-  
-          //Bank name 
-          firstPage.moveTo(105, 369);
-          firstPage.drawText(req.body.bankName, {
-        font: timesBoldFont,
-         size: 10,
-         });
-
-
-         //get day, month and year
-
-*/
-        
 
           //name of first party 
           firstPage.moveTo(94, 184);
@@ -2953,6 +2903,95 @@ whereof I/We hereto at Indore signed on the ${agreementdate.getDate().toString()
          size: 11,
          });
 
+
+         //
+       //  second page in hindi
+
+ //first line
+ secondPage.moveTo(69, 620);
+ secondPage.drawText(firstlinehindi, {
+   font: customFont,
+   size: 11,
+   lineHeight: 15,
+ });
+
+  //second line
+  secondPage.moveTo(69, 500);
+  secondPage.drawText(secondlinehindi, {
+    font: customFont,
+    size: 11,
+    lineHeight: 15,
+  });
+
+   //third line
+ secondPage.moveTo(69, 405);
+ secondPage.drawText(thirdlinehindi, {
+   font: customFont,
+   size: 11,
+   lineHeight: 15,
+ });
+
+    //fourth line
+    secondPage.moveTo(69, 275);
+    secondPage.drawText(fourthlinehindi, {
+      font: customFont,
+      size: 11,
+      lineHeight: 15,
+    });
+ 
+  //Add Id name to legal doc
+ secondPage.moveTo(98, 690);
+ secondPage.drawText(req.body.idNumber, {
+   font: customFont,
+   size: 11,
+ });
+
+
+  secondPage.moveTo(480, 690);
+  secondPage.drawText(new Date().toLocaleDateString("en-GB"), {
+    font: customFont,
+    size: 11,
+  });
+
+  secondPage.moveTo(180, 665);
+  secondPage.drawText(req.body.clientName, {
+    font: customFont,
+    size: 12,
+  });
+
+
+          //name of first party 
+          secondPage.moveTo(98, 212);
+          secondPage.drawText(req.body.clientName, {
+        font: customFont,
+         size: 11,
+         });
+
+          //Address first party 
+          secondPage.moveTo(98, 194);
+          secondPage.drawText(req.body.clientAddress, {
+        font: customFont,
+         size: 11,
+         });
+
+          //Mobile first party 
+          secondPage.moveTo(98, 176);
+          secondPage.drawText(req.body.clientPhone, {
+        font: customFont,
+         size: 11,
+         });
+
+          //witness name
+          secondPage.moveTo(400, 200);
+          secondPage.drawText(req.body.witnessName, {
+        font: customFont,
+         size: 11,
+         });
+
+
+
+
+         //
 
   writeFileSync("Legal.pdf", await document.save());
 
