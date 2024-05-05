@@ -59,10 +59,13 @@ const port = process.env.PORT || 80
 //});
 
 
+
+
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
 
 /*
 
@@ -2819,8 +2822,7 @@ var fourthlinehindi = `मैं पुष्टि करता हूं क�
 
 document.registerFontkit(fontkit);
 
-
- const customFont = await document.embedFont(fs.readFileSync('./public/TiroDevanagariHindi-Regular.ttf'), { subset: true })
+ const customFont = await document.embedFont(fs.readFileSync('./public/Karma-Regular.ttf'), { subset: true })
 
  //first line
  firstPage.moveTo(69, 620);
@@ -2953,7 +2955,7 @@ document.registerFontkit(fontkit);
     size: 11,
   });
 
-  secondPage.moveTo(180, 665);
+  secondPage.moveTo(175, 665);
   secondPage.drawText(req.body.clientName, {
     font: customFont,
     size: 12,
@@ -2961,7 +2963,7 @@ document.registerFontkit(fontkit);
 
 
           //name of first party 
-          secondPage.moveTo(98, 212);
+          secondPage.moveTo(98, 208);
           secondPage.drawText(req.body.clientName, {
         font: customFont,
          size: 11,
