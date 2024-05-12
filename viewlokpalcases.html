@@ -8,6 +8,10 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="css/menubar.css">
+
+    <!-- for editable text box area   https://quilljs.com/docs/quickstart-->
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.4/dist/quill.snow.css" rel="stylesheet" />
+
   <style>
     body {
       background-color: #343a40;
@@ -71,7 +75,7 @@
     }
     .table-dark td {
       color: black;
-      background-color: yellow;
+      background-color: orange;
     }
 
     .table-dark tbody tr.card-missing td {
@@ -182,7 +186,7 @@ div.dataTables_filter {
 
 
   </style>
-  <title>My Cases</title>
+  <title>Lokpal Cases</title>
 </head>
 
 <body>
@@ -248,7 +252,6 @@ div.dataTables_filter {
                     <a href="/generatecardpdf.html" class="dashboard-nav-dropdown-item">Download Card</a>
                 </div>
              </div>
-
 
 
             <div class='dashboard-nav-dropdown show'>
@@ -334,21 +337,27 @@ div.dataTables_filter {
           <div class="container mt-5">
             <div class="row justify-content-center">
               <div class="col-lg-12">
-                <h2 class="text-center mb-4">My Cases</h2>
+                <h2 class="text-center mb-4">Lokpal Cases(Currently under development)</h2>
                 <div class="table-responsive">
                   <table id ="dataTable" class="table table-dark table-bordered">
                     <thead>
                       <tr>
+                        <!--
                         <th>Case Number</th>
                         <th>Customer Name</th>
                         <th>Customer Phone</th>
                         <th>Insurance Company</th>
                         <th>Claim Amount</th>
                         <th>Claim Number</th>
-                        <th>Draft Ready</th>
+                        <th>Case status</th>
+                        <th>Escalation Date</th>
+                        <th>Case Email</th>
+                        <th>Password</th>
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
+                        <th>Action</th>
+                        -->
                       </tr>
                     </thead>
                   </table>
@@ -356,38 +365,89 @@ div.dataTables_filter {
 
                 <div id="popup2" class="overlay">
                   <div class="popup">
-                    <h2  id = "remarkcontent">Assign Medical Officer-</h2>
+                      <div class="frame">
+                        <form id="paymentForm">
+                          <div class="row mb-3">
+
+                            <div class="col-sm-7">
+                              <label for="escalationdate"  class="form-label">First Escalation Date</label>
+                              <input type="date" dateFormat: "dd/mm/yy"  class="form-control" id="escalationdate" required >
+                            </div>
+
+                            <div class="col-sm-7">
+                              <label for="escalationremark"  class="form-label">Escalation Remark</label>
+                              <input type="text"  class="form-control" id="escalationremark" required >
+                            </div>
+                        
+                          </div>
+          
+                          <div class="">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                          </div>
+                        </form>
+                      </div>
+                      <a class="close" style=" color: white;" href="#">&times;</a>
+                  </div>
+                </div>
+
+                <div id="popup9" class="overlay" >
+                  <div class="popup" style ="width:45%">
+                    <h2  id = "remarkcontent">Remarks-</h2>
                     <ul id="remarkcontentlist"></ul>
 
-                      <select name="medicalofficer" id="medicalofficer"  style="margin-top: 5px;margin-bottom: 5px;">
-                        <option value="Khan Sir">Khan Sir</option>
-                        <option value="Ashish Sir">Ashish Sir</option>
-                      </select>
-
-                      <br>        
-                      <br>              
-                      <button type="submit" onclick="addmedicalremarkInDB()" class="btn btn-primary btn-sm">Save Detail</button>
+                    
+                    <input type="text" placeholder="Add new remark here" id="newremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                    <button type="submit" onclick="addremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
                     
                     <a class="close" href="#">&times;</a>
                   </div>
                 </div>
 
-                <div id="popup3" class="overlay">
-                  <div class="popup">
-                    <h2  id = "remarkcontent">Upload Draft (PDF only)</h2>
-                    <ul id="remarkcontentlist"></ul>
-
-                      <div class="col-sm-6">
-                        <label for="draft-upload" class="form-label">Draft Upload</label>
-                        <input type="file" class="form-control" id="draft-upload" required>
-                      </div>
-
-                      <br>        
-                      <br>              
-                      <button type="submit" onclick="adddraftInDB()" class="btn btn-primary btn-sm">Upload</button>
+                <div id="popup5" class="overlay" >
+                  <div class="popup" style =" display: flex;
+                  justify-content: space-between;
+                  width: 100%;">
+                   
+                   <div>
+                    <h2 style="color: black;">Documents - </h2>
+                        <ul id="documentlist" style="margin-right: 100px; margin-top: 50px;"></ul>
+                   </div>
                     
+
+
                     <a class="close" href="#">&times;</a>
+
+                    <div id="wrapper" style="flex: 2;">
+                       
+
+                        <iframe name="inlineFrameExample" 
+                          title="Inline Frame Example" 
+                          style="width: 90%; height: 80vh; border:2px dotted; border-color: black; flex-grow: 2;"
+                          src="">
+                        </iframe>
+
+                   </div>
+
                   </div>
+
+
+                </div>
+
+                <div id="popup6" class="overlay">
+                  <div class="popup" style="width: 80%;">
+                    <div class="frame">
+                        <form id="gistForm">
+                              <label for="editor" class="form-label">Draft</label>
+                              <div id="editor">
+                              </div>
+
+                              <label for="editor1" class="form-label">Draft</label>
+                              <div id="editor1">
+                              </div>
+                        </form>
+                        <a class="close" style=" color: white;" href="#">&times;</a>
+                     </div>
+                    </div>
                 </div>
 
               </div>
@@ -400,94 +460,162 @@ div.dataTables_filter {
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.4/dist/quill.js"></script>
+
   <script>
 
-function viewGist(rfno) {
-  window.open (`https://storage.googleapis.com/rspowerimages/uploads/${rfno}-gist.pdf`);
-  return;
-}
+const toolbarOptions =['bold', 'italic', 'underline'];
 
-
-
-function adddraftInDB() {
-
-var formData = new FormData();
-
-formData.append('caseNumber', localStorage['caseNumber']);
-
-// Get the selected PDF file input element
-var pdfFile = $('#draft-upload')[0].files[0];
-formData.append('pdfFile', pdfFile);
-
-// Make an API call with the username and password
-$.ajax({
-  url: '/api/upload-draft',
-  type: 'POST',
-  processData: false,
-  contentType: false,
-  data: formData,
-  success: function (response) {
-    if(response.message == "success")
-      {
-        alert("Gist Uploaded!!" )
-        window.location.replace("/viewmyopinioncases.html");
-      }
-      else{
-        alert("Failed to upload Draft!!")
-      }
-    //alert("login success");
-    // Redirect to the dashboard or perform any other actions
-  },
-  error: function (error) {
-    alert("Failed to upload Draft!!!");
-    // Display an error message to the user
+const quill = new Quill('#editor', {
+    theme: 'snow',
+    modules: {
+    toolbar: toolbarOptions
   }
-});
+  });
 
+  const quill1 = new Quill('#editor1', {
+    theme: 'snow',
+    modules: {
+    toolbar: toolbarOptions
+  }
+  });
+
+
+function addremarkInDB() {
+
+const today = new Date();
+const yyyy = today.getFullYear();
+let mm = today.getMonth() + 1; // Months start at 0!
+let dd = today.getDate();
+
+if (dd < 10) dd = '0' + dd;
+if (mm < 10) mm = '0' + mm;
+
+const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+    $.ajax({
+      url: '/api/addescalationcaseremark',
+      type: 'POST',
+      contentType: "application/x-www-form-urlencoded",
+      data: {
+        referencenumber: localStorage['addRemarkForRefNumber'],
+        caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ document.getElementById("newremark").value
+      },
+      success: function (response) {
+        if(response.message == "success")
+          {
+           // window.location.href = "/index.html"
+            //localStorage['userID'] = username;
+            alert("Remark saved!")
+            localStorage.removeItem("addRemarkForRefNumber");
+
+            document.getElementById("newremark").value ="";
+            window.location.href = "/viewescalationcases.html";
+            
+          }
+          else{
+            alert("Error saving remark!")
+            //document.getElementById('loginForm').reset();
+          }
+        //alert("login success");
+        // Redirect to the dashboard or perform any other actions
+      },
+      error: function (error) {
+        document.getElementById('loginForm').reset();
+        alert("login failed");
+        // Display an error message to the user
+      }
+    });
+  
 }
+  
+
+
+$('#paymentForm').on('submit', function (event) {
+        event.preventDefault();
+
+        var processingfeeFinal = $('#pf-amount-final').val();
+        var consultationchargeFinal = $('#consultation-charge-final').val();
+       
+          // call ajax to save these details--
+
+          $.ajax({
+          url: '/api/addescalationdetails',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          data: {
+            casereferenceNumber: localStorage['addRemarkForRefNumber'], 
+            dateofEscalationToInsurer: $('#escalationdate').val(),
+            caseRemarks: $('#escalationremark').val(),
+          },
+          success: function (response) {
+            if(response.message == "success")
+              {
+                alert("Escalation details saved!");
+                window.location.href = "/viewescalationcases.html";
+              }
+              else{
+                alert("Error saving escalation details!")
+              }
+          },
+          error: function (error) {
+            document.getElementById('loginForm').reset();
+            alert("login failed");
+            // Display an error message to the user
+          }
+        });
+
+
+      });
+
 
 
 
 function addremark(referencenumber) {
         // Code to generate card
-        localStorage['caseNumber'] =referencenumber; 
+        localStorage['addRemarkForRefNumber'] =referencenumber; 
   }
 
-function addmedicalremarkInDB() {
+  function viewremark(referencenumber) {
+        // Code to generate card
 
-  $.ajax({
-  url: '/api/addmedicalofficertocase',
-  type: 'POST',
-  contentType: "application/x-www-form-urlencoded",
-  data: {
-    caseNumber: localStorage['caseNumber'],
-    medicalOpinionOfficer: $("#medicalofficer option:selected").text(),
-  },
-  success: function (response) {
-    if(response.message == "success")
-      {
-      // window.location.href = "/index.html"
-        //localStorage['userID'] = username;
-        alert("Medical Officer assigned saved!")
-        localStorage.removeItem("caseNumber");
+        localStorage['addRemarkForRefNumber'] = referencenumber; 
 
-        window.location.href = "/viewmedicalopinioncases.html";
-      }
-      else{
-        alert("Error saving details!")
-        //document.getElementById('loginForm').reset();
-      }
-    //alert("login success");
-    // Redirect to the dashboard or perform any other actions
-  },
-  error: function (error) {
-    document.getElementById('loginForm').reset();
-    alert("login failed");
-    // Display an error message to the user
+        let list = document.getElementById("remarkcontentlist");
+
+        // 👇️ Remove all list elements
+        list.innerHTML = '';
+
+        $.ajax({
+        url: '/api/getescalationcaseRemarkbyref',
+        type: 'GET',
+        data: {
+          casereferenceNumber:  localStorage['addRemarkForRefNumber']
+        },
+
+        success: function (response) {
+          // Populate the options in the select eleme    
+           
+           // let text =  response[0].caseRemarks;
+          //  const myArray = text.split(";");    
+
+            let list = document.getElementById("remarkcontentlist");
+              for (i = 0; i < response[0].caseRemarks.length ; i++) {
+                let li = document.createElement('li');
+                li.innerText = response[0].caseRemarks[i];
+                list.appendChild(li);
+               }
+
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
   }
-});
 
-}
 
 
 function movetoescalation(referencenumber) {
@@ -506,7 +634,7 @@ $.ajax({
         //localStorage['userID'] = username;
         alert("Case moved to Escalation!")
 
-        window.location.href = "/viewmyopinioncases.html";
+        window.location.href = "/viewescalationcases.html";
       }
       else{
         alert("Error moving case to Live!")
@@ -521,16 +649,7 @@ $.ajax({
 }
 
 
-function movetolive(referencenumber) {
-        // Code to generate card
-       //alert("Move to live reference number: " + referencenumber);
-       localStorage['casereferencenumber'] = referencenumber; 
 
-       window.location.replace("/movecasetolive.html");
-
-      }
-
-      
     $(document).ready(function () {
 
       $.ajax({
@@ -612,7 +731,7 @@ function movetolive(referencenumber) {
       
        // AJAX call on page load get manager details
        $.ajax({
-        url: '/api/getmedicalopinioncasedetail',
+        url: '/api/getescalationcasedetail',
         type: 'GET',
         success: function (response) {
           // Populate the options in the select element
@@ -630,25 +749,121 @@ function movetolive(referencenumber) {
           $("#dataTable").DataTable().clear();
           var length = Object.keys(data).length;
           for(var i = 0; i < length; i++) {
-            var rfno= data[i].caseNumber
+            var rfno= data[i].casereferenceNumber
+            var canEscalate = "NO";
+
+            //escalate if date diff is greater than 15
+            if( Math.ceil((new Date() - new Date(data[i].dateofEscalationToInsurer)) / (1000 * 60 * 60 * 24))  > 15)
+            {
+              canEscalate = "YES";
+            }
+
             // You could also use an ajax property on the data table initialization
+            /*
             $('#dataTable').dataTable().fnAddData( [
-              data[i].caseNumber,
+              data[i].casereferenceNumber,
               data[i].patientName,
               data[i].patientMobile,
               data[i].insuranceCompanyName,
               data[i].claimAmount,
               data[i].claimNumber,
-              data[i].isDraftGenerated,
-              `<button class="btn btn-primary btn-sm" onclick="viewGist('${rfno}');">View Gist</button>`,
-              `<a href="#popup3"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Draft</button> </a>`,
-              `<button class="btn btn-primary btn-sm" onclick="movetoescalation('${rfno}')">Move to Escalation</button>`
+              data[i].newCaseStatus,
+              moment(new Date(data[i].dateofEscalationToInsurer)).utc().format('DD-MM-YYYY'),
+             // `${canEscalate}`,
+              data[i].caseEmail,
+              data[i].caseEmailPassword,
+              `<a href="#popup2"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Add Escalation details</button> </a>`,
+              `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
+              `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
+              `<a href="#popup6"><button class="btn btn-primary btn-sm"  onclick="viewAgreement('${rfno}')" >View Draft</button> </a>`,
+
             ]);
+          
+            */
+          
           }
         }
       
-
     });
+
+
+    function viewAgreement(referencenumber)
+    {
+
+      localStorage['casereferencenumber'] = referencenumber; 
+
+      $.ajax({
+        url: '/api/getcasedetailbyref',
+        type: 'GET',
+        data: {
+          casereferenceNumber: referencenumber
+        },
+
+        success: function (response) {
+ 
+            quill.root.innerHTML= response[0].caseDraft;
+            quill1.root.innerHTML= response[0].lokpalDraft;          
+
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      }); 
+
+    }
+
+
+    function viewdocuments(referencenumber)
+{
+  let list = document.getElementById("documentlist");
+  
+  console.log("rajat....");
+
+
+  var wrapper = document.getElementById('wrapper');
+  wrapper.innerHTML= `"<iframe name="inlineFrameExample" 
+            title="Inline Frame Example" 
+            style="width: 90%; height: 80vh; border: 2px dotted;border-color: black; flex-grow: 2;"
+            src="">
+    </iframe>"`;
+  
+
+// 👇️ Remove all list elements
+list.innerHTML = '';
+
+
+$.ajax({
+url: '/api/getprospectcasedetailbyref',
+type: 'GET',
+data: {
+  casereferenceNumber: referencenumber
+},
+
+success: function (response) {
+  // Populate the options in the select eleme    
+   
+   // let text =  response[0].caseRemarks;
+  //  const myArray = text.split(";");    
+
+    let list = document.getElementById("documentlist");
+      for (i = 0; i < response[0].docUrl.length ; i++) {
+        let li = document.createElement('li');
+        let filename = response[0].docUrl[i].substring(response[0].docUrl[i].lastIndexOf('/')+1);
+        li.innerHTML = `<a target='inlineFrameExample' href="${response[0].docUrl[i]}" >${filename}</a>`;
+        list.appendChild(li);
+       }
+
+},
+error: function (error) {
+  console.error('Error:', error);
+}
+});
+ 
+}
+
+
+
+    
   </script>
 </body>
 

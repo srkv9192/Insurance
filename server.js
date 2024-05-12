@@ -60,12 +60,10 @@ const port = process.env.PORT || 80
 
 
 
-
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
 
 /*
 
@@ -2643,6 +2641,7 @@ app.get('/createaccount.html', (req, res) => res.sendFile(__dirname+'/createacco
 app.get('/viewcases.html', (req, res) => res.sendFile(__dirname+'/viewcases.html'))
 app.get('/viewmedicalopinioncases.html', (req, res) => res.sendFile(__dirname+'/viewmedicalopinioncases.html'))
 app.get('/viewescalationcases.html', (req, res) => res.sendFile(__dirname+'/viewescalationcases.html'))
+app.get('/viewlokpalcases.html', (req, res) => res.sendFile(__dirname+'/viewlokpalcases.html'))
 
 app.get('/viewmyopinioncases.html', (req, res) => res.sendFile(__dirname+'/viewmyopinioncases.html'))
 
