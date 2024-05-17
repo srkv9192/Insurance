@@ -59,7 +59,6 @@ const port = process.env.PORT || 80
 //});
 
 
-
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -191,9 +190,12 @@ const dataSchema = new mongoose.Schema({
   caseEmailPassword: String,
   dateofEscalationToInsurer: Date,
   companyRevertDate: Date,
-  onlineLokpalComplaintNumber: String,
-  lokpalComplaintDate: String,
+  LokpalBHPComplaintNumber: String,
+  lokpalBHPComplaintDate: Date,
+  annexure5ComplaintNumber: String,
+  annexure5ComplaintDate: Date,
   lokpalComplaintNumber: String,
+  lokpalComplaintDate: Date,
   lokpalCaseStatus: String,
   dateOfLokpalHearing: Date,
   newCaseStatus: String,
@@ -867,6 +869,28 @@ app.post('/api/addlivegistdata', async(req, res) => {
 
 });
 
+
+app.post('/api/addlokpaldata', async(req, res) => {
+  try{
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ LokpalBHPComplaintNumber:req.body.LokpalBHPComplaintNumber, lokpalBHPComplaintDate:req.body.lokpalBHPComplaintDate, annexure5ComplaintDate:req.body.annexure5ComplaintDate, annexure5ComplaintNumber: req.body.annexure5ComplaintNumber, lokpalComplaintNumber: req.body.lokpalComplaintNumber,  lokpalComplaintDate: req.body.lokpalComplaintDate,  dateOfLokpalHearing: req.body.dateOfLokpalHearing,}});
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not save lokpal data', refnum:req.body.caseNumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding lokpal data' });
+  } 
+
+});
 
 app.post('/api/addlivedraftdata', async(req, res) => {
   try{
@@ -2735,7 +2759,7 @@ const { writeFileSync, readFileSync } = require("fs");
 const { kStringMaxLength } = require('buffer');
 
 async function createPDF(req) {
-  const document = await PDFDocument.load(readFileSync("./agreementtemplate19.pdf"));
+  const document = await PDFDocument.load(readFileSync("./agreementtemplate20.pdf"));
 
   const courierBoldFont = await document.embedFont(StandardFonts.Courier);
   const timesFont = await document.embedFont(StandardFonts.TimesRoman);
