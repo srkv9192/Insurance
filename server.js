@@ -64,6 +64,7 @@ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS
   useUnifiedTopology: true,
 });
 
+
 /*
 
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
@@ -225,6 +226,9 @@ const dataSchema = new mongoose.Schema({
   isPendingAuth: String,
   isLive: String,
   isCompleted: String,
+  caseCompletionRemark: String,
+  caseCompletionType: String,
+
 
   // Add stages of case here based on thier colour coding
   isEmailGenerated: String,
@@ -232,6 +236,7 @@ const dataSchema = new mongoose.Schema({
   isMedicalOpinionGenerated: String,
   isDraftGenerated: String,
   isInEscalationStage: String,
+  isInLokpalStage: String,
   isEscalatedInCompany: String,
   isEscalationDeadlineDone: String,
   isLokpalDraftDone: String,
@@ -649,6 +654,50 @@ app.post('/api/addlivecasequeryremark', async(req, res) => {
 
 });
 
+app.post('/api/movetocompleted', async(req, res) => {
+  try{
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ isInLokpalStage:"false", newCaseStatus: "Completed", isCompleted: "true", caseCompletionType: req.body.caseCompletionType, caseCompletionRemark: req.body.caseCompletionRemark }});
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not move case to completed', refnum:req.body.casereferenceNumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding completion remark' });
+  } 
+
+});
+
+
+app.post('/api/movetolokpal', async(req, res) => {
+  try{
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{ caseRemarks:req.body.caseRemarks}, $set:{ newCaseStatus: "Lokpal", isInEscalationStage: "false", isInLokpalStage: "true"}});
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not move case to lokpal', refnum:req.body.casereferenceNumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding remark' });
+  } 
+
+});
 
 app.post('/api/movetoescalation', async(req, res) => {
   try{
@@ -1820,6 +1869,17 @@ app.get("/api/getprospectcasedetail", async(req, res) => {
   }
 });
 
+app.get("/api/getcompletedcases", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  dataSchemaObject.find({isCompleted: "true"});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get pending case details' });
+  }
+});
+
 app.get("/api/getrejectedcasedetail", async(req, res) => {
   try {
     // Retrieve all tpa list from database
@@ -1953,6 +2013,17 @@ app.get("/api/getmedicalopinioncasedetail", async(req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to get medical opinion case details' });
+  }
+});
+
+app.get("/api/getlokpalcasedetail", async(req, res) => {
+  try {
+    // Retrieve all medical opinion case list from database
+    const users = await  dataSchemaObject.find({isInLokpalStage : {"$exists" : true, "$eq" : "true"}});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get lokpal case details' });
   }
 });
 
@@ -2658,6 +2729,8 @@ app.get('/viewlivecases.html', (req, res) => res.sendFile(__dirname+'/viewliveca
 app.get('/viewpendingdraftcases.html', (req, res) => res.sendFile(__dirname+'/viewpendingdraftcases.html'))
 app.get('/viewfullcasedetails.html', (req, res) => res.sendFile(__dirname+'/viewfullcasedetails.html'))
 app.get('/viewrejectedcases.html', (req, res) => res.sendFile(__dirname+'/viewrejectedcases.html'))
+
+app.get('/viewcompletedcases.html', (req, res) => res.sendFile(__dirname+'/viewcompletedcases.html'))
 
 app.get('/changepassword.html', (req, res) => res.sendFile(__dirname+'/changepassword.html'))
 app.get('/createaccount.html', (req, res) => res.sendFile(__dirname+'/createaccount.html'))

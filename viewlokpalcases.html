@@ -13,6 +13,14 @@
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.4/dist/quill.snow.css" rel="stylesheet" />
 
   <style>
+
+input.form-control:disabled {
+        background-color:  #343a40;
+    }
+    input.form-control:disabled {
+        background-color:  #343a40;
+    }
+
     body {
       background-color: #343a40;
       color: #fff;
@@ -133,7 +141,7 @@ div.dataTables_filter {
   padding: 20px;
   background: #fff;
   border-radius: 5px;
-  width: 30%;
+  width: 45%;
   position: relative;
   transition: all 5s ease-in-out;
 }
@@ -337,27 +345,23 @@ div.dataTables_filter {
           <div class="container mt-5">
             <div class="row justify-content-center">
               <div class="col-lg-12">
-                <h2 class="text-center mb-4">Lokpal Cases(Currently under development)</h2>
+                <h2 class="text-center mb-4">Lokpal Cases</h2>
                 <div class="table-responsive">
                   <table id ="dataTable" class="table table-dark table-bordered">
                     <thead>
                       <tr>
-                        <!--
+                        
                         <th>Case Number</th>
                         <th>Customer Name</th>
                         <th>Customer Phone</th>
-                        <th>Insurance Company</th>
                         <th>Claim Amount</th>
                         <th>Claim Number</th>
-                        <th>Case status</th>
-                        <th>Escalation Date</th>
-                        <th>Case Email</th>
-                        <th>Password</th>
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
-                        -->
+                        <th>Action</th>
+                        
                       </tr>
                     </thead>
                   </table>
@@ -369,21 +373,134 @@ div.dataTables_filter {
                         <form id="paymentForm">
                           <div class="row mb-3">
 
-                            <div class="col-sm-7">
-                              <label for="escalationdate"  class="form-label">First Escalation Date</label>
-                              <input type="date" dateFormat: "dd/mm/yy"  class="form-control" id="escalationdate" required >
+                            <div class="col-sm-6">
+                              <label for="complainant-name" class="form-label">Complainant Name</label>
+                              <input type="text" class="form-control" id="complainant-name" required disabled>
                             </div>
 
-                            <div class="col-sm-7">
-                              <label for="escalationremark"  class="form-label">Escalation Remark</label>
-                              <input type="text"  class="form-control" id="escalationremark" required >
+                            <div class="col-sm-6">
+                              <label for="complainant-phone" class="form-label">Complainant Phone</label>
+                              <input type="text" class="form-control" id="complainant-phone" disabled required pattern="[0-9]{10}" required maxlength="10">
                             </div>
                         
                           </div>
+
+                          <div class="row mb-3">
+
+                            <div class="col-sm-6">
+                              <label for="patient-name" class="form-label">Patient Name</label>
+                              <input type="text" class="form-control" id="patient-name" required disabled>
+                            </div>
+
+                            <div class="col-sm-6">
+                              <label for="patient-phone" class="form-label">Patient Phone</label>
+                              <input type="text" class="form-control" id="patient-phone" required disabled pattern="[0-9]{10}" required maxlength="10">
+                            </div>
+                        
+                          </div>
+
+                          <div class="row mb-3">
+
+                            <div class="col-sm-6">
+                              <label for="policy-number" class="form-label">Policy Number</label>
+                              <input type="text" class="form-control" id="policy-number" disabled required>
+                            </div>
+
+                            <div class="col-sm-6">
+                              <label for="disputed-amount" class="form-label">Disputed amount</label>
+                              <input type="text" class="form-control" id="disputed-amount" disabled required>
+                            </div>
+                        
+                          </div>
+
+                          <div class="row mb-3">
+
+                            <div class="col-sm-6">
+                              <label for="rejection-date" class="form-label">Rejection Date</label>
+                              <input type="text" class="form-control" id="rejection-date" disabled required>
+                            </div>
+
+                            <div class="col-sm-6">
+                              <label for="reconsideration-date" class="form-label">Reconsideration Date</label>
+                              <input type="text" class="form-control" id="reconsideration-date" disabled required>
+                            </div>
+                        
+                          </div>
+
+                          <div class="row mb-3">
+
+                            <div class="col-sm-6">
+                              <label for="escalation-email"  class="form-label">Escalation Email</label>
+                              <input type="text"  class="form-control" id="escalation-email" disabled required >
+                            </div>
+
+                          </div>
           
-                          <div class="">
+                        </form>
+                      </div>
+                      <a class="close" style=" color: white;" href="#">&times;</a>
+                  </div>
+                </div>
+
+                <div id="popup3" class="overlay">
+                  <div class="popup">
+                      <div class="frame">
+                        <form id="lokpalForm">
+                          <div class="row mb-3">
+
+                            <div class="col-sm-6">
+                              <label for="bhp-number" class="form-label">Online BHP Number</label>
+                              <input type="text" class="form-control" id="bhp-number" >
+                            </div>
+
+                            <div class="col-sm-6">
+                              <label for="registration-date" class="form-label">Registration Date</label>
+                              <input type="date" dateFormat: "dd/mm/yy" class="form-control" id="registration-date" ">
+                            </div>
+                        
+                          </div>
+
+                          <div class="row mb-3">
+
+                            <div class="col-sm-6">
+                              <label for="annexure-five" class="form-label">Annexure 5 Number</label>
+                              <input type="text" class="form-control" id="annexure-five"  >
+                            </div>
+
+                            <div class="col-sm-6">
+                              <label for="annexure-five-date" class="form-label">Annexure 5 Date</label>
+                              <input type="date" dateFormat: "dd/mm/yy" class="form-control" id="annexure-five-date"  >
+                            </div>
+                        
+                          </div>
+
+                          <div class="row mb-3">
+
+                            <div class="col-sm-6">
+                              <label for="lokpal-complaint-number" class="form-label">Lokpal Complaint Number</label>
+                              <input type="text" class="form-control" id="lokpal-complaint-number" >
+                            </div>
+
+                            <div class="col-sm-6">
+                              <label for="annexure-six-date" class="form-label">Annexure 6 Date</label>
+                              <input type="date" dateFormat: "dd/mm/yy" class="form-control" id="annexure-six-date"  >
+                            </div>
+                        
+                          </div>
+
+                          <div class="row mb-3">
+
+                            <div class="col-sm-6">
+                              <label for="hearing-date" class="form-label">Hearing Date</label>
+                              <input type="date" dateFormat: "dd/mm/yy" class="form-control" id="hearing-date"  >
+                            </div>
+
+                          </div>
+
+                          <div class="text-center">
                             <button type="submit" class="btn btn-primary">Submit</button>
                           </div>
+          
                         </form>
                       </div>
                       <a class="close" style=" color: white;" href="#">&times;</a>
@@ -400,6 +517,36 @@ div.dataTables_filter {
                     <button type="submit" onclick="addremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
                     
                     <a class="close" href="#">&times;</a>
+                  </div>
+                </div>
+
+                <div id="popup4" class="overlay" >
+                  <div class="popup" style ="width:30%">
+                    <h2  id = "remarkcontent">Completion Remark-</h2>
+                    <div class="frame">
+                      <form id="completedForm">
+
+                        <div class="row">
+
+                          <label for="case-complete-type-dropdown" class="form-label">Completion Type</label>
+                          <select class="form-control" id="case-complete-type-dropdown" required style="margin-top: 5px;margin-bottom: 5px;">
+                            <option value="None">None</option>
+                            <option value="Hearing">Hearing</option>
+                            <option value="Consent">Consent</option>
+                          </select>
+      
+                          <label for="casecompleteremark" class="form-label" style="margin-top: 5px;margin-bottom: 5px;">Completion Remark</label>
+                          <input  class="form-control" type="text" placeholder="Add remark here" id="casecompleteremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                        </div>
+                       
+                        <button type="submit" class="btn btn-primary btn-sm" style="margin-top: 5px;margin-bottom: 5px;">Move to Complete</button>
+                        
+                        <a class="close" href="#">&times;</a>
+                        </form>
+                    </div>
+                    
+                    
+
                   </div>
                 </div>
 
@@ -532,6 +679,51 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
 }
   
 
+$('#completedForm').on('submit', function (event) {
+        event.preventDefault();
+
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        let mm = today.getMonth() + 1; // Months start at 0!
+        let dd = today.getDate();
+
+        if (dd < 10) dd = '0' + dd;
+        if (mm < 10) mm = '0' + mm;
+
+        const formattedToday = dd + '/' + mm + '/' + yyyy;
+       
+          $.ajax({
+          url: '/api/movetocompleted',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          data: {
+            casereferenceNumber: localStorage['addRemarkForRefNumber'], 
+            caseCompletionType:$('#case-complete-type-dropdown').val(),
+            caseCompletionRemark: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ $('#casecompleteremark').val(),
+          },
+          success: function (response) {
+            if(response.message == "success")
+              {
+                alert("Case moved to completed!");
+                window.location.href = "/viewlokpalcases.html";
+              }
+              else{
+                alert("Error moving case to completed!")
+              }
+          },
+          error: function (error) {
+            document.getElementById('completedForm').reset();
+            alert("error moving case to completed failed");
+            // Display an error message to the user
+          }
+        });
+
+
+      });
+
+
+
+
 
 $('#paymentForm').on('submit', function (event) {
         event.preventDefault();
@@ -577,6 +769,152 @@ function addremark(referencenumber) {
         // Code to generate card
         localStorage['addRemarkForRefNumber'] =referencenumber; 
   }
+
+
+
+
+  $('#lokpalForm').on('submit', function (event) {
+        event.preventDefault();
+
+
+        var bhpNumber = $('#bhp-number').val();
+        var bhpDate = $('#registration-date').val();
+        var annexure5Date = $('#annexure-five-date').val();
+        var annexure5number = $('#annexure-five').val();
+        var lokpalComplaintNumber = $('#lokpal-complaint-number').val();
+        var annexure6Date = $('#annexure-six-date').val();
+        var hearingDate = $('#hearing-date').val();
+
+      if((bhpNumber == "") && (!bhpDate ) && ( !annexure5Date ) && (annexure5number == "") && (lokpalComplaintNumber =="") && (!annexure6Date ) && ( !hearingDate))
+      {
+        alert("No data Provided!!!");
+        return ;
+      }
+
+          $.ajax({
+          url: '/api/addlokpaldata',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          data: {
+            casereferenceNumber: localStorage['casereferencenumber'], 
+            LokpalBHPComplaintNumber: bhpNumber ,
+            lokpalBHPComplaintDate: bhpDate ,
+            annexure5ComplaintDate: annexure5Date,
+            annexure5ComplaintNumber: annexure5number,
+            lokpalComplaintNumber: lokpalComplaintNumber,
+            lokpalComplaintDate: annexure6Date,
+            dateOfLokpalHearing: hearingDate,
+          },
+          success: function (response) {
+            if(response.message == "success")
+              {
+                alert("Lokpal data Saved!");
+                window.location.href = "/viewlokpalcases.html";
+              }
+              else{
+                alert("Error saving lokpal data!")
+                //document.getElementById('loginForm').reset();
+              }
+            //alert("login success");
+            // Redirect to the dashboard or perform any other actions
+          },
+          error: function (error) {
+            document.getElementById('loginForm').reset();
+            alert("login failed");
+            // Display an error message to the user
+          }
+        });
+
+
+      });
+
+
+
+
+
+function addlokpaldetails(referencenumber) {
+        
+        localStorage['addRemarkForRefNumber'] = referencenumber; 
+
+        $.ajax({
+        url: '/api/getcasedetailbyref',
+        type: 'GET',
+        data: {
+          casereferenceNumber:  localStorage['addRemarkForRefNumber']
+        },
+
+        success: function (response) {
+  
+            document.getElementById("bhp-number").value = response[0].LokpalBHPComplaintNumber ? response[0].LokpalBHPComplaintNumber :  "";
+            document.getElementById("registration-date").value = response[0].lokpalBHPComplaintDate ? moment(new Date(response[0].lokpalBHPComplaintDate)).utc().format('YYYY-MM-DD') : "";
+            document.getElementById("annexure-five-date").value = response[0].annexure5ComplaintDate  ? moment(new Date(response[0].annexure5ComplaintDate)).utc().format('YYYY-MM-DD') : "";
+            document.getElementById("annexure-five").value = response[0].annexure5ComplaintNumber ?response[0].annexure5ComplaintNumber : "";
+            document.getElementById("lokpal-complaint-number").value = response[0].lokpalComplaintNumber ? response[0].lokpalComplaintNumber  : "";
+            document.getElementById("annexure-six-date").value = response[0].lokpalComplaintDate  ? moment(new Date(response[0].lokpalComplaintDate)).utc().format('YYYY-MM-DD') : ""; ;
+            document.getElementById("hearing-date").value = response[0].dateOfLokpalHearing  ? moment(new Date(response[0].dateOfLokpalHearing)).utc().format('YYYY-MM-DD') : ""; ;;
+                     
+
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+
+
+
+  }
+
+  
+
+
+  function viewdetails(referencenumber) {
+        // Code to generate card
+
+        localStorage['addRemarkForRefNumber'] = referencenumber; 
+
+        $.ajax({
+        url: '/api/getcasedetailbyref',
+        type: 'GET',
+        data: {
+          casereferenceNumber:  localStorage['addRemarkForRefNumber']
+        },
+
+        success: function (response) {
+          // Populate the options in the select eleme    
+           
+           // let text =  response[0].caseRemarks;
+          //  const myArray = text.split(";");  
+ 
+            document.getElementById("patient-name").value = response[0].patientName;
+           // document.getElementById("client-address").value = response[0].customerAddress;
+            document.getElementById("patient-phone").value = response[0].patientMobile;
+
+            document.getElementById("complainant-name").value = response[0].complainantName;
+           // document.getElementById("client-address").value = response[0].customerAddress;
+            document.getElementById("complainant-phone").value = response[0].complainantMobile;
+
+
+            document.getElementById("policy-number").value = response[0].policyNumber;
+            document.getElementById("disputed-amount").value = response[0].claimAmount;
+            document.getElementById("escalation-email").value = response[0].caseEmail;
+            document.getElementById("rejection-date").value =  moment(new Date(response[0].initialRejectionDate)).utc().format('DD-MM-YYYY') ;
+            document.getElementById("reconsideration-date").value =  moment(new Date(response[0].dateofEscalationToInsurer)).utc().format('DD-MM-YYYY') ;
+                       
+
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+
+
+  }
+
+
+
+
 
   function viewremark(referencenumber) {
         // Code to generate card
@@ -665,6 +1003,7 @@ $.ajax({
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showonlogin").show();
               $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
              
             }
             else if(response.message =='operation' || response.message =='marketing' || response.message =='medicalofficer')
@@ -673,6 +1012,7 @@ $.ajax({
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showonlogin").show();
               $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
             }
             else if(response.message =='cp' || response.message =='manager')
             {
@@ -680,6 +1020,7 @@ $.ajax({
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showtocpandmanager").show();
               $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
             }
             else if(response.message =='medicalofficer')
             {
@@ -687,6 +1028,7 @@ $.ajax({
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showtomedicalofficer").show();
               $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
             }
             else
             {
@@ -731,7 +1073,7 @@ $.ajax({
       
        // AJAX call on page load get manager details
        $.ajax({
-        url: '/api/getescalationcasedetail',
+        url: '/api/getlokpalcasedetail',
         type: 'GET',
         success: function (response) {
           // Populate the options in the select element
@@ -759,27 +1101,19 @@ $.ajax({
             }
 
             // You could also use an ajax property on the data table initialization
-            /*
+            
             $('#dataTable').dataTable().fnAddData( [
               data[i].casereferenceNumber,
               data[i].patientName,
               data[i].patientMobile,
-              data[i].insuranceCompanyName,
               data[i].claimAmount,
               data[i].claimNumber,
-              data[i].newCaseStatus,
-              moment(new Date(data[i].dateofEscalationToInsurer)).utc().format('DD-MM-YYYY'),
-             // `${canEscalate}`,
-              data[i].caseEmail,
-              data[i].caseEmailPassword,
-              `<a href="#popup2"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Add Escalation details</button> </a>`,
+              `<a href="#popup2"><button class="btn btn-primary btn-sm"  onclick="viewdetails('${rfno}')" >View Details</button> </a>`,
+              `<a href="#popup3"><button class="btn btn-primary btn-sm"  onclick="addlokpaldetails('${rfno}')" >Add details</button> </a>`,
               `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
               `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
-              `<a href="#popup6"><button class="btn btn-primary btn-sm"  onclick="viewAgreement('${rfno}')" >View Draft</button> </a>`,
-
+              `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Completed</button> </a>`,
             ]);
-          
-            */
           
           }
         }

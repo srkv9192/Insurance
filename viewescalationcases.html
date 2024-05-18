@@ -356,6 +356,8 @@ div.dataTables_filter {
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
+                        <th>Action</th>
+                        <th>Action</th>
                       </tr>
                     </thead>
                   </table>
@@ -448,6 +450,49 @@ div.dataTables_filter {
                     </div>
                 </div>
 
+
+                <div id="popup7" class="overlay" >
+                  <div class="popup" style ="width:30%">
+                    <h2  id = "remarkcontent">Move to Lokpal</h2>
+                    <div class="frame">
+                      <form id="lokpalForm">
+
+                        <div class="row">
+                          <input  class="form-control" type="text" placeholder="Add remark here" id="lokpalremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                        </div>
+                       
+                        <button type="submit" class="btn btn-primary btn-sm" style="margin-top: 5px;margin-bottom: 5px;">Submit</button>
+                        
+                        <a class="close" href="#">&times;</a>
+                        </form>
+                    </div>
+                    
+                  </div>
+                </div>
+
+                <div id="popup8" class="overlay" >
+                  <div class="popup" style ="width:30%">
+                    <h2  id = "remarkcontent">Completion Remark-</h2>
+                    <div class="frame">
+                      <form id="completedForm">
+
+                        <div class="row">
+      
+                          <label for="casecompleteremark" class="form-label" style="margin-top: 5px;margin-bottom: 5px;">Completion Remark</label>
+                          <input  class="form-control" type="text" placeholder="Add remark here" id="casecompleteremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                        </div>
+                       
+                        <button type="submit" class="btn btn-primary btn-sm" style="margin-top: 5px;margin-bottom: 5px;">Move to Complete</button>
+                        
+                        <a class="close" href="#">&times;</a>
+                        </form>
+                    </div>
+                    
+                    
+
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
@@ -528,7 +573,96 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
     });
   
 }
+
+
+
   
+$('#lokpalForm').on('submit', function (event) {
+        event.preventDefault();
+
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        let mm = today.getMonth() + 1; // Months start at 0!
+        let dd = today.getDate();
+
+        if (dd < 10) dd = '0' + dd;
+        if (mm < 10) mm = '0' + mm;
+
+        const formattedToday = dd + '/' + mm + '/' + yyyy;
+       
+          $.ajax({
+          url: '/api/movetolokpal',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          data: {
+            casereferenceNumber: localStorage['addRemarkForRefNumber'], 
+            caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ $('#lokpalremark').val(),
+          },
+          success: function (response) {
+            if(response.message == "success")
+              {
+                alert("Case moved to lokpal!");
+                window.location.href = "/viewescalationcases.html";
+              }
+              else{
+                alert("Error moving case to lokpal!")
+              }
+          },
+          error: function (error) {
+            document.getElementById('lokpalForm').reset();
+            alert("Error moving case to lokpal");
+          }
+        });
+
+
+      });
+
+
+  
+$('#completedForm').on('submit', function (event) {
+        event.preventDefault();
+
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        let mm = today.getMonth() + 1; // Months start at 0!
+        let dd = today.getDate();
+
+        if (dd < 10) dd = '0' + dd;
+        if (mm < 10) mm = '0' + mm;
+
+        const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+          $.ajax({
+          url: '/api/movetocompleted',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          data: {
+            casereferenceNumber: localStorage['addRemarkForRefNumber'], 
+            caseCompletionType: "Escalation Settlement",
+            caseCompletionRemark: formattedToday + " - [ " +  localStorage['userName'] + " ] - " + $('#casecompleteremark').val(),
+          },
+          success: function (response) {
+            if(response.message == "success")
+              {
+                alert("Case moved to completed!");
+                window.location.href = "/viewescalationcases.html";
+              }
+              else{
+                alert("Error moving case to completed!")
+              }
+          },
+          error: function (error) {
+            document.getElementById('completedForm').reset();
+            alert("error moving case to completed failed");
+            // Display an error message to the user
+          }
+        });
+
+
+      });
+
+
+
 
 
 $('#paymentForm').on('submit', function (event) {
@@ -663,6 +797,7 @@ $.ajax({
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showonlogin").show();
               $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
              
             }
             else if(response.message =='operation' || response.message =='marketing' || response.message =='medicalofficer')
@@ -671,6 +806,7 @@ $.ajax({
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showonlogin").show();
               $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
             }
             else if(response.message =='cp' || response.message =='manager')
             {
@@ -678,6 +814,7 @@ $.ajax({
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showtocpandmanager").show();
               $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
             }
             else if(response.message =='medicalofficer')
             {
@@ -685,6 +822,7 @@ $.ajax({
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showtomedicalofficer").show();
               $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
             }
             else
             {
@@ -773,6 +911,8 @@ $.ajax({
               `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
               `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
               `<a href="#popup6"><button class="btn btn-primary btn-sm"  onclick="viewAgreement('${rfno}')" >View Draft</button> </a>`,
+              `<a href="#popup7"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Lokpal</button> </a>`,
+              `<a href="#popup8"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Completed</button> </a>`, 
 
             ]);
           }
