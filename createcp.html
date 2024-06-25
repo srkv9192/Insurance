@@ -104,20 +104,17 @@
                      
                      
                      <a href="/viewmedicalopinioncases.html" class="dashboard-nav-dropdown-item">View Medical</a>
-  
                      <a href="/viewapprovedcases.html" class="dashboard-nav-dropdown-item">View Approved</a>
-                     <a href="/viewrejectedcases.html" class="dashboard-nav-dropdown-item">View Rejected</a>
+                     <a href="/viewrejectedcases.html" class="dashboard-nav-dropdown-item">View Rejected</a> 
                      <a href="/viewlivecases.html" class="dashboard-nav-dropdown-item">View Live</a>
                      <a href="/viewpendingdraftcases.html" class="dashboard-nav-dropdown-item">View Pending Draft</a>
                      <a href="/viewescalationcases.html" class="dashboard-nav-dropdown-item">View Escalation</a>
                      <a href="/viewlokpalcases.html" class="dashboard-nav-dropdown-item">View Lokpal</a>
                      <a href="/viewcompletedcases.html" class="dashboard-nav-dropdown-item">View Completed</a>
-                     
                      <!-- 
                      <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
                      <a href="/viewescalationcases.html" class="dashboard-nav-dropdown-item">View Escalation</a>
                       -->
-                      
                      <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
                  </div>
               </div>
@@ -133,6 +130,7 @@
                     <a href="/generatecardpdf.html" class="dashboard-nav-dropdown-item">Download Card</a>
                 </div>
              </div>
+
 
             <div class='dashboard-nav-dropdown show'>
               <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
@@ -191,26 +189,110 @@
         <div class='dashboard-content' style="background-image: url('/images/background20.jpg');  background-repeat: repeat;  background-size: cover;">
           <div class="container mt-5">
             <div class="row justify-content-center">
-              <div class="col-lg-4 col-md-6 col-sm-8">
-                <h2 class="text-center mb-4">Reset Password</h2>
+              <div class="col-lg-8 ">
+                <h2 class="text-center mb-4">Add New Channel Partner</h2>
                 <div class="frame" style=" color:black;display:flex ;background-image: url('/images/background18.jpg');  font-family: monospace;font-size: large; background-size: cover;">
 
-                  <form id="loginForm">
-                    <div class="mb-3">
-                      <label for="username" class="form-label">Username</label>
-                      <input type="text" class="form-control" id="username" placeholder="Enter your username">
-                    </div>
-                    <div class="mb-3">
-                      <label for="newpassword" class="form-label">New Password</label>
-                      <input type="text" class="form-control" id="newpassword" placeholder="Enter new password">
-                    </div>
+                  <div class="frame" style=" color:black;display:flex ;background-image: url('/images/background18.jpg');  font-family: monospace;font-size: large; background-size: cover;">
+                    <form id="loginForm">
+                      <div class="row mb-3">
+                        <div class="col-sm-4">
+                          <label for="username" class="form-label">Name</label>
+                          <input type="text" class="form-control" id="username" placeholder="Enter name">
+                        </div>
+                        <div class="col-sm-4">
+                          <label for="userid" class="form-label">User Name</label>
+                          <input type="text" class="form-control" id="userid" placeholder="Enter User Name">
+                        </div>
+                        <div class="col-sm-4">
+                          <label for="userpassword" class="form-label">Password</label>
+                          <input type="password" class="form-control" id="userpassword" placeholder="Enter password">
+                        </div>
+                      </div>
+                      <div class="row mb-3">
 
-                    <div class="mb-3">
-                      <label for="passwordconfirm" class="form-label">Renter Password</label>
-                      <input type="text" class="form-control" id="passwordconfirm" placeholder="Confirm new password">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                  </form>
+                        <div class="col-sm-4">
+                          <label for="cpAge" class="form-label">Age</label>
+                          <input type="number" class="form-control" id="cpAge" placeholder="Enter age">
+                        </div>
+                        <div class="col-sm-4">
+                          <label for="cpGender" class="form-label">Gender</label>
+                          <select class="form-control" id="cpGender">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                          </select>
+                        </div>
+                        <div class="col-sm-4">
+                          <label for="cpFatherName" class="form-label">Father's Name</label>
+                          <input type="text" class="form-control" id="cpFatherName" placeholder="Enter father's name">
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+
+  
+                        <div class="col-sm-4">
+                          <label for="cpAddress" class="form-label">Address</label>
+                          <input type="text" class="form-control" id="cpAddress" placeholder="Enter address">
+                        </div>
+                        <div class="col-sm-4">
+                          <label for="cpCity" class="form-label">City</label>
+                          <input type="text" class="form-control" id="cpCity" placeholder="Enter city">
+                        </div>
+                        <div class="col-sm-4">
+                          <label for="cpState" class="form-label">State</label>
+                          <input type="text" class="form-control" id="cpState" placeholder="Enter state">
+                        </div>
+
+                      </div>
+                      <div class="row mb-3">
+
+                        <div class="col-sm-4">
+                          <label for="cpQualification" class="form-label">Qualification</label>
+                          <input type="text" class="form-control" id="cpQualification" placeholder="Enter qualification">
+                        </div>
+                        <div class="col-sm-4">
+                          <label for="cpProfession" class="form-label">Profession</label>
+                          <input type="text" class="form-control" id="cpProfession" placeholder="Enter profession">
+                        </div>
+                        <div class="col-sm-4">
+                          <label for="cpCurrentCompany" class="form-label">Current Company</label>
+                          <input type="text" class="form-control" id="cpCurrentCompany" placeholder="Enter company name">
+                        </div>
+
+                      </div>
+
+                      <div class="row mb-3">
+
+                        <div class="col-sm-4">
+                          <label for="manager-name" class="form-label">Manager Name</label>
+                          <div class="input-group">
+                            <select class="form-control" id="manager-name-dropdown" >
+                              <option value="">None</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-sm-4">
+                          <label for="phone" class="form-label">Phone</label>
+                          <input type="text" class="form-control" id="phone" pattern="[0-9]{10}" required maxlength="10" placeholder="Enter phone number">
+                        </div>
+                        <div class="col-sm-4">
+                          <label for="alternatePhone" class="form-label">Alternate Phone</label>
+                          <input type="text" class="form-control" id="alternatePhone" pattern="[0-9]{10}" required maxlength="10" placeholder="Enter alternate phone number">
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col-sm-4">
+                          <label for="email" class="form-label">Email</label>
+                          <input type="email" class="form-control" id="email" placeholder="Enter email">
+                        </div>
+                      </div>
+ 
+                      <button type="submit" class="btn btn-primary">Submit</button>
+                    </form
+                    
+                  </div>
+                
+                  
                 </div>
 
               </div>
@@ -227,15 +309,11 @@
   <script>
     $(document).ready(function () {
 
-
       $.ajax({
         url: '/api/whoami',
         type: 'POST',
         success: function (response) {
-          // Populate the options in the select element
-            //alert(response.message)
-           
-            if(response.message =='admin')
+          if(response.message =='admin')
             {
               $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
               document.getElementById("login-menu").href="/logout.html"; 
@@ -268,7 +346,6 @@
             {
               window.location.href = "/login.html"
             }
-            
         },
         error: function (error) {
           console.error('Error:', error);
@@ -276,6 +353,25 @@
       });
 
 
+
+            // AJAX call on page load get manager details
+            $.ajax({
+        url: '/api/getmanagerdetail',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          const optionsSelect = $('#manager-name-dropdown');
+          response.forEach(function (option) {
+            optionsSelect.append($('<option>', {
+              value: option.managerID,
+              text: option.managerName
+            }));
+          });
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
 
       const mobileScreen = window.matchMedia("(max-width: 990px )");
 
@@ -300,43 +396,81 @@
         event.preventDefault();
 
         var username = $('#username').val();
-        var newpassword = $('#newpassword').val();
-        var newpasswordconfirm = $('#passwordconfirm').val();
-
-
-        if(newpassword != newpasswordconfirm )
-        {
-          alert("Passwords don't match!!")
-          return;
-        }
+        var userid = $('#userid').val();
+        var userpassword = $('#userpassword').val();
+        var cpAge = $('#cpAge').val();
+        var cpGender = $('#cpGender').val();
+        var cpFatherName = $('#cpFatherName').val();
+        var cpAddress = $('#cpAddress').val();
+        var cpCity = $('#cpCity').val();
+        var cpState = $('#cpState').val();
+        var cpQualification = $('#cpQualification').val();
+        var cpProfession =  $('#cpProfession').val();
+        var cpCurrentCompany =$('#cpCurrentCompany').val();
+        var managerid = $('#manager-name-dropdown').val();
+        var phone =$('#phone').val();
+        var alternatePhone = $('#alternatePhone').val();
+        var email = $('#email').val();
 
 
         // Make an API call with the username and password
         $.ajax({
-          url: '/api/changeloginpass',
+          url: '/api/addcpdetail',
           type: 'POST',
           contentType: "application/x-www-form-urlencoded",
-          data: {
-            userID: username,
-            newPassword: newpassword
+          data: {    
+            cpName: username,
+            cpAge: cpAge,
+            cpGender: cpGender,
+            cpFatherName: cpFatherName,
+            cpAddress: cpAddress,
+            cpCity: cpCity,
+            cpState: cpState,
+            cpQualification: cpQualification,
+            cpProfession: cpProfession,
+            cpCurrentCompany: cpCurrentCompany,
+            managerID: managerid,
+            phone: phone,
+            alternatePhone: alternatePhone,
+            email: email,
           },
           success: function (response) {
             if(response.message == "success")
               {
-                alert("Password updated!!")
-                document.getElementById('loginForm').reset();
+                $.ajax({
+                      url: '/api/addlogin',
+                      type: 'POST',
+                      contentType: "application/x-www-form-urlencoded",
+                      data: {
+                        userID: userid,
+                        userPassword: userpassword,
+                        userName: username,
+                        userType: "CP",
+                      },
+                      success: function (response) {
+                        if(response.message == "success")
+                          {
+                            alert("New CP added successfully!!")
+                            document.getElementById('loginForm').reset();
+                          }
+                          
+                      },
+                      error: function (error) {
+                        document.getElementById('loginForm').reset();
+                        alert("Failed to add account");
+                        // Display an error message to the user
+                      }
+                    });
+                  
               }
-              if(response.message == "invaliduser")
-              {
-                alert("Invalid username!!")
-                document.getElementById('loginForm').reset();
+              else{
+                alert("Failed to add CP details.")
               }
-            //alert("login success");
-            // Redirect to the dashboard or perform any other actions
+
           },
           error: function (error) {
             document.getElementById('loginForm').reset();
-            alert("Failed to update password, Please check username.");
+            alert("Failed to add cp details");
             // Display an error message to the user
           }
         });

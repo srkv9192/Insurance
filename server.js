@@ -59,6 +59,7 @@ const port = process.env.PORT || 80
 //});
 
 
+
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -321,8 +322,18 @@ const employeeSchema = new mongoose.Schema({
 const cpSchema = new mongoose.Schema({
   cpID: String,
   cpName: String,
+  cpAge: Number,
+  cpGender: String,
+  cpFatherName: String,
+  cpAddress: String,
+  cpCity: String,
+  cpState: String,
+  cpQualification: String,
+  cpProfession: String,
+  cpCurrentCompany: String,
   managerID: String,
   phone: String,
+  alternatePhone: String,
   email: String,
   // Add more fields as needed
 });
@@ -1432,18 +1443,28 @@ app.post('/api/addcpdetail', async(req, res) => {
         const newData = new cpSchemaObject({
                         'cpID' : "CP_" + refNumber,
                         'cpName' : req.body.cpName,
+                        'cpAge' : req.body.cpAge,
+                        'cpGender' : req.body.cpGender,
+                        'cpFatherName' : req.body.cpFatherName,
+                        'cpAddress' : req.body.cpAddress,
+                        'cpCity' : req.body.cpCity,
+                        'cpState' : req.body.cpState,
+                        'cpQualification' : req.body.cpQualification,
+                        'cpProfession' : req.body.cpProfession,
+                        'cpCurrentCompany' : req.body.cpCurrentCompany,
                         'managerID': req.body.managerID,
                         'phone' : req.body.phone,
+                        'alternatePhone' : req.body.alternatePhone,
                         'email' : req.body.email,
                         });
         const savedData = newData.save();
         await incrementcpCount();
-        res.json({ message: 'CP data saved successfully', data: savedData });
+        res.json({ message: 'success', data: savedData });
       }
     catch(err)
     {
       console.error(err);
-      res.status(500).json({ error: 'Error saving Manager data' });
+      res.status(500).json({ error: 'Error saving cp data' });
     } 
 });
 
@@ -2734,6 +2755,7 @@ app.get('/viewcompletedcases.html', (req, res) => res.sendFile(__dirname+'/viewc
 
 app.get('/changepassword.html', (req, res) => res.sendFile(__dirname+'/changepassword.html'))
 app.get('/createaccount.html', (req, res) => res.sendFile(__dirname+'/createaccount.html'))
+app.get('/createcp.html', (req, res) => res.sendFile(__dirname+'/createcp.html'))
 
 app.get('/viewcases.html', (req, res) => res.sendFile(__dirname+'/viewcases.html'))
 app.get('/viewmedicalopinioncases.html', (req, res) => res.sendFile(__dirname+'/viewmedicalopinioncases.html'))
