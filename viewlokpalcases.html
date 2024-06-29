@@ -358,6 +358,7 @@ div.dataTables_filter {
                         <th>Customer Phone</th>
                         <th>Claim Amount</th>
                         <th>Claim Number</th>
+                        <th>Status</th>
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
@@ -376,29 +377,44 @@ div.dataTables_filter {
                           <div class="row mb-3">
 
                             <div class="col-sm-6">
+                              <label for="complainant-phone" class="form-label">Complainant Phone</label>
+                              <input type="text" class="form-control" id="complainant-phone" disabled required pattern="[0-9]{10}" required maxlength="10">
+                            </div>
+
+                            <div class="col-sm-6">
                               <label for="complainant-name" class="form-label">Complainant Name</label>
                               <input type="text" class="form-control" id="complainant-name" required disabled>
                             </div>
 
-                            <div class="col-sm-6">
-                              <label for="complainant-phone" class="form-label">Complainant Phone</label>
-                              <input type="text" class="form-control" id="complainant-phone" disabled required pattern="[0-9]{10}" required maxlength="10">
-                            </div>
-                        
                           </div>
 
                           <div class="row mb-3">
 
                             <div class="col-sm-6">
-                              <label for="patient-name" class="form-label">Patient Name</label>
-                              <input type="text" class="form-control" id="patient-name" required disabled>
+                              <label for="escalation-email" class="form-label">Email ID</label>
+                              <input type="text" class="form-control" id="escalation-email" disabled required pattern="[0-9]{10}" required maxlength="10">
                             </div>
 
                             <div class="col-sm-6">
-                              <label for="patient-phone" class="form-label">Patient Phone</label>
-                              <input type="text" class="form-control" id="patient-phone" required disabled pattern="[0-9]{10}" required maxlength="10">
+                              <label for="date-of-birth" class="form-label">Date of Birth</label>
+                              <input type="text" class="form-control" id="date-of-birth" required disabled>
                             </div>
-                        
+
+                          </div>
+
+
+                          <div class="row mb-3">
+
+                            <div class="col-sm-6">
+                              <label for="address" class="form-label">Address</label>
+                              <input type="text" class="form-control" id="address" disabled required pattern="[0-9]{10}" required maxlength="10">
+                            </div>
+
+                            <div class="col-sm-6">
+                              <label for="pincode" class="form-label">Pin Code</label>
+                              <input type="text" class="form-control" id="pincode" required disabled>
+                            </div>
+
                           </div>
 
                           <div class="row mb-3">
@@ -423,19 +439,28 @@ div.dataTables_filter {
                             </div>
 
                             <div class="col-sm-6">
-                              <label for="reconsideration-date" class="form-label">Reconsideration Date</label>
-                              <input type="text" class="form-control" id="reconsideration-date" disabled required>
+                              <label for="patient-name" class="form-label">Patient Name</label>
+                              <input type="text" class="form-control" id="patient-name" required disabled>
                             </div>
+
+                           
                         
                           </div>
 
                           <div class="row mb-3">
 
+                            
+
                             <div class="col-sm-6">
-                              <label for="escalation-email"  class="form-label">Escalation Email</label>
-                              <input type="text"  class="form-control" id="escalation-email" disabled required >
+                              <label for="complaint-gist" class="form-label">Gist Of Complaint</label>
+                              <input type="text" class="form-control" id="complaint-gist" required disabled pattern="[0-9]{10}" required maxlength="10">
                             </div>
 
+                            <div class="col-sm-6">
+                              <label for="reconsideration-date" class="form-label">Reconsideration Date</label>
+                              <input type="text" class="form-control" id="reconsideration-date" disabled required>
+                            </div>
+                        
                           </div>
           
                         </form>
@@ -470,7 +495,7 @@ div.dataTables_filter {
                             </div>
 
                             <div class="col-sm-6">
-                              <label for="annexure-five-date" class="form-label">Annexure 5 Date</label>
+                              <label for="annexure-five-date" class="form-label">Annexure 5 Reply Date</label>
                               <input type="date" dateFormat: "dd/mm/yy" class="form-control" id="annexure-five-date"  >
                             </div>
                         
@@ -484,7 +509,7 @@ div.dataTables_filter {
                             </div>
 
                             <div class="col-sm-6">
-                              <label for="annexure-six-date" class="form-label">Annexure 6 Date</label>
+                              <label for="annexure-six-date" class="form-label">Annexure 6 Reply Date</label>
                               <input type="date" dateFormat: "dd/mm/yy" class="form-control" id="annexure-six-date"  >
                             </div>
                         
@@ -798,7 +823,7 @@ function addremark(referencenumber) {
           type: 'POST',
           contentType: "application/x-www-form-urlencoded",
           data: {
-            casereferenceNumber: localStorage['casereferencenumber'], 
+            casereferenceNumber: localStorage['addRemarkForRefNumber'], 
             LokpalBHPComplaintNumber: bhpNumber ,
             lokpalBHPComplaintDate: bhpDate ,
             annexure5ComplaintDate: annexure5Date,
@@ -890,7 +915,7 @@ function addlokpaldetails(referencenumber) {
  
             document.getElementById("patient-name").value = response[0].patientName;
            // document.getElementById("client-address").value = response[0].customerAddress;
-            document.getElementById("patient-phone").value = response[0].patientMobile;
+           // document.getElementById("patient-phone").value = response[0].patientMobile;
 
             document.getElementById("complainant-name").value = response[0].complainantName;
            // document.getElementById("client-address").value = response[0].customerAddress;
@@ -902,7 +927,8 @@ function addlokpaldetails(referencenumber) {
             document.getElementById("escalation-email").value = response[0].caseEmail;
             document.getElementById("rejection-date").value =  moment(new Date(response[0].initialRejectionDate)).utc().format('DD-MM-YYYY') ;
             document.getElementById("reconsideration-date").value =  moment(new Date(response[0].dateofEscalationToInsurer)).utc().format('DD-MM-YYYY') ;
-                       
+            document.getElementById("complaint-gist").value = response[0].caseGist;  
+            
 
         },
         error: function (error) {
@@ -1095,6 +1121,14 @@ $.ajax({
           for(var i = 0; i < length; i++) {
             var rfno= data[i].casereferenceNumber
             var canEscalate = "NO";
+            var lokpalstatus = 
+             (data[i].LokpalBHPComplaintNumber ? data[i].LokpalBHPComplaintNumber :  "")  + ' : ' +
+            (data[i].lokpalBHPComplaintDate ? moment(new Date(data[i].lokpalBHPComplaintDate)).utc().format('YYYY-MM-DD') : "" ) + ' : ' +
+            (data[i].annexure5ComplaintDate  ? moment(new Date(data[i].annexure5ComplaintDate)).utc().format('YYYY-MM-DD') : "" ) + ' : ' +
+           (data[i].annexure5ComplaintNumber ?data[i].annexure5ComplaintNumber : "" ) + ' : ' +
+           (data[i].lokpalComplaintNumber ? data[i].lokpalComplaintNumber  : "" ) + ' : ' +
+            (data[i].lokpalComplaintDate  ? moment(new Date(data[i].lokpalComplaintDate)).utc().format('YYYY-MM-DD') : "" ) + ' : ' +
+            (data[i].dateOfLokpalHearing ? moment(new Date(data[i].dateOfLokpalHearing)).utc().format('YYYY-MM-DD') : "" )
 
             //escalate if date diff is greater than 15
             if( Math.ceil((new Date() - new Date(data[i].dateofEscalationToInsurer)) / (1000 * 60 * 60 * 24))  > 15)
@@ -1110,6 +1144,7 @@ $.ajax({
               data[i].patientMobile,
               data[i].claimAmount,
               data[i].claimNumber,
+              `${lokpalstatus}`,
               `<a href="#popup2"><button class="btn btn-primary btn-sm"  onclick="viewdetails('${rfno}')" >View Details</button> </a>`,
               `<a href="#popup3"><button class="btn btn-primary btn-sm"  onclick="addlokpaldetails('${rfno}')" >Add details</button> </a>`,
               `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,

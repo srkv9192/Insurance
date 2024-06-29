@@ -512,7 +512,7 @@ div.dataTables_filter {
                 </div>
 
                 <div id="popup7" class="overlay">
-                  <div class="popup">
+                  <div class="popup"  style ="width:35%">
                     <h2  id = "remarkcontent">Move to Prospect-</h2>
                     <ul id="remarkcontentlist"></ul>
 
@@ -626,9 +626,11 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
 
            // movetoprospectforquery();
            alert("Case moved to prospect!")
+           window.location.href = "/viewrejectedcases.html"
           }
           else{
             alert("Error moving case to prospect!")
+            window.location.href = "/viewrejectedcases.html"
             //document.getElementById('loginForm').reset();
           }
         //alert("login success");
@@ -637,6 +639,7 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
       error: function (error) {
         //document.getElementById('loginForm').reset();
         alert("Error moving case to prospect!");
+        window.location.href = "/viewrejectedcases.html"
         // Display an error message to the user
       }
     });

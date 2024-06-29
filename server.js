@@ -666,7 +666,7 @@ app.post('/api/addlivecasequeryremark', async(req, res) => {
 
 app.post('/api/movetocompleted', async(req, res) => {
   try{
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ isInLokpalStage:"false", newCaseStatus: "Completed", isCompleted: "true", caseCompletionType: req.body.caseCompletionType, caseCompletionRemark: req.body.caseCompletionRemark }});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ isInLokpalStage:"false", isInEscalationStage : "false", newCaseStatus: "Completed", isCompleted: "true", caseCompletionType: req.body.caseCompletionType, caseCompletionRemark: req.body.caseCompletionRemark }});
 
       if(newData == null)
       {
@@ -1000,11 +1000,11 @@ app.post('/api/addpfdetailsduringlegalgeneration', async(req, res) => {
 
 app.post('/api/addemailremark', async(req, res) => {
   try{
-      const newData = await dataSchemaObject.findOneAndUpdate({caseNumber: req.body.caseNumber}, {$set:{ caseEmailPassword:req.body.caseEmailPassword, caseEmail:req.body.caseEmail, isEmailGenerated: "YES" }});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ caseEmailPassword:req.body.caseEmailPassword, caseEmail:req.body.caseEmail, isEmailGenerated: "YES" }});
 
       if(newData == null)
       {
-        res.json({ message: 'Could not save email remark', refnum:req.body.caseNumber});
+        res.json({ message: 'Could not save email remark.', refnum:req.body.casereferenceNumber});
       }
       else
       {
@@ -1433,6 +1433,13 @@ app.get("/api/getmanagerdetail", async(req, res) => {
 
 app.post('/api/addcpdetail', async(req, res) => {
   try{
+
+        const docs = await cpSchemaObject.findOne({cpID: req.body.cpID});
+        if (docs) {
+          res.json({message : 'duplicate'});
+          return;
+        }
+
         const refNumber= await getcpCount();
         if(refNumber == -1)
         {
@@ -1440,7 +1447,7 @@ app.post('/api/addcpdetail', async(req, res) => {
           return;
         }
         const newData = new cpSchemaObject({
-                        'cpID' : "CP_" + refNumber,
+                        'cpID' : req.body.cpID,
                         'cpName' : req.body.cpName,
                         'cpAge' : req.body.cpAge,
                         'cpGender' : req.body.cpGender,

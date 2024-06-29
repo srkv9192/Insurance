@@ -197,16 +197,16 @@
                     <form id="loginForm">
                       <div class="row mb-3">
                         <div class="col-sm-4">
-                          <label for="username" class="form-label">Name</label>
-                          <input type="text" class="form-control" id="username" placeholder="Enter name">
+                          <label for="cpname" class="form-label">Name</label>
+                          <input type="text" class="form-control" id="cpname" placeholder="Enter name">
                         </div>
                         <div class="col-sm-4">
                           <label for="userid" class="form-label">Login Name</label>
-                          <input type="text" class="form-control" id="userid" placeholder="Enter Login Name">
+                          <input type="text" class="form-control" id="userid"style=" background-color: #495057" readonly placeholder="Enter Login Name">
                         </div>
                         <div class="col-sm-4">
                           <label for="userpassword" class="form-label">Login Password</label>
-                          <input type="password" class="form-control" id="userpassword" placeholder="Enter password">
+                          <input type="text" class="form-control" id="userpassword" placeholder="Enter password">
                         </div>
                       </div>
                       <div class="row mb-3">
@@ -277,7 +277,7 @@
                         </div>
                         <div class="col-sm-4">
                           <label for="alternatePhone" class="form-label">Alternate Phone</label>
-                          <input type="text" class="form-control" id="alternatePhone" pattern="[0-9]{10}" required maxlength="10" placeholder="Enter alternate phone number">
+                          <input type="text" class="form-control" id="alternatePhone" pattern="[0-9]{10}" maxlength="10" placeholder="Enter alternate phone number">
                         </div>
                       </div>
                       <div class="row mb-3">
@@ -311,6 +311,25 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     $(document).ready(function () {
+
+      
+
+                  // AJAX call on page load get manager details
+        $.ajax({
+        url: '/api/getcounter',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          const optionsSelect = $('#manager-name-dropdown');
+          
+          document.getElementById("userid").value = "CP_"+ response[0].cpCount;
+
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
 
       $.ajax({
         url: '/api/whoami',
@@ -398,7 +417,7 @@
       $('#loginForm').on('submit', function (event) {
         event.preventDefault();
 
-        var username = $('#username').val();
+        var username = $('#cpname').val();
         var userid = $('#userid').val();
         var userpassword = $('#userpassword').val();
         var cpAge = $('#cpAge').val();
@@ -423,6 +442,7 @@
           contentType: "application/x-www-form-urlencoded",
           data: {    
             cpName: username,
+            cpID: userid,
             cpAge: cpAge,
             cpGender: cpGender,
             cpFatherName: cpFatherName,
@@ -454,7 +474,8 @@
                         if(response.message == "success")
                           {
                             alert("New CP added successfully!!")
-                            document.getElementById('loginForm').reset();
+                           // document.getElementById('loginForm').reset();
+                            window.location.href = "/createcp.html"
                           }
                           
                       },
@@ -466,6 +487,11 @@
                     });
                   
               }
+              else if(response.message == "duplicate")
+            {
+              alert("CP ID already present, use a different one.")
+              window.location.href = "/createcp.html"
+            }
               else{
                 alert("Failed to add CP details.")
               }
