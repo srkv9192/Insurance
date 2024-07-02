@@ -59,7 +59,6 @@ const port = process.env.PORT || 80
 //});
 
 
-
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -335,6 +334,7 @@ const cpSchema = new mongoose.Schema({
   phone: String,
   alternatePhone: String,
   email: String,
+  cpCommission: Number,
   // Add more fields as needed
 });
 
@@ -1463,6 +1463,7 @@ app.post('/api/addcpdetail', async(req, res) => {
                         'phone' : req.body.phone,
                         'alternatePhone' : req.body.alternatePhone,
                         'email' : req.body.email,
+                        'cpCommission': req.body.cpCommission,
                         });
         const savedData = newData.save();
         await incrementcpCount();
@@ -1475,10 +1476,43 @@ app.post('/api/addcpdetail', async(req, res) => {
     } 
 });
 
+app.post('/api/editcpdetail', async(req, res) => {
+  try{
+
+        const newData = await cpSchemaObject.findOneAndUpdate({cpID : req.body.cpID}, {$set:{ 'cpName' : req.body.cpName, 'cpAge' : req.body.cpAge, 'cpGender' : req.body.cpGender, 'cpFatherName' : req.body.cpFatherName,  'cpAddress' : req.body.cpAddress,'cpCity' : req.body.cpCity, 'cpState' : req.body.cpState,'cpQualification' : req.body.cpQualification,  'cpProfession' : req.body.cpProfession, 'cpCurrentCompany' : req.body.cpCurrentCompany,'managerID': req.body.managerID, 'phone' : req.body.phone, 'alternatePhone' : req.body.alternatePhone, 'email' : req.body.email,'cpCommission': req.body.cpCommission, }});
+
+        if(newData == null)
+        {
+          res.json({ message: 'failure'});
+        }
+        else
+        {
+          const savedData = newData.save();
+          res.json({ message: 'success'});
+        }
+      }
+    catch(err)
+    {
+      console.error(err);
+      res.status(500).json({ error: 'Error saving cp data' });
+    } 
+});
+
 app.get("/api/getcpdetail", async(req, res) => {
   try {
     // Retrieve all tpa list from database
     const users = await  cpSchemaObject.find({});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get CP details' });
+  }
+});
+
+app.get("/api/getcpdetailbyid", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  cpSchemaObject.find({cpID: req.query.cpID});
     res.json(users);
   } catch (error) {
     console.error(error);
@@ -2763,6 +2797,7 @@ app.get('/viewcompletedcases.html', (req, res) => res.sendFile(__dirname+'/viewc
 app.get('/changepassword.html', (req, res) => res.sendFile(__dirname+'/changepassword.html'))
 app.get('/createaccount.html', (req, res) => res.sendFile(__dirname+'/createaccount.html'))
 app.get('/createcp.html', (req, res) => res.sendFile(__dirname+'/createcp.html'))
+app.get('/editcp.html', (req, res) => res.sendFile(__dirname+'/editcp.html'))
 
 app.get('/viewcases.html', (req, res) => res.sendFile(__dirname+'/viewcases.html'))
 app.get('/viewmedicalopinioncases.html', (req, res) => res.sendFile(__dirname+'/viewmedicalopinioncases.html'))

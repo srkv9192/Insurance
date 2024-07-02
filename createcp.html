@@ -139,6 +139,7 @@
                <div class='dashboard-nav-dropdown-menu'>
                    <a href="/changepassword.html" class="dashboard-nav-dropdown-item">Change Password</a>
                    <a href="/createcp.html" class="dashboard-nav-dropdown-item">Add CP</a>
+                   <a href="/editcp.html" class="dashboard-nav-dropdown-item">Edit CP</a>
                </div>
              </div>
 
@@ -285,6 +286,12 @@
                           <label for="email" class="form-label">Email</label>
                           <input type="email" class="form-control" id="email" placeholder="Enter email">
                         </div>
+
+                        <div class="col-sm-4">
+                          <label for="cpCommission" class="form-label">Commission %</label>
+                          <input type="number" class="form-control" id="cpCommission" >
+                        </div>
+
                       </div>
  
                       <button type="submit" class="btn btn-primary" style="width: 300px; margin-left: 150px ;">Submit</button>
@@ -433,6 +440,7 @@
         var phone =$('#phone').val();
         var alternatePhone = $('#alternatePhone').val();
         var email = $('#email').val();
+        var cpCommission = $('#cpCommission').val();
 
 
         // Make an API call with the username and password
@@ -456,6 +464,7 @@
             phone: phone,
             alternatePhone: alternatePhone,
             email: email,
+            cpCommission: cpCommission,
           },
           success: function (response) {
             if(response.message == "success")
@@ -504,7 +513,11 @@
           }
         });
       });
+
+
     });
+
+
   </script>
 </body>
 

@@ -299,6 +299,7 @@ div.dataTables_filter {
                <div class='dashboard-nav-dropdown-menu'>
                    <a href="/changepassword.html" class="dashboard-nav-dropdown-item">Change Password</a>
                    <a href="/createcp.html" class="dashboard-nav-dropdown-item">Add CP</a>
+                   <a href="/editcp.html" class="dashboard-nav-dropdown-item">Edit CP</a>
                </div>
              </div>
 
@@ -394,11 +395,11 @@ div.dataTables_filter {
                     <thead>
                       <tr>
                         <th>Reference Number</th>
+                        <th>Patient Name</th>
+                        <th>Patient Phone</th>
+                        <th>Complainant Name</th>
                         <th>Manager Name</th>
                         <th>CP Name</th>
-                        <th>Patient Name</th>
-                        <th>Complainant Name</th>
-                        <th>Complainant Phone</th>
                         <th>Claim Amount</th>
                         <th>Medical Officer</th>
                         <th>Case Status</th>
@@ -1367,11 +1368,11 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
             // You could also use an ajax property on the data table initialization
             $('#dataTable').dataTable().fnAddData( [
               data[i].casereferenceNumber,
+              data[i].patientName,
+              data[i].patientMobile,
+              data[i].complainantName,
               data[i].managerName,
               data[i].cpName,
-              data[i].patientName,
-              data[i].complainantName,
-              data[i].complainantMobile,
               data[i].claimAmount,
               data[i].medicalOpinionOfficer,
               data[i].newCaseStatus,

@@ -8,10 +8,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="css/menubar.css">
-
-    <!-- for editable text box area   https://quilljs.com/docs/quickstart-->
-    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.4/dist/quill.snow.css" rel="stylesheet" />
-
   <style>
     body {
       background-color: #343a40;
@@ -74,8 +70,8 @@
       color: #fff;
     }
     .table-dark td {
-      color: black;
-      background-color: orange;
+      color: #fff;
+      background-color: darkred;
     }
 
     .table-dark tbody tr.card-missing td {
@@ -106,7 +102,6 @@ div.dataTables_filter {
 
 }
 
-
 /*for pop up box
 
 */
@@ -133,7 +128,7 @@ div.dataTables_filter {
   padding: 20px;
   background: #fff;
   border-radius: 5px;
-  width: 30%;
+  width: 65%;
   position: relative;
   transition: all 5s ease-in-out;
 }
@@ -162,7 +157,7 @@ div.dataTables_filter {
   font-size: 30px;
   font-weight: bold;
   text-decoration: none;
-  color: #333;
+  color: white;
 }
 .popup .close:hover {
   color: #06D85F;
@@ -183,10 +178,8 @@ div.dataTables_filter {
 
 /*pop up box end*/
 
-
-
   </style>
-  <title>Escalation Cases</title>
+  <title>Edit CP Details</title>
 </head>
 
 <body>
@@ -232,7 +225,7 @@ div.dataTables_filter {
                      <a href="/viewescalationcases.html" class="dashboard-nav-dropdown-item">View Escalation</a>
                      <a href="/viewlokpalcases.html" class="dashboard-nav-dropdown-item">View Lokpal</a>
                      <a href="/viewcompletedcases.html" class="dashboard-nav-dropdown-item">View Completed</a>
-                     
+                    
                                        <!-- 
                      <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
                      <a href="/viewescalationcases.html" class="dashboard-nav-dropdown-item">View Escalation</a>
@@ -253,6 +246,7 @@ div.dataTables_filter {
                     <a href="/generatecardpdf.html" class="dashboard-nav-dropdown-item">Download Card</a>
                 </div>
              </div>
+
 
 
             <div class='dashboard-nav-dropdown show'>
@@ -340,101 +334,24 @@ div.dataTables_filter {
           <div class="container mt-5">
             <div class="row justify-content-center">
               <div class="col-lg-12">
-                <h2 class="text-center mb-4">Escalation Cases</h2>
+                <h2 class="text-center mb-4">Edit CP Details</h2>
                 <div class="table-responsive">
                   <table id ="dataTable" class="table table-dark table-bordered">
                     <thead>
                       <tr>
-
-                        <th>Reference Number</th>
-                        <th>Manager Name</th>
-                        <th>CP Name</th>
-                        <th>Patient Name</th>
-                        <th>Complainant Name</th>
-                        <th>Complainant Phone</th>
-                     
-                        <th>Case status</th>
-                        <th>Escalation Date</th>
-                        <th>Case Email</th>
-                        <th>Password</th>
-                        <th>Action</th>
-                        <th>Action</th>
-                        <th>Action</th>
-                        <th>Action</th>
-                        <th>Action</th>
-                        <th>Action</th>
+                        <th>CP ID</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Age</th>
+                        <th>City</th>
+                        <th>Commission</th>
                         <th>Action</th>
                       </tr>
                     </thead>
                   </table>
                 </div>
 
-                <div id="popup2" class="overlay">
-                  <div class="popup">
-                      <div class="frame">
-                        <form id="paymentForm">
-                          <div class="row mb-3">
-
-                            <div class="col-sm-7">
-                              <label for="escalationdate"  class="form-label">First Escalation Date</label>
-                              <input type="date" dateFormat: "dd/mm/yy"  class="form-control" id="escalationdate" required >
-                            </div>
-
-                            <div class="col-sm-7">
-                              <label for="escalationremark"  class="form-label">Escalation Remark</label>
-                              <input type="text"  class="form-control" id="escalationremark" required >
-                            </div>
-                        
-                          </div>
-          
-                          <div class="">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                          </div>
-                        </form>
-                      </div>
-                      <a class="close" style=" color: white;" href="#">&times;</a>
-                  </div>
-                </div>
-
-                <div id="popup3" class="overlay">
-                  <div class="popup">
-                      <div class="frame">
-                        <form id="emailForm">
-                          <div class="row mb-3">
-
-                            <div class="col-sm-7">
-                              <label for="escalationemail"  class="form-label">Email</label>
-                              <input type="text"  class="form-control" id="escalationemail" required >
-                            </div>
-
-                            <div class="col-sm-7">
-                              <label for="escalationpassword"  class="form-label">Password</label>
-                              <input type="text"  class="form-control" id="escalationpassword" required >
-                            </div>
-                        
-                          </div>
-          
-                          <div class="">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                          </div>
-                        </form>
-                      </div>
-                      <a class="close" style=" color: white;" href="#">&times;</a>
-                  </div>
-                </div>
-
-                <div id="popup9" class="overlay" >
-                  <div class="popup" style ="width:45%">
-                    <h2  id = "remarkcontent">Remarks-</h2>
-                    <ul id="remarkcontentlist"></ul>
-
-                    
-                    <input type="text" placeholder="Add new remark here" id="newremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
-                    <button type="submit" onclick="addremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
-                    
-                    <a class="close" href="#">&times;</a>
-                  </div>
-                </div>
+                
 
                 <div id="popup5" class="overlay" >
                   <div class="popup" style =" display: flex;
@@ -448,7 +365,8 @@ div.dataTables_filter {
                     
 
 
-                    <a class="close" href="#">&times;</a>
+                    <a class="close"  href="#" style="
+                    color: white;">&times;</a>
 
                     <div id="wrapper" style="flex: 2;">
                        
@@ -466,65 +384,139 @@ div.dataTables_filter {
 
                 </div>
 
-                <div id="popup6" class="overlay">
-                  <div class="popup" style="width: 80%;">
-                    <div class="frame">
-                        <form id="gistForm">
-                              <label for="editor" class="form-label">Draft</label>
-                              <div id="editor">
-                              </div>
+                <div id="popup9" class="overlay" >
+                  <div class="popup"  style ="width:75%">
 
-                              <label for="editor1" class="form-label">Draft</label>
-                              <div id="editor1">
-                              </div>
-                        </form>
-                        <a class="close" style=" color: white;" href="#">&times;</a>
-                     </div>
-                    </div>
+                    <div class="frame">
+                      <form id="loginForm">
+                        <div class="row mb-3">
+
+                          <div class="col-sm-4">
+                            <label for="userid" class="form-label">Login Name</label>
+                            <input type="text" class="form-control" id="userid"style=" background-color: #495057" readonly placeholder="Enter Login Name">
+                          </div>
+
+                          <div class="col-sm-4">
+                            <label for="cpname" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="cpname" placeholder="Enter name">
+                          </div>
+                          
+                          <div class="col-sm-4">
+                            <label for="cpCommission" class="form-label">Commission %</label>
+                            <input type="number" class="form-control" id="cpCommission" >
+                          </div>
+
+                        </div>
+                        <div class="row mb-3">
+
+                          <div class="col-sm-4">
+                            <label for="cpAge" class="form-label">Age</label>
+                            <input type="number" class="form-control" id="cpAge" placeholder="Enter age">
+                          </div>
+                          <div class="col-sm-4">
+                            <label for="cpGender" class="form-label">Gender</label>
+                            <select class="form-control" id="cpGender">
+                              <option value="Male">Male</option>
+                              <option value="Female">Female</option>
+                            </select>
+                          </div>
+                          <div class="col-sm-4">
+                            <label for="cpFatherName" class="form-label">Father's Name</label>
+                            <input type="text" class="form-control" id="cpFatherName" placeholder="Enter father's name">
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+
+    
+                          <div class="col-sm-4">
+                            <label for="cpAddress" class="form-label">Address</label>
+                            <input type="text" class="form-control" id="cpAddress" placeholder="Enter address">
+                          </div>
+                          <div class="col-sm-4">
+                            <label for="cpCity" class="form-label">City</label>
+                            <input type="text" class="form-control" id="cpCity" placeholder="Enter city">
+                          </div>
+                          <div class="col-sm-4">
+                            <label for="cpState" class="form-label">State</label>
+                            <input type="text" class="form-control" id="cpState" placeholder="Enter state">
+                          </div>
+
+                        </div>
+                        <div class="row mb-3">
+
+                          <div class="col-sm-4">
+                            <label for="cpQualification" class="form-label">Qualification</label>
+                            <input type="text" class="form-control" id="cpQualification" placeholder="Enter qualification">
+                          </div>
+                          <div class="col-sm-4">
+                            <label for="cpProfession" class="form-label">Profession</label>
+                            <input type="text" class="form-control" id="cpProfession" placeholder="Enter profession">
+                          </div>
+                          <div class="col-sm-4">
+                            <label for="cpCurrentCompany" class="form-label">Current Company</label>
+                            <input type="text" class="form-control" id="cpCurrentCompany" placeholder="Enter company name">
+                          </div>
+
+                        </div>
+
+                        <div class="row mb-3">
+
+                          <div class="col-sm-4">
+                            <label for="manager-name" class="form-label">Manager Name</label>
+                            <div class="input-group">
+                              <select class="form-control" id="manager-name-dropdown" >
+                                <option value="">None</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-sm-4">
+                            <label for="phone" class="form-label">Phone</label>
+                            <input type="text" class="form-control" id="phone" pattern="[0-9]{10}" required maxlength="10" placeholder="Enter phone number">
+                          </div>
+                          <div class="col-sm-4">
+                            <label for="alternatePhone" class="form-label">Alternate Phone</label>
+                            <input type="text" class="form-control" id="alternatePhone" pattern="[0-9]{10}" maxlength="10" placeholder="Enter alternate phone number">
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                          <div class="col-sm-4">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" placeholder="Enter email">
+                          </div>
+
+                          
+
+                        </div>
+  
+                        <button type="submit" class="btn btn-primary" style="width: 300px; margin-left: 300px ;">Submit</button>
+                        
+                      </form>
+                       <a class="close" href="#">&times;</a>
+                  </div>
+                    
+                  </div>
+
+                
+                  
+                  </div>
+
+
                 </div>
 
+                <div id="popup7" class="overlay">
+                  <div class="popup"  style ="width:35%">
+                    <h2  id = "remarkcontent">Move to Prospect-</h2>
+                    <ul id="remarkcontentlist"></ul>
 
-                <div id="popup7" class="overlay" >
-                  <div class="popup" style ="width:30%">
-                    <h2  id = "remarkcontent">Move to Lokpal</h2>
-                    <div class="frame">
-                      <form id="lokpalForm">
-
-                        <div class="row">
-                          <input  class="form-control" type="text" placeholder="Add remark here" id="lokpalremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
-                        </div>
-                       
-                        <button type="submit" class="btn btn-primary btn-sm" style="margin-top: 5px;margin-bottom: 5px;">Submit</button>
-                        
-                        <a class="close" href="#">&times;</a>
-                        </form>
-                    </div>
                     
+                    <input type="text" placeholder="Add remark here" id="newremarkapproval" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                    <button type="submit" onclick="addremarkInDBAndApprove()" class="btn btn-primary btn-sm">Move to prospect</button>
+                    
+                    <a class="close" href="#">&times;</a>
                   </div>
                 </div>
 
-                <div id="popup8" class="overlay" >
-                  <div class="popup" style ="width:30%">
-                    <h2  id = "remarkcontent">Completion Remark-</h2>
-                    <div class="frame">
-                      <form id="completedForm">
 
-                        <div class="row">
-      
-                          <label for="casecompleteremark" class="form-label" style="margin-top: 5px;margin-bottom: 5px;">Completion Remark</label>
-                          <input  class="form-control" type="text" placeholder="Add remark here" id="casecompleteremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
-                        </div>
-                       
-                        <button type="submit" class="btn btn-primary btn-sm" style="margin-top: 5px;margin-bottom: 5px;">Move to Complete</button>
-                        
-                        <a class="close" href="#">&times;</a>
-                        </form>
-                    </div>
-                    
-                    
-
-                  </div>
-                </div>
 
               </div>
             </div>
@@ -536,30 +528,17 @@ div.dataTables_filter {
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.4/dist/quill.js"></script>
-
   <script>
 
-const toolbarOptions =['bold', 'italic', 'underline'];
 
-const quill = new Quill('#editor', {
-    theme: 'snow',
-    modules: {
-    toolbar: toolbarOptions
+
+function addremark(referencenumber) {
+        // Code to generate card
+        localStorage['addRemarkForRefNumber'] =referencenumber; 
   }
-  });
-
-  const quill1 = new Quill('#editor1', {
-    theme: 'snow',
-    modules: {
-    toolbar: toolbarOptions
-  }
-  });
 
 
-function addremarkInDB() {
+  function addremarkInDB() {
 
 const today = new Date();
 const yyyy = today.getFullYear();
@@ -572,7 +551,7 @@ if (mm < 10) mm = '0' + mm;
 const formattedToday = dd + '/' + mm + '/' + yyyy;
 
     $.ajax({
-      url: '/api/addescalationcaseremark',
+      url: '/api/addlivecaseremark',
       type: 'POST',
       contentType: "application/x-www-form-urlencoded",
       data: {
@@ -588,7 +567,7 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
             localStorage.removeItem("addRemarkForRefNumber");
 
             document.getElementById("newremark").value ="";
-            window.location.href = "/viewescalationcases.html";
+            window.location.href = "/viewrejectedcases.html";
             
           }
           else{
@@ -599,427 +578,143 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
         // Redirect to the dashboard or perform any other actions
       },
       error: function (error) {
-        document.getElementById('loginForm').reset();
-        alert("login failed");
+       // document.getElementById('loginForm').reset();
+        //alert("login failed");
         // Display an error message to the user
       }
     });
   
+
+
 }
-
-
-
   
-$('#lokpalForm').on('submit', function (event) {
-        event.preventDefault();
 
-        const today = new Date();
-        const yyyy = today.getFullYear();
-        let mm = today.getMonth() + 1; // Months start at 0!
-        let dd = today.getDate();
 
-        if (dd < 10) dd = '0' + dd;
-        if (mm < 10) mm = '0' + mm;
+function addremarkInDBAndApprove() {
 
-        const formattedToday = dd + '/' + mm + '/' + yyyy;
-       
-          $.ajax({
-          url: '/api/movetolokpal',
-          type: 'POST',
-          contentType: "application/x-www-form-urlencoded",
-          data: {
-            casereferenceNumber: localStorage['addRemarkForRefNumber'], 
-            caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ $('#lokpalremark').val(),
-          },
-          success: function (response) {
-            if(response.message == "success")
-              {
-                alert("Case moved to lokpal!");
-                window.location.href = "/viewescalationcases.html";
-              }
-              else{
-                alert("Error moving case to lokpal!")
-              }
-          },
-          error: function (error) {
-            document.getElementById('lokpalForm').reset();
-            alert("Error moving case to lokpal");
+const today = new Date();
+const yyyy = today.getFullYear();
+let mm = today.getMonth() + 1; // Months start at 0!
+let dd = today.getDate();
+
+if (dd < 10) dd = '0' + dd;
+if (mm < 10) mm = '0' + mm;
+
+const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+    $.ajax({
+      url: '/api/addtcaseremarkandmovetoprospect',
+      type: 'POST',
+      contentType: "application/x-www-form-urlencoded",
+      data: {
+        referencenumber: localStorage['addRemarkForRefNumber'],
+        caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ document.getElementById("newremarkapproval").value
+      },
+      success: function (response) {
+        if(response.message == "success")
+          {
+           // window.location.href = "/index.html"
+            //localStorage['userID'] = username;
+
+           // movetoprospectforquery();
+           alert("Case moved to prospect!")
+           window.location.href = "/viewrejectedcases.html"
           }
-        });
-
-
-      });
-
-
+          else{
+            alert("Error moving case to prospect!")
+            window.location.href = "/viewrejectedcases.html"
+            //document.getElementById('loginForm').reset();
+          }
+        //alert("login success");
+        // Redirect to the dashboard or perform any other actions
+      },
+      error: function (error) {
+        //document.getElementById('loginForm').reset();
+        alert("Error moving case to prospect!");
+        window.location.href = "/viewrejectedcases.html"
+        // Display an error message to the user
+      }
+    });
   
-$('#completedForm').on('submit', function (event) {
+   // alert(  document.getElementById("newremark").value);
+
+}
+  
+
+$('#loginForm').on('submit', function (event) {
         event.preventDefault();
 
-        const today = new Date();
-        const yyyy = today.getFullYear();
-        let mm = today.getMonth() + 1; // Months start at 0!
-        let dd = today.getDate();
+        var username = $('#cpname').val();
+        var userid = $('#userid').val();
+        var userpassword = $('#userpassword').val();
+        var cpAge = $('#cpAge').val();
+        var cpGender = $('#cpGender').val();
+        var cpFatherName = $('#cpFatherName').val();
+        var cpAddress = $('#cpAddress').val();
+        var cpCity = $('#cpCity').val();
+        var cpState = $('#cpState').val();
+        var cpQualification = $('#cpQualification').val();
+        var cpProfession =  $('#cpProfession').val();
+        var cpCurrentCompany =$('#cpCurrentCompany').val();
+        var managerid = $('#manager-name-dropdown').val();
+        var phone =$('#phone').val();
+        var alternatePhone = $('#alternatePhone').val();
+        var email = $('#email').val();
+        var cpCommission = $('#cpCommission').val();
 
-        if (dd < 10) dd = '0' + dd;
-        if (mm < 10) mm = '0' + mm;
 
-        const formattedToday = dd + '/' + mm + '/' + yyyy;
-
-          $.ajax({
-          url: '/api/movetocompleted',
+        // Make an API call with the username and password
+        $.ajax({
+          url: '/api/editcpdetail',
           type: 'POST',
           contentType: "application/x-www-form-urlencoded",
-          data: {
-            casereferenceNumber: localStorage['addRemarkForRefNumber'], 
-            caseCompletionType: "Escalation Settlement",
-            caseCompletionRemark: formattedToday + " - [ " +  localStorage['userName'] + " ] - " + $('#casecompleteremark').val(),
+          data: {    
+            cpName: username,
+            cpID: userid,
+            cpAge: cpAge,
+            cpGender: cpGender,
+            cpFatherName: cpFatherName,
+            cpAddress: cpAddress,
+            cpCity: cpCity,
+            cpState: cpState,
+            cpQualification: cpQualification,
+            cpProfession: cpProfession,
+            cpCurrentCompany: cpCurrentCompany,
+            managerID: managerid,
+            phone: phone,
+            alternatePhone: alternatePhone,
+            email: email,
+            cpCommission: cpCommission,
           },
           success: function (response) {
             if(response.message == "success")
               {
-                alert("Case moved to completed!");
-                window.location.href = "/viewescalationcases.html";
+                alert("CP details updated")
+                window.location.href = "/editcp.html"
+                
               }
-              else{
-                alert("Error moving case to completed!")
-              }
-          },
-          error: function (error) {
-            document.getElementById('completedForm').reset();
-            alert("error moving case to completed failed");
-            // Display an error message to the user
-          }
-        });
-
-
-      });
-
-
-
-      
-$('#emailForm').on('submit', function (event) {
-        event.preventDefault();
-          // call ajax to save these details--
-
-          $.ajax({
-          url: '/api/addemailremark',
-          type: 'POST',
-          contentType: "application/x-www-form-urlencoded",
-          data: {
-            casereferenceNumber: localStorage['addRemarkForRefNumber'], 
-            caseEmail: $('#escalationemail').val(),
-            caseEmailPassword: $('#escalationpassword').val(),
-          },
-          success: function (response) {
-            if(response.message == "success")
+              else if(response.message == "failure")
               {
-                alert("Email details saved!");
-                window.location.href = "/viewescalationcases.html";
+                alert("Failed to update CP details")
+                window.location.href = "/editcp.html"
               }
               else{
-                alert("Error saving email details!")
+                alert("Failed to update CP details.")
               }
-          },
-          error: function (error) {
-            document.getElementById('emailForm').reset();
-            alert("Error Saving email details");
-            // Display an error message to the user
-          }
-        });
 
-
-      });
-
-
-
-
-      
-
-
-$('#paymentForm').on('submit', function (event) {
-        event.preventDefault();
-
-        var processingfeeFinal = $('#pf-amount-final').val();
-        var consultationchargeFinal = $('#consultation-charge-final').val();
-       
-          // call ajax to save these details--
-
-          $.ajax({
-          url: '/api/addescalationdetails',
-          type: 'POST',
-          contentType: "application/x-www-form-urlencoded",
-          data: {
-            casereferenceNumber: localStorage['addRemarkForRefNumber'], 
-            dateofEscalationToInsurer: $('#escalationdate').val(),
-            caseRemarks: $('#escalationremark').val(),
-          },
-          success: function (response) {
-            if(response.message == "success")
-              {
-                alert("Escalation details saved!");
-                window.location.href = "/viewescalationcases.html";
-              }
-              else{
-                alert("Error saving escalation details!")
-              }
           },
           error: function (error) {
             document.getElementById('loginForm').reset();
-            alert("login failed");
+            alert("Failed to update cp details");
             // Display an error message to the user
           }
         });
-
-
       });
 
-
-
-
-function addremark(referencenumber) {
-        // Code to generate card
-        localStorage['addRemarkForRefNumber'] =referencenumber; 
-  }
-
-  function viewremark(referencenumber) {
-        // Code to generate card
-
-        localStorage['addRemarkForRefNumber'] = referencenumber; 
-
-        let list = document.getElementById("remarkcontentlist");
-
-        // 👇️ Remove all list elements
-        list.innerHTML = '';
-
-        $.ajax({
-        url: '/api/getescalationcaseRemarkbyref',
-        type: 'GET',
-        data: {
-          casereferenceNumber:  localStorage['addRemarkForRefNumber']
-        },
-
-        success: function (response) {
-          // Populate the options in the select eleme    
-           
-           // let text =  response[0].caseRemarks;
-          //  const myArray = text.split(";");    
-
-            let list = document.getElementById("remarkcontentlist");
-              for (i = 0; i < response[0].caseRemarks.length ; i++) {
-                let li = document.createElement('li');
-                li.innerText = response[0].caseRemarks[i];
-                list.appendChild(li);
-               }
-
-        },
-        error: function (error) {
-          console.error('Error:', error);
-        }
-      });
-
-  }
-
-
-
-function movetoescalation(referencenumber) {
-
-$.ajax({
-  url: '/api/movecasetoescalationfrommedicalbyref',
-  type: 'POST',
-  contentType: "application/x-www-form-urlencoded",
-  data: {
-    caseNumber: referencenumber,
-  },
-  success: function (response) {
-    if(response.message == "success")
-      {
-       // window.location.href = "/index.html"
-        //localStorage['userID'] = username;
-        alert("Case moved to Escalation!")
-
-        window.location.href = "/viewescalationcases.html";
-      }
-      else{
-        alert("Error moving case to Live!")
-      }
-  },
-  error: function (error) {
-    alert("Error moving case to Escalation!");
-    // Display an error message to the user
-  }
-});
-
-}
-
-
-
-    $(document).ready(function () {
-
-      $.ajax({
-        url: '/api/whoami',
-        type: 'POST',
-        success: function (response) {
-          // Populate the options in the select element
-            //alert(response.message)
-           
-            if(response.message =='admin')
-            {
-              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
-              document.getElementById("login-menu").href="/logout.html"; 
-              $("#showonlogin").show();
-              $("#hideonlogin").hide();
-              localStorage['userName'] = response.username;
-             
-            }
-            else if(response.message =='operation' || response.message =='marketing' || response.message =='medicalofficer')
-            {
-              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
-              document.getElementById("login-menu").href="/logout.html"; 
-              $("#showonlogin").show();
-              $("#hideonlogin").hide();
-              localStorage['userName'] = response.username;
-            }
-            else if(response.message =='cp' || response.message =='manager')
-            {
-              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
-              document.getElementById("login-menu").href="/logout.html"; 
-              $("#showtocpandmanager").show();
-              $("#hideonlogin").hide();
-              localStorage['userName'] = response.username;
-            }
-            else if(response.message =='medicalofficer')
-            {
-              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
-              document.getElementById("login-menu").href="/logout.html"; 
-              $("#showtomedicalofficer").show();
-              $("#hideonlogin").hide();
-              localStorage['userName'] = response.username;
-            }
-            else
-            {
-              window.location.href = "/login.html"
-            }
-            
-        },
-        error: function (error) {
-          console.error('Error:', error);
-        }
-      });
-
-
-      const mobileScreen = window.matchMedia("(max-width: 990px)");
-
-      $(".dashboard-nav-dropdown-toggle").click(function () {
-        $(this).closest(".dashboard-nav-dropdown")
-            .toggleClass("show")
-            .find(".dashboard-nav-dropdown")
-            .removeClass("show");
-        $(this).parent()
-            .siblings()
-            .removeClass("show");
-      });
-
-      $(".menu-toggle").click(function () {
-        if (mobileScreen.matches) {
-            $(".dashboard-nav").toggleClass("mobile-show");
-        } else {
-            $(".dashboard").toggleClass("dashboard-compact");
-        }
-      });
-
-      $('#dataTable').DataTable({
-
-        "paging": true,
-        "searching": true,
-        "ordering": true,
-        "info": true,
-        "scrollX": true,
-      });
       
-       // AJAX call on page load get manager details
-       $.ajax({
-        url: '/api/getescalationcasedetail',
-        type: 'GET',
-        success: function (response) {
-          // Populate the options in the select element
-          populateDataTable(response);
-        },
-        error: function (error) {
-          console.error('Error:', error);
-        }
-      });
-
-          // populate the data table with JSON data
-          function populateDataTable(data) {
-          console.log("populating data table...");
-          // clear the table before populating it with more data
-          $("#dataTable").DataTable().clear();
-          var length = Object.keys(data).length;
-          for(var i = 0; i < length; i++) {
-            var rfno= data[i].casereferenceNumber
-            var canEscalate = "NO";
-
-            //escalate if date diff is greater than 15
-            if( Math.ceil((new Date() - new Date(data[i].dateofEscalationToInsurer)) / (1000 * 60 * 60 * 24))  > 15)
-            {
-              canEscalate = "YES";
-            }
-
-            // You could also use an ajax property on the data table initialization
-            $('#dataTable').dataTable().fnAddData( [
-              data[i].casereferenceNumber,
-              data[i].managerName,
-              data[i].cpName,
-              data[i].patientName,
-              data[i].complainantName,
-              data[i].complainantMobile,
-              data[i].newCaseStatus,
-              moment(new Date(data[i].dateofEscalationToInsurer)).utc().format('DD-MM-YYYY'),
-             // `${canEscalate}`,
-              data[i].caseEmail,
-              data[i].caseEmailPassword,
-              `<a href="#popup3"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Add Email</button> </a>`,
-              `<a href="#popup2"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Add Escalation details</button> </a>`,
-              `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
-              `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
-              `<a href="#popup6"><button class="btn btn-primary btn-sm"  onclick="viewAgreement('${rfno}')" >View Draft</button> </a>`,
-              `<a href="#popup7"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Lokpal</button> </a>`,
-              `<a href="#popup8"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Completed</button> </a>`, 
-
-            ]);
-          }
-        }
-      
-    });
 
 
-    function viewAgreement(referencenumber)
-    {
-
-      localStorage['casereferencenumber'] = referencenumber; 
-
-      $.ajax({
-        url: '/api/getcasedetailbyref',
-        type: 'GET',
-        data: {
-          casereferenceNumber: referencenumber
-        },
-
-        success: function (response) {
- 
-            quill.root.innerHTML= response[0].caseDraft;
-            quill1.root.innerHTML= response[0].lokpalDraft;          
-
-        },
-        error: function (error) {
-          console.error('Error:', error);
-        }
-      }); 
-
-    }
-
-
-    function viewdocuments(referencenumber)
+function viewdocuments(referencenumber)
 {
   let list = document.getElementById("documentlist");
   
@@ -1069,7 +764,193 @@ error: function (error) {
 
 
 
-    
+function viewremark(referencenumber) {
+        // Code to generate card
+
+        $.ajax({
+        url: '/api/getcpdetailbyid',
+        type: 'GET',
+        data: {
+          cpID: referencenumber
+        },
+
+        success: function (response) { 
+
+        $('#cpname').val( response[0].cpName);
+        $('#userid').val(response[0].cpID);
+        $('#cpAge').val(response[0].cpAge);
+        $('#cpGender').val(response[0].cpGender);
+        $('#cpFatherName').val(response[0].cpFatherName);
+        $('#cpAddress').val(response[0].cpAddress);
+        $('#cpCity').val(response[0].cpCity);
+        $('#cpState').val(response[0].cpState);
+        $('#cpQualification').val(response[0].cpQualification);
+        $('#cpProfession').val(response[0].cpProfession);
+        $('#cpCurrentCompany').val(response[0].cpCurrentCompany);
+        $('#manager-name-dropdown').val(response[0].managerID);
+        $('#phone').val(response[0].phone);
+        $('#alternatePhone').val(response[0].alternatePhone);
+        $('#email').val(response[0].email);
+        $('#cpCommission').val(response[0].cpCommission);
+
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+  }
+
+
+
+   
+function movetolive(referencenumber) {
+        // Code to generate card
+       //alert("Move to live reference number: " + referencenumber);
+       localStorage['casereferencenumber'] = referencenumber; 
+
+       window.location.replace("/movecasetolive.html");
+
+      }
+
+      
+    $(document).ready(function () {
+
+
+      $.ajax({
+        url: '/api/getmanagerdetail',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          const optionsSelect = $('#manager-name-dropdown');
+          response.forEach(function (option) {
+            optionsSelect.append($('<option>', {
+              value: option.managerID,
+              text: option.managerName
+            }));
+          });
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+      $.ajax({
+        url: '/api/whoami',
+        type: 'POST',
+        success: function (response) {
+          // Populate the options in the select element
+            //alert(response.message)
+           
+            if(response.message =='admin')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showonlogin").show();
+              $("#hideonlogin").hide();
+             
+            }
+            else if(response.message =='operation' || response.message =='marketing' || response.message =='medicalofficer')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showonlogin").show();
+              $("#hideonlogin").hide();
+            }
+            else if(response.message =='cp' || response.message =='manager')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtocpandmanager").show();
+              $("#hideonlogin").hide();
+            }
+            else if(response.message =='medicalofficer')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtomedicalofficer").show();
+              $("#hideonlogin").hide();
+            }
+            else
+            {
+              window.location.href = "/login.html"
+            }
+            
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+
+      const mobileScreen = window.matchMedia("(max-width: 990px)");
+
+      $(".dashboard-nav-dropdown-toggle").click(function () {
+        $(this).closest(".dashboard-nav-dropdown")
+            .toggleClass("show")
+            .find(".dashboard-nav-dropdown")
+            .removeClass("show");
+        $(this).parent()
+            .siblings()
+            .removeClass("show");
+      });
+
+      $(".menu-toggle").click(function () {
+        if (mobileScreen.matches) {
+            $(".dashboard-nav").toggleClass("mobile-show");
+        } else {
+            $(".dashboard").toggleClass("dashboard-compact");
+        }
+      });
+
+      $('#dataTable').DataTable({
+
+        "paging": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "scrollX": true,
+      });
+      
+       // AJAX call on page load get manager details
+       $.ajax({
+        url: '/api/getcpdetail',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          populateDataTable(response);
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+          // populate the data table with JSON data
+          function populateDataTable(data) {
+          console.log("populating data table...");
+          // clear the table before populating it with more data
+          $("#dataTable").DataTable().clear();
+          var length = Object.keys(data).length;
+          for(var i = 0; i < length; i++) {
+            var rfno= data[i].cpID;
+            // You could also use an ajax property on the data table initialization
+            $('#dataTable').dataTable().fnAddData( [
+
+              data[i].cpID ? data[i].cpID : "",
+              data[i].cpName ? data[i].cpName : "",
+              data[i].phone ?data[i].phone : "",
+              data[i].cpAge ?data[i].cpAge : "",
+              data[i].cpCity ? data[i].cpCity: "",
+              data[i].cpCommission ?data[i].cpCommission : "",
+              `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >Edit Details</button> </a>`,
+            ]);
+          }
+        }
+      
+
+
+
+    });
   </script>
 </body>
 
