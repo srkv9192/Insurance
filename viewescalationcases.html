@@ -427,7 +427,7 @@ div.dataTables_filter {
                   <div class="popup" style="color:black; width: 70%; max-height: 90vh; overflow-y: auto;">
                       <div style="display: flex; align-items: center; justify-content: start;">
                           <img src="/images/logoround.png" width="130" height="130" style="margin-right: 20px;">
-                          <h2 style="margin: 0; flex-grow: 1; text-align: center;">Case Progress</h2>
+                          <h2 style="margin: 0; flex-grow: 1; text-align: center;">Case Report</h2>
                       </div>
                       <div style="margin-top: 10px; margin-left:40px;">
                           <div style="display: flex; justify-content: space-between;">
@@ -1081,6 +1081,8 @@ function populatereport(refnumber)
             },
             success: function (response) {
               // Populate the options in the select element
+              document.querySelector('[data-info="reportinitialcasedate"]').textContent =response[0].prospectDate ? moment(new Date(response[0].prospectDate)).utc().format('MM-DD-YYYY') : "";
+
               document.querySelector('[data-info="reportpatientname"]').textContent =response[0].patientName ? response[0].patientName : "";
 
               document.querySelector('[data-info="reportpatientcontact"]').textContent =response[0].patientMobile ? response[0].patientMobile : "";
