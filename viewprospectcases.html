@@ -429,6 +429,90 @@ div.dataTables_filter {
                   </div>
                 </div>
 
+                <div id="popup2" class="overlay">
+                  <div class="popup" style="color:black; width: 70%; max-height: 90vh; overflow-y: auto;">
+                      <div style="display: flex; align-items: center; justify-content: start;">
+                          <img src="/images/logoround.png" width="130" height="130" style="margin-right: 20px;">
+                          <h2 style="margin: 0; flex-grow: 1; text-align: center;">Case Progress</h2>
+                      </div>
+                      <div style="margin-top: 10px; margin-left:40px;">
+                          <div style="display: flex; justify-content: space-between;">
+                              <div style="flex: 1;">
+                                  <label class="form-label"><strong>Initial Case Date:</strong></label>
+                                  <span data-info="reportinitialcasedate">[Initial Case Date]</span>
+                              </div>
+                              <div style="flex: 1;">
+                                  <label class="form-label"><strong>Patient Name:</strong></label>
+                                  <span data-info="reportpatientname">[Case status]</span>
+                              </div>
+                          </div>
+                          <div style="display: flex; justify-content: space-between;">
+                              <div style="flex: 1;">
+                                  <label class="form-label"><strong>Patient Contact:</strong></label>
+                                  <span data-info="reportpatientcontact">[Remarks]</span>
+                              </div>
+                              <div style="flex: 1;">
+                                  <label class="form-label"><strong>Complainant Name:</strong></label>
+                                  <span data-info="reportcomplainantname">[Initial Case Date]</span>
+                              </div>
+                          </div>
+                          <div style="display: flex; justify-content: space-between;">
+                              <div style="flex: 1;">
+                                  <label class="form-label"><strong>Complainant Contact:</strong></label>
+                                  <span data-info="reportcomplainantcontact">[Case status]</span>
+                              </div>
+                              <div style="flex: 1;">
+                                  <label class="form-label"><strong>Manager:</strong></label>
+                                  <span data-info="reportmanager">[Remarks]</span>
+                              </div>
+                          </div>
+                          <div style="display: flex; justify-content: space-between;">
+                              <div style="flex: 1;">
+                                  <label class="form-label"><strong>Channel Partner:</strong></label>
+                                  <span data-info="reportcp">[Initial Case Date]</span>
+                              </div>
+                              <div style="flex: 1;">
+                                  <label class="form-label"><strong>Insurance company:</strong></label>
+                                  <span data-info="reportinsurancecompany">[Case status]</span>
+                              </div>
+                          </div>
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Claim Number:</strong></label>
+                              <span data-info="reportclaimnumber">[Remarks]</span>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Claim Amount:</strong></label>
+                              <span data-info="reportclaimamount">[Remarks]</span>
+                            </div>
+                          </div>
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                            <label class="form-label"><strong>Rejection Reason :</strong></label>
+                            <span data-info="reportrejectionreason">[Remarks]</span>
+                            </div>
+                          </div>
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                            <label class="form-label"><strong>Manual Gist :</strong></label>
+                            <span data-info="reportmanualgist">[Remarks]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                            <label class="form-label"><strong>Remarks :</strong></label>
+                            <span data-info="reportremarks">[Remarks]</span>
+                            </div>
+                          </div>
+
+                      </div>
+                      <a class="close" href="#">&times;</a>
+                  </div>
+                </div>
+              
+              
+
                 <div id="popup3" class="overlay">
                   <div class="popup">
                     <h2 >Assign Medical Officer-</h2>
@@ -750,20 +834,17 @@ function addremark(referencenumber) {
         // Code to generate card
         localStorage['addRemarkForRefNumber'] =referencenumber; 
   }
-
-
   
 function addGistAndReason()
 {
-
        $.ajax({
           url: '/api/addcasegistandrejectionreason',
           type: 'POST',
           contentType: "application/x-www-form-urlencoded",
           data: {
             casereferenceNumber: localStorage['addRemarkForRefNumber'],
-            caseGist: document.getElementById("rejectionreason").value,
-            caseRejectionReason: document.getElementById("gistremark").value,
+            caseGist: document.getElementById("gistremark").value,
+            caseRejectionReason: document.getElementById("rejectionreason").value,
           },
           success: function (response) {
             if(response.message == "success")
@@ -1226,7 +1307,80 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
 }
   
 
+function populatereport(refnumber)
+      {
+            $.ajax({
+            url: '/api/getcasedetailbyref',
+            type: 'GET',
+            data: {
+                //fill appropriate case number here. fasttodo
+              casereferenceNumber: refnumber,
+            },
+            success: function (response) {
+              // Populate the options in the select element
+              document.querySelector('[data-info="reportpatientname"]').textContent =response[0].patientName ? response[0].patientName : "";
 
+              document.querySelector('[data-info="reportpatientcontact"]').textContent =response[0].patientMobile ? response[0].patientMobile : "";
+
+              document.querySelector('[data-info="reportcomplainantname"]').textContent =response[0].complainantName ? response[0].complainantName : "";
+
+              document.querySelector('[data-info="reportcomplainantcontact"]').textContent =response[0].complainantMobile ? response[0].complainantMobile : "";
+
+              document.querySelector('[data-info="reportmanager"]').textContent =response[0].managerName ? response[0].managerName : "";
+
+              document.querySelector('[data-info="reportcp"]').textContent =response[0].cpName ? response[0].cpName : "";
+
+              document.querySelector('[data-info="reportinsurancecompany"]').textContent =response[0].insuranceCompanyName ? response[0].insuranceCompanyName : "";
+
+              document.querySelector('[data-info="reportclaimnumber"]').textContent =response[0].claimNumber ? response[0].claimNumber : "";
+
+              document.querySelector('[data-info="reportclaimamount"]').textContent =response[0].claimAmount ? response[0].claimAmount : "";
+
+              document.querySelector('[data-info="reportrejectionreason"]').textContent =response[0].caseRejectionReason ? response[0].caseRejectionReason : "";
+
+              document.querySelector('[data-info="reportmanualgist"]').textContent =response[0].caseGist ? response[0].caseGist : "";
+              
+
+             
+              // Assuming the JSON response object is 'response' and it contains 'caseRemarks' as a comma-separated string
+               
+                 var remarks = response[0].caseRemarks;
+                 //const remarksArray= remarks.split(',');
+
+                  // Select the element where you want to display the bullet points
+                  var textContentElement = document.querySelector('[data-info="reportremarks"]');
+
+                  //document.querySelector('[data-info="reportremarks"]').textContent = response[0].caseRemarks ? response[0].caseRemarks : "";
+
+                  // Clear previous content
+                  textContentElement.innerHTML = '';
+
+                  // Create a bullet point list
+                  var ulElement = document.createElement('ul');
+                  textContentElement.appendChild(ulElement);
+
+                  // Add each remark as a list item to the unordered list
+                  remarks.forEach(function(remark) {
+                    var liElement = document.createElement('li');
+                    liElement.textContent = remark.trim(); // Trim whitespace
+                    ulElement.appendChild(liElement);
+                  });
+                
+
+
+             // document.getElementById("popup2").style.visibility = "visible";
+             // document.getElementById("popup2").style.opacity = 1;
+
+             // document.getElementById("popup2").scrollIntoView(true);
+              window.location = localStorage['baseurl'] + "#popup2" 
+              
+              console.log("india...");
+            },
+            error: function (error) {
+              console.error('Error:', error);
+            }
+          });
+      }
 
     $(document).ready(function () {
 
@@ -1309,6 +1463,17 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
         "info": true,
         "scrollX": true,
       });
+
+
+      var table = $('#dataTable').DataTable();
+      localStorage['baseurl'] = window.location; 
+
+      $('#dataTable tbody').on('click', 'tr td:first-child', function () {
+    var data = table.row(this).data();
+    populatereport(data[0]);  // Assuming data[0] is the data in the first column
+    //alert( 'You clicked on ' + data[0] + '\'s row' );
+    });
+
       
        // AJAX call on page load get manager details
        $.ajax({
