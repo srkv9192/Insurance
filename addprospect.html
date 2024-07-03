@@ -340,6 +340,29 @@
 
                 </div>
 
+                <div class="row mb-3">
+                  <div class="col-sm-6">
+                    <label for="case-of-dropdown" class="form-label">Case of:</label>
+                    <div class="input-group">
+                      <select class="form-control" id="case-of-dropdown" >
+                        <option value="">None</option>
+                        <option value="abhishek solanki">Abhishek Solanki</option>
+                        <option value="annapurna kasera">Annapurna Kasera</option>
+                        <option value="aparna pare">Aparna Pare </option>
+                        <option value="ashish dubey">Ashish Dubey</option>
+                        <option value="ashwin kaushal">Ashwin kaushal</option>
+                        <option value="avi mishra">Avi Mishra</option>
+                        <option value="dimple batra">Dimple Batra</option>
+                        <option value="khushi bhite">Khushi Bhite</option>
+                        <option value="mansi sawant">Mansi Sawant </option>
+                        <option value="mona dodiya">Mona Dodiya</option>
+                        <option value="robin mehkali">Robin Mehkali</option>
+                        <option value="swati sarathe">Swati Sarathe</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
 
                 <div class="text-center">
                   <button type="submit" class="btn btn-primary">Submit</button>
@@ -603,6 +626,7 @@
         var prospectzone = $('#prospectZone-dropdown').val()
 
         var cpname = $("#cp-name-dropdown option:selected").text();
+        var casehandler = $("#case-of-dropdown option:selected").text();
 
         var cpid=   $('#cp-name-dropdown').val()
         var managername = $("#manager-name-dropdown option:selected").text();
@@ -617,6 +641,7 @@
         formData.append('casereferenceNumber', localStorage['casereferencenumber']);
         formData.append('cpName', cpname);
         formData.append('cpID', cpid);
+        formData.append('caseHandler', casehandler);
 
         formData.append('managerName', managername);
         formData.append('managerID', managerid);

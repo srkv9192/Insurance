@@ -401,6 +401,7 @@ div.dataTables_filter {
                         <th>Manager Name</th>
                         <th>CP Name</th>
                         <th>Claim Amount</th>
+                        <th>Case Of</th>
                         <th>Medical Officer</th>
                         <th>Case Status</th>
                         <th>Action</th>
@@ -1544,6 +1545,7 @@ function populatereport(refnumber)
               data[i].managerName,
               data[i].cpName,
               data[i].claimAmount,
+              data[i].caseHandler ? data[i].caseHandler: " ",
               data[i].medicalOpinionOfficer,
               data[i].newCaseStatus,
               `<a href="${canAddGist}"  ><button class="btn btn-primary btn-sm" ${gistbutton} onclick="addremark('${rfno}')" >Add Manual Gist</button> </a>`,

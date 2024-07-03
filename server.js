@@ -467,6 +467,7 @@ app.post('/api/addprospect', upload.array('pdfFile', 10), async (req, res) => {
                         claimAmount: req.body.claimAmount,
                         cpName: req.body.cpName,
                         cpID: req.body.cpID,
+                        caseHandler: req.body.caseHandler,
                         managerName: req.body.managerName,
                         managerID: req.body.managerID,
                         directCase: req.body.directCase,
