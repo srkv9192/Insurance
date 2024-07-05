@@ -672,15 +672,21 @@ div.dataTables_filter {
                 </div>
 
                 <div id="popup6" class="overlay">
-                  <div class="popup" style="width: 80%;">
+                  <div class="popup" style="width: 80%; max-height: 90vh; overflow-y: auto;">
                     <div class="frame">
                         <form id="gistForm">
                               <label for="editor" class="form-label">Draft</label>
-                              <div id="editor">
+                              <div id="editor" style="
+                              background-color: white;
+                              color: black;
+                          ">
                               </div>
 
-                              <label for="editor1" class="form-label">Draft</label>
-                              <div id="editor1">
+                              <label for="editor1" class="form-label">Lokpal Draft</label>
+                              <div id="editor1" style="
+                              background-color: white;
+                              color: black;
+                          ">
                               </div>
                         </form>
                         <a class="close" style=" color: white;" href="#">&times;</a>
