@@ -115,6 +115,13 @@ div.dataTables_filter {
 
 }
 
+#uploadingdiv {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
 /*for pop up box
 
 */
@@ -486,7 +493,10 @@ div.dataTables_filter {
                           <div class="row mb-3">
 
                             <label for="editor" class="form-label">Draft</label>
-                            <div id="editor">
+                            <div id="editor"  style="
+                            background-color: white;
+                            color: black;
+                        ">
                             
                             </div>
                             
@@ -495,7 +505,10 @@ div.dataTables_filter {
 
                             <div class="row mb-3">
                               <label for="editor1" class="form-label">Lokpal Draft</label>
-                              <div id="editor1">
+                              <div id="editor1"  style="
+                              background-color: white;
+                              color: black;
+                          ">
                                 
                               </div>
                           </div>
@@ -701,7 +714,7 @@ div.dataTables_filter {
                 
                 <div id="popup4"  class="overlay">
                   <div class="popup" style="width:45%">
-                    <h2 >Upload Final Draft</h2>
+                    <h2 >Upload Docs</h2>
 
                     <form id="loginForm" enctype="multipart/form-data">
                       <div class="col-sm-6">
@@ -1513,122 +1526,6 @@ function movetolive(referencenumber) {
       }
 
       });
-
-
-      $('#loginForm').on('submit', function (event) {
-        event.preventDefault();
-
-        var clientname = $('#client-name').val();
-        var clientaddress = $('#client-address').val();
-
-        var clientphone = $('#client-phone').val();
-        var claimnumber = $('#claim-number').val();
-
-        var behalfof = $('#behalf-of-dropdown').val();;
-        var complainantname = $('#complainant-name').val();
-
-        var insurancecompanyname = $('#insurance-company-dropdown').val();
-        var processingfee = $('#processing-fee').val();
-
-        var consultationcharge = $('#consultation-charge').val();
-        var claimamount = $('#total-claim-amount').val();
-
-        var chequeamount = $('#cheque-amount').val();
-        var chequenumber = $('#cheque-number').val();
-
-        var bankname = $('#bank-name').val();
-        var witnessname = $('#witness-name').val();
-        var idnumber = $('#id-number').val();
-
-
-        $.ajax({
-          url: '/api/addpfdetailsduringlegalgeneration',
-          type: 'POST',
-          contentType: "application/x-www-form-urlencoded",
-          data: {
-            casereferenceNumber: localStorage['casereferencenumber'], 
-            pfAmount: processingfee,
-            cfPercentage: consultationcharge,
-            cfAmount: chequeamount,
-            cfChequeNumber: chequenumber,
-            cfBankName: bankname,
-            patientAddress: clientaddress,
-          },
-          success: function (response) {
-            if(response.message == "success")
-              {
-              
-                
-              }
-              else{
-                //alert("Error saving remark!")
-                //document.getElementById('loginForm').reset();
-              }
-            
-          },
-          error: function (error) {
-            //document.getElementById('loginForm').reset();
-            //alert("login failed");
-            // Display an error message to the user
-          }
-        });
-
-
-
-        //addcaselegalgenerateddetails
-
-        // Make an API call with the username and password
-        $.ajax({
-          url: '/api/getlegalpdf',
-          type: 'POST',
-          contentType: "application/x-www-form-urlencoded",
-          xhrFields: {
-            responseType: 'blob'
-        },
-          data: {
-          clientName:clientname,
-          clientAddress: clientaddress,
-          clientPhone: clientphone,
-          claimNumber: claimnumber,
-          insuranceCompanyName: insurancecompanyname,
-          processingFee: processingfee,
-          consultationCharge: consultationcharge,
-          claimAmount:  claimamount,
-          chequeAmount: chequeamount,
-          chequeNumber: chequenumber,
-          bankName:  bankname,
-          witnessName: witnessname,
-          behalfOf: behalfof,
-          complainantName: complainantname,
-          idNumber: idnumber,
-          },
-          success: function (response) {
-            var a = document.createElement('a');
-            var url = window.URL.createObjectURL(response);
-            a.href = url;
-            a.download = `${localStorage['casereferencenumber']}_legal.pdf`;
-            document.body.append(a);
-            a.click();
-            a.remove();
-            window.URL.revokeObjectURL(url);
-
-            addCasaddlegalgenerateddetailseVerdict();
-
-              // call another ajax to save case status as legal generated
-
-
-          },
-          error: function (error) {
-            document.getElementById('loginForm').reset();
-            alert("PDF generation failed even after bug fix");
-            // Display an error message to the user
-          }
-        });
-      
-      
-      
-      });
-
 
 
         // calculate cheque amount based on consulation charge percentage
