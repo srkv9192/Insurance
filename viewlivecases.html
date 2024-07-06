@@ -348,11 +348,12 @@ div.dataTables_filter {
                     <thead>
                       <tr>
                         <th>Reference Number</th>
+                        <th>Patient Name</th>
+                        <th>Patient Phone</th>
+                        <th>Complainant Name</th>
                         <th>Manager Name</th>
                         <th>CP Name</th>
-                        <th>Patient Name</th>
-                        <th>Complainant Name</th>
-                        <th>Complainant Phone</th>
+                        <th>Claim Number</th>
                         <th>Claim Amount</th>
                         <th>Operation Officer</th>
                         <th>Medical Officer</th>
@@ -383,6 +384,27 @@ div.dataTables_filter {
                               <label for="complainant-name" class="form-label">Complainant name</label>
                               <input type="text" class="form-control" id="complainant-name" required >
                             </div>
+
+                            <div class="col-sm-4">
+                              <label for="behalf-of" class="form-label">On Behalf of</label>
+                                <div class="input-group">
+                                  <select class="form-control" id="behalf-of-dropdown" required>
+                                    <option value="">None</option>
+                                    <option value="Self">Self</option>
+                                    <option value="Father">Father</option>
+                                    <option value="Mother">Mother</option>
+                                    <option value="Wife">Wife</option>
+                                    <option value="Husband">Husband</option>
+                                    <option value="Children">Children</option>
+                                  </select>
+                                </div>
+                            </div>
+
+                            
+                            
+                          </div>
+                          <div class="row mb-3">
+
                             <div class="col-sm-4">
                               <label for="claim-type-dropdown" class="form-label">Claim Type</label>
                               
@@ -399,9 +421,6 @@ div.dataTables_filter {
                               </div>
 
                             </div>
-                            
-                          </div>
-                          <div class="row mb-3">
 
                             <div class="col-sm-4">
                               <label for="claim-amount" class="form-label">Claim Amount</label>
@@ -413,14 +432,16 @@ div.dataTables_filter {
                               <input type="text" class="form-control" id="policy-number" required >
                             </div>
 
-                            <div class="col-sm-4">
-                              <label for="claim-number" class="form-label">Claim Number</label>
-                              <input type="text" class="form-control" id="claim-number" required>
-                            </div>
+                            
 
                           </div>
 
                           <div class="row mb-3">
+
+                            <div class="col-sm-4">
+                              <label for="claim-number" class="form-label">Claim Number</label>
+                              <input type="text" class="form-control" id="claim-number" required>
+                            </div>
 
                             <div class="col-sm-4">
                               <label for="policy-date" class="form-label">Date of Policy Inception</label>
@@ -432,15 +453,15 @@ div.dataTables_filter {
                               <input type="text" class="form-control" id="company-name" required >
                             </div>
 
+                            
+                          </div>
+
+                          <div class="row mb-3">
+
                             <div class="col-sm-4">
                               <label for="hospital-name" class="form-label">Hospital Name</label>
                               <input type="text" class="form-control" id="hospital-name" required >
                             </div>
-
-
-                          </div>
-
-                          <div class="row mb-3">
 
                             <div class="col-sm-4">
                               <label for="admission-date" class="form-label">Date of Admission</label>
@@ -452,16 +473,16 @@ div.dataTables_filter {
                               <input type="date" class="form-control" id="discharge-date" required >
                             </div>
 
-                            <div class="col-sm-4">
-                              <label for="case-diagnosis" class="form-label">Diagnosis</label>
-                              <input type="text" class="form-control" id="case-diagnosis" required >
-                            </div>
-
 
                           </div>
 
                           
                           <div class="row mb-3">
+                            
+                            <div class="col-sm-4">
+                              <label for="case-diagnosis" class="form-label">Diagnosis</label>
+                              <input type="text" class="form-control" id="case-diagnosis" required >
+                            </div>
 
                             <div class="col-sm-4">
                               <label for="patient-complain" class="form-label">Patient complain</label>
@@ -473,15 +494,14 @@ div.dataTables_filter {
                               <input type="text" class="form-control" id="rejection-reason" required >
                             </div>
 
-                            <div class="col-sm-4">
-                              <label for="rejection-date" class="form-label">Rejection date</label>
-                              <input type="date" class="form-control" id="rejection-date" required >
-                            </div>
-
 
                           </div>
 
                           <div class="row mb-3">
+                            <div class="col-sm-4">
+                              <label for="rejection-date" class="form-label">Rejection date</label>
+                              <input type="date" class="form-control" id="rejection-date" required >
+                            </div>
 
                             <div class="col-sm-4">
                               <label for="case-comment" class="form-label">Comments</label>
@@ -1143,6 +1163,10 @@ error: function (error) {
             document.getElementById("patient-name").value = response[0].patientName ? response[0].patientName : "";
             document.getElementById("complainant-name").value = response[0].complainantName ? response[0].complainantName: "";
             document.getElementById("claim-type-dropdown").value = response[0].claimType ? response[0].claimType : "";
+            
+            document.getElementById("behalf-of-dropdown").value = response[0].behalfOf ? response[0].behalfOf : "";
+
+            
             document.getElementById("claim-amount").value = response[0].claimAmount ? response[0].claimAmount : "";
             document.getElementById("claim-number").value = response[0].claimNumber ? response[0].claimNumber : "";
             document.getElementById("policy-number").value = response[0].policyNumber ?  response[0].policyNumber : "";
@@ -1401,17 +1425,6 @@ function movetolive(referencenumber) {
       });
 
 
-      // behalf of change function
-      $('#behalf-of-dropdown').change(function () {
-
-      var behalfof = $('#behalf-of-dropdown').val();
-
-      if(behalfof =="Self")
-      {
-        document.getElementById("complainant-name").value = $('#client-name').val();
-      }
-
-      });
 
 
       $('#loginForm').on('submit', function (event) {
@@ -1586,6 +1599,7 @@ function movetolive(referencenumber) {
         var casecomment = $('#case-comment').val();
 
         var claimtype = $('#claim-type-dropdown').val();
+        var behalfOfValue = $('#behalf-of-dropdown').val();
         var policynumber = $('#policy-number').val();
 
           // call ajax to save these details--
@@ -1606,6 +1620,7 @@ function movetolive(referencenumber) {
             gistComments: casecomment,
             hospitalName: hospitalname,
             claimType: claimtype,
+            behalfOf: behalfOfValue,
             policyNumber: policynumber,
           },
           success: function (response) {
@@ -1751,11 +1766,12 @@ function movetolive(referencenumber) {
             // You could also use an ajax property on the data table initialization
             $('#dataTable').dataTable().fnAddData( [
             data[i].casereferenceNumber,
+            data[i].patientName,
+              data[i].patientMobile,
+              data[i].complainantName,
               data[i].managerName,
               data[i].cpName,
-              data[i].patientName,
-              data[i].complainantName,
-              data[i].complainantMobile,
+              data[i].claimNumber,
               data[i].claimAmount,
               data[i].operationOfficer,
               data[i].medicalOpinionOfficer,

@@ -74,6 +74,7 @@ mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
 
 */
 
+
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
 app.use(cookieParser());
@@ -160,6 +161,7 @@ const dataSchema = new mongoose.Schema({
   patientMobile:Number,
   patientAddress: String,
   complainantName: String,
+  behalfOf : String ,
   complainantMobile : Number,
   caseHandler: String,
   insuranceCompanyName: String,
@@ -910,7 +912,7 @@ app.post('/api/addpfremark', upload.array('pdfFile', 10), async(req, res) => {
 
 app.post('/api/addlivegistdata', async(req, res) => {
   try{
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ dateOfPolicy:req.body.dateOfPolicy, dateOfAdmission:req.body.dateOfAdmission, dateOfDischarge:req.body.dateOfDischarge, diagnosis: req.body.diagnosis, patientComplainDuringAdmission: req.body.patientComplainDuringAdmission,  rejectionReason: req.body.rejectionReason,  initialRejectionDate: req.body.initialRejectionDate, gistComments: req.body.gistComments, hospitalName: req.body.hospitalName, claimType:  req.body.claimType, policyNumber:  req.body.policyNumber, caseDraft: req.body.caseDraft, lokpalDraft:  req.body.lokpalDraft,  newCaseStatus: "Gist Generated", }});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ dateOfPolicy:req.body.dateOfPolicy, dateOfAdmission:req.body.dateOfAdmission, dateOfDischarge:req.body.dateOfDischarge, diagnosis: req.body.diagnosis, patientComplainDuringAdmission: req.body.patientComplainDuringAdmission,  rejectionReason: req.body.rejectionReason,  initialRejectionDate: req.body.initialRejectionDate, gistComments: req.body.gistComments, hospitalName: req.body.hospitalName, claimType:  req.body.claimType, policyNumber:  req.body.policyNumber, caseDraft: req.body.caseDraft, lokpalDraft:  req.body.lokpalDraft, behalfOf : req.body.behalfOf,  newCaseStatus: "Gist Generated", }});
 
       if(newData == null)
       {
@@ -978,7 +980,7 @@ app.post('/api/addlivedraftdata', async(req, res) => {
 app.post('/api/addpfdetailsduringlegalgeneration', async(req, res) => {
   try{
 
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfpaymentRemarks:req.body.pfpaymentRemarks, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,  cfBankName: req.body.cfBankName, patientAddress: req.body.patientAddress  }});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfpaymentRemarks:req.body.pfpaymentRemarks, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,  cfBankName: req.body.cfBankName, patientAddress: req.body.patientAddress, behalfOf : req.body.behalfOf  }});
 
       if(newData == null)
       {

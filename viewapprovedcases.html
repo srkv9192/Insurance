@@ -350,11 +350,12 @@ div.dataTables_filter {
                     <thead>
                       <tr>
                         <th>Reference Number</th>
+                        <th>Patient Name</th>
+                        <th>Patient Phone</th>
+                        <th>Complainant Name</th>
                         <th>Manager Name</th>
                         <th>CP Name</th>
-                        <th>Patient Name</th>
-                        <th>Complainant Name</th>
-                        <th>Complainant Phone</th>
+                        <th>Claim Number</th>
                         <th>Claim Amount</th>
                         <th>Case Status</th>
                         <th>Action</th>
@@ -531,6 +532,7 @@ div.dataTables_filter {
                                     <option value="Cash">Cash</option>
                                     <option value="UPI">UPI</option>
                                     <option value="Bank Transfer">Bank Transfer</option>
+                                    <option value="FOC">FOC</option>
                                   </select>
                                 </div>
                             </div>
@@ -1141,6 +1143,7 @@ function populatereport(refnumber)
             cfChequeNumber: chequenumber,
             cfBankName: bankname,
             patientAddress: clientaddress,
+            behalfOf: behalfof,
           },
           success: function (response) {
             if(response.message == "success")
@@ -1466,11 +1469,12 @@ function populatereport(refnumber)
             // You could also use an ajax property on the data table initialization
             $('#dataTable').dataTable().fnAddData( [
             data[i].casereferenceNumber,
+              data[i].patientName,
+              data[i].patientMobile,
+              data[i].complainantName,
               data[i].managerName,
               data[i].cpName,
-              data[i].patientName,
-              data[i].complainantName,
-              data[i].complainantMobile,
+              data[i].claimNumber,
               data[i].claimAmount,
               data[i].newCaseStatus, 
               `<a href="#popup1"> <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Generate legal</button> </a>`,

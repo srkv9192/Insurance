@@ -347,12 +347,13 @@ div.dataTables_filter {
                       <tr>
 
                         <th>Reference Number</th>
+                        <th>Patient Name</th>
+                        <th>Patient Phone</th>
+                        <th>Complainant Name</th>
                         <th>Manager Name</th>
                         <th>CP Name</th>
-                        <th>Patient Name</th>
-                        <th>Complainant Name</th>
-                        <th>Complainant Phone</th>
-                     
+                        <th>Claim Number</th>
+                        <th>Claim Amount</th> 
                         <th>Case status</th>
                         <th>Escalation Date</th>
                         <th>Case Email</th>
@@ -1335,11 +1336,13 @@ function populatereport(refnumber)
             // You could also use an ajax property on the data table initialization
             $('#dataTable').dataTable().fnAddData( [
               data[i].casereferenceNumber,
+              data[i].patientName,
+              data[i].patientMobile,
+              data[i].complainantName,
               data[i].managerName,
               data[i].cpName,
-              data[i].patientName,
-              data[i].complainantName,
-              data[i].complainantMobile,
+              data[i].claimNumber,
+              data[i].claimAmount,
               data[i].newCaseStatus,
               moment(new Date(data[i].dateofEscalationToInsurer)).utc().format('DD-MM-YYYY'),
              // `${canEscalate}`,

@@ -363,11 +363,12 @@ div.dataTables_filter {
                     <thead>
                       <tr>
                         <th>Reference Number</th>
+                        <th>Patient Name</th>
+                        <th>Patient Phone</th>
+                        <th>Complainant Name</th>
                         <th>Manager Name</th>
                         <th>CP Name</th>
-                        <th>Patient Name</th>
-                        <th>Complainant Name</th>
-                        <th>Complainant Phone</th>
+                        <th>Claim Number</th>
                         <th>Claim Amount</th>
                         <th>Operation Officer</th>
                         <th>Medical Officer</th>
@@ -772,6 +773,7 @@ div.dataTables_filter {
                     <div style="margin-top: 10px; margin-left:40px;">
                       <p><strong>NAME OF PATIENT:</strong>  <span data-info="patientName">[Patient Name]</span></p>
                       <p><strong>NAME OF COMPLAINANT:</strong>  <span data-info="complainantName">[Complainant Name]</span></p>
+                      <p><strong>RELATIONSHIP:</strong>  <span data-info="relationship">[Relation]</span></p>
                       <p><strong>Type of Claim / Rejection / Deduction:</strong> <span data-info="claimType">[Type]</span></p>
                       <p><strong>Claim Amount:</strong><span data-info="claimAmount">[Amount]</span> </p>
                       <p><strong>POLICY NUMBER:</strong> <span data-info="policyNumber">[Policy Number]</span> </p>
@@ -1296,6 +1298,7 @@ error: function (error) {
             document.querySelector('[data-info="patientName"]').textContent =response[0].patientName ? response[0].patientName : "";
 
             document.querySelector('[data-info="complainantName"]').textContent =response[0].complainantName ? response[0].complainantName : "";
+            document.querySelector('[data-info="relationship"]').textContent =response[0].behalfOf ? response[0].behalfOf : "";
             document.querySelector('[data-info="claimType"]').textContent = response[0].claimType ? response[0].claimType : "";
             document.querySelector('[data-info="claimAmount"]').textContent = response[0].claimAmount ? response[0].claimAmount : "";
             document.querySelector('[data-info="policyNumber"]').textContent =response[0].policyNumber ?  response[0].policyNumber : "";
@@ -1764,11 +1767,12 @@ function movetolive(referencenumber) {
             // You could also use an ajax property on the data table initialization
             $('#dataTable').dataTable().fnAddData( [
             data[i].casereferenceNumber,
+            data[i].patientName,
+              data[i].patientMobile,
+              data[i].complainantName,
               data[i].managerName,
               data[i].cpName,
-              data[i].patientName,
-              data[i].complainantName,
-              data[i].complainantMobile,
+              data[i].claimNumber,
               data[i].claimAmount,
               data[i].operationOfficer ? data[i].operationOfficer: "",
               data[i].medicalOpinionOfficer,
