@@ -64,7 +64,6 @@ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS
   useUnifiedTopology: true,
 });
 
-
 /*
 
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
@@ -73,7 +72,6 @@ mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
 });
 
 */
-
 
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
@@ -1945,6 +1943,17 @@ app.get("/api/getcompletedcases", async(req, res) => {
   }
 });
 
+app.get("/api/getallcases", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  dataSchemaObject.find();
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get all case details' });
+  }
+});
+
 app.get("/api/getrejectedcasedetail", async(req, res) => {
   try {
     // Retrieve all tpa list from database
@@ -2796,6 +2805,7 @@ app.get('/viewfullcasedetails.html', (req, res) => res.sendFile(__dirname+'/view
 app.get('/viewrejectedcases.html', (req, res) => res.sendFile(__dirname+'/viewrejectedcases.html'))
 
 app.get('/viewcompletedcases.html', (req, res) => res.sendFile(__dirname+'/viewcompletedcases.html'))
+app.get('/viewsearchcases.html', (req, res) => res.sendFile(__dirname+'/viewsearchcases.html'))
 
 app.get('/changepassword.html', (req, res) => res.sendFile(__dirname+'/changepassword.html'))
 app.get('/createaccount.html', (req, res) => res.sendFile(__dirname+'/createaccount.html'))
