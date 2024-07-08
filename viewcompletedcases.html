@@ -688,7 +688,9 @@ success: function (response) {
       for (i = 0; i < response[0].docUrl.length ; i++) {
         let li = document.createElement('li');
         let filename = response[0].docUrl[i].substring(response[0].docUrl[i].lastIndexOf('/')+1);
-        li.innerHTML = `<a target='inlineFrameExample' href="${response[0].docUrl[i]}" >${filename}</a>`;
+        let smallfilename= filename.substring(0, filename.lastIndexOf('-'));
+        //li.innerHTML = `<a target='inlineFrameExample' href="${response[0].docUrl[i]}" >${filename}</a>`;
+        li.innerHTML = `<a target='inlineFrameExample' href="${response[0].docUrl[i]}" >${smallfilename}</a>`;
         list.appendChild(li);
        }
 
