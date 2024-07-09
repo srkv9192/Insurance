@@ -905,6 +905,8 @@ error: function (error) {
             document.getElementById("claim-number").value = response[0].claimNumber ? response[0].claimNumber : "";
             document.getElementById("total-claim-amount").value = response[0].claimAmount ?  response[0].claimAmount : "";
 
+            document.getElementById("witness-name").value = response[0].caseHandler ? response[0].caseHandler : "";
+
             document.getElementById("total-claim-amount-final").value = response[0].claimAmount ? response[0].claimAmount : "";
 
 

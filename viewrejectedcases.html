@@ -663,6 +663,12 @@ function addremark(referencenumber) {
 
   function addremarkInDB() {
 
+    if( document.getElementById("newremark").value == "")
+  {
+    alert("Empty remark not allowed!")
+    return;
+  }
+
 const today = new Date();
 const yyyy = today.getFullYear();
 let mm = today.getMonth() + 1; // Months start at 0!
@@ -714,6 +720,12 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
 
 
 function addremarkInDBAndApprove() {
+
+  if( document.getElementById("newremarkapproval").value == "")
+  {
+    alert("Empty remark not allowed!")
+    return;
+  }
 
 const today = new Date();
 const yyyy = today.getFullYear();
@@ -974,6 +986,7 @@ function populatereport(refnumber)
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showonlogin").show();
               $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
              
             }
             else if(response.message =='operation' || response.message =='marketing' || response.message =='medicalofficer')
@@ -982,6 +995,7 @@ function populatereport(refnumber)
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showonlogin").show();
               $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
             }
             else if(response.message =='cp' || response.message =='manager')
             {
@@ -989,6 +1003,7 @@ function populatereport(refnumber)
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showtocpandmanager").show();
               $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
             }
             else if(response.message =='medicalofficer')
             {
@@ -996,6 +1011,7 @@ function populatereport(refnumber)
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showtomedicalofficer").show();
               $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
             }
             else
             {

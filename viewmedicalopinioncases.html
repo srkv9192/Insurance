@@ -556,6 +556,12 @@ div.dataTables_filter {
 
 function addremarkInDBAndApprove() {
 
+  if( document.getElementById("newremarkapproval").value == "")
+  {
+    alert("Empty remark not allowed!")
+    return;
+  }
+
 const today = new Date();
 const yyyy = today.getFullYear();
 let mm = today.getMonth() + 1; // Months start at 0!
@@ -607,6 +613,12 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
 
 function addremarkInDBAndReject() {
 
+  if( document.getElementById("newremarkrejection").value == "")
+  {
+    alert("Empty remark not allowed!")
+    return;
+  }
+
 const today = new Date();
 const yyyy = today.getFullYear();
 let mm = today.getMonth() + 1; // Months start at 0!
@@ -655,6 +667,12 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
 
 
 function addremarkInDBAndMoveToMedicalQuery() {
+
+  if( document.getElementById("newremarkmedicalquery").value == "")
+  {
+    alert("Empty remark not allowed!")
+    return;
+  }
 
 const today = new Date();
 const yyyy = today.getFullYear();
@@ -1098,6 +1116,7 @@ function populatereport(refnumber)
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showonlogin").show();
               $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
             }
             else if(response.message =='cp' || response.message =='manager')
             {

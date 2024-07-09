@@ -788,6 +788,12 @@ const quill = new Quill('#editor', {
 
 function addremarkInDB() {
 
+  if( document.getElementById("newremark").value == "")
+  {
+    alert("Empty remark not allowed!")
+    return;
+  }
+
 const today = new Date();
 const yyyy = today.getFullYear();
 let mm = today.getMonth() + 1; // Months start at 0!
@@ -964,6 +970,16 @@ $('#emailForm').on('submit', function (event) {
 
 
 $('#paymentForm').on('submit', function (event) {
+
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  let mm = today.getMonth() + 1; // Months start at 0!
+  let dd = today.getDate();
+
+  if (dd < 10) dd = '0' + dd;
+  if (mm < 10) mm = '0' + mm;
+
+  const formattedToday = dd + '/' + mm + '/' + yyyy;
         event.preventDefault();
 
         var processingfeeFinal = $('#pf-amount-final').val();
@@ -978,7 +994,8 @@ $('#paymentForm').on('submit', function (event) {
           data: {
             casereferenceNumber: localStorage['addRemarkForRefNumber'], 
             dateofEscalationToInsurer: $('#escalationdate').val(),
-            caseRemarks: $('#escalationremark').val(),
+           // caseRemarks: $('#escalationremark').val(),
+            caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+  $('#escalationremark').val()
           },
           success: function (response) {
             if(response.message == "success")
