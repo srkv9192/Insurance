@@ -906,9 +906,10 @@ const quill = new Quill('#editor', {
 
 
 
-function addremark(referencenumber) {
+function addremark(referencenumber, casestatus) {
         // Code to generate card
         localStorage['addRemarkForRefNumber'] =referencenumber; 
+        localStorage['addcaseStatusForRefNumber'] = casestatus; 
   }
 
   
@@ -961,6 +962,13 @@ function addescalationremarkInDB() {
     alert("Empty remark not allowed!")
     return;
   }
+
+  if(localStorage['addcaseStatusForRefNumber'] != "Draft Generated")
+  {
+    alert("Please add draft details before moving to escalation!")
+    return;
+  }
+
 
 const today = new Date();
 const yyyy = today.getFullYear();
@@ -1306,8 +1314,8 @@ error: function (error) {
            // quill.setText(response[0].caseDraft);
            // quill1.setText( response[0].lokpalDraft);
 
-            quill.root.innerHTML= response[0].caseDraft;
-            quill1.root.innerHTML= response[0].lokpalDraft;
+            quill.root.innerHTML= response[0].caseDraft ? response[0].caseDraft : "";
+            quill1.root.innerHTML= response[0].lokpalDraft ?  response[0].lokpalDraft:"" ;
 
           //  quill.setContents(response[0].caseDraft);
           //  quill1.setContents( response[0].lokpalDraft);
@@ -1469,8 +1477,8 @@ function movetolive(referencenumber) {
              // document.querySelector('[data-info="reportlokpaldraft"]').textContent =response[0].rejectionReason ? response[0].rejectionReason : "";
 
 
-              quill2.root.innerHTML= response[0].caseDraft;
-              quill3.root.innerHTML= response[0].lokpalDraft;
+              quill2.root.innerHTML= response[0].caseDraft ?  response[0].caseDraft : "";
+              quill3.root.innerHTML= response[0].lokpalDraft ?  response[0].lokpalDraft : "";
               
              
               // Assuming the JSON response object is 'response' and it contains 'caseRemarks' as a comma-separated string
@@ -1511,7 +1519,8 @@ function movetolive(referencenumber) {
               console.error('Error:', error);
             }
           });
-      }
+      
+        }
 
 
 
@@ -1786,6 +1795,7 @@ function movetolive(referencenumber) {
           var length = Object.keys(data).length;
           for(var i = 0; i < length; i++) {
             var rfno= data[i].casereferenceNumber
+            var caseststaus =  data[i].newCaseStatus
             // You could also use an ajax property on the data table initialization
             $('#dataTable').dataTable().fnAddData( [
             data[i].casereferenceNumber,
@@ -1803,9 +1813,9 @@ function movetolive(referencenumber) {
               `<a href="#popup2"> <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Add Draft</button> </a>`,
               `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
               `<a href="#popup10"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >Raise Query</button> </a>`,
-              `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
+              `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}', '${caseststaus}')" >Upload Docs</button> </a>`,
               `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
-              `<a href="#popup11"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Escalation</button> </a>`,
+              `<a href="#popup11"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}', '${caseststaus}')" >Move to Escalation</button> </a>`,
             ]);
           }
         }

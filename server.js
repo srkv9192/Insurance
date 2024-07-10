@@ -59,10 +59,12 @@ const port = process.env.PORT || 80
 //});
 
 
+
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
 
 /*
 
@@ -2918,10 +2920,10 @@ async function createPDF(req) {
   const secondPage = document.getPage(1);
 
   console.log( firstPage.getHeight() + " " +  firstPage.getWidth());
-
-  var firstline=`I/We the customer/applicant named above as ${req.body.clientName} (first party) do hereby
+  
+  var firstline=`I/We the customer/applicant named above as ${req.body.complainantName} (first party) do hereby
 appoint, engage and authorize Nidaan The legal Consultants (second party) to act and plead in case of ${req.body.behalfOf},
-${req.body.complainantName} claim No. ${req.body.claimNumber}  of ${req.body.insuranceCompanyName} 
+${req.body.clientName} claim No. ${req.body.claimNumber}  of ${req.body.insuranceCompanyName} 
 Company, which shall include claim filing, application for query reply, reconsideration process, setting aside 
 of rejected/deducted claim. We endeavour to get the claim settled though correspondence or Court Proceeding 
 or Ombudsman, as may be deemed necessary by the second party, for the benefit of the said claim at all its stages
@@ -3044,7 +3046,7 @@ document.registerFontkit(fontkit);
   });
 
   firstPage.moveTo(221, 671);
-  firstPage.drawText(req.body.clientName, {
+  firstPage.drawText(req.body.complainantName, {
     font: timesBoldFont,
     size: 12,
   });
@@ -3052,7 +3054,7 @@ document.registerFontkit(fontkit);
 
           //name of first party 
           firstPage.moveTo(94, 184);
-          firstPage.drawText(req.body.clientName, {
+          firstPage.drawText(req.body.complainantName, {
         font: timesBoldFont,
          size: 11,
          });
@@ -3129,7 +3131,7 @@ document.registerFontkit(fontkit);
   });
 
   secondPage.moveTo(175, 665);
-  secondPage.drawText(req.body.clientName, {
+  secondPage.drawText(req.body.complainantName, {
     font: customFont,
     size: 12,
   });
@@ -3137,7 +3139,7 @@ document.registerFontkit(fontkit);
 
           //name of first party 
           secondPage.moveTo(98, 208);
-          secondPage.drawText(req.body.clientName, {
+          secondPage.drawText(req.body.complainantName, {
         font: customFont,
          size: 11,
          });

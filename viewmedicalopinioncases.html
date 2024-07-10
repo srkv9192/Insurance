@@ -70,7 +70,7 @@
       color: #fff;
     }
     .table-dark td {
-      color: black;
+      color: #fff;
       background-color: cadetblue;
     }
 
@@ -352,6 +352,7 @@ div.dataTables_filter {
                         <th>CP Name</th>
                         <th>Claim Number</th>
                         <th>Claim Amount</th>
+                        <th>Case Of</th>
                         <th>Medical Officer</th>
                         <th>Case Status</th>
                         <th>Action</th>
@@ -1215,6 +1216,7 @@ function populatereport(refnumber)
               data[i].cpName,
               data[i].claimNumber,
               data[i].claimAmount,
+              data[i].caseHandler ? data[i].caseHandler: " ",
               data[i].medicalOpinionOfficer,
               data[i].newCaseStatus,
               `<a href="#popup3"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,

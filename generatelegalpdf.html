@@ -10,6 +10,10 @@
   <link rel="stylesheet" href="css/menubar.css">
   <style>
 
+hr.dashed {
+  border-top: 3px dashed #bbb;
+}
+
   input.form-control:read-only {
         background-color:  #343a40;
     }
@@ -203,6 +207,7 @@
           <div class="col-lg-6">
             <h2 class="text-center mb-4">Legal PDF Generation Form</h2>
 
+<!--
             <div class="frame" style="color:black;background-image: url('/images/background18.jpg');  font-weight: bold;  font-family: monospace;font-size: large; background-size: cover;">
               <form id="loginForm">
                 <div class="row mb-3">
@@ -306,6 +311,120 @@
                 </div>
               </form>
             </div>
+            -->
+
+            <div class="frame" style="color:black;background-image: url('/images/background18.jpg'); font-weight: bold; font-family: monospace;font-size: large; background-size: cover;">
+              <form id="loginForm">
+                  <!-- Query Section -->
+                  <div class="row mb-3 justify-content-center">
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="queryInput" placeholder="Enter Reference Number">
+                    </div>
+                    <div class="col-sm-4 text-center">
+                        <button type="button" class="btn btn-primary mt-2" onclick="fetchData()">Fetch Data</button>
+                    </div>
+                </div>
+
+                <hr class="dashed">
+          
+                  <!-- Form Fields -->
+                  <div class="row mb-3">
+                      <div class="col-sm-6">
+                          <label for="complainant-name" class="form-label">Complainant Name</label>
+                          <input type="text" class="form-control" id="complainant-name" required>
+                      </div>
+                      <div class="col-sm-6">
+                          <label for="client-address" class="form-label">Client Address</label>
+                          <input type="text" class="form-control" id="client-address" required>
+                      </div>
+                  </div>
+                  <div class="row mb-3">
+                      <div class="col-sm-6">
+                          <label for="client-phone" class="form-label">Client Phone</label>
+                          <input type="text" class="form-control" id="client-phone" pattern="[0-9]{10}" maxlength="10" required>
+                      </div>
+                      <div class="col-sm-6">
+                          <label for="claim-number" class="form-label">Claim Number</label>
+                          <input type="text" class="form-control" id="claim-number" required>
+                      </div>
+                  </div>
+                  <div class="row mb-3">
+                      <div class="col-sm-6">
+                          <label for="behalf-of" class="form-label">On Behalf of</label>
+                          <div class="input-group">
+                              <select class="form-control" id="behalf-of-dropdown" required>
+                                  <option value="">None</option>
+                                  <option value="Self">Self</option>
+                                  <option value="Father">Father</option>
+                                  <option value="Mother">Mother</option>
+                                  <option value="Wife">Wife</option>
+                                  <option value="Husband">Husband</option>
+                                  <option value="Children">Children</option>
+                                  <option value="Brother">Brother</option>
+                                  <option value="Sister">Sister</option>
+                                  <option value="Friend">Friend</option>
+                              </select>
+                          </div>
+                      </div>
+                      <div class="col-sm-6">
+                          <label for="patient-name" class="form-label">Patient Name</label>
+                          <input type="text" class="form-control" id="patient-name" required>
+                      </div>
+                  </div>
+                  <div class="row mb-3">
+                      <div class="col-sm-6">
+                          <label for="insurance-company-name" class="form-label">Insurance Company Name</label>
+                          <select class="form-control" id="insurance-company-dropdown" required>
+                              <option value="">None</option>
+                          </select>
+                      </div>
+                      <div class="col-sm-6">
+                          <label for="witness-name" class="form-label">Witness Name</label>
+                          <input type="text" class="form-control" id="witness-name" required>
+                      </div>
+                  </div>
+                  <div class="row mb-3">
+                      <div class="col-sm-6">
+                          <label for="consultation-charge" class="form-label">Consultation Charge</label>
+                          <input type="number" class="form-control" id="consultation-charge" required>
+                      </div>
+                      <div class="col-sm-6">
+                          <label for="processing-fee" class="form-label">Processing Fee</label>
+                          <input type="text" class="form-control" id="processing-fee" required>
+                      </div>
+                  </div>
+                  <div class="row mb-3">
+                      <div class="col-sm-6">
+                          <label for="total-claim-amount" class="form-label">Disputed Amount</label>
+                          <input type="number" class="form-control" id="total-claim-amount" required>
+                      </div>
+                      <div class="col-sm-6">
+                          <label for="cheque-amount" class="form-label">Cheque Amount</label>
+                          <input type="number" class="form-control" id="cheque-amount" required disabled>
+                      </div>
+                  </div>
+                  <div class="row mb-3">
+                      <div class="col-sm-6">
+                          <label for="cheque-number" the form-label">Cheque Number</label>
+                          <input type="text" class="form-control" id="cheque-number">
+                      </div>
+                      <div class="col-sm-6">
+                          <label for="bank-name" class="form-label">Bank Name</label>
+                          <input type="text" class="form-control" id="bank-name">
+                      </div>
+                  </div>
+                  <div class="row mb-3">
+                      <div class="col-sm-6">
+                          <label for="id-number" class="form-label">ID Number</label>
+                          <input type="text" class="form-control" id="id-number" required>
+                      </div>
+                  </div>
+          
+                  <div class="text-center">
+                      <button type="submit" class="btn btn-primary">Submit</button>
+                  </div>
+              </form>
+          </div>
 
           </div>
         </div>
@@ -322,6 +441,67 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
+
+function fetchData() {
+    var refNumber = document.getElementById('queryInput').value;
+    $.ajax({
+        url: '/api/getcasedetailbyref',
+        type: 'GET',
+        data: {
+          casereferenceNumber: refNumber
+        },
+
+        success: function (response) {
+          // Populate the options in the select elemen
+                
+            document.getElementById("patient-name").value = response[0].patientName ? response[0].patientName : "";
+            document.getElementById("client-address").value = response[0].customerAddress ? response[0].customerAddress : "";
+            document.getElementById("client-phone").value = response[0].complainantMobile ? response[0].complainantMobile : "";
+
+            document.getElementById("complainant-name").value = response[0].complainantName ? response[0].complainantName: "";
+
+           // document.getElementById("reference-number").value = localStorage['casereferencenumber'];
+            document.getElementById("claim-number").value = response[0].claimNumber ? response[0].claimNumber : "";
+            document.getElementById("total-claim-amount").value = response[0].claimAmount ?  response[0].claimAmount : "";
+
+            document.getElementById("witness-name").value = response[0].caseHandler ? response[0].caseHandler : "";
+
+
+            document.getElementById("processing-fee").value = response[0].processingFee ? response[0].processingFee : "";
+
+            document.getElementById("consultation-charge").value = response[0].consultationCharge ? response[0].consultationCharge : "";
+            document.getElementById("cheque-amount").value = response[0].chequeAmount ? response[0].chequeAmount : "";
+            document.getElementById("cheque-number").value = response[0].chequeNumber ?  response[0].chequeNumber : "";
+            document.getElementById("bank-name").value = response[0].bankName ? response[0].bankName : "";
+            document.getElementById("id-number").value = response[0].casereferenceNumber ? response[0].casereferenceNumber : "";
+            document.getElementById("insurance-company-dropdown").value = response[0].insuranceCompanyName ? response[0].insuranceCompanyName : "";
+
+            // add payment related info here-
+
+            //
+    
+                    
+
+
+            document.getElementById("processing-fee").value = response[0].pfAmount ? response[0].pfAmount : "";
+            document.getElementById("consultation-charge").value = response[0].cfPercentage ? response[0].cfPercentage : "";
+            document.getElementById("cheque-number").value = response[0].cfChequeNumber ? response[0].cfChequeNumber : "";
+            document.getElementById("cheque-amount").value = response[0].cfAmount ? response[0].cfAmount : "";
+            document.getElementById("bank-name").value = response[0].cfBankName ? response[0].cfBankName : "";
+
+           
+           // pfReceived: String,
+           // pfpaymentRemarks: String,
+           
+
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+      
+}
+
     $(document).ready(function () {
 
 
@@ -332,11 +512,7 @@
 
             if(behalfof =="Self")
             {
-              document.getElementById("complainant-name").value = $('#client-name').val();
-            }
-            else
-            {
-              document.getElementById("complainant-name").value = "";
+              document.getElementById("patient-name").value = $('#complainant-name').val();
             }
 
             });
@@ -452,7 +628,7 @@
       $('#loginForm').on('submit', function (event) {
         event.preventDefault();
 
-        var clientname = $('#client-name').val();
+        var clientname = $('#patient-name').val();
         var clientaddress = $('#client-address').val();
 
         var clientphone = $('#client-phone').val();
@@ -508,6 +684,7 @@
             a.click();
             a.remove();
             window.URL.revokeObjectURL(url);
+            document.getElementById('loginForm').reset();
           },
           error: function (error) {
             document.getElementById('loginForm').reset();
@@ -517,6 +694,10 @@
         });
       });
     });
+  
+  
+  
+  
   </script>
 </body>
 

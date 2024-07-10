@@ -348,6 +348,7 @@ div.dataTables_filter {
                         <th>CP Name</th>
                         <th>Claim Number</th>
                         <th>Claim Amount</th>
+                        <th>Case Of</th>
                         <th>Medical Officer</th>
                         <th>Case Status</th>
                         <th>Action</th>
@@ -403,6 +404,9 @@ div.dataTables_filter {
                                 <option value="Wife">Wife</option>
                                 <option value="Husband">Husband</option>
                                 <option value="Children">Children</option>
+                                <option value="Brother">Brother</option>
+                                <option value="Sister">Sister</option>
+                                <option value="Friend">Friend</option>
                               </select>
                             </div>
                         </div>
@@ -1094,6 +1098,7 @@ function populatereport(refnumber)
               data[i].cpName,
               data[i].claimNumber,
               data[i].claimAmount,
+              data[i].caseHandler ? data[i].caseHandler: " ",
               data[i].medicalOpinionOfficer,
               data[i].newCaseStatus,
               `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
