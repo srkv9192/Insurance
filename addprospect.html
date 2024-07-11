@@ -578,8 +578,16 @@
         }
     });
 
+    var alreadysubmitted = false;
       $('#loginForm').on('submit', function (event) {
         event.preventDefault();
+
+        if(alreadysubmitted)
+        {
+          console.log("already submitted once....");
+          return;
+        }
+        alreadysubmitted = true;
 
         $('#uploadingdiv').show();
 
@@ -683,6 +691,7 @@
                 $('#uploadingdiv').hide({done: function() { alert("Case added reference number- " + response.referencenumber); } });
                // alert("Case added reference number- " + response.referencenumber);
                 document.getElementById('loginForm').reset();
+                alreadysubmitted = false;
               }
               else{
                 $('#uploadingdiv').hide({done: function() { alert(response.message); } });

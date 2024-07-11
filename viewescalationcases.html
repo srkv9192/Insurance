@@ -348,6 +348,7 @@ div.dataTables_filter {
                       <tr>
 
                         <th>Reference Number</th>
+                        <th>Case Inception Date</th>
                         <th>Patient Name</th>
                         <th>Patient Phone</th>
                         <th>Complainant Name</th>
@@ -1354,6 +1355,7 @@ function populatereport(refnumber)
             // You could also use an ajax property on the data table initialization
             $('#dataTable').dataTable().fnAddData( [
               data[i].casereferenceNumber,
+              moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),
               data[i].patientName,
               data[i].patientMobile,
               data[i].complainantName,

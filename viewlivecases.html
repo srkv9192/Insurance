@@ -10,6 +10,40 @@
   <link rel="stylesheet" href="css/menubar.css">
   <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.4/dist/quill.snow.css" rel="stylesheet" />
   <style>
+
+.btn_special {
+      background: #3498db;
+      background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
+      background-image: -moz-linear-gradient(top, #3498db, #2980b9);
+      background-image: -ms-linear-gradient(top, #3498db, #2980b9);
+      background-image: -o-linear-gradient(top, #3498db, #2980b9);
+      background-image: linear-gradient(to bottom, #3498db, #2980b9);
+      font-family: Arial;
+      color: #ffffff;
+      font-size: 16px;
+      padding: 10px 20px 10px 20px;
+      text-decoration: none;
+
+      float: left;
+      width: 150px;
+      list-style-type: none;
+      margin-left: 10px;
+    }
+
+    .btn_special:hover {
+      background: #3cb0fd;
+      background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+      background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+      background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+      background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+      background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+      text-decoration: none;
+    }
+    li a {
+      color: blue;
+      text-decoration: none;
+    }
+
     body {
       background-color: #343a40;
       color: #fff;
@@ -342,13 +376,25 @@ div.dataTables_filter {
         <div class='dashboard-content' style="background-image: url('/images/background20.jpg');  background-repeat: repeat;  background-size: cover;">
           <div class="container mt-5">
             <div class="row justify-content-center">
+              <h2 class="text-center mb-4">Live Cases</h2>
+              <ul>
+                <li class="btn_special"><a href="#" class="all">All</a></li>
+                <li class="btn_special"><a href="#" >Live</a></li>
+                <li class="btn_special"><a href="#">Draft Query</a></li>
+                <li class="btn_special"><a href="#">Gist Generated</a></li>
+                <!--
+                    <li class="btn_special"><a href="#">Approved</a></li>
+                    <li class="btn_special"><a href="#">Rejected</a></li>
+                -->
+              </ul>
               <div class="col-lg-12">
-                <h2 class="text-center mb-4">Live Cases</h2>
+       
                 <div class="table-responsive">
                   <table id ="dataTable" class="table table-dark table-bordered">
                     <thead>
                       <tr>
                         <th>Reference Number</th>
+                        <th>Case Inception Date</th>
                         <th>Patient Name</th>
                         <th>Patient Phone</th>
                         <th>Complainant Name</th>
@@ -421,6 +467,7 @@ div.dataTables_filter {
                                   <option value="Rejection">Rejection</option>
                                   <option value="Query">Query</option>
                                   <option value="Consumer">Consumer</option>
+                                  <option value="Delay in process">Delay in process</option>
                                 </select>
                               </div>
 
@@ -854,6 +901,7 @@ div.dataTables_filter {
 
 
               </div>
+
             </div>
           </div>
         </div>
@@ -1780,6 +1828,7 @@ function movetolive(referencenumber) {
             // You could also use an ajax property on the data table initialization
             $('#dataTable').dataTable().fnAddData( [
             data[i].casereferenceNumber,
+            moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),
             data[i].patientName,
               data[i].patientMobile,
               data[i].complainantName,
@@ -1805,6 +1854,41 @@ function movetolive(referencenumber) {
 
 
     });
+
+
+
+    //for  filter buttons
+
+    $('ul').on('click', 'a', function() {
+      var nameFilter = $(this).text()
+      console.log(nameFilter)
+
+        switch (nameFilter)
+        {
+          case "Live":
+          case "Draft Query":
+          case "Gist Generated":
+          $("#dataTable").DataTable()
+          .columns(11)
+          .search($(this).text())
+          .draw();
+            break;
+
+        }
+
+      });
+
+      $('ul').on('click', 'a.all', function() {
+        $("#dataTable").DataTable()
+        .search('')
+        .columns(11)
+        .search('')
+        .draw();
+      });
+
+    // filter buttons end
+
+
   </script>
 </body>
 
