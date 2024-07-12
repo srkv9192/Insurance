@@ -65,7 +65,6 @@ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS
   useUnifiedTopology: true,
 });
 
-
 /*
 
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
@@ -156,6 +155,7 @@ async function uploadFileToGCS(filePath, destination , referencenumber) {
 // Create a schema
 const dataSchema = new mongoose.Schema({
   prospectDate: Date,
+  completedDate: Date,
   prospectZone: String,
   patientName: String,
   patientMobile:Number,
@@ -670,7 +670,7 @@ app.post('/api/addlivecasequeryremark', async(req, res) => {
 
 app.post('/api/movetocompleted', async(req, res) => {
   try{
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ isInLokpalStage:"false", isInEscalationStage : "false", newCaseStatus: "Completed", isCompleted: "true", caseCompletionType: req.body.caseCompletionType, caseCompletionRemark: req.body.caseCompletionRemark }});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ isInLokpalStage:"false", isInEscalationStage : "false", newCaseStatus: "Completed", isCompleted: "true", caseCompletionType: req.body.caseCompletionType, caseCompletionRemark: req.body.caseCompletionRemark,  completedDate: req.body.completedDate }});
 
       if(newData == null)
       {
@@ -935,7 +935,7 @@ app.post('/api/addlivegistdata', async(req, res) => {
 
 app.post('/api/addlokpaldata', async(req, res) => {
   try{
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ LokpalBHPComplaintNumber:req.body.LokpalBHPComplaintNumber, lokpalBHPComplaintDate:req.body.lokpalBHPComplaintDate, annexure5ComplaintDate:req.body.annexure5ComplaintDate, annexure5ComplaintNumber: req.body.annexure5ComplaintNumber, lokpalComplaintNumber: req.body.lokpalComplaintNumber,  lokpalComplaintDate: req.body.lokpalComplaintDate,  dateOfLokpalHearing: req.body.dateOfLokpalHearing,}});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ LokpalBHPComplaintNumber:req.body.LokpalBHPComplaintNumber, lokpalBHPComplaintDate:req.body.lokpalBHPComplaintDate, annexure5ComplaintDate:req.body.annexure5ComplaintDate, annexure5ComplaintNumber: req.body.annexure5ComplaintNumber, lokpalComplaintNumber: req.body.lokpalComplaintNumber,  lokpalComplaintDate: req.body.lokpalComplaintDate,  dateOfLokpalHearing: req.body.dateOfLokpalHearing, newCaseStatus: req.body.newCaseStatus}});
 
       if(newData == null)
       {

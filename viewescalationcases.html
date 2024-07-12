@@ -349,6 +349,7 @@ div.dataTables_filter {
 
                         <th>Reference Number</th>
                         <th>Case Inception Date</th>
+                        <th>Case Age</th>
                         <th>Patient Name</th>
                         <th>Patient Phone</th>
                         <th>Complainant Name</th>
@@ -906,6 +907,7 @@ $('#completedForm').on('submit', function (event) {
           data: {
             casereferenceNumber: localStorage['addRemarkForRefNumber'], 
             caseCompletionType: "Escalation Settlement",
+            completedDate: today,
             caseCompletionRemark: formattedToday + " - [ " +  localStorage['userName'] + " ] - " + $('#casecompleteremark').val(),
           },
           success: function (response) {
@@ -1351,11 +1353,15 @@ function populatereport(refnumber)
             {
               canEscalate = "YES";
             }
+            var todaysdate = moment(new Date());
+            var prospectcasedate = moment(data[i].prospectDate);
+            var caseage  =    todaysdate.diff(prospectcasedate, 'days');
 
             // You could also use an ajax property on the data table initialization
             $('#dataTable').dataTable().fnAddData( [
               data[i].casereferenceNumber,
               moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),
+              `${caseage}`,
               data[i].patientName,
               data[i].patientMobile,
               data[i].complainantName,

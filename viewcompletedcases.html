@@ -345,6 +345,7 @@ div.dataTables_filter {
                       <tr>
                         <th>Reference Number</th>
                         <th>Case Inception Date</th>
+                        <th>Case Age</th>
                         <th>Patient Name</th>
                         <th>Patient Phone</th>
                         <th>Complainant Name</th>
@@ -545,6 +546,7 @@ div.dataTables_filter {
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
   <script>
 
 
@@ -872,10 +874,14 @@ function movetolive(referencenumber) {
           var length = Object.keys(data).length;
           for(var i = 0; i < length; i++) {
             var rfno= data[i].casereferenceNumber
+            var completeddate = moment(data[i].completedDate);
+            var prospectcasedate = moment(data[i].prospectDate);
+            var caseage  =    completeddate.diff(prospectcasedate, 'days');
             // You could also use an ajax property on the data table initialization
             $('#dataTable').dataTable().fnAddData( [
             data[i].casereferenceNumber,
             moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),
+            `${caseage}`,
             data[i].patientName,
               data[i].patientMobile,
               data[i].complainantName,

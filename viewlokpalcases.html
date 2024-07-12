@@ -357,6 +357,7 @@ div.dataTables_filter {
                         
                         <th>Reference Number</th>
                         <th>Case Inception Date</th>
+                        <th>Case Age</th>
                         <th>Patient Name</th>
                         <th>Patient Phone</th>
                         <th>Complainant Name</th>
@@ -364,6 +365,7 @@ div.dataTables_filter {
                         <th>CP Name</th>
                         <th>Claim Number</th>
                         <th>Claim Amount</th> 
+                         <th>Case Status</th> 
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
@@ -737,6 +739,7 @@ $('#completedForm').on('submit', function (event) {
           data: {
             casereferenceNumber: localStorage['addRemarkForRefNumber'], 
             caseCompletionType:$('#case-complete-type-dropdown').val(),
+            completedDate: today,
             caseCompletionRemark: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ $('#casecompleteremark').val(),
           },
           success: function (response) {
@@ -829,6 +832,26 @@ function addremark(referencenumber) {
         return ;
       }
 
+      var lokpalcasestatus= 'lokpal';
+
+      if((bhpNumber != "") && (bhpDate) && (annexure5number == "") && (lokpalComplaintNumber ==""))
+      {
+        lokpalcasestatus = "Lokpal Registered";
+      }
+      else if((bhpNumber != "") && (bhpDate) && (annexure5number != "") && (lokpalComplaintNumber ==""))
+      {
+        lokpalcasestatus = "Lokpal Query";
+      }
+      else if((bhpNumber != "") && (bhpDate) && (lokpalComplaintNumber !="") && (hearingDate))
+      {
+        lokpalcasestatus = "Hearing";
+      }
+      else if((bhpNumber != "") && (bhpDate) && (lokpalComplaintNumber !=""))
+      {
+        lokpalcasestatus = "Annexure 6 Received";
+      }
+
+
           $.ajax({
           url: '/api/addlokpaldata',
           type: 'POST',
@@ -842,6 +865,7 @@ function addremark(referencenumber) {
             lokpalComplaintNumber: lokpalComplaintNumber,
             lokpalComplaintDate: annexure6Date,
             dateOfLokpalHearing: hearingDate,
+            newCaseStatus: lokpalcasestatus,
           },
           success: function (response) {
             if(response.message == "success")
@@ -897,9 +921,6 @@ function addlokpaldetails(referencenumber) {
           console.error('Error:', error);
         }
       });
-
-
-
 
   }
 
@@ -1148,10 +1169,14 @@ $.ajax({
             }
 
             // You could also use an ajax property on the data table initialization
-            
+            var todaysdate = moment(new Date());
+            var prospectcasedate = moment(data[i].prospectDate);
+            var caseage  =    todaysdate.diff(prospectcasedate, 'days');
+
             $('#dataTable').dataTable().fnAddData( [
               data[i].casereferenceNumber,
               moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),
+              `${caseage}`,
               data[i].patientName,
               data[i].patientMobile,
               data[i].complainantName,
@@ -1159,6 +1184,7 @@ $.ajax({
               data[i].cpName,
               data[i].claimNumber,
               data[i].claimAmount,
+              data[i].newCaseStatus,
               `<a href="#popup2"><button class="btn btn-primary btn-sm"  onclick="viewdetails('${rfno}')" >View Details</button> </a>`,
               `<a href="#popup3"><button class="btn btn-primary btn-sm"  onclick="addlokpaldetails('${rfno}')" >Add details</button> </a>`,
               `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
