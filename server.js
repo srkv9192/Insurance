@@ -59,11 +59,11 @@ const port = process.env.PORT || 80
 //});
 
 
-
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
 
 /*
 
@@ -160,6 +160,8 @@ const dataSchema = new mongoose.Schema({
   patientName: String,
   patientMobile:Number,
   patientAddress: String,
+  patientPincode: String,
+  patientDOB: Date,
   complainantName: String,
   behalfOf : String ,
   complainantMobile : Number,
@@ -174,7 +176,7 @@ const dataSchema = new mongoose.Schema({
   docUrl: Array,
   extraRemarks: String,
   pfpayeeName: String,
-  pfAmount: Number,
+  pfAmount: String,
   pfReceived: String,
   pfpaymentRemarks: String,
   pfpaymentMode: String,
@@ -693,7 +695,7 @@ app.post('/api/movetocompleted', async(req, res) => {
 
 app.post('/api/movetolokpal', async(req, res) => {
   try{
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{ caseRemarks:req.body.caseRemarks}, $set:{ newCaseStatus: "Lokpal", isInEscalationStage: "false", isInLokpalStage: "true"}});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{ caseRemarks:req.body.caseRemarks}, $set:{ newCaseStatus: "Lokpal Pending", isInEscalationStage: "false", isInLokpalStage: "true"}});
 
       if(newData == null)
       {
@@ -951,6 +953,30 @@ app.post('/api/addlokpaldata', async(req, res) => {
   {
     console.error(err);
     res.status(500).json({ error: 'Error adding lokpal data' });
+  } 
+
+});
+
+
+app.post('/api/addlokpaldependencydata', async(req, res) => {
+  try{
+
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ patientName:req.body.patientName, patientAddress:req.body.patientAddress, patientPincode:req.body.patientPincode, complainantName: req.body.complainantName, complainantMobile: req.body.complainantMobile,  policyNumber: req.body.policyNumber,  claimAmount: req.body.claimAmount, caseEmail: req.body.caseEmail, initialRejectionDate : req.body.initialRejectionDate, dateofEscalationToInsurer: req.body.dateofEscalationToInsurer, caseGist: req.body.caseGist, patientDOB: req.body.patientDOB }});
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not save lokpal dependency data', refnum:req.body.caseNumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding lokpal dependency data' });
   } 
 
 });
