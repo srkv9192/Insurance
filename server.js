@@ -451,6 +451,26 @@ catch(err)
 });
 
 
+app.post('/api/deletecase', async(req, res) => {
+  try{
+        const docs = await dataSchemaObject.findOneAndDelete({casereferenceNumber: req.body.casereferenceNumber});
+        if (!docs) {
+          res.json({message : 'Failed to delete case!'})
+        }
+        else
+        {
+            res.json({message : 'success'})
+        }
+
+      }
+    catch(err)
+    {
+      res.status(500).json({ error: 'Error while login' });
+    }
+  
+});
+
+
 // Define the API endpoint to save data
 app.post('/api/addprospect', upload.array('pdfFile', 10), async (req, res) => {
   try{
@@ -2828,6 +2848,7 @@ app.get('/newcase.html', (req, res) => res.sendFile(__dirname+'/newcase.html'))
 app.get('/viewprospectcases.html', (req, res) => res.sendFile(__dirname+'/viewprospectcases.html'))
 app.get('/viewapprovedcases.html', (req, res) => res.sendFile(__dirname+'/viewapprovedcases.html'))
 app.get('/viewlivecases.html', (req, res) => res.sendFile(__dirname+'/viewlivecases.html'))
+app.get('/deletecases.html', (req, res) => res.sendFile(__dirname+'/deletecases.html'))
 app.get('/viewpendingdraftcases.html', (req, res) => res.sendFile(__dirname+'/viewpendingdraftcases.html'))
 app.get('/viewfullcasedetails.html', (req, res) => res.sendFile(__dirname+'/viewfullcasedetails.html'))
 app.get('/viewrejectedcases.html', (req, res) => res.sendFile(__dirname+'/viewrejectedcases.html'))
