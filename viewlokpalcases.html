@@ -393,6 +393,8 @@ div.dataTables_filter {
                         <th>CP Name</th>
                         <th>Claim Number</th>
                         <th>Claim Amount</th> 
+                        <th>Email</th> 
+                        <th>Password</th> 
                          <th>Case Status</th> 
                         <th>Action</th>
                         <th>Action</th>
@@ -412,6 +414,13 @@ div.dataTables_filter {
                           <h2 style="margin: 0; flex-grow: 1; text-align: center;">Case Report</h2>
                       </div>
                       <div style="margin-top: 10px; margin-left:40px;">
+                        <div style="display: flex; justify-content: space-between;">
+                          <div style="flex: 1;">
+                              <label class="form-label"><strong>Case Number:</strong></label>
+                              <span data-info="reportcasenumber">[Case Number]</span>
+                          </div>
+                        </div>
+
                           <div style="display: flex; justify-content: space-between;">
                               <div style="flex: 1;">
                                   <label class="form-label"><strong>Initial Case Date:</strong></label>
@@ -646,7 +655,7 @@ div.dataTables_filter {
 
 
                       </div>
-                      <a class="close" href="#">&times;</a>
+                      <a class="close" href="#close">&times;</a>
                   </div>
                 </div>
 
@@ -751,7 +760,7 @@ div.dataTables_filter {
           
                         </form>
                       </div>
-                      <a class="close" style=" color: white;" href="#">&times;</a>
+                      <a class="close" style=" color: white;" href="#close">&times;</a>
                   </div>
                 </div>
 
@@ -816,7 +825,7 @@ div.dataTables_filter {
           
                         </form>
                       </div>
-                      <a class="close" style=" color: white;" href="#">&times;</a>
+                      <a class="close" style=" color: white;" href="#close">&times;</a>
                   </div>
                 </div>
 
@@ -829,7 +838,7 @@ div.dataTables_filter {
                     <input type="text" placeholder="Add new remark here" id="newremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
                     <button type="submit" onclick="addremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
                     
-                    <a class="close" href="#">&times;</a>
+                    <a class="close" href="#close">&times;</a>
                   </div>
                 </div>
 
@@ -854,7 +863,7 @@ div.dataTables_filter {
                        
                         <button type="submit" class="btn btn-primary btn-sm" style="margin-top: 5px;margin-bottom: 5px;">Move to Complete</button>
                         
-                        <a class="close" href="#">&times;</a>
+                        <a class="close" href="#close">&times;</a>
                         </form>
                     </div>
                     
@@ -875,7 +884,7 @@ div.dataTables_filter {
                     
 
 
-                    <a class="close" href="#">&times;</a>
+                    <a class="close" href="#close">&times;</a>
 
                     <div id="wrapper" style="flex: 2;">
                        
@@ -905,7 +914,7 @@ div.dataTables_filter {
                               <div id="editor1">
                               </div>
                         </form>
-                        <a class="close" style=" color: white;" href="#">&times;</a>
+                        <a class="close" style=" color: white;" href="#close">&times;</a>
                      </div>
                     </div>
                 </div>
@@ -969,6 +978,8 @@ function populatereport(refnumber)
             },
             success: function (response) {
               // Populate the options in the select element
+              document.querySelector('[data-info="reportcasenumber"]').textContent =response[0].casereferenceNumber ? response[0].casereferenceNumber : "";
+
               document.querySelector('[data-info="reportinitialcasedate"]').textContent =response[0].prospectDate ? moment(new Date(response[0].prospectDate)).utc().format('MM-DD-YYYY') : "";
 
               document.querySelector('[data-info="reportpatientname"]').textContent =response[0].patientName ? response[0].patientName : "";
@@ -1658,6 +1669,8 @@ $.ajax({
               data[i].cpName,
               data[i].claimNumber,
               data[i].claimAmount,
+              data[i].caseEmail,
+              data[i].caseEmailPassword,
               data[i].newCaseStatus,
               `<a href="#popup2"><button class="btn btn-primary btn-sm"  onclick="viewdetails('${rfno}')" >View Details</button> </a>`,
               `<a href="#popup3"><button class="btn btn-primary btn-sm"  onclick="addlokpaldetails('${rfno}')" >Add details</button> </a>`,

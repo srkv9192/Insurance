@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="css/menubar.css">
+
+  <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.4/dist/quill.snow.css" rel="stylesheet" />
   <style>
     body {
       background-color: #343a40;
@@ -502,7 +504,260 @@ div.dataTables_filter {
                   </div>
 
 
-                    <a class="close" style=" color: white;" href="#">&times;</a>
+                    <a class="close" style=" color: white;" href="#close">&times;</a>
+                  </div>
+                </div>
+
+
+                <div id="popup2" class="overlay">
+                  <div class="popup" style="color:black; width: 70%; max-height: 90vh; overflow-y: auto;">
+                      <div style="display: flex; align-items: center; justify-content: start;">
+                          <img src="/images/logoround.png" width="130" height="130" style="margin-right: 20px;">
+                          <h2 style="margin: 0; flex-grow: 1; text-align: center;">Case Report</h2>
+                      </div>
+                      <div style="margin-top: 10px; margin-left:40px;">
+                        <div style="display: flex; justify-content: space-between;">
+                          <div style="flex: 1;">
+                              <label class="form-label"><strong>Case Number:</strong></label>
+                              <span data-info="reportcasenumber">[Case Number]</span>
+                          </div>
+                        </div>
+
+                          <div style="display: flex; justify-content: space-between;">
+                              <div style="flex: 1;">
+                                  <label class="form-label"><strong>Initial Case Date:</strong></label>
+                                  <span data-info="reportinitialcasedate">[Initial Case Date]</span>
+                              </div>
+                              <div style="flex: 1;">
+                                  <label class="form-label"><strong>Patient Name:</strong></label>
+                                  <span data-info="reportpatientname">[Case status]</span>
+                              </div>
+                          </div>
+                          <div style="display: flex; justify-content: space-between;">
+                              <div style="flex: 1;">
+                                  <label class="form-label"><strong>Patient Contact:</strong></label>
+                                  <span data-info="reportpatientcontact">[Remarks]</span>
+                              </div>
+                              <div style="flex: 1;">
+                                  <label class="form-label"><strong>Complainant Name:</strong></label>
+                                  <span data-info="reportcomplainantname">[Initial Case Date]</span>
+                              </div>
+                          </div>
+                          <div style="display: flex; justify-content: space-between;">
+                              <div style="flex: 1;">
+                                  <label class="form-label"><strong>Complainant Contact:</strong></label>
+                                  <span data-info="reportcomplainantcontact">[Case status]</span>
+                              </div>
+                              <div style="flex: 1;">
+                                  <label class="form-label"><strong>Manager:</strong></label>
+                                  <span data-info="reportmanager">[Remarks]</span>
+                              </div>
+                          </div>
+                          <div style="display: flex; justify-content: space-between;">
+                              <div style="flex: 1;">
+                                  <label class="form-label"><strong>Channel Partner:</strong></label>
+                                  <span data-info="reportcp">[Initial Case Date]</span>
+                              </div>
+                              <div style="flex: 1;">
+                                  <label class="form-label"><strong>Insurance company:</strong></label>
+                                  <span data-info="reportinsurancecompany">[Case status]</span>
+                              </div>
+                          </div>
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Claim Number:</strong></label>
+                              <span data-info="reportclaimnumber">[Remarks]</span>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Claim Amount:</strong></label>
+                              <span data-info="reportclaimamount">[Remarks]</span>
+                            </div>
+                          </div>
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                            <label class="form-label"><strong>Case Rejection Reason :</strong></label>
+                            <span data-info="reportcaserejectionreason">[Remarks]</span>
+                            </div>
+                          </div>
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                            <label class="form-label"><strong>Manual Gist :</strong></label>
+                            <span data-info="reportmanualgist">[Remarks]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                            <label class="form-label"><strong>Remarks :</strong></label>
+                            <span data-info="reportremarks">[Remarks]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Consultation Charge :</strong></label>
+                              <span data-info="reportconsultationcharge">[Remarks]</span>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Processing Fees : </strong></label>
+                              <span data-info="reportprocessingfees">[Remarks]</span>
+                            </div>
+                          </div>
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Cheque Amount :</strong></label>
+                              <span data-info="reportchequeamount">[Remarks]</span>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Cheque Number : </strong></label>
+                              <span data-info="reportchequenumber">[Remarks]</span>
+                            </div>
+                          </div>
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Bank Name  :</strong></label>
+                              <span data-info="reportbankname">[Remarks]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Operation Officer :</strong></label>
+                              <span data-info="reportoperationofficer">[None]</span>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Medical Officer : </strong></label>
+                              <span data-info="reportmedicalofficer">[None]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Claim Type :</strong></label>
+                              <span data-info="reportclaimtype">[None]</span>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Policy Number : </strong></label>
+                              <span data-info="reportpolicynumber">[None]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Policy Inception :</strong></label>
+                              <span data-info="reportpolicyinception">[None]</span>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Hospital Name : </strong></label>
+                              <span data-info="reporthospitalname">[None]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Admission Date :</strong></label>
+                              <span data-info="reportadmissiondate">[None]</span>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Discharge Date : </strong></label>
+                              <span data-info="reportdischargedate">[None]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Diagnosis :</strong></label>
+                              <span data-info="reportdiagnosis">[None]</span>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Patient Complain : </strong></label>
+                              <span data-info="reportpatientcomplain">[None]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Rejection Reason :</strong></label>
+                              <span data-info="reportrejectionreason">[None]</span>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Rejection Date : </strong></label>
+                              <span data-info="reportrejectiondate">[None]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Draft :</strong></label>
+                              <div id="reportdraft" style="height:350px">[None]</span></div>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Lokpal Draft : </strong></label>
+                              <div id="reportlokpaldraft" style="height:350px">[None]</span></div>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Case Email :</strong></label>
+                              <span data-info="reportemail">[None]</span>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Email Password : </strong></label>
+                              <span data-info="reportemailpassword">[None]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Escalation Date :</strong></label>
+                              <span data-info="reportescalationdate">[None]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Online BHP Number :</strong></label>
+                              <span data-info="bhp-number">[None]</span>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Lokpal Registration Date : </strong></label>
+                              <span data-info="lokpalregistrationdate">[None]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Annexure 5 :</strong></label>
+                              <span data-info="annexure-5">[None]</span>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Annexure 5 Reply Date : </strong></label>
+                              <span data-info="annexure-5-replydate">[None]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Annexure 6 :</strong></label>
+                              <span data-info="annexure-6">[None]</span>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Annexure 6 Reply Date : </strong></label>
+                              <span data-info="annexure-6-replydate">[None]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Lokpal Hearing Date :</strong></label>
+                              <span data-info="lokpal-hearing-date">[None]</span>
+                            </div>
+                          </div>
+
+
+                      </div>
+                      <a class="close" href="#close">&times;</a>
                   </div>
                 </div>
 
@@ -518,7 +773,7 @@ div.dataTables_filter {
                     
 
 
-                    <a class="close" href="#">&times;</a>
+                    <a class="close" href="#close">&times;</a>
 
                     <div id="wrapper" style="flex: 2;">
                        
@@ -545,7 +800,7 @@ div.dataTables_filter {
                     <input type="text" placeholder="Add new remark here" id="newremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
                     <button type="submit" onclick="addremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
                     
-                    <a class="close" href="#">&times;</a>
+                    <a class="close" href="#close">&times;</a>
                   </div>
                 </div>
 
@@ -558,7 +813,7 @@ div.dataTables_filter {
                     <input type="text" placeholder="Add remark here" id="newremarkapproval" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
                     <button type="submit" onclick="addremarkInDBAndApprove()" class="btn btn-primary btn-sm">Move to prospect</button>
                     
-                    <a class="close" href="#">&times;</a>
+                    <a class="close" href="#close">&times;</a>
                   </div>
                 </div>
 
@@ -575,7 +830,160 @@ div.dataTables_filter {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.4/dist/quill.js"></script>
   <script>
+
+const toolbarOptions =['bold', 'italic', 'underline'];
+
+  const quill2 = new Quill('#reportdraft', {
+    theme: 'snow',
+    modules: {
+    toolbar: toolbarOptions
+  }
+  });
+
+  const quill3 = new Quill('#reportlokpaldraft', {
+    theme: 'snow',
+    modules: {
+    toolbar: toolbarOptions
+  }
+  });
+
+
+  
+function populatereport(refnumber)
+      {
+            $.ajax({
+            url: '/api/getcasedetailbyref',
+            type: 'GET',
+            data: {
+                //fill appropriate case number here. fasttodo
+              casereferenceNumber: refnumber,
+            },
+            success: function (response) {
+              // Populate the options in the select element
+              document.querySelector('[data-info="reportcasenumber"]').textContent =response[0].casereferenceNumber ? response[0].casereferenceNumber : "";
+
+              document.querySelector('[data-info="reportinitialcasedate"]').textContent =response[0].prospectDate ? moment(new Date(response[0].prospectDate)).utc().format('MM-DD-YYYY') : "";
+
+              document.querySelector('[data-info="reportpatientname"]').textContent =response[0].patientName ? response[0].patientName : "";
+
+              document.querySelector('[data-info="reportpatientcontact"]').textContent =response[0].patientMobile ? response[0].patientMobile : "";
+
+              document.querySelector('[data-info="reportcomplainantname"]').textContent =response[0].complainantName ? response[0].complainantName : "";
+
+              document.querySelector('[data-info="reportcomplainantcontact"]').textContent =response[0].complainantMobile ? response[0].complainantMobile : "";
+
+              document.querySelector('[data-info="reportmanager"]').textContent =response[0].managerName ? response[0].managerName : "";
+
+              document.querySelector('[data-info="reportcp"]').textContent =response[0].cpName ? response[0].cpName : "";
+
+              document.querySelector('[data-info="reportinsurancecompany"]').textContent =response[0].insuranceCompanyName ? response[0].insuranceCompanyName : "";
+
+              document.querySelector('[data-info="reportclaimnumber"]').textContent =response[0].claimNumber ? response[0].claimNumber : "";
+
+              document.querySelector('[data-info="reportclaimamount"]').textContent =response[0].claimAmount ? response[0].claimAmount : "";
+
+              document.querySelector('[data-info="reportcaserejectionreason"]').textContent =response[0].caseRejectionReason ? response[0].caseRejectionReason : "";
+
+              document.querySelector('[data-info="reportmanualgist"]').textContent =response[0].caseGist ? response[0].caseGist : "";
+              
+              document.querySelector('[data-info="reportconsultationcharge"]').textContent =response[0].cfPercentage ? response[0].cfPercentage : "";
+
+              document.querySelector('[data-info="reportprocessingfees"]').textContent =response[0].pfAmount ? response[0].pfAmount : "";
+
+              document.querySelector('[data-info="reportchequeamount"]').textContent =response[0].cfAmount ? response[0].cfAmount : "";
+
+              document.querySelector('[data-info="reportchequenumber"]').textContent =response[0].cfChequeNumber ? response[0].cfChequeNumber : "";
+
+              document.querySelector('[data-info="reportbankname"]').textContent =response[0].cfBankName ? response[0].cfBankName : "";
+
+              document.querySelector('[data-info="reportoperationofficer"]').textContent =response[0].operationOfficer ? response[0].operationOfficer : "";
+
+              document.querySelector('[data-info="reportmedicalofficer"]').textContent =response[0].operationOfficer ? response[0].operationOfficer : "";
+
+              document.querySelector('[data-info="reportclaimtype"]').textContent =response[0].claimType ? response[0].claimType : "";
+
+              document.querySelector('[data-info="reportpolicynumber"]').textContent =response[0].policyNumber ? response[0].policyNumber : "";
+
+
+              document.querySelector('[data-info="reportpolicyinception"]').textContent =response[0].dateOfPolicy ? moment(new Date(response[0].dateOfPolicy)).utc().format('MM-DD-YYYY') : "";
+
+              document.querySelector('[data-info="reporthospitalname"]').textContent =response[0].hospitalName ? response[0].hospitalName : "";
+              
+              document.querySelector('[data-info="reportadmissiondate"]').textContent =response[0].dateOfAdmission ? moment(new Date(response[0].dateOfAdmission)).utc().format('MM-DD-YYYY') : "";
+
+              document.querySelector('[data-info="reportdischargedate"]').textContent =response[0].dateOfDischarge ? moment(new Date(response[0].dateOfDischarge)).utc().format('MM-DD-YYYY') : "";
+
+              document.querySelector('[data-info="reportrejectiondate"]').textContent =response[0].initialRejectionDate ? moment(new Date(response[0].initialRejectionDate)).utc().format('MM-DD-YYYY') : "";
+
+              document.querySelector('[data-info="reportdiagnosis"]').textContent =response[0].diagnosis ? response[0].diagnosis : "";
+
+              document.querySelector('[data-info="reportpatientcomplain"]').textContent =response[0].patientComplainDuringAdmission ? response[0].patientComplainDuringAdmission : "";
+
+              document.querySelector('[data-info="reportrejectionreason"]').textContent =response[0].rejectionReason ? response[0].rejectionReason : "";
+
+
+              document.querySelector('[data-info="reportemail"]').textContent =response[0].caseEmail ? response[0].caseEmail : "";
+
+              document.querySelector('[data-info="reportemailpassword"]').textContent =response[0].caseEmailPassword ? response[0].caseEmailPassword : "";
+
+              document.querySelector('[data-info="reportescalationdate"]').textContent =response[0].dateofEscalationToInsurer ? moment(new Date(response[0].dateofEscalationToInsurer)).utc().format('MM-DD-YYYY') : "";
+
+
+              document.querySelector('[data-info="lokpalregistrationdate"]').textContent =response[0].lokpalBHPComplaintDate ? moment(new Date(response[0].lokpalBHPComplaintDate)).utc().format('MM-DD-YYYY') : "";
+              document.querySelector('[data-info="annexure-5-replydate"]').textContent =response[0].annexure5ComplaintDate ? moment(new Date(response[0].annexure5ComplaintDate)).utc().format('MM-DD-YYYY') : "";
+              document.querySelector('[data-info="annexure-6-replydate"]').textContent =response[0].lokpalComplaintDate ? moment(new Date(response[0].lokpalComplaintDate)).utc().format('MM-DD-YYYY') : "";
+              document.querySelector('[data-info="lokpal-hearing-date"]').textContent =response[0].dateOfLokpalHearing ? moment(new Date(response[0].dateOfLokpalHearing)).utc().format('MM-DD-YYYY') : "";
+              document.querySelector('[data-info="bhp-number"]').textContent =response[0].LokpalBHPComplaintNumber ? response[0].LokpalBHPComplaintNumber : "";
+              document.querySelector('[data-info="annexure-5"]').textContent =response[0].annexure5ComplaintNumber ? response[0].annexure5ComplaintNumber : "";
+              document.querySelector('[data-info="annexure-6"]').textContent =response[0].lokpalComplaintNumber ? response[0].lokpalComplaintNumber : "";
+
+
+              quill2.root.innerHTML= response[0].caseDraft;
+              quill3.root.innerHTML= response[0].lokpalDraft;
+              
+             
+              // Assuming the JSON response object is 'response' and it contains 'caseRemarks' as a comma-separated string
+               
+                 var remarks = response[0].caseRemarks;
+                 //const remarksArray= remarks.split(',');
+
+                  // Select the element where you want to display the bullet points
+                  var textContentElement = document.querySelector('[data-info="reportremarks"]');
+
+                  //document.querySelector('[data-info="reportremarks"]').textContent = response[0].caseRemarks ? response[0].caseRemarks : "";
+
+                  // Clear previous content
+                  textContentElement.innerHTML = '';
+
+                  // Create a bullet point list
+                  var ulElement = document.createElement('ul');
+                  textContentElement.appendChild(ulElement);
+
+                  // Add each remark as a list item to the unordered list
+                  remarks.forEach(function(remark) {
+                    var liElement = document.createElement('li');
+                    liElement.textContent = remark.trim(); // Trim whitespace
+                    ulElement.appendChild(liElement);
+                  });
+                
+
+
+             // document.getElementById("popup2").style.visibility = "visible";
+             // document.getElementById("popup2").style.opacity = 1;
+
+             // document.getElementById("popup2").scrollIntoView(true);
+              window.location = localStorage['baseurl'] + "#popup2" 
+              
+              console.log("india...");
+            },
+            error: function (error) {
+              console.error('Error:', error);
+            }
+          });
+      }
+
 
 
 
@@ -888,6 +1296,15 @@ function movetolive(referencenumber) {
         "ordering": true,
         "info": true,
         "scrollX": true,
+      });
+
+      var table = $('#dataTable').DataTable();
+      localStorage['baseurl'] = window.location; 
+
+      $('#dataTable tbody').on('click', 'tr td:first-child', function () {
+      var data = table.row(this).data();
+      populatereport(data[0]);  // Assuming data[0] is the data in the first column
+      //alert( 'You clicked on ' + data[0] + '\'s row' );
       });
       
        // AJAX call on page load get manager details
