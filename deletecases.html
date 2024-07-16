@@ -63,7 +63,7 @@
       border-color: #005cbf;
     }
   </style>
-  <title>Create CP</title>
+  <title>Delete Case Page</title>
 </head>
 
 <body>
@@ -76,17 +76,14 @@
          </a>
          <a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a>
         </header>
-      <nav class="dashboard-nav-list"><a href="/" class="dashboard-nav-item"><i class="fas fa-home"></i>
+        <nav class="dashboard-nav-list"><a href="/" class="dashboard-nav-item"><i class="fas fa-home"></i>
           Home </a>
-
           <div id="hideonlogin">
             <nav class="dashboard-nav-list"><a href="/newcarddirect.html" class="dashboard-nav-item"><i class="fas fa-inr"></i>
               Buy Card </a>
-
               <nav class="dashboard-nav-list"><a href="/paymentinfo.html" class="dashboard-nav-item"><i class="fas fa-inr"></i>
                 Payment Info </a>
           </div>
-
           
 
           <div id="showonlogin" style="display: none;">
@@ -105,17 +102,19 @@
                      
                      <a href="/viewmedicalopinioncases.html" class="dashboard-nav-dropdown-item">View Medical</a>
                      <a href="/viewapprovedcases.html" class="dashboard-nav-dropdown-item">View Approved</a>
-                     <a href="/viewrejectedcases.html" class="dashboard-nav-dropdown-item">View Rejected</a> 
+                     <a href="/viewrejectedcases.html" class="dashboard-nav-dropdown-item">View Rejected</a>
                      <a href="/viewlivecases.html" class="dashboard-nav-dropdown-item">View Live</a>
                      <a href="/viewpendingdraftcases.html" class="dashboard-nav-dropdown-item">View Pending Draft</a>
                      <a href="/viewescalationcases.html" class="dashboard-nav-dropdown-item">View Escalation</a>
                      <a href="/viewlokpalcases.html" class="dashboard-nav-dropdown-item">View Lokpal</a>
                      <a href="/viewcompletedcases.html" class="dashboard-nav-dropdown-item">View Completed</a>
                      <a href="/viewsearchcases.html" class="dashboard-nav-dropdown-item">Search Case</a>
-                     <!-- 
+                    
+                                       <!-- 
                      <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
                      <a href="/viewescalationcases.html" class="dashboard-nav-dropdown-item">View Escalation</a>
                       -->
+  
                      <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
                  </div>
               </div>
@@ -131,6 +130,7 @@
                     <a href="/generatecardpdf.html" class="dashboard-nav-dropdown-item">Download Card</a>
                 </div>
              </div>
+
 
 
             <div class='dashboard-nav-dropdown show'>
@@ -176,8 +176,13 @@
               <i class="fas fa-photo-video">
                 </i>Case Menu</a>
               <div class='dashboard-nav-dropdown-menu'>
-                  <a href="/viewmyopinioncases.html" class="dashboard-nav-dropdown-item">My Cases</a>
+                  <a href="/viewmedicalopinioncases.html" class="dashboard-nav-dropdown-item">View Medical</a>
+                  <a href="/viewpendingdraftcases.html" class="dashboard-nav-dropdown-item">View Pending Draft</a>
+                  <a href="/viewsearchcases.html" class="dashboard-nav-dropdown-item">Search Case</a>
+                  <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
+                <!--  <a href="/viewmyopinioncases.html" class="dashboard-nav-dropdown-item">My Cases</a>  -->
               </div>
+
            </div>
 
          </div>
@@ -204,8 +209,33 @@
 
          </div>
 
-        <div class="nav-item-divider"></div>
-        <a  id="login-menu"
+          <div id="showtocoordinator" style="display: none;">
+
+            <div class='dashboard-nav-dropdown show'>
+               <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+                <i class="fas fa-photo-video">
+                  </i>Card Menu</a>
+                <div class='dashboard-nav-dropdown-menu'>
+                    <a href="/newcard.html" class="dashboard-nav-dropdown-item">Add Card</a>
+                </div>
+             </div>
+
+             <div class='dashboard-nav-dropdown show'>
+              <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+               <i class="fas fa-photo-video">
+                 </i>Case Menu</a>
+               <div class='dashboard-nav-dropdown-menu'>
+                   <a href="/addprospect.html" class="dashboard-nav-dropdown-item">Add Case</a>
+                   <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
+               </div>
+            </div>
+
+          </div>
+            
+        <div class="nav-item-divider">
+
+        </div>
+        <a id="login-menu"
                   href="/login.html" class="dashboard-nav-item"><i class="fas  fa-sign-in "></i> Login </a>
       </nav>
   </div>
@@ -214,122 +244,20 @@
         <div class='dashboard-content' style="background-image: url('/images/background20.jpg');  background-repeat: repeat;  background-size: cover;">
           <div class="container mt-5">
             <div class="row justify-content-center">
-              <div class="col-lg-8 ">
-                <h2 class="text-center mb-4">Add New Channel Partner</h2>
-                
+              <div class="col-lg-4 col-md-6 col-sm-8">
+                <h2 class="text-center mb-4">Delete case</h2>
+                <div class="frame" style=" color:black;display:flex ;background-image: url('/images/background18.jpg');  font-family: monospace;font-size: large; background-size: cover;">
 
-                  <div class="frame" style=" color:black;display:flex ;background-image: url('/images/background18.jpg');  font-family: monospace;font-size: large; background-size: cover;">
-                    <form id="loginForm">
-                      <div class="row mb-3">
-                        <div class="col-sm-4">
-                          <label for="cpname" class="form-label">Name</label>
-                          <input type="text" class="form-control" id="cpname" placeholder="Enter name">
-                        </div>
-                        <div class="col-sm-4">
-                          <label for="userid" class="form-label">Login Name</label>
-                          <input type="text" class="form-control" id="userid"style=" background-color: #495057" readonly placeholder="Enter Login Name">
-                        </div>
-                        <div class="col-sm-4">
-                          <label for="userpassword" class="form-label">Login Password</label>
-                          <input type="text" class="form-control" id="userpassword" placeholder="Enter password">
-                        </div>
-                      </div>
-                      <div class="row mb-3">
+                  <form id="loginForm">
+                    <div class="mb-3">
+                      <label for="caseid" class="form-label">Case ID</label>
+                      <input type="text" class="form-control" id="caseid" placeholder="Enter case id">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Delete case</button>
+                  </form>
+                </div>
 
-                        <div class="col-sm-4">
-                          <label for="cpAge" class="form-label">Age</label>
-                          <input type="number" class="form-control" id="cpAge" placeholder="Enter age">
-                        </div>
-                        <div class="col-sm-4">
-                          <label for="cpGender" class="form-label">Gender</label>
-                          <select class="form-control" id="cpGender">
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                          </select>
-                        </div>
-                        <div class="col-sm-4">
-                          <label for="cpFatherName" class="form-label">Father's Name</label>
-                          <input type="text" class="form-control" id="cpFatherName" placeholder="Enter father's name">
-                        </div>
-                      </div>
-                      <div class="row mb-3">
-
-  
-                        <div class="col-sm-4">
-                          <label for="cpAddress" class="form-label">Address</label>
-                          <input type="text" class="form-control" id="cpAddress" placeholder="Enter address">
-                        </div>
-                        <div class="col-sm-4">
-                          <label for="cpCity" class="form-label">City</label>
-                          <input type="text" class="form-control" id="cpCity" placeholder="Enter city">
-                        </div>
-                        <div class="col-sm-4">
-                          <label for="cpState" class="form-label">State</label>
-                          <input type="text" class="form-control" id="cpState" placeholder="Enter state">
-                        </div>
-
-                      </div>
-                      <div class="row mb-3">
-
-                        <div class="col-sm-4">
-                          <label for="cpQualification" class="form-label">Qualification</label>
-                          <input type="text" class="form-control" id="cpQualification" placeholder="Enter qualification">
-                        </div>
-                        <div class="col-sm-4">
-                          <label for="cpProfession" class="form-label">Profession</label>
-                          <input type="text" class="form-control" id="cpProfession" placeholder="Enter profession">
-                        </div>
-                        <div class="col-sm-4">
-                          <label for="cpCurrentCompany" class="form-label">Current Company</label>
-                          <input type="text" class="form-control" id="cpCurrentCompany" placeholder="Enter company name">
-                        </div>
-
-                      </div>
-
-                      <div class="row mb-3">
-
-                        <div class="col-sm-4">
-                          <label for="manager-name" class="form-label">Manager Name</label>
-                          <div class="input-group">
-                            <select class="form-control" id="manager-name-dropdown" >
-                              <option value="">None</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="col-sm-4">
-                          <label for="phone" class="form-label">Phone</label>
-                          <input type="text" class="form-control" id="phone" pattern="[0-9]{10}" required maxlength="10" placeholder="Enter phone number">
-                        </div>
-                        <div class="col-sm-4">
-                          <label for="alternatePhone" class="form-label">Alternate Phone</label>
-                          <input type="text" class="form-control" id="alternatePhone" pattern="[0-9]{10}" maxlength="10" placeholder="Enter alternate phone number">
-                        </div>
-                      </div>
-                      <div class="row mb-3">
-                        <div class="col-sm-4">
-                          <label for="email" class="form-label">Email</label>
-                          <input type="email" class="form-control" id="email" placeholder="Enter email">
-                        </div>
-
-                        <div class="col-sm-4">
-                          <label for="cpCommission" class="form-label">Commission %</label>
-                          <input type="number" class="form-control" id="cpCommission" >
-                        </div>
-
-                      </div>
- 
-                      <button type="submit" class="btn btn-primary" style="width: 300px; margin-left: 150px ;">Submit</button>
-                      
-                    </form
-                    
-                  </div>
-                
-                  
-                  </div>
-
-                 
-
-
+              </div>
             </div>
           </div>
         </div>
@@ -337,49 +265,37 @@
     </div>
 </div>
 
+
+
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     $(document).ready(function () {
 
-      
-
-                  // AJAX call on page load get manager details
-        $.ajax({
-        url: '/api/getcounter',
-        type: 'GET',
-        success: function (response) {
-          // Populate the options in the select element
-          const optionsSelect = $('#manager-name-dropdown');
-          
-          document.getElementById("userid").value = "CP_"+ response[0].cpCount;
-
-        },
-        error: function (error) {
-          console.error('Error:', error);
-        }
-      });
-
-
       $.ajax({
         url: '/api/whoami',
         type: 'POST',
         success: function (response) {
-          if(response.message =='admin')
+          // Populate the options in the select element
+            //alert(response.message)
+           
+            if(response.message =='admin')
             {
               $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showonlogin").show();
               $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
              
             }
-            else if(response.message =='operation' )
+            else if(response.message =='operation')
             {
               $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showonlogin").show();
               $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
             }
             else if(response.message =='cp' || response.message =='manager')
             {
@@ -387,6 +303,7 @@
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showtocpandmanager").show();
               $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
             }
             else if(response.message =='medicalofficer')
             {
@@ -394,6 +311,7 @@
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showtomedicalofficer").show();
               $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
             }
             else if(response.message =='marketing')
             {
@@ -407,6 +325,7 @@
             {
               window.location.href = "/login.html"
             }
+            
         },
         error: function (error) {
           console.error('Error:', error);
@@ -414,25 +333,6 @@
       });
 
 
-
-            // AJAX call on page load get manager details
-            $.ajax({
-        url: '/api/getmanagerdetail',
-        type: 'GET',
-        success: function (response) {
-          // Populate the options in the select element
-          const optionsSelect = $('#manager-name-dropdown');
-          response.forEach(function (option) {
-            optionsSelect.append($('<option>', {
-              value: option.managerID,
-              text: option.managerName
-            }));
-          });
-        },
-        error: function (error) {
-          console.error('Error:', error);
-        }
-      });
 
       const mobileScreen = window.matchMedia("(max-width: 990px )");
 
@@ -456,100 +356,37 @@
       $('#loginForm').on('submit', function (event) {
         event.preventDefault();
 
-        var username = $('#cpname').val();
-        var userid = $('#userid').val();
-        var userpassword = $('#userpassword').val();
-        var cpAge = $('#cpAge').val();
-        var cpGender = $('#cpGender').val();
-        var cpFatherName = $('#cpFatherName').val();
-        var cpAddress = $('#cpAddress').val();
-        var cpCity = $('#cpCity').val();
-        var cpState = $('#cpState').val();
-        var cpQualification = $('#cpQualification').val();
-        var cpProfession =  $('#cpProfession').val();
-        var cpCurrentCompany =$('#cpCurrentCompany').val();
-        var managerid = $('#manager-name-dropdown').val();
-        var phone =$('#phone').val();
-        var alternatePhone = $('#alternatePhone').val();
-        var email = $('#email').val();
-        var cpCommission = $('#cpCommission').val();
-
+        var caseid = $('#caseid').val();
 
         // Make an API call with the username and password
         $.ajax({
-          url: '/api/addcpdetail',
+          url: '/api/deletecase',
           type: 'POST',
           contentType: "application/x-www-form-urlencoded",
-          data: {    
-            cpName: username,
-            cpID: userid,
-            cpAge: cpAge,
-            cpGender: cpGender,
-            cpFatherName: cpFatherName,
-            cpAddress: cpAddress,
-            cpCity: cpCity,
-            cpState: cpState,
-            cpQualification: cpQualification,
-            cpProfession: cpProfession,
-            cpCurrentCompany: cpCurrentCompany,
-            managerID: managerid,
-            phone: phone,
-            alternatePhone: alternatePhone,
-            email: email,
-            cpCommission: cpCommission,
+          data: {
+            casereferenceNumber: caseid,
           },
           success: function (response) {
             if(response.message == "success")
               {
-                $.ajax({
-                      url: '/api/addlogin',
-                      type: 'POST',
-                      contentType: "application/x-www-form-urlencoded",
-                      data: {
-                        userID: userid,
-                        userPassword: userpassword,
-                        userName: username,
-                        userType: "cp",
-                      },
-                      success: function (response) {
-                        if(response.message == "success")
-                          {
-                            alert("New CP added successfully!!")
-                           // document.getElementById('loginForm').reset();
-                            window.location.href = "/createcp.html"
-                          }
-                          
-                      },
-                      error: function (error) {
-                        document.getElementById('loginForm').reset();
-                        alert("Failed to add account");
-                        // Display an error message to the user
-                      }
-                    });
-                  
+                alert("Case deleted!!!")
+                window.location.href = "/deletecases.html"
               }
-              else if(response.message == "duplicate")
-            {
-              alert("CP ID already present, use a different one.")
-              window.location.href = "/createcp.html"
-            }
               else{
-                alert("Failed to add CP details.")
+                alert("Failed to delete case!!")
+                document.getElementById('loginForm').reset();
               }
-
+            //alert("login success");
+            // Redirect to the dashboard or perform any other actions
           },
           error: function (error) {
             document.getElementById('loginForm').reset();
-            alert("Failed to add cp details");
+            alert("Failed to delete case");
             // Display an error message to the user
           }
         });
       });
-
-
     });
-
-
   </script>
 </body>
 
