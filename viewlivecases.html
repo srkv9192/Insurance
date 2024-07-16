@@ -1705,6 +1705,11 @@ function movetolive(referencenumber) {
         var  patientname  = $('#patient-name').val();
         var  complainantname = $('#complainant-name').val();
 
+
+        var claimnumber = $('#claim-number').val();
+        var policynumber = $('#policy-number').val();
+        var claimamount = $('#claim-amount').val();
+
           // call ajax to save these details--
 
           $.ajax({
@@ -1727,6 +1732,10 @@ function movetolive(referencenumber) {
             policyNumber: policynumber,
             patientName : patientname ,
             complainantName: complainantname,
+            claimAmount: claimamount ,
+            claimNumber: claimnumber ,
+            policyNumber: policynumber,
+
           },
           success: function (response) {
             if(response.message == "success")
