@@ -364,7 +364,29 @@ div.dataTables_filter {
             <div class="row justify-content-center">
               <div class="col-lg-12">
                 <h2 class="text-center mb-4">Rejected Cases</h2>
-                <div class="table-responsive">
+
+                <div id="actionPanel" style="position: fixed; top: 70px;height:100%; width: 100%; display:none; background-image: url('/images/background20.jpg');  background-repeat: round;  background-size: cover border-top: 1px solid #ccc;">
+                  <div class="container">
+                      <div class="header">
+                        <h2 style ="display:flex; margin-left: 20px;">Case id- <div id="refnumberforaction"></div></h2>
+
+                          <button id = "closeActionPanel" type="button" class="close" style="
+                          position: absolute;
+                          left: 10px;
+                          top: 0px;
+                          font-size: 30px;
+                          font-weight: bold;
+                          text-decoration: none;
+                          color: black;
+                          ">×</button>
+                      </div>
+                      <div class="body" id="actionContent" style="display: flex;flex-wrap: wrap;justify-content: left;gap: 10px;max-width: 80%;margin: 10px;">
+                        <!-- Actions will be inserted here -->
+                      </div>
+                  </div>
+              </div>
+
+                <div class="table-responsive" id ="fulldatatable">
                   <table id ="dataTable" class="table table-dark table-bordered">
                     <thead>
                       <tr>
@@ -381,8 +403,6 @@ div.dataTables_filter {
                         <th>Case Of</th>
                         <th>Medical Officer</th>
                         <th>Case Status</th>
-                        <th>Action</th>
-                        <th>Action</th>
                         <th>Action</th>
                       </tr>
                     </thead>
@@ -693,6 +713,54 @@ div.dataTables_filter {
   <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
   <script>
+
+
+// Assuming the DataTable container exists in the DOM on page load
+document.getElementById('fulldatatable').addEventListener('click', function(event) {
+  console.log("rajat")
+    var target = event.target; // Get the clicked element within the container
+
+    if (target.matches('.actionButton')) { // Check if the clicked element is an action button
+      console.log("rajat1")
+      sessionStorage.setItem('scrollPosition', window.scrollY); // Store scroll position
+    document.getElementById('fulldatatable').style.display = 'none'; // Hide DataTable
+    document.getElementById('actionPanel').style.display = 'block'; // Show Action Panel
+    }
+});
+
+
+// Assuming the DataTable container exists in the DOM on page load
+document.getElementById('closeActionPanel').addEventListener('click', function(event) {
+    var target = event.target; // Get the clicked element within the container   
+      document.getElementById('actionPanel').style.display = 'none'; // Hide Action Panel
+    document.getElementById('fulldatatable').style.display = 'block'; // Show DataTable
+    //window.scrollTo(0, sessionStorage.getItem('scrollPosition')); // Scroll to last position
+    
+    window.scrollTo({
+    top: sessionStorage.getItem('scrollPosition'),
+    behavior: 'instant'
+  });
+    
+});
+
+
+
+function showActions(rfno ) {
+    var actionContent = `
+<a href="#popup9"><button class="btn btn-primary btn-lg"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>
+              <a href="#popup5"><button class="btn btn-primary btn-lg"  onclick="viewdocuments('${rfno}')">View Documents</button> </a>
+              <a href="#popup7"><button class="btn btn-primary btn-lg"   onsclick="addremark('${rfno}')" >Move to Prospect</button> </a>
+    `;
+    document.getElementById('actionContent').innerHTML = actionContent;
+
+    document.getElementById('refnumberforaction').innerHTML = `    ${rfno}`;
+   // $('#actionPanel');  // Assuming you're using Bootstrap for modal
+   sessionStorage.setItem('scrollPosition', window.scrollY); 
+   document.getElementById('actionPanel').style.display = 'block';
+   document.getElementById('fulldatatable').style.display = 'none';
+    
+}
+
 
 
 
@@ -1153,9 +1221,8 @@ function populatereport(refnumber)
               data[i].caseHandler ? data[i].caseHandler: " ",
               data[i].medicalOpinionOfficer,
               data[i].newCaseStatus,
-              `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
-              `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')">View Documents</button> </a>`,
-              `<a href="#popup7"><button class="btn btn-primary btn-sm"   onclick="addremark('${rfno}')" >Move to Prospect</button> </a>`,
+              `<button id="actionButton" class="btn btn-primary btn-sm" onclick="showActions('${rfno}')" >Actions</button>`
+
             ]);
           }
         }
