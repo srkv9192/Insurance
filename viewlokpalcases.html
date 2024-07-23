@@ -387,6 +387,9 @@ div.dataTables_filter {
                         <th>Reference Number</th>
                         <th>Case Inception Date</th>
                         <th>Case Age</th>
+                        <th>Registration Time</th>
+                        <th>Annexure5 Time</th>
+                        <th>Annexure6 Time</th>
                         <th>Patient Name</th>
                         <th>Patient Phone</th>
                         <th>Complainant Name</th>
@@ -1725,13 +1728,40 @@ $.ajax({
 
             // You could also use an ajax property on the data table initialization
             var todaysdate = moment(new Date());
-            var prospectcasedate = moment(data[i].prospectDate);
-            var caseage  =    todaysdate.diff(prospectcasedate, 'days');
+            //var prospectcasedate = moment(data[i].prospectDate);
+            var caseage  =    "Not Available"
+            var registrationage  =   "Not Available"
+            var annexure5age  =    "Not Available"
+            var annexure6age  =    "Not Available"
+            if((data[i].lokpalbucketDate))
+           {
+              var lokpalcasedate = moment(data[i].lokpalbucketDate);
+              caseage  =    todaysdate.diff(lokpalcasedate, 'days');
+
+              if((data[i].lokpalBHPComplaintDate))
+              {
+                var registrationdate = moment(data[i].lokpalBHPComplaintDate);
+                registrationage = registrationdate.diff(lokpalcasedate, 'days');
+              }
+              if((data[i].annexure5ComplaintDate))
+              {
+                var annexure5date = moment(data[i].annexure5ComplaintDate);
+                annexure5age =  annexure5date.diff(lokpalcasedate, 'days');
+              }
+              if((data[i].lokpalComplaintDate))
+              {
+                var annexure6date = moment(data[i].lokpalComplaintDate);
+                annexure6age =  annexure6date.diff(lokpalcasedate, 'days');
+              }
+           }
 
             $('#dataTable').dataTable().fnAddData( [
               data[i].casereferenceNumber,
               moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),
               `${caseage}`,
+              `${registrationage}`,
+              `${annexure5age}`,
+              `${annexure6age}`,
               data[i].patientName,
               data[i].patientMobile,
               data[i].complainantName,

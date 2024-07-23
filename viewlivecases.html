@@ -1956,8 +1956,14 @@ function movetolive(referencenumber) {
           for(var i = 0; i < length; i++) {
             var rfno= data[i].casereferenceNumber
             var todaysdate = moment(new Date());
-            var prospectcasedate = moment(data[i].prospectDate);
-            var caseage  =    todaysdate.diff(prospectcasedate, 'days');
+           // var prospectcasedate = moment(data[i].prospectDate);
+           var caseage  =  "Not Available"
+           if((data[i].liveDate))
+           {
+            var livecasedate = moment(data[i].liveDate);
+            caseage  =    todaysdate.diff(livecasedate, 'days');
+           }
+          
             // You could also use an ajax property on the data table initialization
             $('#dataTable').dataTable().fnAddData( [
             data[i].casereferenceNumber,

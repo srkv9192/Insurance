@@ -148,13 +148,11 @@ async function uploadFileToGCS(filePath, destination , referencenumber) {
 //
 
 
-
-
-
-
 // Create a schema
 const dataSchema = new mongoose.Schema({
   prospectDate: Date,
+  liveDate: Date,
+  lokpalbucketDate: Date,
   completedDate: Date,
   prospectZone: String,
   patientName: String,
@@ -739,7 +737,7 @@ app.post('/api/movetocompleted', async(req, res) => {
 
 app.post('/api/movetolokpal', async(req, res) => {
   try{
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{ caseRemarks:req.body.caseRemarks}, $set:{ newCaseStatus: "Lokpal Pending", isInEscalationStage: "false", isInLokpalStage: "true"}});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{ caseRemarks:req.body.caseRemarks}, $set:{ newCaseStatus: "Lokpal Pending", isInEscalationStage: "false", isInLokpalStage: "true",  lokpalbucketDate: req.body.lokpalbucketDate}});
 
       if(newData == null)
       {
@@ -950,7 +948,7 @@ async function addDocURLInDBbycasenum(casenumber , url)
 app.post('/api/addpfremark', upload.array('pdfFile', 10), async(req, res) => {
   try{
 
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfpaymentRemarks:req.body.pfpaymentRemarks,  pfpaymentDate:req.body.pfpaymentDate, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,   caseEmail: req.body.caseEmail, caseEmailPassword: req.body.caseEmailPassword, cfBankName: req.body.cfBankName, isLive: "true", newCaseStatus : "Live" }});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfpaymentRemarks:req.body.pfpaymentRemarks,  pfpaymentDate:req.body.pfpaymentDate, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,   caseEmail: req.body.caseEmail, caseEmailPassword: req.body.caseEmailPassword, cfBankName: req.body.cfBankName, isLive: "true", newCaseStatus : "Live", liveDate : req.body.liveDate }});
 
       if(newData == null)
       {

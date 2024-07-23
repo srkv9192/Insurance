@@ -1478,6 +1478,8 @@ function populatereport(refnumber)
           formData.append('cfChequeNumber', chequenumberFinal);
           formData.append('cfBankName', banknameFinal);
 
+          formData.append('liveDate', new Date());
+
 
           $.each($('#pdf-input')[0].files, function(i, file) {
           formData.append('pdfFile', file);

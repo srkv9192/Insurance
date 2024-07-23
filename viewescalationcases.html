@@ -980,6 +980,7 @@ $('#lokpalForm').on('submit', function (event) {
           contentType: "application/x-www-form-urlencoded",
           data: {
             casereferenceNumber: localStorage['addRemarkForRefNumber'], 
+            lokpalbucketDate: today,
             caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ $('#lokpalremark').val(),
           },
           success: function (response) {
