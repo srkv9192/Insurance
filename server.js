@@ -59,12 +59,11 @@ const port = process.env.PORT || 80
 //});
 
 
-
-
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
 
 /*
 
@@ -74,7 +73,6 @@ mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
 });
 
 */
-
 
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
@@ -209,6 +207,7 @@ const dataSchema = new mongoose.Schema({
   isProspect: String,
   isPendingAuth: String,
   isLive: String,
+  isHold: String,
   isInMedicalOpinion: String,
   legalCollected: String,
   pdcCollected: String,
@@ -625,6 +624,29 @@ app.post('/api/addtcaseremarkandmovetoprospect', async(req, res) => {
 });
 
 
+app.post('/api/addcaseremarkandmovetolivefromhold', async(req, res) => {
+  try{
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ caseRemarks:req.body.caseRemarks} , $set:{ newCaseStatus: "Hold Return",  isLive:"true", isHold: "false"} });
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not save remark', refnum:req.body.referencenumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding remark' });
+  } 
+
+});
+
+
 app.post('/api/addlivecaseremark', async(req, res) => {
   try{
       const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ caseRemarks:req.body.caseRemarks}});
@@ -744,6 +766,29 @@ app.post('/api/movetoescalation', async(req, res) => {
       if(newData == null)
       {
         res.json({ message: 'Could not move case to escalation', refnum:req.body.referencenumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding remark' });
+  } 
+
+});
+
+
+app.post('/api/movetohold', async(req, res) => {
+  try{
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ caseRemarks:req.body.caseRemarks}, $set:{ newCaseStatus: "Hold", isHold: "true", isLive: "false"}});
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not move case to hold', refnum:req.body.referencenumber});
       }
       else
       {
@@ -2016,6 +2061,17 @@ app.get("/api/getrejectedcasedetail", async(req, res) => {
   }
 });
 
+app.get("/api/getholdcasedetail", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  dataSchemaObject.find({isHold : {"$exists" : true, "$eq" : "true"}});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get hold case details' });
+  }
+});
+
 app.get("/api/getapprovedcasedetail", async(req, res) => {
   try {
     // Retrieve all tpa list from database
@@ -2855,6 +2911,8 @@ app.get('/deletecases.html', (req, res) => res.sendFile(__dirname+'/deletecases.
 app.get('/viewpendingdraftcases.html', (req, res) => res.sendFile(__dirname+'/viewpendingdraftcases.html'))
 app.get('/viewfullcasedetails.html', (req, res) => res.sendFile(__dirname+'/viewfullcasedetails.html'))
 app.get('/viewrejectedcases.html', (req, res) => res.sendFile(__dirname+'/viewrejectedcases.html'))
+
+app.get('/viewholdcases.html', (req, res) => res.sendFile(__dirname+'/viewholdcases.html'))
 
 app.get('/viewcompletedcases.html', (req, res) => res.sendFile(__dirname+'/viewcompletedcases.html'))
 app.get('/viewsearchcases.html', (req, res) => res.sendFile(__dirname+'/viewsearchcases.html'))

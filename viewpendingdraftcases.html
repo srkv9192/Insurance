@@ -248,6 +248,7 @@ div.dataTables_filter {
                      <a href="/viewescalationcases.html" class="dashboard-nav-dropdown-item">View Escalation</a>
                      <a href="/viewlokpalcases.html" class="dashboard-nav-dropdown-item">View Lokpal</a>
                      <a href="/viewcompletedcases.html" class="dashboard-nav-dropdown-item">View Completed</a>
+                     <a href="/viewholdcases.html" class="dashboard-nav-dropdown-item">View Hold</a>
                      <a href="/viewsearchcases.html" class="dashboard-nav-dropdown-item">Search Case</a>
                     
                                        <!-- 
@@ -404,6 +405,7 @@ div.dataTables_filter {
                         <th>Operation Officer</th>
                         <th>Medical Officer</th>
                         <th>Case Status</th>
+                        <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
@@ -866,6 +868,17 @@ div.dataTables_filter {
                   </div>
                 </div>
 
+                <div id="popup12" class="overlay" >
+                  <div class="popup" style ="width:30%">
+                    <h2  id = "remarkcontent">Move to Hold-</h2>
+                    
+                    <input type="text" placeholder="Add hold remark here" id="holdremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                    <button type="submit" onclick="addholdremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
+                    
+                    <a class="close" href="#close">&times;</a>
+                  </div>
+                </div>
+
                 
                 <div id="popup11" class="overlay" >
                   <div class="popup" style ="width:45%">
@@ -988,6 +1001,65 @@ function addremark(referencenumber, casestatus) {
       });
 
   }
+
+
+
+  
+function addholdremarkInDB() {
+
+if( document.getElementById("holdremark").value == "")
+{
+  alert("Empty remark not allowed!")
+  return;
+}
+
+
+const today = new Date();
+const yyyy = today.getFullYear();
+let mm = today.getMonth() + 1; // Months start at 0!
+let dd = today.getDate();
+
+if (dd < 10) dd = '0' + dd;
+if (mm < 10) mm = '0' + mm;
+
+const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+  $.ajax({
+    url: '/api/movetohold',
+    type: 'POST',
+    contentType: "application/x-www-form-urlencoded",
+    data: {
+      referencenumber: localStorage['addRemarkForRefNumber'],
+      caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - [Hold Remark] "+ document.getElementById("holdremark").value
+    },
+    success: function (response) {
+      if(response.message == "success")
+        {
+         // window.location.href = "/index.html"
+          //localStorage['userID'] = username;
+          alert("Case moved to hold phase!")
+          localStorage.removeItem("addRemarkForRefNumber");
+
+          document.getElementById("holdremark").value ="";
+          window.location.href = "/viewpendingdraftcases.html";
+          
+        }
+        else{
+          alert("Error saving remark!")
+          //document.getElementById('loginForm').reset();
+        }
+      //alert("login success");
+      // Redirect to the dashboard or perform any other actions
+    },
+    error: function (error) {
+      document.getElementById('loginForm').reset();
+      alert("login failed");
+      // Display an error message to the user
+    }
+  });
+
+}
+
 
 
   
@@ -1478,15 +1550,15 @@ function movetolive(referencenumber) {
 
               document.querySelector('[data-info="reportprocessingfees"]').textContent =response[0].pfAmount ? response[0].pfAmount : "";
 
-              document.querySelector('[data-info="reportchequeamount"]').textContent =response[0].cfAmount ? response[0].cfAmount : "";
+              document.querySelector('[data-info="reportchequeamount"]').textContent = response[0].cfAmount ? response[0].cfAmount : "";
 
-              document.querySelector('[data-info="reportchequenumber"]').textContent =response[0].cfChequeNumber ? response[0].cfChequeNumber : "";
+              document.querySelector('[data-info="reportchequenumber"]').textContent = response[0].cfChequeNumber ? response[0].cfChequeNumber : "";
 
-              document.querySelector('[data-info="reportbankname"]').textContent =response[0].cfBankName ? response[0].cfBankName : "";
+              document.querySelector('[data-info="reportbankname"]').textContent = response[0].cfBankName ? response[0].cfBankName : "";
 
               document.querySelector('[data-info="reportoperationofficer"]').textContent =response[0].operationOfficer ? response[0].operationOfficer : "";
 
-              document.querySelector('[data-info="reportmedicalofficer"]').textContent =response[0].operationOfficer ? response[0].operationOfficer : "";
+              document.querySelector('[data-info="reportmedicalofficer"]').textContent =response[0].medicalOpinionOfficer ? response[0].operationOfficer : "";
 
               document.querySelector('[data-info="reportclaimtype"]').textContent =response[0].claimType ? response[0].claimType : "";
 
@@ -1867,6 +1939,7 @@ function movetolive(referencenumber) {
               `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}', '${caseststaus}')" >Upload Docs</button> </a>`,
               `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
               `<a href="#popup11"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}', '${caseststaus}')" >Move to Escalation</button> </a>`,
+              `<a href="#popup12"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Hold</button> </a>`,
             ]);
           }
         }

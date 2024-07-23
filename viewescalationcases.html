@@ -232,6 +232,7 @@ div.dataTables_filter {
                      <a href="/viewescalationcases.html" class="dashboard-nav-dropdown-item">View Escalation</a>
                      <a href="/viewlokpalcases.html" class="dashboard-nav-dropdown-item">View Lokpal</a>
                      <a href="/viewcompletedcases.html" class="dashboard-nav-dropdown-item">View Completed</a>
+                     <a href="/viewholdcases.html" class="dashboard-nav-dropdown-item">View Hold</a>
                      <a href="/viewsearchcases.html" class="dashboard-nav-dropdown-item">Search Case</a>
                      
                                        <!-- 
@@ -390,6 +391,7 @@ div.dataTables_filter {
                         <th>Escalation Date</th>
                         <th>Case Email</th>
                         <th>Password</th>
+                        <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
@@ -777,6 +779,17 @@ div.dataTables_filter {
                   </div>
                 </div>
 
+                <div id="popup12" class="overlay" >
+                  <div class="popup" style ="width:30%">
+                    <h2  id = "remarkcontent">Move to Hold-</h2>
+                    
+                    <input type="text" placeholder="Add hold remark here" id="holdremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                    <button type="submit" onclick="addholdremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
+                    
+                    <a class="close" href="#close">&times;</a>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
@@ -879,6 +892,66 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
 }
 
 
+
+  
+function addholdremarkInDB() {
+
+if( document.getElementById("holdremark").value == "")
+{
+  alert("Empty remark not allowed!")
+  return;
+}
+
+
+const today = new Date();
+const yyyy = today.getFullYear();
+let mm = today.getMonth() + 1; // Months start at 0!
+let dd = today.getDate();
+
+if (dd < 10) dd = '0' + dd;
+if (mm < 10) mm = '0' + mm;
+
+const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+  $.ajax({
+    url: '/api/movetohold',
+    type: 'POST',
+    contentType: "application/x-www-form-urlencoded",
+    data: {
+      referencenumber: localStorage['addRemarkForRefNumber'],
+      caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - [Hold Remark] "+ document.getElementById("holdremark").value
+    },
+    success: function (response) {
+      if(response.message == "success")
+        {
+         // window.location.href = "/index.html"
+          //localStorage['userID'] = username;
+          alert("Case moved to hold phase!")
+          localStorage.removeItem("addRemarkForRefNumber");
+
+          document.getElementById("holdremark").value ="";
+          window.location.href = "/viewescalationcases.html";
+          
+        }
+        else{
+          alert("Error saving remark!")
+          //document.getElementById('loginForm').reset();
+        }
+      //alert("login success");
+      // Redirect to the dashboard or perform any other actions
+    },
+    error: function (error) {
+      document.getElementById('loginForm').reset();
+      alert("login failed");
+      // Display an error message to the user
+    }
+  });
+
+}
+
+
+
+  
 
   
 $('#lokpalForm').on('submit', function (event) {
@@ -1192,7 +1265,7 @@ function populatereport(refnumber)
 
               document.querySelector('[data-info="reportoperationofficer"]').textContent =response[0].operationOfficer ? response[0].operationOfficer : "";
 
-              document.querySelector('[data-info="reportmedicalofficer"]').textContent =response[0].operationOfficer ? response[0].operationOfficer : "";
+              document.querySelector('[data-info="reportmedicalofficer"]').textContent =response[0].medicalOpinionOfficer ? response[0].operationOfficer : "";
 
               document.querySelector('[data-info="reportclaimtype"]').textContent =response[0].claimType ? response[0].claimType : "";
 
@@ -1438,6 +1511,7 @@ function populatereport(refnumber)
               `<a href="#popup6"><button class="btn btn-primary btn-sm"  onclick="viewAgreement('${rfno}')" >View Draft</button> </a>`,
               `<a href="#popup7"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}', '${casestatus}')" >Move to Lokpal</button> </a>`,
               `<a href="#popup8"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}', '${casestatus}')" >Move to Completed</button> </a>`, 
+              `<a href="#popup12"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}', '${casestatus}')" >Move to Hold</button> </a>`,
 
             ]);
           }

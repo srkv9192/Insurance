@@ -229,6 +229,7 @@ div.dataTables_filter {
                      <a href="/viewescalationcases.html" class="dashboard-nav-dropdown-item">View Escalation</a>
                      <a href="/viewlokpalcases.html" class="dashboard-nav-dropdown-item">View Lokpal</a>
                      <a href="/viewcompletedcases.html" class="dashboard-nav-dropdown-item">View Completed</a>
+                     <a href="/viewholdcases.html" class="dashboard-nav-dropdown-item">View Hold</a>
                      <a href="/viewsearchcases.html" class="dashboard-nav-dropdown-item">Search Case</a>
                     
                                        <!-- 
@@ -853,7 +854,7 @@ function populatereport(refnumber)
 
               document.querySelector('[data-info="reportoperationofficer"]').textContent =response[0].operationOfficer ? response[0].operationOfficer : "";
 
-              document.querySelector('[data-info="reportmedicalofficer"]').textContent =response[0].operationOfficer ? response[0].operationOfficer : "";
+              document.querySelector('[data-info="reportmedicalofficer"]').textContent =response[0].medicalOpinionOfficer ? response[0].operationOfficer : "";
 
               document.querySelector('[data-info="reportclaimtype"]').textContent =response[0].claimType ? response[0].claimType : "";
 
