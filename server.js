@@ -232,7 +232,8 @@ const dataSchema = new mongoose.Schema({
   isCompleted: String,
   caseCompletionRemark: String,
   caseCompletionType: String,
-
+  caseResult:String,
+  caseSettlementAmount: String,
 
   // Add stages of case here based on thier colour coding
   isEmailGenerated: String,
@@ -870,6 +871,30 @@ app.post('/api/addescalationdetails', async(req, res) => {
   } 
 
 });
+
+app.post('/api/addcasesettlementdetails', async(req, res) => {
+  try{
+
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ caseResult:req.body.caseResult, caseSettlementAmount: req.body.caseSettlementAmount }});
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not save case settlement details', refnum:req.body.casereferenceNumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error saving case settlement details' });
+  } 
+
+});
+
 
 
 

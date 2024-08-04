@@ -11,6 +11,44 @@
 
   <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.4/dist/quill.snow.css" rel="stylesheet" />
   <style>
+
+.btn_special {
+      background: #3498db;
+      background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
+      background-image: -moz-linear-gradient(top, #3498db, #2980b9);
+      background-image: -ms-linear-gradient(top, #3498db, #2980b9);
+      background-image: -o-linear-gradient(top, #3498db, #2980b9);
+      background-image: linear-gradient(to bottom, #3498db, #2980b9);
+      font-family: Arial;
+      color: #ffffff;
+      font-size: 16px;
+      padding: 10px 20px 10px 20px;
+      text-decoration: none;
+
+      float: left;
+      width: 150px;
+      list-style-type: none;
+      margin-left: 10px;
+    }
+
+    .btn_special:hover {
+      background: #3cb0fd;
+      background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+      background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+      background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+      background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+      background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+      text-decoration: none;
+    }
+
+    
+#uploadingdiv {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
     body {
       background-color: #343a40;
       color: #fff;
@@ -368,8 +406,21 @@ div.dataTables_filter {
         <div class='dashboard-content' style="background-image: url('/images/background20.jpg');  background-repeat: repeat;  background-size: cover;">
           <div class="container mt-5">
             <div class="row justify-content-center">
+              <h2 class="text-center mb-4">Completed Cases</h2>
+              <ul>
+                <li class="btn_special"><a href="#" class="all">All</a></li>
+                <li class="btn_special"><a href="#" >Live</a></li>
+                <li class="btn_special"><a href="#">Draft Query</a></li>
+                <li class="btn_special"><a href="#">Gist Generated</a></li>
+                <li class="btn_special"><a href="#">Pending Draft</a></li>
+                <li class="btn_special"><a href="#">Reimbursement</a></li>
+                <!--
+                    <li class="btn_special"><a href="#">Approved</a></li>
+                    <li class="btn_special"><a href="#">Rejected</a></li>
+                -->
+              </ul>
               <div class="col-lg-12">
-                <h2 class="text-center mb-4">Completed Cases</h2>
+               
                 <div class="table-responsive">
                   <table id ="dataTable" class="table table-dark table-bordered">
                     <thead>
@@ -385,6 +436,10 @@ div.dataTables_filter {
                         <th>Claim Number</th>
                         <th>Claim Amount</th> 
                         <th>Completion Type</th>
+                        <th>Result</th>
+                        <th>Settlement Amount</th>
+                        <th>Action</th>
+                        <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
                       </tr>
@@ -805,6 +860,43 @@ div.dataTables_filter {
                   </div>
                 </div>
 
+                <div id="popup4"  class="overlay">
+                  <div class="popup" style="width:45%">
+                    <h2 >Upload document-</h2>
+
+                    <form id="DocUploadForm" enctype="multipart/form-data">
+                      <div class="col-sm-6">
+                        <label for="pdf-input" class="form-label">Documents</label>
+                          <input type="file" class="form-control" id="pdf-input"  multiple>
+                      </div>
+                      <br>        
+                      <br>
+                      <button type="submit" onclick="uploadDocsInDB()" class="btn btn-primary btn-sm">Upload</button>
+                    </form>
+
+                    <a class="close" href="#close">&times;</a>
+                  </div>
+                </div>
+
+
+                <div id="popup10" class="overlay">
+                  <div class="popup" style ="width:25%">
+                      <h2 id="remarkcontent">Add Case Details</h2>
+                      <form id="remarkForm">
+                              <label for="status">Final Case Status</label>
+                              <select class="form-control" id="status" required>
+                                  <option value="" disabled selected>Select status</option>
+                                  <option value="WON">Won</option>
+                                  <option value="LOST">Lost</option>
+                              </select>
+                              <label for="settlementAmount">Settlement Amount</label>
+                              <input type="text" class="form-control" id="settlementAmount" placeholder="Enter settlement amount" value="0" disabled>
+                          <button type="button" class="btn btn-primary" style="margin-top: 10px;" onclick="saveDetails()">Save Details</button>
+                          <a class="close" href="#close">&times;</a>
+                      </form>
+                  </div>
+              </div>
+
                 <div id="popup7" class="overlay">
                   <div class="popup">
                     <h2  id = "remarkcontent">Move to Prospect-</h2>
@@ -816,6 +908,10 @@ div.dataTables_filter {
                     
                     <a class="close" href="#close">&times;</a>
                   </div>
+                </div>
+
+                <div id="uploadingdiv" style="display: none;">
+                  <img src="/images/uploading3.webp">
                 </div>
 
 
@@ -849,6 +945,50 @@ const toolbarOptions =['bold', 'italic', 'underline'];
     toolbar: toolbarOptions
   }
   });
+
+
+  function uploadDocsInDB()
+{
+
+  $('#uploadingdiv').show();
+
+  var formData = new FormData();
+        formData.append('casereferenceNumber', localStorage['addRemarkForRefNumber']);
+       
+        $.each($('#pdf-input')[0].files, function(i, file) {
+          formData.append('pdfFile', file);
+      });
+
+      $.ajax({
+          url: '/api/uploadadditionaldocs',
+          type: 'POST',
+          contentType: false,
+          processData: false,
+          data: formData,
+          success: function (response) {
+            if(response.message == "success")
+              {
+                //window.location.href = "/dashboard.html"
+                $('#uploadingdiv').hide({done: function() { alert("Additional docs uploaded."); } });
+               // alert("Case added reference number- " + response.referencenumber);
+                document.getElementById('DocUploadForm').reset();
+              }
+              else{
+                $('#uploadingdiv').hide({done: function() { alert(response.error); } });
+               // alert(response.message);
+                document.getElementById('DocUploadForm').reset();
+                //document.getElementById('loginForm').reset();
+              }
+          },
+          error: function (error) {
+            $('#uploadingdiv').hide({done: function() { alert("Failed to upload docs!!!"); } });
+            document.getElementById('DocUploadForm').reset();
+           // alert("Failed to add case!!!");
+            // Display an error message to the user
+          }
+        });
+
+}
 
 
   
@@ -1199,6 +1339,35 @@ function viewremark(referencenumber) {
 
 
 
+  function saveDetails() {
+        var status = $('#status').val();
+        var settlementAmount = $('#settlementAmount').val();
+        if (!status) {
+            alert('Please select a status.');
+            return;
+        }
+
+        $.ajax({
+            url: '/api/addcasesettlementdetails', // Replace with your API endpoint
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+              casereferenceNumber:  localStorage['addRemarkForRefNumber'],
+              caseResult: status,
+              caseSettlementAmount: settlementAmount
+            }),
+            success: function(response) {
+                alert('Details saved successfully.');
+                $('#popup9').fadeOut();
+                $('#remarkForm')[0].reset();
+                window.location.href = "/viewcompletedcases.html";
+            },
+            error: function() {
+                alert('Failed to save details.');
+            }
+        });
+    }
+
    
 function movetolive(referencenumber) {
         // Code to generate card
@@ -1211,6 +1380,15 @@ function movetolive(referencenumber) {
 
       
     $(document).ready(function () {
+
+
+      $('#status').change(function() {
+            if ($(this).val() === 'WON') {
+                $('#settlementAmount').prop('disabled', false);
+            } else {
+                $('#settlementAmount').prop('disabled', true).val('0');
+            }
+        });
 
 
       $.ajax({
@@ -1332,6 +1510,18 @@ function movetolive(referencenumber) {
             var completeddate = moment(data[i].completedDate);
             var prospectcasedate = moment(data[i].prospectDate);
             var caseage  =    completeddate.diff(prospectcasedate, 'days');
+            var caseResult = "Not Availble";
+            var caseSettlementamount = "Not Availble";
+
+            if(data[i].caseResult)
+            {
+              caseResult = data[i].caseResult;
+            }
+            if(data[i].caseSettlementAmount)
+            {
+              caseSettlementamount = data[i].caseSettlementAmount;
+            }
+
             // You could also use an ajax property on the data table initialization
             $('#dataTable').dataTable().fnAddData( [
             data[i].casereferenceNumber,
@@ -1345,8 +1535,12 @@ function movetolive(referencenumber) {
               data[i].claimNumber,
               data[i].claimAmount,
               data[i].caseCompletionType,
+              `${caseResult}`,
+              `${caseSettlementamount}`,
+              `<a href="#popup10"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >Add Details</button> </a>`,
               `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
               `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')">View Documents</button> </a>`,
+              `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
             ]);
           }
         }
@@ -1355,6 +1549,39 @@ function movetolive(referencenumber) {
 
 
     });
+
+
+    //for  filter buttons
+
+    $('ul').on('click', 'a', function() {
+      var nameFilter = $(this).text()
+      console.log(nameFilter)
+
+        switch (nameFilter)
+        {
+          case "Hearing":
+          case "Escalation Settlement":
+          case "Consent":
+          $("#dataTable").DataTable()
+          .columns(10)
+          .search($(this).text())
+          .draw();
+            break;
+
+        }
+
+      });
+
+      $('ul').on('click', 'a.all', function() {
+        $("#dataTable").DataTable()
+        .search('')
+        .columns(10)
+        .search('')
+        .draw();
+      });
+
+    // filter buttons end
+
   </script>
 </body>
 
