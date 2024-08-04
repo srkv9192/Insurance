@@ -206,6 +206,7 @@ const dataSchema = new mongoose.Schema({
   isPendingAuth: String,
   isLive: String,
   isHold: String,
+  isReimbursement: String,
   isInMedicalOpinion: String,
   legalCollected: String,
   pdcCollected: String,
@@ -782,11 +783,33 @@ app.post('/api/movetoescalation', async(req, res) => {
 
 app.post('/api/movetohold', async(req, res) => {
   try{
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ caseRemarks:req.body.caseRemarks}, $set:{ newCaseStatus: "Hold", isHold: "true", isLive: "false"}});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ caseRemarks:req.body.caseRemarks}, $set:{ newCaseStatus: "Hold", isHold: "true", isLive: "false", isInEscalationStage: "false", isInLokpalStage : "false"}});
 
       if(newData == null)
       {
         res.json({ message: 'Could not move case to hold', refnum:req.body.referencenumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding remark' });
+  } 
+
+});
+
+app.post('/api/movetoreimbursement', async(req, res) => {
+  try{
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ caseRemarks:req.body.caseRemarks}, $set:{ newCaseStatus: "Reimbursement", isReimbursement: "true"}});
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not move case to Reimbursement', refnum:req.body.referencenumber});
       }
       else
       {

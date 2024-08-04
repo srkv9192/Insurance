@@ -249,14 +249,31 @@
                 <h2 class="text-center mb-4">Delete case</h2>
                 <div class="frame" style=" color:black;display:flex ;background-image: url('/images/background18.jpg');  font-family: monospace;font-size: large; background-size: cover;">
 
-                  <form id="loginForm">
-                    <div class="mb-3">
-                      <label for="caseid" class="form-label">Case ID</label>
-                      <input type="text" class="form-control" id="caseid" placeholder="Enter case id">
+                  <div class="container mt-3">
+                    <form id="caseForm">
+                        <div class="mb-3">
+                            <label for="caseid" class="form-label">Case ID</label>
+                            <input type="text" class="form-control" id="caseid" placeholder="Enter case id" required>
+                        </div>
+                        <button type="button" id="getDetails" class="btn btn-primary">Get Details</button>
+                        <button type="button" id="deleteCase" class="btn btn-danger">Delete Case</button>
+                    </form>
+                
+                    <div id="caseDetails" class="mt-4">
+                        <h4>Case Details</h4>
+                        <p><strong>Patient Name:</strong> <span id="patientName"></span></p>
+                        <p><strong>Patient Phone:</strong> <span id="patientPhone"></span></p>
+                        <p><strong>Claim Amount:</strong> <span id="claimAmount"></span></p>
+                        <p><strong>Case of:</strong> <span id="caseOfPerson"></span></p>
+                        <p><strong>Manager of:</strong> <span id="managerName"></span></p>
+                        <p><strong>CP:</strong> <span id="cpName"></span></p>
                     </div>
-                    <button type="submit" class="btn btn-primary">Delete case</button>
-                  </form>
                 </div>
+
+                </div>
+
+             
+
 
               </div>
             </div>
@@ -273,6 +290,71 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     $(document).ready(function () {
+
+
+
+      $('#getDetails').click(function() {
+        const caseId = $('#caseid').val();
+        if (caseId) {
+            $.ajax({
+                url: '/api/getcasedetailbyref', // Replace with your actual endpoint
+                method: 'GET',
+                data: { casereferenceNumber: caseId },
+                success: function(response) {
+
+                  if(response[0])
+                  {
+                      // Assuming response is a JSON object with the details
+                    $('#patientName').text(response[0].patientName);
+                    $('#patientPhone').text(response[0].patientMobile);
+                    $('#claimAmount').text(response[0].claimAmount);
+                    $('#caseOfPerson').text(response[0].caseHandler);
+                    $('#managerName').text(response[0].managerName);
+                    $('#cpName').text(response[0].cpName);
+                  }
+                  else{
+                      alert("Case ID not found!!!")
+                  }
+                   
+
+                },
+                error: function(xhr, status, error) {
+                    alert('Error fetching case details.');
+                }
+            });
+        } else {
+            alert('Please enter a Case ID.');
+        }
+    });
+
+
+
+    $('#deleteCase').click(function() {
+        const caseId = $('#caseid').val();
+        if (caseId) {
+            $.ajax({
+                url: '/api/deletecase', // Replace with your actual endpoint
+                method: 'POST',
+                data: { casereferenceNumber: caseId },
+                success: function(response) {
+                    alert('Case deleted successfully.');
+                    // Optionally, clear the case details from the form
+                    $('#patientName').text('');
+                    $('#patientPhone').text('');
+                    $('#claimAmount').text('');
+                    $('#caseOfPerson').text('');
+                    $('#caseid').val('');
+                    $('#managerName').text('');
+                    $('#cpName').text('');
+                },
+                error: function(xhr, status, error) {
+                    alert('Error deleting case.');
+                }
+            });
+        } else {
+            alert('Please enter a Case ID.');
+        }
+    });
 
       $.ajax({
         url: '/api/whoami',
@@ -386,6 +468,8 @@
             // Display an error message to the user
           }
         });
+
+
       });
     });
   </script>

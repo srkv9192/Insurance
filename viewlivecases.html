@@ -39,6 +39,7 @@
       background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
       text-decoration: none;
     }
+    
     li a {
       color: blue;
       text-decoration: none;
@@ -411,6 +412,8 @@ div.dataTables_filter {
                 <li class="btn_special"><a href="#" >Live</a></li>
                 <li class="btn_special"><a href="#">Draft Query</a></li>
                 <li class="btn_special"><a href="#">Gist Generated</a></li>
+                <li class="btn_special"><a href="#">Pending Draft</a></li>
+                <li class="btn_special"><a href="#">Reimbursement</a></li>
                 <!--
                     <li class="btn_special"><a href="#">Approved</a></li>
                     <li class="btn_special"><a href="#">Rejected</a></li>
@@ -435,6 +438,7 @@ div.dataTables_filter {
                         <th>Operation Officer</th>
                         <th>Medical Officer</th>
                         <th>Case Status</th>
+                        <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
@@ -929,6 +933,17 @@ div.dataTables_filter {
                   </div>
                 </div>
 
+                <div id="popup11" class="overlay" >
+                  <div class="popup" style ="width:30%">
+                    <h2  id = "remarkcontent">Move to Reimbursement-</h2>
+                    
+                    <input type="text" placeholder="Add hold reimbursement remark here" id="reimbursementremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                    <button type="submit" onclick="addreimbursementremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
+                    
+                    <a class="close" href="#close">&times;</a>
+                  </div>
+                </div>
+
 
                 
                 <div id="popup9" class="overlay" >
@@ -1085,7 +1100,65 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
 }
 
 
-  
+ 
+
+function addreimbursementremarkInDB() {
+
+if( document.getElementById("reimbursementremark").value == "")
+{
+  alert("Empty remark not allowed!")
+  return;
+}
+
+
+const today = new Date();
+const yyyy = today.getFullYear();
+let mm = today.getMonth() + 1; // Months start at 0!
+let dd = today.getDate();
+
+if (dd < 10) dd = '0' + dd;
+if (mm < 10) mm = '0' + mm;
+
+const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+  $.ajax({
+    url: '/api/movetoreimbursement',
+    type: 'POST',
+    contentType: "application/x-www-form-urlencoded",
+    data: {
+      referencenumber: localStorage['addRemarkForRefNumber'],
+      caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - [Reimbursement Remark] "+ document.getElementById("reimbursementremark").value
+    },
+    success: function (response) {
+      if(response.message == "success")
+        {
+         // window.location.href = "/index.html"
+          //localStorage['userID'] = username;
+          alert("Case moved to hold phase!")
+          localStorage.removeItem("addRemarkForRefNumber");
+
+          document.getElementById("reimbursementremark").value ="";
+          window.location.href = "/viewlivecases.html";
+          
+        }
+        else{
+          alert("Error saving remark!")
+          //document.getElementById('loginForm').reset();
+        }
+      //alert("login success");
+      // Redirect to the dashboard or perform any other actions
+    },
+    error: function (error) {
+      document.getElementById('loginForm').reset();
+      alert("login failed");
+      // Display an error message to the user
+    }
+  });
+
+}
+
+
+
 
   function addremarkInDB() {
 
@@ -1986,6 +2059,7 @@ function movetolive(referencenumber) {
               `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
               `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
               `<a href="#popup10"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Hold</button> </a>`,
+              `<a href="#popup11"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Reimbursement</button> </a>`,
             ]);
           }
         }
@@ -2009,6 +2083,8 @@ function movetolive(referencenumber) {
           case "Live":
           case "Draft Query":
           case "Gist Generated":
+          case "Pending Draft":
+          case "Reimbursement":
           $("#dataTable").DataTable()
           .columns(12)
           .search($(this).text())
