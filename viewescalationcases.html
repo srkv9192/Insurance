@@ -426,6 +426,7 @@ div.dataTables_filter {
                         <th>Complainant Name</th>
                         <th>Manager Name</th>
                         <th>CP Name</th>
+                        <th>Company</th>
                         <th>Claim Number</th>
                         <th>Claim Amount</th> 
                         <th>Company</th> 
@@ -433,6 +434,7 @@ div.dataTables_filter {
                         <th>Escalation Date</th>
                         <th>Case Email</th>
                         <th>Password</th>
+                        <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
@@ -832,6 +834,17 @@ div.dataTables_filter {
                   </div>
                 </div>
 
+                <div id="popup13" class="overlay" >
+                  <div class="popup" style ="width:35%">
+                    <h2  id = "remarkcontent">Move to Escalation Query-</h2>
+                    
+                    <input type="text" placeholder="Add hold remark here" id="escalationqueryremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                    <button type="submit" onclick="addescalationqueryremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
+                    
+                    <a class="close" href="#close">&times;</a>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
@@ -932,6 +945,64 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
     });
   
 }
+
+
+
+function addescalationqueryremarkInDB() {
+
+if( document.getElementById("escalationqueryremark").value == "")
+{
+  alert("Empty remark not allowed!")
+  return;
+}
+
+
+const today = new Date();
+const yyyy = today.getFullYear();
+let mm = today.getMonth() + 1; // Months start at 0!
+let dd = today.getDate();
+
+if (dd < 10) dd = '0' + dd;
+if (mm < 10) mm = '0' + mm;
+
+const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+  $.ajax({
+    url: '/api/movetoescalationquery',
+    type: 'POST',
+    contentType: "application/x-www-form-urlencoded",
+    data: {
+      referencenumber: localStorage['addRemarkForRefNumber'],
+      caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - [Escalation Query Remark] "+ document.getElementById("escalationqueryremark").value
+    },
+    success: function (response) {
+      if(response.message == "success")
+        {
+         // window.location.href = "/index.html"
+          //localStorage['userID'] = username;
+          alert("Case moved to escalation query!")
+          localStorage.removeItem("addRemarkForRefNumber");
+
+          document.getElementById("escalationqueryremark").value ="";
+          window.location.href = "/viewescalationcases.html";
+          
+        }
+        else{
+          alert("Error saving remark!")
+          //document.getElementById('loginForm').reset();
+        }
+      //alert("login success");
+      // Redirect to the dashboard or perform any other actions
+    },
+    error: function (error) {
+      document.getElementById('loginForm').reset();
+      alert("login failed");
+      // Display an error message to the user
+    }
+  });
+
+}
+
 
 
 
@@ -1539,6 +1610,7 @@ function populatereport(refnumber)
               data[i].complainantName,
               data[i].managerName,
               data[i].cpName,
+              data[i].insuranceCompanyName,
               data[i].claimNumber,
               data[i].claimAmount,
               data[i].insuranceCompanyName,
@@ -1555,6 +1627,7 @@ function populatereport(refnumber)
               `<a href="#popup7"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}', '${casestatus}')" >Move to Lokpal</button> </a>`,
               `<a href="#popup8"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}', '${casestatus}')" >Move to Completed</button> </a>`, 
               `<a href="#popup12"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}', '${casestatus}')" >Move to Hold</button> </a>`,
+              `<a href="#popup13"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}', '${casestatus}')" >Move to Escalation Query</button> </a>`,
 
             ]);
           }
@@ -1650,8 +1723,9 @@ error: function (error) {
         {
           case "Escalated":
           case "Escalation Pending":
+          case "Escalation Query":
           $("#dataTable").DataTable()
-          .columns(11)
+          .columns(12)
           .search($(this).text())
           .draw();
             break;
@@ -1663,7 +1737,7 @@ error: function (error) {
       $('ul').on('click', 'a.all', function() {
         $("#dataTable").DataTable()
         .search('')
-        .columns(11)
+        .columns(12)
         .search('')
         .draw();
       });

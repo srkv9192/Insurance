@@ -440,6 +440,8 @@ div.dataTables_filter {
                         <th>Complainant Name</th>
                         <th>Manager Name</th>
                         <th>CP Name</th>
+                        <th>Operation Officer</th>
+                        <th>Company</th>
                         <th>Claim Number</th>
                         <th>Claim Amount</th> 
                         <th>Email</th> 
@@ -864,6 +866,11 @@ div.dataTables_filter {
                             <div class="col-sm-6">
                               <label for="hearing-date" class="form-label">Hearing Date</label>
                               <input type="date" dateFormat: "dd/mm/yy" class="form-control" id="hearing-date"  >
+                            </div>
+
+                            <div class="col-sm-6">
+                              <label for="detailremark" class="form-label">Add Remark</label>
+                              <input type="text" class="form-control" id="detailremark"  required >
                             </div>
 
                           </div>
@@ -1407,6 +1414,7 @@ function addremark(referencenumber) {
         var lokpalComplaintNumber = $('#lokpal-complaint-number').val();
         var annexure6Date = $('#annexure-six-date').val();
         var hearingDate = $('#hearing-date').val();
+        var detailremark = $('#detailremark').val();
 
       if((bhpNumber == "") && (!bhpDate ) && ( !annexure5Date ) && (annexure5number == "") && (lokpalComplaintNumber =="") && (!annexure6Date ) && ( !hearingDate))
       {
@@ -1434,6 +1442,17 @@ function addremark(referencenumber) {
       }
 
 
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      let mm = today.getMonth() + 1; // Months start at 0!
+      let dd = today.getDate();
+
+      if (dd < 10) dd = '0' + dd;
+      if (mm < 10) mm = '0' + mm;
+
+      const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+
           $.ajax({
           url: '/api/addlokpaldata',
           type: 'POST',
@@ -1448,6 +1467,7 @@ function addremark(referencenumber) {
             lokpalComplaintDate: annexure6Date,
             dateOfLokpalHearing: hearingDate,
             newCaseStatus: lokpalcasestatus,
+            caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] "+ detailremark
           },
           success: function (response) {
             if(response.message == "success")
@@ -1813,6 +1833,8 @@ $.ajax({
               data[i].complainantName,
               data[i].managerName,
               data[i].cpName,
+              data[i].operationOfficer,
+              data[i].insuranceCompanyName,
               data[i].claimNumber,
               data[i].claimAmount,
               data[i].caseEmail,
@@ -1929,7 +1951,7 @@ $('ul').on('click', 'a', function() {
           case "Annexure 6 Received":
           case "Hearing":
           $("#dataTable").DataTable()
-          .columns(15)
+          .columns(17)
           .search($(this).text())
           .draw();
             break;
@@ -1941,7 +1963,7 @@ $('ul').on('click', 'a', function() {
       $('ul').on('click', 'a.all', function() {
         $("#dataTable").DataTable()
         .search('')
-        .columns(15)
+        .columns(17)
         .search('')
         .draw();
       });

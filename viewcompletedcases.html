@@ -436,6 +436,7 @@ div.dataTables_filter {
                         <th>Complainant Name</th>
                         <th>Manager Name</th>
                         <th>CP Name</th>
+                        <th>Company</th>
                         <th>Claim Number</th>
                         <th>Claim Amount</th> 
                         <th>Completion Type</th>
@@ -1535,6 +1536,7 @@ function movetolive(referencenumber) {
               data[i].complainantName,
               data[i].managerName,
               data[i].cpName,
+              data[i].insuranceCompanyName,
               data[i].claimNumber,
               data[i].claimAmount,
               data[i].caseCompletionType,
@@ -1566,7 +1568,7 @@ function movetolive(referencenumber) {
           case "Escalation Settlement":
           case "Consent":
           $("#dataTable").DataTable()
-          .columns(10)
+          .columns(11)
           .search($(this).text())
           .draw();
             break;
@@ -1578,7 +1580,7 @@ function movetolive(referencenumber) {
       $('ul').on('click', 'a.all', function() {
         $("#dataTable").DataTable()
         .search('')
-        .columns(10)
+        .columns(11)
         .search('')
         .draw();
       });

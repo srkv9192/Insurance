@@ -414,6 +414,7 @@ div.dataTables_filter {
                 <li class="btn_special"><a href="#">Gist Generated</a></li>
                 <li class="btn_special"><a href="#">Pending Draft</a></li>
                 <li class="btn_special"><a href="#">Reimbursement</a></li>
+                <li class="btn_special"><a href="#">Pending Doc</a></li>
                 <!--
                     <li class="btn_special"><a href="#">Approved</a></li>
                     <li class="btn_special"><a href="#">Rejected</a></li>
@@ -433,11 +434,13 @@ div.dataTables_filter {
                         <th>Complainant Name</th>
                         <th>Manager Name</th>
                         <th>CP Name</th>
+                        <th>Company</th>
                         <th>Claim Number</th>
                         <th>Claim Amount</th>
                         <th>Operation Officer</th>
                         <th>Medical Officer</th>
                         <th>Case Status</th>
+                        <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
@@ -944,7 +947,16 @@ div.dataTables_filter {
                   </div>
                 </div>
 
-
+                <div id="popup12" class="overlay" >
+                  <div class="popup" style ="width:30%">
+                    <h2  id = "remarkcontent">Move to Pending Docs-</h2>
+                    
+                    <input type="text" placeholder="Add pending doc remark" id="pendingdocremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                    <button type="submit" onclick="addpendingdocremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
+                    
+                    <a class="close" href="#close">&times;</a>
+                  </div>
+                </div>
                 
                 <div id="popup9" class="overlay" >
                   <div class="popup" style ="width:45%">
@@ -1100,7 +1112,65 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
 }
 
 
- 
+
+function addpendingdocremarkInDB() {
+
+if( document.getElementById("pendingdocremark").value == "")
+{
+  alert("Empty remark not allowed!")
+  return;
+}
+
+
+const today = new Date();
+const yyyy = today.getFullYear();
+let mm = today.getMonth() + 1; // Months start at 0!
+let dd = today.getDate();
+
+if (dd < 10) dd = '0' + dd;
+if (mm < 10) mm = '0' + mm;
+
+const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+  $.ajax({
+    url: '/api/movetopendingdoc',
+    type: 'POST',
+    contentType: "application/x-www-form-urlencoded",
+    data: {
+      referencenumber: localStorage['addRemarkForRefNumber'],
+      caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - [Pending Doc Remark] "+ document.getElementById("pendingdocremark").value
+    },
+    success: function (response) {
+      if(response.message == "success")
+        {
+         // window.location.href = "/index.html"
+          //localStorage['userID'] = username;
+          alert("Case moved to Pending Doc!")
+          localStorage.removeItem("addRemarkForRefNumber");
+
+          document.getElementById("pendingdocremark").value ="";
+          window.location.href = "/viewlivecases.html";
+          
+        }
+        else{
+          alert("Error saving remark!")
+          //document.getElementById('loginForm').reset();
+        }
+      //alert("login success");
+      // Redirect to the dashboard or perform any other actions
+    },
+    error: function (error) {
+      document.getElementById('loginForm').reset();
+      alert("login failed");
+      // Display an error message to the user
+    }
+  });
+
+}
+
+
+
+
 
 function addreimbursementremarkInDB() {
 
@@ -1134,7 +1204,7 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
         {
          // window.location.href = "/index.html"
           //localStorage['userID'] = username;
-          alert("Case moved to hold phase!")
+          alert("Case moved to reimbursement phase!")
           localStorage.removeItem("addRemarkForRefNumber");
 
           document.getElementById("reimbursementremark").value ="";
@@ -2047,6 +2117,7 @@ function movetolive(referencenumber) {
               data[i].complainantName,
               data[i].managerName,
               data[i].cpName,
+              data[i].insuranceCompanyName,
               data[i].claimNumber,
               data[i].claimAmount,
               data[i].operationOfficer,
@@ -2060,6 +2131,7 @@ function movetolive(referencenumber) {
               `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
               `<a href="#popup10"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Hold</button> </a>`,
               `<a href="#popup11"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Reimbursement</button> </a>`,
+              `<a href="#popup12"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to PendingDocs</button> </a>`,
             ]);
           }
         }
@@ -2085,8 +2157,9 @@ function movetolive(referencenumber) {
           case "Gist Generated":
           case "Pending Draft":
           case "Reimbursement":
+          case "Pending Doc":
           $("#dataTable").DataTable()
-          .columns(12)
+          .columns(13)
           .search($(this).text())
           .draw();
             break;
@@ -2098,7 +2171,7 @@ function movetolive(referencenumber) {
       $('ul').on('click', 'a.all', function() {
         $("#dataTable").DataTable()
         .search('')
-        .columns(12)
+        .columns(13)
         .search('')
         .draw();
       });

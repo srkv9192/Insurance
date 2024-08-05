@@ -59,11 +59,11 @@ const port = process.env.PORT || 80
 //});
 
 
+
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
 
 /*
 
@@ -580,7 +580,7 @@ app.post('/api/uploaddraftdocs', upload.array('pdfFile', 10), async (req, res) =
 
 app.post('/api/addtcaseremark', async(req, res) => {
   try{
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ caseRemarks:req.body.caseRemarks}});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber},  {$push:{ caseRemarks:req.body.caseRemarks}});
 
       if(newData == null)
       {
@@ -804,6 +804,30 @@ app.post('/api/movetohold', async(req, res) => {
 
 });
 
+
+
+app.post('/api/movetoescalationquery', async(req, res) => {
+  try{
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ caseRemarks:req.body.caseRemarks}, $set:{ newCaseStatus: "Escalation Query"}});
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not move case to escalation query', refnum:req.body.referencenumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding remark' });
+  } 
+
+});
+
 app.post('/api/movetoreimbursement', async(req, res) => {
   try{
       const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ caseRemarks:req.body.caseRemarks}, $set:{ newCaseStatus: "Reimbursement", isReimbursement: "true"}});
@@ -811,6 +835,28 @@ app.post('/api/movetoreimbursement', async(req, res) => {
       if(newData == null)
       {
         res.json({ message: 'Could not move case to Reimbursement', refnum:req.body.referencenumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding remark' });
+  } 
+
+});
+
+app.post('/api/movetopendingdoc', async(req, res) => {
+  try{
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ caseRemarks:req.body.caseRemarks}, $set:{ newCaseStatus: "Pending Doc"}});
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not move case to Pending doc', refnum:req.body.referencenumber});
       }
       else
       {
@@ -1050,7 +1096,7 @@ app.post('/api/addlivegistdata', async(req, res) => {
 
 app.post('/api/addlokpaldata', async(req, res) => {
   try{
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ LokpalBHPComplaintNumber:req.body.LokpalBHPComplaintNumber, lokpalBHPComplaintDate:req.body.lokpalBHPComplaintDate, annexure5ComplaintDate:req.body.annexure5ComplaintDate, annexure5ComplaintNumber: req.body.annexure5ComplaintNumber, lokpalComplaintNumber: req.body.lokpalComplaintNumber,  lokpalComplaintDate: req.body.lokpalComplaintDate,  dateOfLokpalHearing: req.body.dateOfLokpalHearing, newCaseStatus: req.body.newCaseStatus}});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber},{$push:{ caseRemarks:req.body.caseRemarks}}, {$set:{ LokpalBHPComplaintNumber:req.body.LokpalBHPComplaintNumber, lokpalBHPComplaintDate:req.body.lokpalBHPComplaintDate, annexure5ComplaintDate:req.body.annexure5ComplaintDate, annexure5ComplaintNumber: req.body.annexure5ComplaintNumber, lokpalComplaintNumber: req.body.lokpalComplaintNumber,  lokpalComplaintDate: req.body.lokpalComplaintDate,  dateOfLokpalHearing: req.body.dateOfLokpalHearing, newCaseStatus: req.body.newCaseStatus}});
 
       if(newData == null)
       {
