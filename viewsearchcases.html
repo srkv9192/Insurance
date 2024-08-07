@@ -1394,8 +1394,10 @@ function movetolive(referencenumber) {
               `<a href="#popup55"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
               `<a href="#popup7"> <button class="btn btn-primary btn-sm" onclick="addremark('${rfno}')">Assign Operation Officer</button> </a>`,
 
-            ]);
+            ], false);
           }
+          // Re-draw the table - you wouldn't want to do it here, but it's an example :-)
+          $('#dataTable').dataTable().fnDraw();
         }
       
 
