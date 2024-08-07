@@ -917,7 +917,9 @@ div.dataTables_filter {
                       <option value="NONE">NONE</option>
                       </select>
 
-                      <br>        
+                      <br> 
+                      <input type="text" placeholder="Add remark here" id="movetopendingdraftremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+    
                       <br>              
                       <button type="submit" onclick="addMedicalOfficerToCase()" class="btn btn-primary btn-sm">Save Officer</button>
                     
@@ -1329,6 +1331,22 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
   
 function addMedicalOfficerToCase() {
 
+  if( document.getElementById("movetopendingdraftremark").value == "")
+  {
+  alert("Empty remark not allowed!!");
+  return;
+ }
+
+ const today = new Date();
+const yyyy = today.getFullYear();
+let mm = today.getMonth() + 1; // Months start at 0!
+let dd = today.getDate();
+
+if (dd < 10) dd = '0' + dd;
+if (mm < 10) mm = '0' + mm;
+
+const formattedToday = dd + '/' + mm + '/' + yyyy;
+
 $.ajax({
 url: '/api/addmedicalofficertocaseandmovetopendingdraft',
 type: 'POST',
@@ -1336,6 +1354,7 @@ contentType: "application/x-www-form-urlencoded",
 data: {
   casereferenceNumber: localStorage['addRemarkForRefNumber'],
   medicalOpinionOfficer: $("#medicalofficer option:selected").text(),
+  caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ document.getElementById("movetopendingdraftremark").value,
 },
 success: function (response) {
   if(response.message == "success")

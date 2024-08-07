@@ -807,7 +807,6 @@ div.dataTables_filter {
                 <div id="popup8" class="overlay">
                   <div class="popup">
                     <h2  id = "remarkcontent">Add Manual Gist- </h2>
-                    <ul id="remarkcontentlist"></ul>
                     
                     <textarea name="text"  placeholder="Add rejection reason" id="rejectionreason" rows="3" cols="60" wrap="soft" maxlength="400" required style="margin-top: 5px;margin-bottom: 5px; overflow:hidden; resize:none;"></textarea>                  
 
@@ -891,11 +890,6 @@ function addremark(referencenumber) {
         // Code to generate card
 
         localStorage['addRemarkForRefNumber'] = referencenumber; 
-
-        let list = document.getElementById("remarkcontentlist");
-
-        // 👇️ Remove all list elements
-        list.innerHTML = '';
 
         $.ajax({
         url: '/api/getcasedetailbyref',
