@@ -426,9 +426,9 @@ div.dataTables_filter {
                 <li class="btn_special"><a href="#" class="all">All</a></li>
                 <li class="btn_special"><a href="#">Lokpal Pending</a></li>
                 <li class="btn_special"><a href="#">Lokpal Registered</a></li>
-                <li class="btn_special"><a href="#">Annexure5 Received</a></li>
+                <li class="btn_special"><a href="#">Annexure5 Pending</a></li>
                 <li class="btn_special"><a href="#">Annexure5 Replied</a></li>
-                <li class="btn_special"><a href="#">Annexure 6 Received</a></li>
+                <li class="btn_special"><a href="#">Annexure 6 Pending</a></li>
                 <li class="btn_special"><a href="#">Annexure 6 Replied</a></li>
                 <li class="btn_special"><a href="#">Hearing</a></li>
               </ul>
@@ -1513,12 +1513,14 @@ function addremark(referencenumber) {
       else if((bhpNumber != "") && (bhpDate) && (annexure5number != "") && (annexure5Date) && (lokpalComplaintNumber ==""))
       {
         //Lokpal Query renamed to Annexure5 Received 
+        //bulk update db using mongosh
+        //db.datas.update({"newCaseStatus": "Annexure 6 Received"},{$set:{"newCaseStatus": "Annexure 6 Pending"}},{multi: true,});
         lokpalcasestatus = "Annexure5 Replied";
       }
       else if((bhpNumber != "") && (bhpDate) && (annexure5number != "") && (lokpalComplaintNumber ==""))
       {
         //Lokpal Query renamed to Annexure5 Received 
-        lokpalcasestatus = "Annexure5 Received";
+        lokpalcasestatus = "Annexure5 Pending";
       }
       else if((bhpNumber != "") && (bhpDate) && (lokpalComplaintNumber !="") && (hearingDate))
       {
@@ -1530,10 +1532,8 @@ function addremark(referencenumber) {
       }
       else if((bhpNumber != "") && (bhpDate) && (lokpalComplaintNumber !=""))
       {
-        lokpalcasestatus = "Annexure 6 Received";
+        lokpalcasestatus = "Annexure 6 Pending";
       }
-
-
 
       const today = new Date();
       const yyyy = today.getFullYear();
@@ -2041,10 +2041,10 @@ $('ul').on('click', 'a', function() {
         {
           case "Lokpal Pending":
           case "Lokpal Registered":
-          case "Annexure5 Received":
+          case "Annexure5 Pending":
           case "Annexure5 Replied":
           case "Annexure 6 Replied":
-          case "Annexure 6 Received":
+          case "Annexure 6 Pending":
           case "Hearing":
           $("#dataTable").DataTable()
           .columns(17)
