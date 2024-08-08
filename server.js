@@ -64,7 +64,6 @@ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS
   useUnifiedTopology: true,
 });
 
-
 /*
 
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
@@ -2983,6 +2982,9 @@ app.post('/api/whoami', async(req,res) => {
   }
   else if(req.session.userId && (req.session.userType == 'operation')){
     res.json({message : 'operation', username : req.session.userName})
+  }
+  else if(req.session.userId && (req.session.userType == 'advocate')){
+    res.json({message : 'advocate', username : req.session.userName})
   }
   else
      res.json({message : 'invalid'})

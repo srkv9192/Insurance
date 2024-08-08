@@ -182,6 +182,19 @@
            </div>
 
          </div>
+         <div id="showtoadvocate" style="display: none;">
+
+          <div class='dashboard-nav-dropdown show'>
+           <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+            <i class="fas fa-photo-video">
+              </i>Case Menu</a>
+            <div class='dashboard-nav-dropdown-menu'>
+                <a href="/viewpendingdraftcases.html" class="dashboard-nav-dropdown-item">View Pending Draft</a>
+            </div>
+
+         </div>
+
+       </div>
 
          <div id="showtomarketing" style="display: none;">
 
@@ -395,6 +408,14 @@
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showtomedicalofficer").show();
               $("#hideonlogin").hide();
+            }
+            else if(response.message =='advocate')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtoadvocate").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
             }
             else if(response.message =='marketing')
             {
