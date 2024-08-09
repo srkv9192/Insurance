@@ -1385,6 +1385,17 @@ app.get("/api/getmedicalteamlist", async(req, res) => {
   }
 });
 
+app.get("/api/getadvocateteamlist", async(req, res) => {
+  try {
+    // Retrieve all users login from the database
+    const users = await loginSchemaObject.find({userType:"advocate"}, {userName:1, userID:1});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get medical team details' });
+  }
+});
+
 
 app.get("/api/getcounter", async(req, res) => {
   try {

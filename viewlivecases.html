@@ -1751,6 +1751,27 @@ function movetolive(referencenumber) {
       });
 
 
+
+      
+      $.ajax({
+        url: '/api/getadvocateteamlist',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          const optionsSelect = $('#medicalofficer');
+          response.forEach(function (option) {
+            optionsSelect.append($('<option>', {
+              value: option.userID,
+              text: option.userName
+            }));
+          });
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+
       $.ajax({
         url: '/api/getoperationteamlist',
         type: 'GET',
