@@ -611,6 +611,20 @@ div.dataTables_filter {
                               <input type="text" class="form-control" id="case-comment"  >
                             </div>
 
+                            <div class="col-sm-4">
+                              <label for="case-emailid" class="form-label">Email ID</label>
+                              <input type="text" class="form-control" id="case-emailid"  >
+                            </div>
+
+                          </div>
+
+                          <div class="row mb-3">
+
+                            <div class="col-sm-4">
+                              <label for="case-emailpassword" class="form-label">Email Password</label>
+                              <input type="text" class="form-control" id="case-emailpassword"  >
+                            </div>
+
                           </div>
           
                           <div class="text-center">
@@ -633,6 +647,10 @@ div.dataTables_filter {
                           <div style="flex: 1;">
                               <label class="form-label"><strong>Case Number:</strong></label>
                               <span data-info="reportcasenumber">[Case Number]</span>
+                          </div>
+                          <div style="flex: 1;">
+                            <label class="form-label"><strong>Case Handler:</strong></label>
+                            <span data-info="reportcasehandler">[Case Handler]</span>
                           </div>
                         </div>
 
@@ -1528,6 +1546,8 @@ error: function (error) {
             document.getElementById("rejection-date").value = response[0].initialRejectionDate ? moment(new Date(response[0].initialRejectionDate)).utc().format('YYYY-MM-DD') : "";
             document.getElementById("case-comment").value = response[0].gistComments ? response[0].gistComments : "";
 
+            document.getElementById("case-emailid").value = response[0].caseEmail ? response[0].caseEmail : "";
+            document.getElementById("case-emailpassword").value = response[0].caseEmailPassword ? response[0].caseEmailPassword : "";
 
             document.querySelector('[data-info="patientName"]').textContent =response[0].patientName ? response[0].patientName : "";
 
@@ -1614,7 +1634,7 @@ function movetolive(referencenumber) {
             success: function (response) {
               // Populate the options in the select element
               document.querySelector('[data-info="reportcasenumber"]').textContent =response[0].casereferenceNumber ? response[0].casereferenceNumber : "";
-
+              document.querySelector('[data-info="reportcasehandler"]').textContent =response[0].caseHandler ? response[0].caseHandler : "";
               document.querySelector('[data-info="reportinitialcasedate"]').textContent =response[0].prospectDate ? moment(new Date(response[0].prospectDate)).utc().format('MM-DD-YYYY') : "";
 
               document.querySelector('[data-info="reportpatientname"]').textContent =response[0].patientName ? response[0].patientName : "";
@@ -1963,6 +1983,8 @@ function movetolive(referencenumber) {
         var rejectionreason = $('#rejection-reason').val();
         var rejectiondate = $('#rejection-date').val();
         var casecomment = $('#case-comment').val();
+        var caseemail = $('#case-emailid').val();
+        var caseemailpassword = $('#case-emailpassword').val();
 
         var claimtype = $('#claim-type-dropdown').val();
         var behalfOfValue = $('#behalf-of-dropdown').val();
@@ -1992,6 +2014,8 @@ function movetolive(referencenumber) {
             rejectionReason: rejectionreason,
             initialRejectionDate: rejectiondate,
             gistComments: casecomment,
+            caseEmail : caseemail,
+            caseEmailPassword:caseemailpassword,
             hospitalName: hospitalname,
             claimType: claimtype,
             behalfOf: behalfOfValue,

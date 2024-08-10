@@ -533,6 +533,10 @@ div.dataTables_filter {
                               <label class="form-label"><strong>Case Number:</strong></label>
                               <span data-info="reportcasenumber">[Case Number]</span>
                           </div>
+                          <div style="flex: 1;">
+                            <label class="form-label"><strong>Case Handler:</strong></label>
+                            <span data-info="reportcasehandler">[Case Handler]</span>
+                          </div>
                         </div>
 
                           <div style="display: flex; justify-content: space-between;">
@@ -948,7 +952,7 @@ function populatereport(refnumber)
             success: function (response) {
               // Populate the options in the select element
               document.querySelector('[data-info="reportcasenumber"]').textContent =response[0].casereferenceNumber ? response[0].casereferenceNumber : "";
-
+              document.querySelector('[data-info="reportcasehandler"]').textContent =response[0].caseHandler ? response[0].caseHandler : "";
               document.querySelector('[data-info="reportinitialcasedate"]').textContent =response[0].prospectDate ? moment(new Date(response[0].prospectDate)).utc().format('MM-DD-YYYY') : "";
 
               document.querySelector('[data-info="reportpatientname"]').textContent =response[0].patientName ? response[0].patientName : "";

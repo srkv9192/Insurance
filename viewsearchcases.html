@@ -534,6 +534,10 @@ div.dataTables_filter {
                               <label class="form-label"><strong>Case Number:</strong></label>
                               <span data-info="reportcasenumber">[Case Number]</span>
                           </div>
+                          <div style="flex: 1;">
+                            <label class="form-label"><strong>Case Handler:</strong></label>
+                            <span data-info="reportcasehandler">[Case Handler]</span>
+                          </div>
                         </div>
 
                           <div style="display: flex; justify-content: space-between;">
@@ -727,6 +731,47 @@ div.dataTables_filter {
                               <span data-info="reportescalationdate">[None]</span>
                             </div>
                           </div>
+
+                          <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Online BHP Number :</strong></label>
+                              <span data-info="bhp-number">[None]</span>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Lokpal Registration Date : </strong></label>
+                              <span data-info="lokpalregistrationdate">[None]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Annexure 5 :</strong></label>
+                              <span data-info="annexure-5">[None]</span>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Annexure 5 Reply Date : </strong></label>
+                              <span data-info="annexure-5-replydate">[None]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Annexure 6 :</strong></label>
+                              <span data-info="annexure-6">[None]</span>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Annexure 6 Reply Date : </strong></label>
+                              <span data-info="annexure-6-replydate">[None]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Lokpal Hearing Date :</strong></label>
+                              <span data-info="lokpal-hearing-date">[None]</span>
+                            </div>
+                          </div>
+
 
 
                       </div>
@@ -941,7 +986,7 @@ function populatereport(refnumber)
             success: function (response) {
               // Populate the options in the select element
               document.querySelector('[data-info="reportcasenumber"]').textContent =response[0].casereferenceNumber ? response[0].casereferenceNumber : "";
-
+              document.querySelector('[data-info="reportcasehandler"]').textContent =response[0].caseHandler ? response[0].caseHandler : "";
               document.querySelector('[data-info="reportinitialcasedate"]').textContent =response[0].prospectDate ? moment(new Date(response[0].prospectDate)).utc().format('MM-DD-YYYY') : "";
 
               document.querySelector('[data-info="reportpatientname"]').textContent =response[0].patientName ? response[0].patientName : "";
@@ -1008,7 +1053,13 @@ function populatereport(refnumber)
 
               document.querySelector('[data-info="reportescalationdate"]').textContent =response[0].dateofEscalationToInsurer ? moment(new Date(response[0].dateofEscalationToInsurer)).utc().format('MM-DD-YYYY') : "";
 
-
+              document.querySelector('[data-info="lokpalregistrationdate"]').textContent =response[0].lokpalBHPComplaintDate ? moment(new Date(response[0].lokpalBHPComplaintDate)).utc().format('MM-DD-YYYY') : "";
+              document.querySelector('[data-info="annexure-5-replydate"]').textContent =response[0].annexure5ComplaintDate ? moment(new Date(response[0].annexure5ComplaintDate)).utc().format('MM-DD-YYYY') : "";
+              document.querySelector('[data-info="annexure-6-replydate"]').textContent =response[0].lokpalComplaintDate ? moment(new Date(response[0].lokpalComplaintDate)).utc().format('MM-DD-YYYY') : "";
+              document.querySelector('[data-info="lokpal-hearing-date"]').textContent =response[0].dateOfLokpalHearing ? moment(new Date(response[0].dateOfLokpalHearing)).utc().format('MM-DD-YYYY') : "";
+              document.querySelector('[data-info="bhp-number"]').textContent =response[0].LokpalBHPComplaintNumber ? response[0].LokpalBHPComplaintNumber : "";
+              document.querySelector('[data-info="annexure-5"]').textContent =response[0].annexure5ComplaintNumber ? response[0].annexure5ComplaintNumber : "";
+              document.querySelector('[data-info="annexure-6"]').textContent =response[0].lokpalComplaintNumber ? response[0].lokpalComplaintNumber : "";
               
 
               //document.querySelector('[data-info="reportdraft"]').textContent =response[0].rejectionReason ? response[0].rejectionReason : "";

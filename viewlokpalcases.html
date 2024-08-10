@@ -495,6 +495,10 @@ div.dataTables_filter {
                               <label class="form-label"><strong>Case Number:</strong></label>
                               <span data-info="reportcasenumber">[Case Number]</span>
                           </div>
+                          <div style="flex: 1;">
+                            <label class="form-label"><strong>Case Handler:</strong></label>
+                            <span data-info="reportcasehandler">[Case Handler]</span>
+                          </div>
                         </div>
 
                           <div style="display: flex; justify-content: space-between;">
@@ -762,8 +766,8 @@ div.dataTables_filter {
                             </div>
 
                             <div class="col-sm-6">
-                              <label for="date-of-birth" class="form-label">Date of Birth</label>
-                              <input type="date" class="form-control" id="date-of-birth"  >
+                              <label for="escalation-email-password" class="form-label">Email Password</label>
+                              <input type="text" class="form-control" id="escalation-email-password" >
                             </div>
 
                           </div>
@@ -815,8 +819,6 @@ div.dataTables_filter {
 
                           <div class="row mb-3">
 
-                            
-
                             <div class="col-sm-6">
                               <label for="complaint-gist" class="form-label">Gist Of Complaint</label>
                               <input type="text" class="form-control" id="complaint-gist"  >
@@ -828,6 +830,13 @@ div.dataTables_filter {
                             </div>
                         
                           </div>
+
+                        <div class="row mb-3">
+                          <div class="col-sm-6">
+                            <label for="date-of-birth" class="form-label">Date of Birth</label>
+                            <input type="date" class="form-control" id="date-of-birth"  >
+                          </div>
+                        </div>
 
                           <div class="text-center">
                             <button type="submit" class="btn btn-primary">Submit</button>
@@ -1200,7 +1209,7 @@ function populatereport(refnumber)
             success: function (response) {
               // Populate the options in the select element
               document.querySelector('[data-info="reportcasenumber"]').textContent =response[0].casereferenceNumber ? response[0].casereferenceNumber : "";
-
+              document.querySelector('[data-info="reportcasehandler"]').textContent =response[0].caseHandler ? response[0].caseHandler : "";
               document.querySelector('[data-info="reportinitialcasedate"]').textContent =response[0].prospectDate ? moment(new Date(response[0].prospectDate)).utc().format('MM-DD-YYYY') : "";
 
               document.querySelector('[data-info="reportpatientname"]').textContent =response[0].patientName ? response[0].patientName : "";
@@ -1440,6 +1449,8 @@ $('#paymentForm').on('submit', function (event) {
         var policynumber = $('#policy-number').val();
         var claimamount = $('#disputed-amount').val();
         var escalationemail = $('#escalation-email').val();
+        var escalationemailpassword = $('#escalation-email-password').val();
+
         var rejectiondate =  $('#rejection-date').val();
 
         var reconsiderationdate =  $('#reconsideration-date').val();
@@ -1463,6 +1474,7 @@ $('#paymentForm').on('submit', function (event) {
             policyNumber : policynumber,
             claimAmount  : claimamount,
             caseEmail : escalationemail,
+            caseEmailPassword : escalationemailpassword,
             initialRejectionDate : rejectiondate, 
             dateofEscalationToInsurer  : reconsiderationdate ,
             caseGist   : casegist ,
@@ -1667,6 +1679,7 @@ function addlokpaldetails(referencenumber) {
             document.getElementById("policy-number").value = response[0].policyNumber;
             document.getElementById("disputed-amount").value = response[0].claimAmount;
             document.getElementById("escalation-email").value = response[0].caseEmail;
+            document.getElementById("escalation-email-password").value = response[0].caseEmailPassword;
             document.getElementById("rejection-date").value =  moment(new Date(response[0].initialRejectionDate)).utc().format('YYYY-MM-DD') ;
             document.getElementById("reconsideration-date").value =  moment(new Date(response[0].dateofEscalationToInsurer)).utc().format('YYYY-MM-DD') ;
             document.getElementById("complaint-gist").value = response[0].caseGist;  

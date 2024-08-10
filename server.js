@@ -44,7 +44,6 @@ const storage = multer.diskStorage({
 var nodemailer = require('nodemailer');
 
 
-
 const upload = multer({ storage: storage });
 const app = express()
 const port = process.env.PORT || 80
@@ -72,7 +71,6 @@ mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
 });
 
 */
-
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
 app.use(cookieParser());
@@ -94,7 +92,6 @@ const storagegcp = new Storage(
   }
 );
 //const bucketName = storagegcp.bucket(process.env.GCLOUD_STORAGE_BUCKET);
-
 
 
 //for upload in background to gcp
@@ -1072,7 +1069,7 @@ app.post('/api/addpfremark', upload.array('pdfFile', 10), async(req, res) => {
 
 app.post('/api/addlivegistdata', async(req, res) => {
   try{
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ dateOfPolicy:req.body.dateOfPolicy, dateOfAdmission:req.body.dateOfAdmission, dateOfDischarge:req.body.dateOfDischarge, diagnosis: req.body.diagnosis, patientComplainDuringAdmission: req.body.patientComplainDuringAdmission,  rejectionReason: req.body.rejectionReason,  initialRejectionDate: req.body.initialRejectionDate, gistComments: req.body.gistComments, hospitalName: req.body.hospitalName, claimType:  req.body.claimType, policyNumber:  req.body.policyNumber, caseDraft: req.body.caseDraft, lokpalDraft:  req.body.lokpalDraft, behalfOf : req.body.behalfOf,  newCaseStatus: "Gist Generated",  patientName : req.body.patientName , complainantName: req.body.complainantName, claimAmount: req.body.claimAmount, claimNumber:req.body.claimNumber, policyNumber: req.body.policyNumber }});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ dateOfPolicy:req.body.dateOfPolicy, dateOfAdmission:req.body.dateOfAdmission, dateOfDischarge:req.body.dateOfDischarge, diagnosis: req.body.diagnosis, patientComplainDuringAdmission: req.body.patientComplainDuringAdmission,  rejectionReason: req.body.rejectionReason,  initialRejectionDate: req.body.initialRejectionDate, gistComments: req.body.gistComments, hospitalName: req.body.hospitalName, claimType:  req.body.claimType, policyNumber:  req.body.policyNumber, caseDraft: req.body.caseDraft, lokpalDraft:  req.body.lokpalDraft, behalfOf : req.body.behalfOf,  newCaseStatus: "Gist Generated",  patientName : req.body.patientName , complainantName: req.body.complainantName, claimAmount: req.body.claimAmount, claimNumber:req.body.claimNumber, policyNumber: req.body.policyNumber, caseEmail : req.body.caseEmail, caseEmailPassword: req.body.caseEmailPassword,}});
 
       if(newData == null)
       {
@@ -1119,7 +1116,7 @@ app.post('/api/addlokpaldata', async(req, res) => {
 app.post('/api/addlokpaldependencydata', async(req, res) => {
   try{
 
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ patientName:req.body.patientName, patientAddress:req.body.patientAddress, patientPincode:req.body.patientPincode, complainantName: req.body.complainantName, complainantMobile: req.body.complainantMobile,  policyNumber: req.body.policyNumber,  claimAmount: req.body.claimAmount, caseEmail: req.body.caseEmail, initialRejectionDate : req.body.initialRejectionDate, dateofEscalationToInsurer: req.body.dateofEscalationToInsurer, caseGist: req.body.caseGist, patientDOB: req.body.patientDOB }});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ patientName:req.body.patientName, patientAddress:req.body.patientAddress, patientPincode:req.body.patientPincode, complainantName: req.body.complainantName, complainantMobile: req.body.complainantMobile,  policyNumber: req.body.policyNumber,  claimAmount: req.body.claimAmount, caseEmail: req.body.caseEmail, caseEmailPassword: req.body.caseEmailPassword , initialRejectionDate : req.body.initialRejectionDate, dateofEscalationToInsurer: req.body.dateofEscalationToInsurer, caseGist: req.body.caseGist, patientDOB: req.body.patientDOB }});
 
       if(newData == null)
       {
