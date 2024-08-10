@@ -964,15 +964,23 @@ div.dataTables_filter {
     </div>
   </div>
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
   <!-- for saving pdf-->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.4/dist/quill.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdn.datatables.net/2.1.3/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.1/js/dataTables.buttons.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.dataTables.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.print.min.js"></script>
 
 
   <!-- saving pdf end-->
@@ -1859,6 +1867,8 @@ function movetolive(referencenumber) {
         success: function (response) {
           // Populate the options in the select element
             //alert(response.message)
+            var table = new DataTable('#dataTable');
+            table.buttons().disable();
            
             if(response.message =='admin')
             {
@@ -1868,6 +1878,7 @@ function movetolive(referencenumber) {
               $("#hideonlogin").hide();
               localStorage['userName'] = response.username;
               localStorage['userType'] = response.message;
+              table.buttons().enable();
              
             }
             else if(response.message =='operation' )
@@ -1960,12 +1971,12 @@ function movetolive(referencenumber) {
       });
 
       $('#dataTable').DataTable({
-
-        "paging": true,
         "searching": true,
-        "ordering": true,
-        "info": true,
-        "scrollX": true,
+        layout: {
+          topStart: {
+              buttons: ['excel']
+          }
+        },
       });
 
       var table = $('#dataTable').DataTable();
@@ -1983,6 +1994,7 @@ function movetolive(referencenumber) {
           console.log("populating data table...");
           // clear the table before populating it with more data
           $("#dataTable").DataTable().clear();
+          var table = $('#dataTable').DataTable();
           var length = Object.keys(data).length;
           for(var i = 0; i < length; i++) {
             var rfno= data[i].casereferenceNumber
@@ -1994,8 +2006,8 @@ function movetolive(referencenumber) {
           if( localStorage['userName'] === data[i].medicalOpinionOfficer)
           { 
             // You could also use an ajax property on the data table initialization
-            $('#dataTable').dataTable().fnAddData( [
-            data[i].casereferenceNumber,
+
+            var rowData = [ data[i].casereferenceNumber,
             moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),
             `${caseage}`,
             data[i].patientName,
@@ -2016,14 +2028,14 @@ function movetolive(referencenumber) {
               `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}', '${caseststaus}')" >Upload Docs</button> </a>`,
               `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
               `<a href="#popup11"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}', '${caseststaus}')" >Move to Escalation</button> </a>`,
-              `<a href="#popup12"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Hold</button> </a>`,
-            ]);
+              `<a href="#popup12"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Hold</button> </a>`,];
+
+              table.row.add(rowData);
           }
           else if( localStorage['userType'] === 'admin')
           { 
             // You could also use an ajax property on the data table initialization
-            $('#dataTable').dataTable().fnAddData( [
-            data[i].casereferenceNumber,
+            var rowData = [data[i].casereferenceNumber,
             moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),
             `${caseage}`,
             data[i].patientName,
@@ -2044,11 +2056,14 @@ function movetolive(referencenumber) {
               `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}', '${caseststaus}')" >Upload Docs</button> </a>`,
               `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
               `<a href="#popup11"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}', '${caseststaus}')" >Move to Escalation</button> </a>`,
-              `<a href="#popup12"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Hold</button> </a>`,
-            ]);
+              `<a href="#popup12"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Hold</button> </a>`, ];
+
+
+              table.row.add(rowData);
           }
 
           }
+          table.draw(false);
         }
       
 // https://stackoverflow.com/questions/47528857/momentjs-date-string-adds-one-day
