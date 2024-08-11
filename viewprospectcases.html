@@ -1516,7 +1516,7 @@ function populatereport(refnumber)
 
             var table = new DataTable('#dataTable');
                 
-                table.buttons().disable();
+                table.buttons(0).disable();
            
             if(response.message =='admin')
             {
@@ -1526,7 +1526,7 @@ function populatereport(refnumber)
               $("#hideonlogin").hide();
               localStorage['userName'] = response.username;
 
-                table.buttons().enable();
+                table.buttons(0).enable();
              
             }
             else if(response.message =='operation' )
@@ -1611,7 +1611,7 @@ function populatereport(refnumber)
         //"fixedHeader": true,
         layout: {
           topStart: {
-              buttons: ['excel']
+              buttons: ['excel', 'pageLength']
           }
         },
       });

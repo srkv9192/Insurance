@@ -63,6 +63,7 @@ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS
   useUnifiedTopology: true,
 });
 
+
 /*
 
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
@@ -71,6 +72,7 @@ mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
 });
 
 */
+
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
 app.use(cookieParser());
@@ -1161,7 +1163,7 @@ app.post('/api/addlivedraftdata', async(req, res) => {
 app.post('/api/addpfdetailsduringlegalgeneration', async(req, res) => {
   try{
 
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfpaymentRemarks:req.body.pfpaymentRemarks, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,  cfBankName: req.body.cfBankName, patientAddress: req.body.patientAddress, behalfOf : req.body.behalfOf, patientName: req.body.patientName, patientMobile: req.body.patientMobile, complainantName: req.body.complainantName}});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfpaymentRemarks:req.body.pfpaymentRemarks, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,  cfBankName: req.body.cfBankName, patientAddress: req.body.patientAddress, behalfOf : req.body.behalfOf, patientName: req.body.patientName, patientMobile: req.body.patientMobile, complainantName: req.body.complainantName, claimNumber: req.body.claimNumber,}});
 
       if(newData == null)
       {

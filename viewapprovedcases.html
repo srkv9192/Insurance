@@ -802,6 +802,8 @@ div.dataTables_filter {
                     <h2 style="color: black;">Documents - </h2>
                         <ul id="documentlist" style="margin-right: 100px; margin-top: 50px;"></ul>
                    </div>
+
+                   <button onclick="createCombinedHtml()">View All Documents</button>
                     
 
 
@@ -874,6 +876,45 @@ div.dataTables_filter {
   <script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.html5.min.js"></script>
   <script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.print.min.js"></script>
   <script>
+
+
+        function createCombinedHtml() {
+
+          $.ajax({
+        url: '/api/getprospectcasedetailbyref',
+        type: 'GET',
+        data: {
+          casereferenceNumber: localStorage['addRemarkForRefNumber']
+        },
+
+        success: function (response) {
+
+            var html = '<!DOCTYPE html><html><head><title>Combined View</title></head><body>';
+  
+
+              for (i = 0; i < response[0].docUrl.length ; i++) {
+                var extension = response[0].docUrl[i].split('.').pop().toLowerCase();
+                if (extension === 'pdf') {
+                    html += '<embed src="' + response[i].docUrl + '" type="application/pdf" width="100%" height="500px" /><br>';
+                } else if (['jpg', 'jpeg', 'png'].includes(extension)) {
+                    html += '<img src="' + response[i].docUrl + '" width="100%" /><br>';
+                }
+              }
+
+            html += '</body></html>';
+
+            var blob = new Blob([html], { type: 'text/html' });
+            var url = URL.createObjectURL(blob);
+            document.getElementById('inlineFrameExample').src = url;
+
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+        });
+
+        }
+
 
 function addremark(referencenumber) {
         // Code to generate card
@@ -1089,6 +1130,8 @@ $.ajax({
   function viewdocuments(referencenumber)
 {
   let list = document.getElementById("documentlist");
+
+  localStorage['addRemarkForRefNumber'] = referencenumber;
   
   console.log("rajat....");
 
@@ -1414,6 +1457,7 @@ function populatereport(refnumber)
             patientName : clientname ,
             patientMobile : clientphone,
             complainantName: complainantname,
+            claimNumber : claimnumber,
 
           },
           success: function (response) {
@@ -1637,7 +1681,7 @@ function populatereport(refnumber)
             //alert(response.message)
 
             var table = new DataTable('#dataTable');
-            table.buttons().disable();
+            table.buttons(0).disable();
            
             if(response.message =='admin')
             {
@@ -1647,7 +1691,7 @@ function populatereport(refnumber)
               $("#hideonlogin").hide();
               localStorage['userName'] = response.username;
 
-              table.buttons().enable();
+              table.buttons(0).enable();
              
             }
             else if(response.message =='operation')
@@ -1725,7 +1769,7 @@ function populatereport(refnumber)
         "searching": true,
         layout: {
           topStart: {
-              buttons: ['excel']
+              buttons: ['excel', 'pageLength']
           }
         },
       });
@@ -1786,6 +1830,7 @@ function populatereport(refnumber)
               `<a href="#popup2"> <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Move to Live</button> </a>`,];
 
               table.row.add(rowData);
+
           }
           table.draw(false);
         }

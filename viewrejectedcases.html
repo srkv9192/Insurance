@@ -1050,7 +1050,7 @@ function populatereport(refnumber)
           // Populate the options in the select element
             //alert(response.message)
             var table = new DataTable('#dataTable');
-            table.buttons().disable();
+            table.buttons(0).disable();
            
             if(response.message =='admin')
             {
@@ -1060,7 +1060,7 @@ function populatereport(refnumber)
               $("#hideonlogin").hide();
               localStorage['userName'] = response.username;
 
-              table.buttons().enable();
+              table.buttons(0).enable();
              
             }
             else if(response.message =='operation' )
@@ -1139,7 +1139,7 @@ function populatereport(refnumber)
         "searching": true,
         layout: {
           topStart: {
-              buttons: ['excel']
+              buttons: ['excel', 'pageLength']
           }
         },
       });

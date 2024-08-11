@@ -1868,7 +1868,7 @@ function movetolive(referencenumber) {
           // Populate the options in the select element
             //alert(response.message)
             var table = new DataTable('#dataTable');
-            table.buttons().disable();
+            table.buttons(0).disable();
            
             if(response.message =='admin')
             {
@@ -1878,7 +1878,7 @@ function movetolive(referencenumber) {
               $("#hideonlogin").hide();
               localStorage['userName'] = response.username;
               localStorage['userType'] = response.message;
-              table.buttons().enable();
+              table.buttons(0).enable();
              
             }
             else if(response.message =='operation' )
@@ -1974,7 +1974,7 @@ function movetolive(referencenumber) {
         "searching": true,
         layout: {
           topStart: {
-              buttons: ['excel']
+              buttons: ['excel', 'pageLength']
           }
         },
       });

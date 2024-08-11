@@ -445,7 +445,7 @@ hr.dashed {
                   </div>
                   <div class="row mb-3">
                       <div class="col-sm-6">
-                          <label for="cheque-number" the form-label">Cheque Number</label>
+                          <label for="cheque-number" class="form-label">Cheque Number</label>
                           <input type="text" class="form-control" id="cheque-number">
                       </div>
                       <div class="col-sm-6">
@@ -461,7 +461,7 @@ hr.dashed {
                   </div>
           
                   <div class="text-center">
-                      <button type="submit" class="btn btn-primary">Submit</button>
+                      <button type="submit" class="btn btn-primary">Save & Submit</button>
                   </div>
               </form>
           </div>
@@ -495,7 +495,7 @@ function fetchData() {
           // Populate the options in the select elemen
                 
             document.getElementById("patient-name").value = response[0].patientName ? response[0].patientName : "";
-            document.getElementById("client-address").value = response[0].customerAddress ? response[0].customerAddress : "";
+            document.getElementById("client-address").value = response[0].patientAddress ? response[0].patientAddress : "";
             document.getElementById("client-phone").value = response[0].complainantMobile ? response[0].complainantMobile : "";
 
             document.getElementById("complainant-name").value = response[0].complainantName ? response[0].complainantName: "";
@@ -706,6 +706,46 @@ function fetchData() {
         var bankname = $('#bank-name').val();
         var witnessname = $('#witness-name').val();
         var idnumber = $('#id-number').val();
+
+        $.ajax({
+          url: '/api/addpfdetailsduringlegalgeneration',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          data: {
+            casereferenceNumber: idnumber, 
+            pfAmount: processingfee,
+            cfPercentage: consultationcharge,
+            cfAmount: chequeamount,
+            cfChequeNumber: chequenumber,
+            cfBankName: bankname,
+            patientAddress: clientaddress,
+            behalfOf: behalfof,
+            patientName : clientname ,
+            patientMobile : clientphone,
+            complainantName: complainantname,
+            claimNumber: claimnumber,
+
+
+
+          },
+          success: function (response) {
+            if(response.message == "success")
+              {
+              
+                
+              }
+              else{
+                //alert("Error saving remark!")
+                //document.getElementById('loginForm').reset();
+              }
+            
+          },
+          error: function (error) {
+            //document.getElementById('loginForm').reset();
+            //alert("login failed");
+            // Display an error message to the user
+          }
+        });
 
         // Make an API call with the username and password
         $.ajax({
