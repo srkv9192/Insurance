@@ -6,23 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">\
+
   <link rel="stylesheet" href="css/menubar.css">
 
-    <!-- for editable text box area   https://quilljs.com/docs/quickstart-->
-    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.4/dist/quill.snow.css" rel="stylesheet" />
-
+  <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.4/dist/quill.snow.css" rel="stylesheet" />
   <style>
 
-    
-#uploadingdiv {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-    
-    .btn_special {
+
+.btn_special {
       background: #3498db;
       background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
       background-image: -moz-linear-gradient(top, #3498db, #2980b9);
@@ -36,7 +28,7 @@
       text-decoration: none;
 
       float: left;
-      width: 160px;
+      width: 170px;
       list-style-type: none;
       margin-left: 10px;
     }
@@ -55,13 +47,12 @@
       color: blue;
       text-decoration: none;
     }
-
-
-input.form-control:disabled {
-        background-color:  #343a40;
-    }
-    input.form-control:disabled {
-        background-color:  #343a40;
+    
+#uploadingdiv {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
 
     body {
@@ -125,8 +116,8 @@ input.form-control:disabled {
       color: #fff;
     }
     .table-dark td {
-      color: black;
-      background-color: orange;
+      color: #fff;
+      background-color: green;
     }
 
     .table-dark tbody tr.card-missing td {
@@ -157,7 +148,6 @@ div.dataTables_filter {
 
 }
 
-
 /*for pop up box
 
 */
@@ -184,7 +174,7 @@ div.dataTables_filter {
   padding: 20px;
   background: #fff;
   border-radius: 5px;
-  width: 45%;
+  width: 65%;
   position: relative;
   transition: all 5s ease-in-out;
 }
@@ -236,8 +226,9 @@ div.dataTables_filter {
 
 
 
+
   </style>
-  <title>Lokpal Cases</title>
+  <title>Pending payment Cases</title>
 </head>
 
 <body>
@@ -286,7 +277,7 @@ div.dataTables_filter {
                      <a href="/viewholdcases.html" class="dashboard-nav-dropdown-item">View Hold</a>
                      <a href="/viewsearchcases.html" class="dashboard-nav-dropdown-item">Search Case</a>
                      <a href="/viewholdcases.html" class="dashboard-nav-dropdown-item">View Hold</a>
-                     
+                    
                                        <!-- 
                      <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
                      <a href="/viewescalationcases.html" class="dashboard-nav-dropdown-item">View Escalation</a>
@@ -307,6 +298,7 @@ div.dataTables_filter {
                     <a href="/generatecardpdf.html" class="dashboard-nav-dropdown-item">Download Card</a>
                 </div>
              </div>
+
 
 
             <div class='dashboard-nav-dropdown show'>
@@ -438,45 +430,37 @@ div.dataTables_filter {
         <div class='dashboard-content' style="background-image: url('/images/background20.jpg');  background-repeat: repeat;  background-size: cover;">
           <div class="container mt-5">
             <div class="row justify-content-center">
-              <h2 class="text-center mb-4">Lokpal Cases</h2>
-
+              <h2 class="text-center mb-4">Pending Payment Cases</h2>
               <ul>
                 <li class="btn_special"><a href="#" class="all">All</a></li>
-                <li class="btn_special"><a href="#">Lokpal Pending</a></li>
-                <li class="btn_special"><a href="#">Lokpal Registered</a></li>
-                <li class="btn_special"><a href="#">Annexure5 Pending</a></li>
-                <li class="btn_special"><a href="#">Annexure5 Replied</a></li>
-                <li class="btn_special"><a href="#">Annexure 6 Pending</a></li>
-                <li class="btn_special"><a href="#">Annexure 6 Replied</a></li>
-                <li class="btn_special"><a href="#">Hearing</a></li>
+                <li class="btn_special"><a href="#" >Hearing</a></li>
+                <li class="btn_special"><a href="#">Escalation Settlement</a></li>
+                <li class="btn_special"><a href="#">Consent</a></li>
+                <!--
+                    <li class="btn_special"><a href="#">Approved</a></li>
+                    <li class="btn_special"><a href="#">Rejected</a></li>
+                -->
               </ul>
-
               <div class="col-lg-12">
+               
                 <div class="table-responsive">
                   <table id ="dataTable" class="table table-dark table-bordered">
                     <thead>
                       <tr>
-                        
                         <th>Reference Number</th>
                         <th>Case Inception Date</th>
                         <th>Case Age</th>
-                        <th>Registration Time</th>
-                        <th>Annexure5 Time</th>
-                        <th>Annexure6 Time</th>
                         <th>Patient Name</th>
                         <th>Patient Phone</th>
                         <th>Complainant Name</th>
                         <th>Manager Name</th>
                         <th>CP Name</th>
-                        <th>Operation Officer</th>
                         <th>Company</th>
                         <th>Claim Number</th>
                         <th>Claim Amount</th> 
-                        <th>Email</th> 
-                        <th>Password</th> 
-                         <th>Case Status</th> 
-                        <th>Action</th>
-                        <th>Action</th>
+                        <th>Completion Type</th>
+                        <th>Result</th>
+                        <th>Settlement Amount</th>
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
@@ -488,6 +472,124 @@ div.dataTables_filter {
                 </div>
 
                 <div id="popup1" class="overlay">
+                  <div class="popup">
+                    <!--
+                    <ul id="remarkcontentlist"></ul>
+
+                    
+                    <input type="text" placeholder="Add remark here" id="newremarkrejection" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                    <button type="submit" onclick="addremarkInDBAndReject()" class="btn btn-primary btn-sm">Submit</button>
+                    
+                  -->
+
+                  <div class="frame">
+                    <form id="loginForm">
+                      <div class="row mb-3">
+                        <div class="col-sm-4">
+                          <label for="client-name" class="form-label">Client Name</label>
+                          <input type="text" class="form-control" id="client-name" required >
+                        </div>
+                        <div class="col-sm-4">
+                          <label for="client-address" class="form-label">Client Address</label>
+                          <input type="text" class="form-control" id="client-address" required >
+                        </div>
+                        <div class="col-sm-4">
+                          <label for="client-phone" class="form-label">Client Phone</label>
+                          <input type="text" class="form-control" id="client-phone" pattern="[0-9]{10}"  maxlength="10" required >
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+
+                        <div class="col-sm-4">
+                          <label for="claim-number" class="form-label">Claim Number</label>
+                          <input type="text" class="form-control" id="claim-number" required >
+                        </div>
+
+                        <div class="col-sm-4">
+                          <label for="behalf-of" class="form-label">On Behalf of</label>
+                            <div class="input-group">
+                              <select class="form-control" id="behalf-of-dropdown" required>
+                                <option value="">None</option>
+                                <option value="Self">Self</option>
+                                <option value="Father">Father</option>
+                                <option value="Mother">Mother</option>
+                                <option value="Wife">Wife</option>
+                                <option value="Husband">Husband</option>
+                                <option value="Children">Children</option>
+                                <option value="Brother">Brother</option>
+                                <option value="Sister">Sister</option>
+                                <option value="Friend">Friend</option>
+                              </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                          <label for="complainant-name" class="form-label">Complainant Name</label>
+                          <input type="text" class="form-control" id="complainant-name" required>
+                        </div>
+                      </div>
+      
+      
+                      <div class="row mb-3">
+                        <div class="col-sm-4">
+                          <label for="insurance-company-name" class="form-label">Insurance Company Name</label>
+                          <input type="text" class="form-control" id="insurance-company-dropdown" required >
+                        </div>
+                        <div class="col-sm-4">
+                          <label for="witness-name" class="form-label">Witness Name</label>
+                          <input type="text" class="form-control" id="witness-name" required>
+                        </div>
+                        <div class="col-sm-4">
+                          <label for="consultation-charge" class="form-label">Consultation Charge</label>
+                          <input type="number" class="form-control" id="consultation-charge" required >
+                        </div>
+      
+                      </div>
+                      <div class="row mb-3">
+
+                        <div class="col-sm-4">
+                          <label for="processing-fee" class="form-label">Processing Fee</label>
+                          <input type="text" class="form-control" id="processing-fee" required  >
+                        </div>
+                        <div class="col-sm-4">
+                          <label for="total-claim-amount" class="form-label">Disputed Amount</label>
+                          <input type="number" class="form-control" id="total-claim-amount" required >
+                        </div>
+                        <div class="col-sm-4">
+                          <label for="cheque-amount" class="form-label">Cheque Amount</label>
+                          <input type="number" class="form-control" id="cheque-amount" required   >
+                        </div>
+                      </div>
+
+                      <div class="row mb-3">
+                        <div class="col-sm-4">
+                          <label for="cheque-number" class="form-label">Cheque Number</label>
+                          <input type="text" class="form-control" id="cheque-number" required  >
+                        </div>
+                        <div class="col-sm-4">
+                          <label for="bank-name" class="form-label">Bank Name</label>
+                          <input type="text" class="form-control" id="bank-name" required  >
+                        </div>
+
+                        <div class="col-sm-4">
+                          <label for="id-number" class="form-label">ID Number</label>
+                          <input type="text" class="form-control" id="id-number" required >
+                        </div>
+                      </div>
+      
+      
+                      <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                      </div>
+                    </form>
+                  </div>
+
+
+                    <a class="close" style=" color: white;" href="#close">&times;</a>
+                  </div>
+                </div>
+
+
+                <div id="popup2" class="overlay">
                   <div class="popup" style="color:black; width: 70%; max-height: 90vh; overflow-y: auto;">
                       <div style="display: flex; align-items: center; justify-content: start;">
                           <img src="/images/logoround.png" width="130" height="130" style="margin-right: 20px;">
@@ -743,260 +845,6 @@ div.dataTables_filter {
                   </div>
                 </div>
 
-
-                <div id="popup2" class="overlay">
-                  <div class="popup">
-                      <div class="frame">
-                        <form id="paymentForm">
-                          <div class="row mb-3">
-
-                            <div class="col-sm-6">
-                              <label for="complainant-phone" class="form-label">Complainant Phone</label>
-                              <input type="text" class="form-control" id="complainant-phone"   pattern="[0-9]{10}" required maxlength="10">
-                            </div>
-
-                            <div class="col-sm-6">
-                              <label for="complainant-name" class="form-label">Complainant Name</label>
-                              <input type="text" class="form-control" id="complainant-name"  >
-                            </div>
-
-                          </div>
-
-                          <div class="row mb-3">
-
-                            <div class="col-sm-6">
-                              <label for="escalation-email" class="form-label">Email ID</label>
-                              <input type="text" class="form-control" id="escalation-email" >
-                            </div>
-
-                            <div class="col-sm-6">
-                              <label for="escalation-email-password" class="form-label">Email Password</label>
-                              <input type="text" class="form-control" id="escalation-email-password" >
-                            </div>
-
-                          </div>
-
-
-                          <div class="row mb-3">
-
-                            <div class="col-sm-6">
-                              <label for="address" class="form-label">Address</label>
-                              <input type="text" class="form-control" id="address"  >
-                            </div>
-
-                            <div class="col-sm-6">
-                              <label for="pincode" class="form-label">Pin Code</label>
-                              <input type="text" class="form-control" id="pincode"  >
-                            </div>
-
-                          </div>
-
-                          <div class="row mb-3">
-
-                            <div class="col-sm-6">
-                              <label for="policy-number" class="form-label">Policy Number</label>
-                              <input type="text" class="form-control" id="policy-number"  >
-                            </div>
-
-                            <div class="col-sm-6">
-                              <label for="disputed-amount" class="form-label">Disputed amount</label>
-                              <input type="text" class="form-control" id="disputed-amount"  >
-                            </div>
-                        
-                          </div>
-
-                          <div class="row mb-3">
-
-                            <div class="col-sm-6">
-                              <label for="rejection-date" class="form-label">Rejection Date</label>
-                              <input type="date" class="form-control" id="rejection-date"  >
-                            </div>
-
-                            <div class="col-sm-6">
-                              <label for="patient-name" class="form-label">Patient Name</label>
-                              <input type="text" class="form-control" id="patient-name"  >
-                            </div>
-
-                           
-                        
-                          </div>
-
-                          <div class="row mb-3">
-
-                            <div class="col-sm-6">
-                              <label for="complaint-gist" class="form-label">Gist Of Complaint</label>
-                              <input type="text" class="form-control" id="complaint-gist"  >
-                            </div>
-
-                            <div class="col-sm-6">
-                              <label for="reconsideration-date" class="form-label">Reconsideration Date</label>
-                              <input type="date" class="form-control" id="reconsideration-date"  >
-                            </div>
-                        
-                          </div>
-
-                        <div class="row mb-3">
-                          <div class="col-sm-6">
-                            <label for="date-of-birth" class="form-label">Date of Birth</label>
-                            <input type="date" class="form-control" id="date-of-birth"  >
-                          </div>
-                        </div>
-
-                          <div class="text-center">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                          </div>
-
-          
-                        </form>
-                      </div>
-                      <a class="close" style=" color: white;" href="#close">&times;</a>
-                  </div>
-                </div>
-
-                <div id="popup3" class="overlay">
-                  <div class="popup">
-                      <div class="frame">
-                        <form id="lokpalForm">
-                          <div class="row mb-3">
-
-                            <div class="col-sm-6">
-                              <label for="bhp-number" class="form-label">Online BHP Number</label>
-                              <input type="text" class="form-control" id="bhp-number" >
-                            </div>
-
-                            <div class="col-sm-6">
-                              <label for="registration-date" class="form-label">Registration Date</label>
-                              <input type="date" required dateFormat: "dd/mm/yy" class="form-control" id="registration-date" ">
-                            </div>
-                        
-                          </div>
-
-                          <div class="row mb-3">
-
-                            <div class="col-sm-6">
-                              <label for="annexure-five" class="form-label">Annexure 5 Number</label>
-                              <input type="text" class="form-control" id="annexure-five"  >
-                            </div>
-
-                            <div class="col-sm-6">
-                              <label for="annexure-five-date" class="form-label">Annexure 5 Reply Date</label>
-                              <input type="date" dateFormat: "dd/mm/yy" class="form-control" id="annexure-five-date"  >
-                            </div>
-                        
-                          </div>
-
-                          <div class="row mb-3">
-
-                            <div class="col-sm-6">
-                              <label for="lokpal-complaint-number" class="form-label">Lokpal Complaint Number</label>
-                              <input type="text" class="form-control" id="lokpal-complaint-number" >
-                            </div>
-
-                            <div class="col-sm-6">
-                              <label for="annexure-six-date" class="form-label">Annexure 6 Reply Date</label>
-                              <input type="date" dateFormat: "dd/mm/yy" class="form-control" id="annexure-six-date"  >
-                            </div>
-                        
-                          </div>
-
-                          <div class="row mb-3">
-
-                            <div class="col-sm-6">
-                              <label for="hearing-date" class="form-label">Hearing Date</label>
-                              <input type="date" dateFormat: "dd/mm/yy" class="form-control" id="hearing-date"  >
-                            </div>
-
-                            <div class="col-sm-6">
-                              <label for="detailremark" class="form-label">Add Remark</label>
-                              <input type="text" class="form-control" id="detailremark"  required >
-                            </div>
-
-                          </div>
-
-                          <div class="text-center">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                          </div>
-          
-                        </form>
-                      </div>
-                      <a class="close" style=" color: white;" href="#close">&times;</a>
-                  </div>
-                </div>
-
-                <div id="popup9" class="overlay" >
-                  <div class="popup" style ="width:45%">
-                    <h2  id = "remarkcontent">Remarks-</h2>
-                    <ul id="remarkcontentlist"></ul>
-
-                    
-                    <input type="text" placeholder="Add new remark here" id="newremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
-                    <button type="submit" onclick="addremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
-                    
-                    <a class="close" href="#close">&times;</a>
-                  </div>
-                </div>
-
-                <div id="popup14"  class="overlay">
-                  <div class="popup" style="width:45%">
-                    <h2 >Upload document-</h2>
-
-                    <form id="DocUploadForm" enctype="multipart/form-data">
-                      <div class="col-sm-6">
-                        <label for="pdf-input1" class="form-label">Documents</label>
-                          <input type="file" class="form-control" id="pdf-input1"  multiple>
-                      </div>
-                      <br>        
-                      <br>
-                      <button type="submit" onclick="uploadDocsInDB()" class="btn btn-primary btn-sm">Upload</button>
-                    </form>
-                                   
-                     
-                    
-                    <a class="close" href="#close">&times;</a>
-                  </div>
-                </div>
-
-                <div id="popup4" class="overlay" >
-                  <div class="popup" style ="width:30%">
-                    <h2  id = "remarkcontent">Completion Remark-</h2>
-                    <div class="frame">
-                      <form id="completedForm">
-
-                        <div class="row">
-
-                          <label for="case-complete-type-dropdown" class="form-label">Completion Type</label>
-                          <select class="form-control" id="case-complete-type-dropdown" required style="margin-top: 5px;margin-bottom: 5px;">
-                            <option value="None">None</option>
-                            <option value="Hearing">Hearing</option>
-                            <option value="Consent">Consent</option>
-                          </select>
-      
-                          <label for="casecompleteremark" class="form-label" style="margin-top: 5px;margin-bottom: 5px;">Completion Remark</label>
-                          <input  class="form-control" type="text" placeholder="Add remark here" id="casecompleteremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
-                        </div>
-                       
-                        <button type="submit" class="btn btn-primary btn-sm" style="margin-top: 5px;margin-bottom: 5px;">Move to Complete</button>
-                        
-                        <a class="close" href="#close">&times;</a>
-                        </form>
-                    </div>
-                    
-                    
-
-                  </div>
-                </div>
-
-                <div id="popup12" class="overlay" >
-                  <div class="popup" style ="width:30%">
-                    <h2  id = "remarkcontent">Move to Hold-</h2>
-                    
-                    <input type="text" placeholder="Add hold remark here" id="holdremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
-                    <button type="submit" onclick="addholdremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
-                    
-                    <a class="close" href="#close">&times;</a>
-                  </div>
-                </div>
-
                 <div id="popup5" class="overlay" >
                   <div class="popup" style =" display: flex;
                   justify-content: space-between;
@@ -1027,26 +875,94 @@ div.dataTables_filter {
 
                 </div>
 
-                <div id="popup6" class="overlay">
-                  <div class="popup" style="width: 80%;">
-                    <div class="frame">
-                        <form id="gistForm">
-                              <label for="editor" class="form-label">Draft</label>
-                              <div id="editor">
-                              </div>
+                <div id="popup9" class="overlay" >
+                  <div class="popup" style ="width:45%">
+                    <h2  id = "remarkcontent">Remarks-</h2>
+                    <ul id="remarkcontentlist"></ul>
 
-                              <label for="editor1" class="form-label">Draft</label>
-                              <div id="editor1">
-                              </div>
-                        </form>
-                        <a class="close" style=" color: white;" href="#close">&times;</a>
-                     </div>
-                    </div>
+                    
+                    <input type="text" placeholder="Add new remark here" id="newremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                    <button type="submit" onclick="addremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
+                    
+                    <a class="close" href="#close">&times;</a>
+                  </div>
+                </div>
+
+                <div id="popup4"  class="overlay">
+                  <div class="popup" style="width:45%">
+                    <h2 >Upload document-</h2>
+
+                    <form id="DocUploadForm" enctype="multipart/form-data">
+                      <div class="col-sm-6">
+                        <label for="pdf-input" class="form-label">Documents</label>
+                          <input type="file" class="form-control" id="pdf-input"  multiple>
+                      </div>
+                      <br>        
+                      <br>
+                      <button type="submit" onclick="uploadDocsInDB()" class="btn btn-primary btn-sm">Upload</button>
+                    </form>
+
+                    <a class="close" href="#close">&times;</a>
+                  </div>
+                </div>
+
+
+                <div id="popup10" class="overlay">
+                  <div class="popup" style ="width:25%">
+                      <h2 id="remarkcontent" style="color: black;">Add Case Details</h2>
+                      <form id="remarkForm">
+                              <label for="status">Final Case Status</label>
+                              <select class="form-control" id="status" required>
+                                  <option value="" disabled selected>Select status</option>
+                                  <option value="WON">Won</option>
+                                  <option value="LOST">Lost</option>
+                              </select>
+                              <label for="settlementAmount" style="color: black;">Settlement Amount</label>
+                              <input type="text" class="form-control" id="settlementAmount" placeholder="Enter settlement amount" value="0" disabled>
+                          <button type="button" class="btn btn-primary" style="margin-top: 10px;" onclick="saveDetails()">Save Details</button>
+                          <a class="close" href="#close">&times;</a>
+                      </form>
+                  </div>
+                </div>
+
+                <div id="popup6" class="overlay">
+                  <div class="popup" style ="width:25%">
+                      <h2 id="remarkcontent">Add details</h2>
+                      <form id="remarkForm">
+        
+                          <label for="customerAmount" style="color: black;">Amount received by customer</label>
+                          <input type="number" class="form-control" id="customerAmount" placeholder="Enter amount" required>
+
+                          <label for="customerAmountDate" style="color: black;">Date</label>
+                          <input type="date" class="form-control" id="customerAmountDate"  required>
+
+                          <label for="movetopendingpaymentremark" style="color: black;">Remark</label>
+                          <input type="text" class="form-control" id="movetopendingpaymentremark" placeholder="Enter remark" required>
+
+                          <button type="button" class="btn btn-primary" style="margin-top: 10px;" onclick="movetoPendingPayment()">Save Details</button>
+                          <a class="close" href="#close">&times;</a>
+                      </form>
+                  </div>
+                </div>
+
+                <div id="popup7" class="overlay">
+                  <div class="popup">
+                    <h2  id = "remarkcontent">Move to Prospect-</h2>
+                    <ul id="remarkcontentlist"></ul>
+
+                    
+                    <input type="text" placeholder="Add remark here" id="newremarkapproval" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                    <button type="submit" onclick="addremarkInDBAndApprove()" class="btn btn-primary btn-sm">Move to prospect</button>
+                    
+                    <a class="close" href="#close">&times;</a>
+                  </div>
                 </div>
 
                 <div id="uploadingdiv" style="display: none;">
                   <img src="/images/uploading3.webp">
                 </div>
+
+
 
               </div>
             </div>
@@ -1057,7 +973,6 @@ div.dataTables_filter {
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-
   <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.4/dist/quill.js"></script>
 
   <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
@@ -1069,24 +984,9 @@ div.dataTables_filter {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.print.min.js"></script>
-
   <script>
 
 const toolbarOptions =['bold', 'italic', 'underline'];
-
-const quill = new Quill('#editor', {
-    theme: 'snow',
-    modules: {
-    toolbar: toolbarOptions
-  }
-  });
-
-  const quill1 = new Quill('#editor1', {
-    theme: 'snow',
-    modules: {
-    toolbar: toolbarOptions
-  }
-  });
 
   const quill2 = new Quill('#reportdraft', {
     theme: 'snow',
@@ -1103,7 +1003,6 @@ const quill = new Quill('#editor', {
   });
 
 
-  
   function uploadDocsInDB()
 {
 
@@ -1112,7 +1011,7 @@ const quill = new Quill('#editor', {
   var formData = new FormData();
         formData.append('casereferenceNumber', localStorage['addRemarkForRefNumber']);
        
-        $.each($('#pdf-input1')[0].files, function(i, file) {
+        $.each($('#pdf-input')[0].files, function(i, file) {
           formData.append('pdfFile', file);
       });
 
@@ -1128,84 +1027,24 @@ const quill = new Quill('#editor', {
                 //window.location.href = "/dashboard.html"
                 $('#uploadingdiv').hide({done: function() { alert("Additional docs uploaded."); } });
                // alert("Case added reference number- " + response.referencenumber);
-                document.getElementById('loginForm').reset();
+                document.getElementById('DocUploadForm').reset();
               }
               else{
                 $('#uploadingdiv').hide({done: function() { alert(response.error); } });
                // alert(response.message);
-                document.getElementById('loginForm').reset();
+                document.getElementById('DocUploadForm').reset();
                 //document.getElementById('loginForm').reset();
               }
           },
           error: function (error) {
             $('#uploadingdiv').hide({done: function() { alert("Failed to upload docs!!!"); } });
-            document.getElementById('loginForm').reset();
+            document.getElementById('DocUploadForm').reset();
            // alert("Failed to add case!!!");
             // Display an error message to the user
           }
         });
 
-
 }
-
-
-
-    
-function addholdremarkInDB() {
-
-if( document.getElementById("holdremark").value == "")
-{
-  alert("Empty remark not allowed!")
-  return;
-}
-
-
-const today = new Date();
-const yyyy = today.getFullYear();
-let mm = today.getMonth() + 1; // Months start at 0!
-let dd = today.getDate();
-
-if (dd < 10) dd = '0' + dd;
-if (mm < 10) mm = '0' + mm;
-
-const formattedToday = dd + '/' + mm + '/' + yyyy;
-
-  $.ajax({
-    url: '/api/movetohold',
-    type: 'POST',
-    contentType: "application/x-www-form-urlencoded",
-    data: {
-      referencenumber: localStorage['addRemarkForRefNumber'],
-      caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - [Hold Remark] "+ document.getElementById("holdremark").value
-    },
-    success: function (response) {
-      if(response.message == "success")
-        {
-         // window.location.href = "/index.html"
-          //localStorage['userID'] = username;
-          alert("Case moved to hold phase!")
-          localStorage.removeItem("addRemarkForRefNumber");
-
-          document.getElementById("holdremark").value ="";
-          window.location.href = "/viewlokpalcases.html";
-          
-        }
-        else{
-          alert("Error saving remark!")
-          //document.getElementById('loginForm').reset();
-        }
-      //alert("login success");
-      // Redirect to the dashboard or perform any other actions
-    },
-    error: function (error) {
-      document.getElementById('loginForm').reset();
-      alert("login failed");
-      // Display an error message to the user
-    }
-  });
-
-}
-
 
 
   
@@ -1332,7 +1171,7 @@ function populatereport(refnumber)
              // document.getElementById("popup2").style.opacity = 1;
 
              // document.getElementById("popup2").scrollIntoView(true);
-              window.location = localStorage['baseurl'] + "#popup1" 
+              window.location = localStorage['baseurl'] + "#popup2" 
               
               console.log("india...");
             },
@@ -1345,11 +1184,15 @@ function populatereport(refnumber)
 
 
 
+function addremark(referencenumber) {
+        // Code to generate card
+        localStorage['addRemarkForRefNumber'] =referencenumber; 
+  }
 
 
-function addremarkInDB() {
+  function addremarkInDB() {
 
-  if( document.getElementById("newremark").value == "")
+    if( document.getElementById("newremark").value == "")
   {
     alert("Empty remark not allowed!")
     return;
@@ -1366,7 +1209,7 @@ if (mm < 10) mm = '0' + mm;
 const formattedToday = dd + '/' + mm + '/' + yyyy;
 
     $.ajax({
-      url: '/api/addescalationcaseremark',
+      url: '/api/addlivecaseremark',
       type: 'POST',
       contentType: "application/x-www-form-urlencoded",
       data: {
@@ -1382,7 +1225,7 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
             localStorage.removeItem("addRemarkForRefNumber");
 
             document.getElementById("newremark").value ="";
-            window.location.href = "/viewescalationcases.html";
+            window.location.href = "/viewrejectedcases.html";
             
           }
           else{
@@ -1393,327 +1236,126 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
         // Redirect to the dashboard or perform any other actions
       },
       error: function (error) {
-        document.getElementById('loginForm').reset();
-        alert("login failed");
+       // document.getElementById('loginForm').reset();
+        //alert("login failed");
         // Display an error message to the user
       }
     });
   
+
+
 }
   
 
-$('#completedForm').on('submit', function (event) {
-        event.preventDefault();
 
-        const today = new Date();
-        const yyyy = today.getFullYear();
-        let mm = today.getMonth() + 1; // Months start at 0!
-        let dd = today.getDate();
+function addremarkInDBAndApprove() {
 
-        if (dd < 10) dd = '0' + dd;
-        if (mm < 10) mm = '0' + mm;
-
-        const formattedToday = dd + '/' + mm + '/' + yyyy;
-       
-          $.ajax({
-          url: '/api/movetocompleted',
-          type: 'POST',
-          contentType: "application/x-www-form-urlencoded",
-          data: {
-            casereferenceNumber: localStorage['addRemarkForRefNumber'], 
-            caseCompletionType:$('#case-complete-type-dropdown').val(),
-            completedDate: today,
-            caseCompletionRemark: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ $('#casecompleteremark').val(),
-          },
-          success: function (response) {
-            if(response.message == "success")
-              {
-                alert("Case moved to completed!");
-                window.location.href = "/viewlokpalcases.html";
-              }
-              else{
-                alert("Error moving case to completed!")
-              }
-          },
-          error: function (error) {
-            document.getElementById('completedForm').reset();
-            alert("error moving case to completed failed");
-            // Display an error message to the user
-          }
-        });
-
-
-      });
-
-
-
-
-
-$('#paymentForm').on('submit', function (event) {
-        event.preventDefault();
-
-        var patientName = $('#patient-name').val();
-        var patientAddress = $('#address').val();
-        var patientPincode = $('#pincode').val();
-        var complainantName = $('#complainant-name').val();
-        var complainantMobile = $('#complainant-phone').val();
-
-        var policynumber = $('#policy-number').val();
-        var claimamount = $('#disputed-amount').val();
-        var escalationemail = $('#escalation-email').val();
-        var escalationemailpassword = $('#escalation-email-password').val();
-
-        var rejectiondate =  $('#rejection-date').val();
-
-        var reconsiderationdate =  $('#reconsideration-date').val();
-        var casegist =  $('#complaint-gist').val();
-        var patientdob =  $('#date-of-birth').val();
-      
-       
-          // call ajax to save these details--
-
-          $.ajax({
-          url: '/api/addlokpaldependencydata',
-          type: 'POST',
-          contentType: "application/x-www-form-urlencoded",
-          data: {
-            casereferenceNumber: localStorage['addRemarkForRefNumber'], 
-            patientName  : patientName ,
-            patientAddress : patientAddress, 
-            patientPincode: patientPincode,
-            complainantName: complainantName, 
-            complainantMobile: complainantMobile, 
-            policyNumber : policynumber,
-            claimAmount  : claimamount,
-            caseEmail : escalationemail,
-            caseEmailPassword : escalationemailpassword,
-            initialRejectionDate : rejectiondate, 
-            dateofEscalationToInsurer  : reconsiderationdate ,
-            caseGist   : casegist ,
-            patientDOB    :patientdob, 
-          },
-          success: function (response) {
-            if(response.message == "success")
-              {
-                alert("lokpal details saved!");
-                window.location.href = "/viewlokpalcases.html";
-              }
-              else{
-                alert("Error saving lokpal details!")
-              }
-          },
-          error: function (error) {
-            document.getElementById('paymentForm').reset();
-           // alert("login failed");
-            // Display an error message to the user
-          }
-        });
-
-
-      });
-
-
-
-
-function addremark(referencenumber) {
-        // Code to generate card
-        localStorage['addRemarkForRefNumber'] =referencenumber; 
+  if( document.getElementById("newremarkapproval").value == "")
+  {
+    alert("Empty remark not allowed!")
+    return;
   }
 
+const today = new Date();
+const yyyy = today.getFullYear();
+let mm = today.getMonth() + 1; // Months start at 0!
+let dd = today.getDate();
 
+if (dd < 10) dd = '0' + dd;
+if (mm < 10) mm = '0' + mm;
 
+const formattedToday = dd + '/' + mm + '/' + yyyy;
 
-  $('#lokpalForm').on('submit', function (event) {
-        event.preventDefault();
+    $.ajax({
+      url: '/api/addtcaseremarkandmovetoprospect',
+      type: 'POST',
+      contentType: "application/x-www-form-urlencoded",
+      data: {
+        referencenumber: localStorage['addRemarkForRefNumber'],
+        caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ document.getElementById("newremarkapproval").value
+      },
+      success: function (response) {
+        if(response.message == "success")
+          {
+           // window.location.href = "/index.html"
+            //localStorage['userID'] = username;
 
-
-        var bhpNumber = $('#bhp-number').val();
-        var bhpDate = $('#registration-date').val();
-        var annexure5Date = $('#annexure-five-date').val();
-        var annexure5number = $('#annexure-five').val();
-        var lokpalComplaintNumber = $('#lokpal-complaint-number').val();
-        var annexure6Date = $('#annexure-six-date').val();
-        var hearingDate = $('#hearing-date').val();
-        var detailremark = $('#detailremark').val();
-
-      if((bhpNumber == "") && (!bhpDate ) && ( !annexure5Date ) && (annexure5number == "") && (lokpalComplaintNumber =="") && (!annexure6Date ) && ( !hearingDate))
-      {
-        alert("No data Provided!!!");
-        return ;
-      }
-
-      var lokpalcasestatus= 'Lokpal Pending';
-
-      if((bhpNumber != "") && (bhpDate) && (annexure5number == "") && (lokpalComplaintNumber ==""))
-      {
-        lokpalcasestatus = "Lokpal Registered";
-      }
-      else if((bhpNumber != "") && (bhpDate) && (annexure5number != "") && (annexure5Date) && (lokpalComplaintNumber ==""))
-      {
-        //Lokpal Query renamed to Annexure5 Received 
-        //bulk update db using mongosh
-        //db.datas.update({"newCaseStatus": "Annexure 6 Received"},{$set:{"newCaseStatus": "Annexure 6 Pending"}},{multi: true,});
-        lokpalcasestatus = "Annexure5 Replied";
-      }
-      else if((bhpNumber != "") && (bhpDate) && (annexure5number != "") && (lokpalComplaintNumber ==""))
-      {
-        //Lokpal Query renamed to Annexure5 Received 
-        lokpalcasestatus = "Annexure5 Pending";
-      }
-      else if((bhpNumber != "") && (bhpDate) && (lokpalComplaintNumber !="") && (hearingDate))
-      {
-        lokpalcasestatus = "Hearing";
-      }
-      else if((bhpNumber != "") && (bhpDate) && (lokpalComplaintNumber !="") && (annexure6Date) )
-      {
-        lokpalcasestatus = "Annexure 6 Replied";
-      }
-      else if((bhpNumber != "") && (bhpDate) && (lokpalComplaintNumber !=""))
-      {
-        lokpalcasestatus = "Annexure 6 Pending";
-      }
-
-      const today = new Date();
-      const yyyy = today.getFullYear();
-      let mm = today.getMonth() + 1; // Months start at 0!
-      let dd = today.getDate();
-
-      if (dd < 10) dd = '0' + dd;
-      if (mm < 10) mm = '0' + mm;
-
-      const formattedToday = dd + '/' + mm + '/' + yyyy;
-
-
-          $.ajax({
-          url: '/api/addlokpaldata',
-          type: 'POST',
-          contentType: "application/x-www-form-urlencoded",
-          data: {
-            casereferenceNumber: localStorage['addRemarkForRefNumber'], 
-            LokpalBHPComplaintNumber: bhpNumber ,
-            lokpalBHPComplaintDate: bhpDate ,
-            annexure5ComplaintDate: annexure5Date,
-            annexure5ComplaintNumber: annexure5number,
-            lokpalComplaintNumber: lokpalComplaintNumber,
-            lokpalComplaintDate: annexure6Date,
-            dateOfLokpalHearing: hearingDate,
-            newCaseStatus: lokpalcasestatus,
-            caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] "+ detailremark
-          },
-          success: function (response) {
-            if(response.message == "success")
-              {
-                alert("Lokpal data Saved!");
-                window.location.href = "/viewlokpalcases.html";
-              }
-              else{
-                alert("Error saving lokpal data!")
-                //document.getElementById('loginForm').reset();
-              }
-            //alert("login success");
-            // Redirect to the dashboard or perform any other actions
-          },
-          error: function (error) {
-            document.getElementById('loginForm').reset();
-            alert("login failed");
-            // Display an error message to the user
+           // movetoprospectforquery();
+           alert("Case moved to prospect!")
           }
-        });
-
-
-      });
-
-
-
-
-
-function addlokpaldetails(referencenumber) {
-        
-        localStorage['addRemarkForRefNumber'] = referencenumber; 
-
-        $.ajax({
-        url: '/api/getcasedetailbyref',
-        type: 'GET',
-        data: {
-          casereferenceNumber:  localStorage['addRemarkForRefNumber']
-        },
-
-        success: function (response) {
+          else{
+            alert("Error moving case to prospect!")
+            //document.getElementById('loginForm').reset();
+          }
+        //alert("login success");
+        // Redirect to the dashboard or perform any other actions
+      },
+      error: function (error) {
+        //document.getElementById('loginForm').reset();
+        alert("Error moving case to prospect!");
+        // Display an error message to the user
+      }
+    });
   
-            document.getElementById("bhp-number").value = response[0].LokpalBHPComplaintNumber ? response[0].LokpalBHPComplaintNumber :  "";
-            document.getElementById("registration-date").value = response[0].lokpalBHPComplaintDate ? moment(new Date(response[0].lokpalBHPComplaintDate)).utc().format('YYYY-MM-DD') : "";
-            document.getElementById("annexure-five-date").value = response[0].annexure5ComplaintDate  ? moment(new Date(response[0].annexure5ComplaintDate)).utc().format('YYYY-MM-DD') : "";
-            document.getElementById("annexure-five").value = response[0].annexure5ComplaintNumber ?response[0].annexure5ComplaintNumber : "";
-            document.getElementById("lokpal-complaint-number").value = response[0].lokpalComplaintNumber ? response[0].lokpalComplaintNumber  : "";
-            document.getElementById("annexure-six-date").value = response[0].lokpalComplaintDate  ? moment(new Date(response[0].lokpalComplaintDate)).utc().format('YYYY-MM-DD') : ""; ;
-            document.getElementById("hearing-date").value = response[0].dateOfLokpalHearing  ? moment(new Date(response[0].dateOfLokpalHearing)).utc().format('YYYY-MM-DD') : ""; ;;
-                     
+   // alert(  document.getElementById("newremark").value);
 
-        },
-        error: function (error) {
-          console.error('Error:', error);
-        }
-      });
-
-  }
-
+}
   
 
 
-  function viewdetails(referencenumber) {
-        // Code to generate card
+function viewdocuments(referencenumber)
+{
+  let list = document.getElementById("documentlist");
+  
+  console.log("rajat....");
 
-        localStorage['addRemarkForRefNumber'] = referencenumber; 
 
-        $.ajax({
-        url: '/api/getcasedetailbyref',
-        type: 'GET',
-        data: {
-          casereferenceNumber:  localStorage['addRemarkForRefNumber']
-        },
+  var wrapper = document.getElementById('wrapper');
+  wrapper.innerHTML= `"<iframe name="inlineFrameExample" 
+            title="Inline Frame Example" 
+            style="width: 90%; height: 80vh; border: 2px dotted;border-color: black; flex-grow: 2;"
+            src="">
+    </iframe>"`;
+  
 
-        success: function (response) {
-          // Populate the options in the select eleme    
-           
-           // let text =  response[0].caseRemarks;
-          //  const myArray = text.split(";");  
+// 👇️ Remove all list elements
+list.innerHTML = '';
+
+
+$.ajax({
+url: '/api/getprospectcasedetailbyref',
+type: 'GET',
+data: {
+  casereferenceNumber: referencenumber
+},
+
+success: function (response) {
+  // Populate the options in the select eleme    
+   
+   // let text =  response[0].caseRemarks;
+  //  const myArray = text.split(";");    
+
+    let list = document.getElementById("documentlist");
+      for (i = 0; i < response[0].docUrl.length ; i++) {
+        let li = document.createElement('li');
+        let filename = response[0].docUrl[i].substring(response[0].docUrl[i].lastIndexOf('/')+1);
+        let smallfilename= filename.substring(0, filename.lastIndexOf('-'));
+        //li.innerHTML = `<a target='inlineFrameExample' href="${response[0].docUrl[i]}" >${filename}</a>`;
+        li.innerHTML = `<a target='inlineFrameExample' href="${response[0].docUrl[i]}" >${smallfilename}</a>`;
+        list.appendChild(li);
+       }
+
+},
+error: function (error) {
+  console.error('Error:', error);
+}
+});
  
-            document.getElementById("patient-name").value = response[0].patientName;
-            document.getElementById("address").value = response[0].patientAddress;
-            document.getElementById("pincode").value = response[0].patientPincode;
-           // document.getElementById("patient-phone").value = response[0].patientMobile;
-
-            document.getElementById("complainant-name").value = response[0].complainantName;
-           // document.getElementById("client-address").value = response[0].customerAddress;
-            document.getElementById("complainant-phone").value = response[0].complainantMobile;
-
-
-            document.getElementById("policy-number").value = response[0].policyNumber;
-            document.getElementById("disputed-amount").value = response[0].claimAmount;
-            document.getElementById("escalation-email").value = response[0].caseEmail;
-            document.getElementById("escalation-email-password").value = response[0].caseEmailPassword;
-            document.getElementById("rejection-date").value =  moment(new Date(response[0].initialRejectionDate)).utc().format('YYYY-MM-DD') ;
-            document.getElementById("reconsideration-date").value =  moment(new Date(response[0].dateofEscalationToInsurer)).utc().format('YYYY-MM-DD') ;
-            document.getElementById("complaint-gist").value = response[0].caseGist;  
-            
-            document.getElementById("date-of-birth").value =  moment(new Date(response[0].patientDOB)).utc().format('YYYY-MM-DD') ;
-
-            
-        },
-        error: function (error) {
-          console.error('Error:', error);
-        }
-      });
+}
 
 
 
-  }
-
-
-
-
-
-  function viewremark(referencenumber) {
+function viewremark(referencenumber) {
         // Code to generate card
 
         localStorage['addRemarkForRefNumber'] = referencenumber; 
@@ -1724,10 +1366,10 @@ function addlokpaldetails(referencenumber) {
         list.innerHTML = '';
 
         $.ajax({
-        url: '/api/getescalationcaseRemarkbyref',
+        url: '/api/getlivecaseRemarkbyref',
         type: 'GET',
         data: {
-          casereferenceNumber:  localStorage['addRemarkForRefNumber']
+          casereferenceNumber: referencenumber
         },
 
         success: function (response) {
@@ -1752,59 +1394,85 @@ function addlokpaldetails(referencenumber) {
   }
 
 
+  
+  function movetoPendingPayment() {
+        var paymentdate = $('#customerAmountDate').val();
+        var remark = $('#movetopendingpaymentremark').val();
+        var customerAmount = $('#customerAmount').val();
+        
+        $.ajax({
+            url: '/api/addcasecustomerpaymentdetails', // Replace with your API endpoint
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+              casereferenceNumber:  localStorage['addRemarkForRefNumber'],
+              caseCustomerReceivedAmountDate : paymentdate,
+              caseRemarks: remark,
+              caseCustomerReceivedAmount: customerAmount, 
+            }),
+            success: function(response) {
+                alert('Case moved to pending payment');
+                window.location.href = "/viewcompletedcases.html";
+            },
+            error: function() {
+                alert('Failed to save details.');
+            }
+        });
+    }
 
-function movetoescalation(referencenumber) {
+   
 
-$.ajax({
-  url: '/api/movecasetoescalationfrommedicalbyref',
-  type: 'POST',
-  contentType: "application/x-www-form-urlencoded",
-  data: {
-    caseNumber: referencenumber,
-  },
-  success: function (response) {
-    if(response.message == "success")
-      {
-       // window.location.href = "/index.html"
-        //localStorage['userID'] = username;
-        alert("Case moved to Escalation!")
 
-        window.location.href = "/viewescalationcases.html";
+  function saveDetails() {
+        var status = $('#status').val();
+        var settlementAmount = $('#settlementAmount').val();
+        if (!status) {
+            alert('Please select a status.');
+            return;
+        }
+
+        $.ajax({
+            url: '/api/addcasesettlementdetails', // Replace with your API endpoint
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+              casereferenceNumber:  localStorage['addRemarkForRefNumber'],
+              caseResult: status,
+              caseSettlementAmount: settlementAmount
+            }),
+            success: function(response) {
+                alert('Details saved successfully.');
+                $('#popup9').fadeOut();
+                $('#remarkForm')[0].reset();
+                window.location.href = "/viewcompletedcases.html";
+            },
+            error: function() {
+                alert('Failed to save details.');
+            }
+        });
+    }
+
+   
+function movetolive(referencenumber) {
+        // Code to generate card
+       //alert("Move to live reference number: " + referencenumber);
+       localStorage['casereferencenumber'] = referencenumber; 
+
+       window.location.replace("/movecasetolive.html");
+
       }
-      else{
-        alert("Error moving case to Live!")
-      }
-  },
-  error: function (error) {
-    alert("Error moving case to Escalation!");
-    // Display an error message to the user
-  }
-});
 
-}
-
-
-
+      
     $(document).ready(function () {
 
-      $.ajax({
-        url: '/api/getoperationteamlist',
-        type: 'GET',
-        success: function (response) {
-          // Populate the options in the select element
-          const optionsSelect = $('#operationofficer');
-          response.forEach(function (option) {
-            optionsSelect.append($('<option>', {
-              value: option.userID,
-              text: option.userName
-            }));
-          });
-        },
-        error: function (error) {
-          console.error('Error:', error);
-        }
-      });
 
+      $('#status').change(function() {
+            if ($(this).val() === 'WON') {
+                $('#settlementAmount').prop('disabled', false);
+            } else {
+                $('#settlementAmount').prop('disabled', true).val('0');
+            }
+        });
 
 
       $.ajax({
@@ -1822,7 +1490,6 @@ $.ajax({
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showonlogin").show();
               $("#hideonlogin").hide();
-              localStorage['userName'] = response.username;
               table.buttons(0).enable();
              
             }
@@ -1832,7 +1499,6 @@ $.ajax({
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showonlogin").show();
               $("#hideonlogin").hide();
-              localStorage['userName'] = response.username;
             }
             else if(response.message =='cp' || response.message =='manager')
             {
@@ -1840,7 +1506,6 @@ $.ajax({
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showtocpandmanager").show();
               $("#hideonlogin").hide();
-              localStorage['userName'] = response.username;
             }
             else if(response.message =='medicalofficer')
             {
@@ -1899,7 +1564,6 @@ $.ajax({
       });
 
       $('#dataTable').DataTable({
-        "searching": true,
         layout: {
           topStart: {
               buttons: ['excel', 'pageLength']
@@ -1915,13 +1579,11 @@ $.ajax({
       populatereport(data[0]);  // Assuming data[0] is the data in the first column
       //alert( 'You clicked on ' + data[0] + '\'s row' );
       });
-
       
        // AJAX call on page load get manager details
        $.ajax({
-        url: '/api/getlokpalcasedetail',
+        url: '/api/getpendingpaymentcases',
         type: 'GET',
-        async: false, 
         success: function (response) {
           // Populate the options in the select element
           populateDataTable(response);
@@ -1940,187 +1602,68 @@ $.ajax({
           var length = Object.keys(data).length;
           for(var i = 0; i < length; i++) {
             var rfno= data[i].casereferenceNumber
-            var canEscalate = "NO";
-            var lokpalstatus = 
-             (data[i].LokpalBHPComplaintNumber ? data[i].LokpalBHPComplaintNumber :  "")  + ' : ' +
-            (data[i].lokpalBHPComplaintDate ? moment(new Date(data[i].lokpalBHPComplaintDate)).utc().format('YYYY-MM-DD') : "" ) + ' : ' +
-            (data[i].annexure5ComplaintDate  ? moment(new Date(data[i].annexure5ComplaintDate)).utc().format('YYYY-MM-DD') : "" ) + ' : ' +
-           (data[i].annexure5ComplaintNumber ?data[i].annexure5ComplaintNumber : "" ) + ' : ' +
-           (data[i].lokpalComplaintNumber ? data[i].lokpalComplaintNumber  : "" ) + ' : ' +
-            (data[i].lokpalComplaintDate  ? moment(new Date(data[i].lokpalComplaintDate)).utc().format('YYYY-MM-DD') : "" ) + ' : ' +
-            (data[i].dateOfLokpalHearing ? moment(new Date(data[i].dateOfLokpalHearing)).utc().format('YYYY-MM-DD') : "" )
+            var completeddate = moment(data[i].completedDate);
+            var prospectcasedate = moment(data[i].prospectDate);
+            var caseage  =    completeddate.diff(prospectcasedate, 'days');
+            var caseResult = "Not Availble";
+            var caseSettlementamount = "Not Availble";
 
-            //escalate if date diff is greater than 15
-            if( Math.ceil((new Date() - new Date(data[i].dateofEscalationToInsurer)) / (1000 * 60 * 60 * 24))  > 15)
+            if(data[i].caseResult)
             {
-              canEscalate = "YES";
+              caseResult = data[i].caseResult;
+            }
+            if(data[i].caseSettlementAmount)
+            {
+              caseSettlementamount = data[i].caseSettlementAmount;
             }
 
             // You could also use an ajax property on the data table initialization
-            var todaysdate = moment(new Date());
-            //var prospectcasedate = moment(data[i].prospectDate);
-            var caseage  =    "Not Available"
-            var registrationage  =   "Not Available"
-            var annexure5age  =    "Not Available"
-            var annexure6age  =    "Not Available"
-            if((data[i].lokpalbucketDate))
-           {
-              var lokpalcasedate = moment(data[i].lokpalbucketDate);
-              caseage  =    todaysdate.diff(lokpalcasedate, 'days');
 
-              if((data[i].lokpalBHPComplaintDate))
-              {
-                var registrationdate = moment(data[i].lokpalBHPComplaintDate);
-                registrationage = registrationdate.diff(lokpalcasedate, 'days');
-              }
-              if((data[i].annexure5ComplaintDate))
-              {
-                var annexure5date = moment(data[i].annexure5ComplaintDate);
-                annexure5age =  annexure5date.diff(lokpalcasedate, 'days');
-              }
-              if((data[i].lokpalComplaintDate))
-              {
-                var annexure6date = moment(data[i].lokpalComplaintDate);
-                annexure6age =  annexure6date.diff(lokpalcasedate, 'days');
-              }
-           }
-
-           var rowData = [ data[i].casereferenceNumber,
-              moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),
-              `${caseage}`,
-              `${registrationage}`,
-              `${annexure5age}`,
-              `${annexure6age}`,
-              data[i].patientName,
+            var rowData = [data[i].casereferenceNumber,
+            moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),
+            `${caseage}`,
+            data[i].patientName,
               data[i].patientMobile,
               data[i].complainantName,
               data[i].managerName,
               data[i].cpName,
-              data[i].operationOfficer,
               data[i].insuranceCompanyName,
               data[i].claimNumber,
               data[i].claimAmount,
-              data[i].caseEmail,
-              data[i].caseEmailPassword,
-              data[i].newCaseStatus,
-              `<a href="#popup2"><button class="btn btn-primary btn-sm"  onclick="viewdetails('${rfno}')" >View Details</button> </a>`,
-              `<a href="#popup3"><button class="btn btn-primary btn-sm"  onclick="addlokpaldetails('${rfno}')" >Add details</button> </a>`,
+              data[i].caseCompletionType,
+              `${caseResult}`,
+              `${caseSettlementamount}`,
+              `<a href="#popup10"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >Add Details</button> </a>`,
               `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
-              `<a href="#popup14"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
-              `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
-              `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Completed</button> </a>`,
-              `<a href="#popup12"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Hold</button> </a>`,
-];
+              `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')">View Documents</button> </a>`,
+              `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
+              `<a href="#popup6"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Pending Payment</button> </a>`,
+              ];
 
-            table.row.add(rowData);
-
+              table.row.add(rowData);
           }
-
-        // Re-draw the table - you wouldn't want to do it here, but it's an example :-)
-       // $('#dataTable').dataTable().fnDraw();
-
-        table.draw(false);
-        
-           }
-
-
+          table.draw(false);
+        }
       
+
+
+
     });
 
 
-    function viewAgreement(referencenumber)
-    {
+    //for  filter buttons
 
-      localStorage['casereferencenumber'] = referencenumber; 
-
-      $.ajax({
-        url: '/api/getcasedetailbyref',
-        type: 'GET',
-        data: {
-          casereferenceNumber: referencenumber
-        },
-
-        success: function (response) {
- 
-            quill.root.innerHTML= response[0].caseDraft;
-            quill1.root.innerHTML= response[0].lokpalDraft;          
-
-        },
-        error: function (error) {
-          console.error('Error:', error);
-        }
-      }); 
-
-    }
-
-
-    function viewdocuments(referencenumber)
-{
-  let list = document.getElementById("documentlist");
-  
-  console.log("rajat....");
-
-
-  var wrapper = document.getElementById('wrapper');
-  wrapper.innerHTML= `"<iframe name="inlineFrameExample" 
-            title="Inline Frame Example" 
-            style="width: 90%; height: 80vh; border: 2px dotted;border-color: black; flex-grow: 2;"
-            src="">
-    </iframe>"`;
-  
-
-// 👇️ Remove all list elements
-list.innerHTML = '';
-
-
-$.ajax({
-url: '/api/getprospectcasedetailbyref',
-type: 'GET',
-data: {
-  casereferenceNumber: referencenumber
-},
-
-success: function (response) {
-  // Populate the options in the select eleme    
-   
-   // let text =  response[0].caseRemarks;
-  //  const myArray = text.split(";");    
-
-    let list = document.getElementById("documentlist");
-      for (i = 0; i < response[0].docUrl.length ; i++) {
-        let li = document.createElement('li');
-        let filename = response[0].docUrl[i].substring(response[0].docUrl[i].lastIndexOf('/')+1);
-        let smallfilename= filename.substring(0, filename.lastIndexOf('-'));
-        //li.innerHTML = `<a target='inlineFrameExample' href="${response[0].docUrl[i]}" >${filename}</a>`;
-        li.innerHTML = `<a target='inlineFrameExample' href="${response[0].docUrl[i]}" >${smallfilename}</a>`;
-        list.appendChild(li);
-       }
-
-},
-error: function (error) {
-  console.error('Error:', error);
-}
-});
- 
-}
-
-
-
-$('ul').on('click', 'a', function() {
+    $('ul').on('click', 'a', function() {
       var nameFilter = $(this).text()
       console.log(nameFilter)
 
         switch (nameFilter)
         {
-          case "Lokpal Pending":
-          case "Lokpal Registered":
-          case "Annexure5 Pending":
-          case "Annexure5 Replied":
-          case "Annexure 6 Replied":
-          case "Annexure 6 Pending":
           case "Hearing":
+          case "Escalation Settlement":
+          case "Consent":
           $("#dataTable").DataTable()
-          .columns(17)
+          .columns(11)
           .search($(this).text())
           .draw();
             break;
@@ -2132,13 +1675,13 @@ $('ul').on('click', 'a', function() {
       $('ul').on('click', 'a.all', function() {
         $("#dataTable").DataTable()
         .search('')
-        .columns(17)
+        .columns(11)
         .search('')
         .draw();
       });
 
+    // filter buttons end
 
-    
   </script>
 </body>
 

@@ -57,12 +57,10 @@ const port = process.env.PORT || 80
 //  useUnifiedTopology: true,
 //});
 
-
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
 
 /*
 
@@ -72,6 +70,7 @@ mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
 });
 
 */
+
 
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
@@ -228,10 +227,14 @@ const dataSchema = new mongoose.Schema({
   isPendingAuth: String,
   isLive: String,
   isCompleted: String,
+  isPendingPayment: String,
   caseCompletionRemark: String,
   caseCompletionType: String,
   caseResult:String,
   caseSettlementAmount: String,
+
+  caseCustomerReceivedAmount: Number,
+  caseCustomerReceivedAmountDate: Date,
 
   // Add stages of case here based on thier colour coding
   isEmailGenerated: String,
@@ -939,8 +942,28 @@ app.post('/api/addcasesettlementdetails', async(req, res) => {
 
 });
 
+app.post('/api/addcasecustomerpaymentdetails', async(req, res) => {
+  try{
 
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{caseRemarks:req.body.caseRemarks}, $set:{ caseCustomerReceivedAmountDate:req.body.caseCustomerReceivedAmountDate, caseCustomerReceivedAmount: req.body.caseCustomerReceivedAmount, isPendingPayment: "true", isCompleted: "false", newCaseStatus: "Pending Payment" }});
 
+      if(newData == null)
+      {
+        res.json({ message: 'Could not save case settlement details', refnum:req.body.casereferenceNumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error saving case settlement details' });
+  } 
+
+});
 
 app.post('/api/addcaseverdictmedical', async(req, res) => {
   try{
@@ -2141,6 +2164,17 @@ app.get("/api/getcompletedcases", async(req, res) => {
   }
 });
 
+app.get("/api/getpendingpaymentcases", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  dataSchemaObject.find({isPendingPayment: "true"});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get pending case details' });
+  }
+});
+
 app.get("/api/getallcases", async(req, res) => {
   try {
     // Retrieve all tpa list from database
@@ -3020,6 +3054,9 @@ app.get('/viewrejectedcases.html', (req, res) => res.sendFile(__dirname+'/viewre
 app.get('/viewholdcases.html', (req, res) => res.sendFile(__dirname+'/viewholdcases.html'))
 
 app.get('/viewcompletedcases.html', (req, res) => res.sendFile(__dirname+'/viewcompletedcases.html'))
+
+app.get('/viewpendingpaymentcases.html', (req, res) => res.sendFile(__dirname+'/viewpendingpaymentcases.html'))
+
 app.get('/viewsearchcases.html', (req, res) => res.sendFile(__dirname+'/viewsearchcases.html'))
 
 app.get('/changepassword.html', (req, res) => res.sendFile(__dirname+'/changepassword.html'))
