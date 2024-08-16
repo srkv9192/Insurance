@@ -72,7 +72,6 @@ mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
 
 */
 
-
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
 app.use(cookieParser());
@@ -241,6 +240,11 @@ const dataSchema = new mongoose.Schema({
   caseNidaanReceivedAmountDate : Date,
   caseNidaanReceivedAmount: Number, 
   caseNidaanReceivedAmountMode : String,
+
+  caseCPFinalAmount: Number,
+  caseCPFinalReceivedAmount: Number,
+  caseCPFinalReceivedAmountDate: Date,
+  caseCPFinalReceivedAmountMode :String,
 
   // Add stages of case here based on thier colour coding
   isEmailGenerated: String,
@@ -972,14 +976,14 @@ app.post('/api/addcasecustomerpaymentdetails', async(req, res) => {
 });
 
 
-app.post('/api/addcasenidaanpaymentdetails', async(req, res) => {
+app.post('/api/addcaseclosedcppaymentdetails', async(req, res) => {
   try{
 
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{caseRemarks:req.body.caseRemarks}, $set:{ caseNidaanReceivedAmountDate:req.body.caseNidaanReceivedAmountDate, caseNidaanReceivedAmount: req.body.caseNidaanReceivedAmount, caseNidaanReceivedAmountMode: req.body.caseNidaanReceivedAmountMode, isPendingPayment: "false", isFinished: "true", newCaseStatus: "CP Payment Pending" }});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{caseRemarks:req.body.caseRemarks}, $set:{ caseCPFinalReceivedAmountDate:req.body.caseCPFinalReceivedAmountDate, caseCPFinalReceivedAmount: req.body.caseCPFinalReceivedAmount, caseCPFinalReceivedAmountMode: req.body.caseCPFinalReceivedAmountMode, newCaseStatus: "Case Closed" }});
 
       if(newData == null)
       {
-        res.json({ message: 'Could not save case settlement details', refnum:req.body.casereferenceNumber});
+        res.json({ message: 'Could not save case closed details', refnum:req.body.casereferenceNumber});
       }
       else
       {
@@ -990,10 +994,73 @@ app.post('/api/addcasenidaanpaymentdetails', async(req, res) => {
   catch(err)
   {
     console.error(err);
+    res.status(500).json({ error: 'Error saving case closed details' });
+  } 
+
+});
+
+
+app.post('/api/addcasenidaanpaymentdetails', async(req, res) => {
+  try{
+
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{caseRemarks:req.body.caseRemarks}, $set:{ caseNidaanReceivedAmountDate:req.body.caseNidaanReceivedAmountDate, caseNidaanReceivedAmount: req.body.caseNidaanReceivedAmount, caseNidaanReceivedAmountMode: req.body.caseNidaanReceivedAmountMode, caseCPFinalAmount: req.body.caseCPFinalAmount, isPendingPayment: "false", isFinished: "true", newCaseStatus: "CP Payment Pending" }});
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not save case settlement details', refnum:req.body.casereferenceNumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+
+
+
+
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
     res.status(500).json({ error: 'Error saving case settlement details' });
   } 
 
 });
+
+
+
+// API Endpoint
+app.post('/api/getCpCommission', async (req, res) => {
+  try {
+
+      // Step 1: Fetch cpId from data collection using referenceNumber
+      const dataRecord = await dataSchemaObject.findOne({casereferenceNumber: req.body.casereferenceNumber }).exec();
+
+      if (!dataRecord) {
+        res.json({ cpCommission: 0 });
+      }
+
+      console.log(dataRecord)
+
+      // Step 2: Fetch cpCommission from cp collection using cpId
+      const cpRecord = await cpSchemaObject.findOne({ cpID: dataRecord.cpID }).exec();
+
+      //rajat
+
+      if (!cpRecord) {
+        res.json({ cpCommission: 0 });
+      }
+
+      console.log(cpRecord)
+
+      // Respond with cpCommission
+      res.json({ cpCommission: cpRecord.cpCommission });
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
 
 
 app.post('/api/addcaseverdictmedical', async(req, res) => {
