@@ -5,6 +5,9 @@ const multer = require('multer');
 const AWS = require('aws-sdk');
 var fs = require('fs');
 
+const ExcelJS = require('exceljs');
+const moment = require('moment'); // Import moment
+
 const utf8 = require('utf8');
 
 const regeneratorRuntime = require("regenerator-runtime");
@@ -62,6 +65,7 @@ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
 
 /*
 
@@ -215,7 +219,6 @@ const dataSchema = new mongoose.Schema({
   managerName: String,
   cpID: String,
   cpName: String,
-
 
 
   policyNumber: String,
@@ -586,6 +589,70 @@ app.post('/api/uploaddraftdocs', upload.array('pdfFile', 10), async (req, res) =
       res.status(500).json({ error: 'Error saving data' });
     }
   
+});
+
+// API Endpoint
+app.get('/api/downloadExcel', async (req, res) => {
+  try {
+      // Query the MongoDB collection
+      const records = await dataSchemaObject.find({}).exec();
+
+      // Create a new workbook and worksheet
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet('Sheet1');
+
+            // Add header row
+            worksheet.columns = [
+              { header: 'Case Number', key: 'field1', width: 20 },
+              { header: 'Case Inception Date', key: 'field2', width: 20 },
+              { header: 'Patient Name', key: 'field3', width: 15 },
+              { header: 'Patient Phone', key: 'field4', width: 20 },
+              { header: 'Complainant Name', key: 'field5', width: 15 },
+              { header: 'Complainant Phone', key: 'field6', width: 20 },
+              { header: 'Manager Name', key: 'field7', width: 15 },
+              { header: 'CP Name', key: 'field8', width: 20 },
+              { header: 'Insurance Company Name', key: 'field9', width: 20 },
+              { header: 'Claim Number', key: 'field10', width: 20 },
+              { header: 'Claim Amount', key: 'field11', width: 20 },
+              { header: 'Case Of', key: 'field12', width: 20 },
+              { header: 'Operation Officer', key: 'field13', width: 20 },
+              { header: 'Medical Officer', key: 'field14', width: 20 },
+              { header: 'Case Status', key: 'field15', width: 20 },
+          ];
+    
+    
+    
+                // Add rows to worksheet
+                records.forEach(record => {
+                    worksheet.addRow({
+                        field1: record.casereferenceNumber,
+                        field2: moment(record.prospectDate).format('DD-MM-YYYY'),
+                        field3: record.patientName,
+                        field4: record.patientMobile,
+                        field5: record.complainantName,
+                        field6: record.complainantMobile,
+                        field7: record.managerName,
+                        field8: record.cpName,
+                        field9: record.insuranceCompanyName,
+                        field10: record.claimNumber,
+                        field11: record.claimAmount,
+                        field12: record.caseHandler,
+                        field13: record.operationOfficer,
+                        field14: record.medicalOpinionOfficer,
+                        field15: record.newCaseStatus,
+                    });
+                });
+      // Create a buffer from the workbook
+      const buffer = await workbook.xlsx.writeBuffer();
+
+      // Set response headers and send the buffer
+      res.setHeader('Content-Disposition', 'attachment; filename=records.xlsx');
+      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+      res.send(buffer);
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Internal Server Error' });
+  }
 });
 
 
