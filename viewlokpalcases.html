@@ -462,9 +462,6 @@ div.dataTables_filter {
                         <th>Reference Number</th>
                         <th>Case Inception Date</th>
                         <th>Case Age</th>
-                        <th>Registration Time</th>
-                        <th>Annexure5 Time</th>
-                        <th>Annexure6 Time</th>
                         <th>Patient Name</th>
                         <th>Patient Phone</th>
                         <th>Complainant Name</th>
@@ -476,6 +473,9 @@ div.dataTables_filter {
                         <th>Claim Amount</th> 
                         <th>Email</th> 
                         <th>Password</th> 
+                        <th>Registration Time</th>
+                        <th>Annexure5 Time</th>
+                        <th>Annexure6 Time</th>
                          <th>Case Status</th> 
                         <th>Action</th>
                         <th>Action</th>
@@ -1998,9 +1998,6 @@ $.ajax({
            var rowData = [ data[i].casereferenceNumber,
               moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),
               `${caseage}`,
-              `${registrationage}`,
-              `${annexure5age}`,
-              `${annexure6age}`,
               data[i].patientName,
               data[i].patientMobile,
               data[i].complainantName,
@@ -2012,6 +2009,9 @@ $.ajax({
               data[i].claimAmount,
               data[i].caseEmail,
               data[i].caseEmailPassword,
+              `${registrationage}`,
+              `${annexure5age}`,
+              `${annexure6age}`,
               data[i].newCaseStatus,
               `<a href="#popup2"><button class="btn btn-primary btn-sm"  onclick="viewdetails('${rfno}')" >View Details</button> </a>`,
               `<a href="#popup3"><button class="btn btn-primary btn-sm"  onclick="addlokpaldetails('${rfno}')" >Add details</button> </a>`,

@@ -425,8 +425,27 @@ hr.dashed {
                           </select>
                       </div>
                       <div class="col-sm-6">
-                          <label for="witness-name" class="form-label">Witness Name</label>
-                          <input type="text" class="form-control" id="witness-name" required>
+                          <label for="case-of-dropdown" class="form-label">Witness Name</label>
+                          <div class="input-group">
+                            <select class="form-control" id="case-of-dropdown"  required>
+                              <option value="">None</option>
+                              <option value="abhishek solanki">Abhishek Solanki</option>
+                              <option value="annapurna kasera">Annapurna Kasera</option>
+                              <option value="aparna pare">Aparna Pare</option>
+                              <option value="ashish dubey">Ashish Dubey</option>
+                              <option value="ashish khandelwal">Ashish khandelwal</option>
+                              <option value="ashwin kaushal">Ashwin kaushal</option>
+                              <option value="avi mishra">Avi Mishra</option>
+                              <option value="dimple batra">Dimple Batra</option>
+                              <option value="khushi bhite">Khushi Bhite</option>
+                              <option value="mahi mishra">Mahi Mishra</option>
+                              <option value="mansi sawant">Mansi Sawant</option>
+                              <option value="mona dodiya">Mona Dodiya</option>
+                              <option value="robin mehkali">Robin Mehkali</option>
+                              <option value="swati sarathe">Swati Sarathe</option>
+                              <option value="vijay nagar">Vijay Nagar</option>
+                            </select>
+                          </div>
                       </div>
                   </div>
                   <div class="row mb-3">
@@ -510,7 +529,7 @@ function fetchData() {
             document.getElementById("claim-number").value = response[0].claimNumber ? response[0].claimNumber : "";
             document.getElementById("total-claim-amount").value = response[0].claimAmount ?  response[0].claimAmount : "";
 
-            document.getElementById("witness-name").value = response[0].caseHandler ? response[0].caseHandler : "";
+            document.getElementById("case-of-dropdown").value = response[0].caseHandler ? (response[0].caseHandler).toLowerCase() : "";
 
 
             document.getElementById("processing-fee").value = response[0].processingFee ? response[0].processingFee : "";
@@ -710,7 +729,8 @@ function fetchData() {
         var chequenumber = $('#cheque-number').val();
 
         var bankname = $('#bank-name').val();
-        var witnessname = $('#witness-name').val();
+        var witnessname = $("#case-of-dropdown option:selected").text();
+
         var idnumber = $('#id-number').val();
 
         $.ajax({
@@ -730,8 +750,9 @@ function fetchData() {
             patientMobile : clientphone,
             complainantName: complainantname,
             claimNumber: claimnumber,
-
-
+            insuranceCompanyName: insurancecompanyname,
+            caseHandler: witnessname,
+            claimAmount: claimamount,
 
           },
           success: function (response) {

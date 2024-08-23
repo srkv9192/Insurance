@@ -66,7 +66,6 @@ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS
   useUnifiedTopology: true,
 });
 
-
 /*
 
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
@@ -1351,7 +1350,7 @@ app.post('/api/addlivedraftdata', async(req, res) => {
 app.post('/api/addpfdetailsduringlegalgeneration', async(req, res) => {
   try{
 
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfpaymentRemarks:req.body.pfpaymentRemarks, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,  cfBankName: req.body.cfBankName, patientAddress: req.body.patientAddress, behalfOf : req.body.behalfOf, patientName: req.body.patientName, patientMobile: req.body.patientMobile, complainantName: req.body.complainantName, claimNumber: req.body.claimNumber,}});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfpaymentRemarks:req.body.pfpaymentRemarks, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,  cfBankName: req.body.cfBankName, patientAddress: req.body.patientAddress, behalfOf : req.body.behalfOf, patientName: req.body.patientName, patientMobile: req.body.patientMobile, complainantName: req.body.complainantName, claimNumber: req.body.claimNumber, insuranceCompanyName: req.body.insuranceCompanyName, claimAmount:req.body.claimAmount, caseHandler:req.body.caseHandler}});
 
       if(newData == null)
       {
@@ -3219,6 +3218,7 @@ app.get('/index.html', (req, res) => res.sendFile(__dirname+'/index.html'))
 app.get('/login.html', (req, res) => res.sendFile(__dirname+'/login.html'))
 app.get('/logout.html', (req, res) => res.sendFile(__dirname+'/logout.html'))
 app.get('/newcase.html', (req, res) => res.sendFile(__dirname+'/newcase.html'))
+app.get('/editcase.html', (req, res) => res.sendFile(__dirname+'/editcase.html'))
 app.get('/viewprospectcases.html', (req, res) => res.sendFile(__dirname+'/viewprospectcases.html'))
 app.get('/viewapprovedcases.html', (req, res) => res.sendFile(__dirname+'/viewapprovedcases.html'))
 app.get('/viewlivecases.html', (req, res) => res.sendFile(__dirname+'/viewlivecases.html'))
