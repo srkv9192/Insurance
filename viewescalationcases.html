@@ -1780,7 +1780,7 @@ error: function (error) {
           case "Escalation Pending":
           case "Escalation Query":
           $("#dataTable").DataTable()
-          .columns(12)
+          .columns(11)
           .search($(this).text())
           .draw();
             break;
@@ -1792,7 +1792,7 @@ error: function (error) {
       $('ul').on('click', 'a.all', function() {
         $("#dataTable").DataTable()
         .search('')
-        .columns(12)
+        .columns(11)
         .search('')
         .draw();
       });
