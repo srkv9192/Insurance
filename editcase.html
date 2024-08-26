@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="css/menubar.css">
+  <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.4/dist/quill.snow.css" rel="stylesheet" />
+  <style>
+    body {
+      background-color: #343a40;
+      background-image: url('/images/background20.jpg');
+      color: #fff;
+    }
+
+    .navbar-light .navbar-brand {
+      color: #fff;
+    }
+
+    .navbar-light .navbar-nav .nav-link {
+      color: #fff;
+    }
+
+    .navbar-light .navbar-nav .nav-link:hover,
+    .navbar-light .navbar-nav .nav-link:focus {
+      color: #e9ecef;
+    }
+
+    
+    .navbar-dark .navbar-brand {
+      color: #343a40;
+    }
+
+    .navbar-dark .navbar-nav .nav-link {
+      color: #343a40;
+    }
+
+    .navbar-dark .navbar-nav .nav-link:hover,
+    .navbar-dark .navbar-nav .nav-link:focus {
+      color: #343a40;
+    }
+
+    .form-control {
+      background-color: #495057;
+      color: #fff;
+    }
+
+    .form-control:focus {
+      background-color: #343a40;
+      color: #fff;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      border-color: #007bff;
+    }
+
+    .btn-primary:hover,
+    .btn-primary:focus {
+      background-color: #0062cc;
+      border-color: #005cbf;
+    }
+  </style>
+  <title>Edit Case Page</title>
+</head>
+
+<body>
+
+  <div class='dashboard'>
+    <div class="dashboard-nav">
+      <header>
+        <a href="#"class="brand-logo"> 
+          <img src="/images/logoround.png" class="navbar-brand" href="/" align="left" width="130" height="130">
+         </a>
+         <a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a>
+        </header>
+      <nav class="dashboard-nav-list"><a href="/" class="dashboard-nav-item"><i class="fas fa-home"></i>
+          Home </a>
+
+          <div id="hideonlogin">
+            <nav class="dashboard-nav-list"><a href="/newcarddirect.html" class="dashboard-nav-item"><i class="fas fa-inr"></i>
+              Buy Card </a>
+
+              <nav class="dashboard-nav-list"><a href="/paymentinfo.html" class="dashboard-nav-item"><i class="fas fa-inr"></i>
+                Payment Info </a>
+          </div>
+
+          
+
+          <div id="showonlogin" style="display: none;">
+
+            <nav class="dashboard-nav-list"><a href="/dashboard.html" class="dashboard-nav-item"><i class="fas fa-dashboard"></i>
+              Dashboard </a>
+
+            <div class='dashboard-nav-dropdown show'>
+               <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+                <i class="fas fa-photo-video">
+                  </i>Card Menu</a>
+                <div class='dashboard-nav-dropdown-menu'>
+                    <a href="/newcard.html" class="dashboard-nav-dropdown-item">Add Card</a>
+                    <a href="/viewpendingcards.html" class="dashboard-nav-dropdown-item">View Pending</a>
+                    <a href="/viewcards.html" class="dashboard-nav-dropdown-item">View Completed</a>
+                    <a href="/generatecardpdf.html" class="dashboard-nav-dropdown-item">Download Card</a>
+                </div>
+             </div>
+
+             <div class='dashboard-nav-dropdown show'>
+              <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+               <i class="fas fa-photo-video">
+                 </i>Case Menu</a>
+               <div class='dashboard-nav-dropdown-menu'>
+                   <a href="/addprospect.html" class="dashboard-nav-dropdown-item">Add Case</a>
+                   <a href="/viewprospectcases.html" class="dashboard-nav-dropdown-item">View Prospect</a>
+                   
+                   
+                   <a href="/viewmedicalopinioncases.html" class="dashboard-nav-dropdown-item">View Medical</a>
+                   <a href="/viewapprovedcases.html" class="dashboard-nav-dropdown-item">View Approved</a>
+                   <a href="/viewrejectedcases.html" class="dashboard-nav-dropdown-item">View Rejected</a>
+                   <a href="/viewlivecases.html" class="dashboard-nav-dropdown-item">View Live</a>
+                   <a href="/viewpendingdraftcases.html" class="dashboard-nav-dropdown-item">View Pending Draft</a>
+                   <a href="/viewescalationcases.html" class="dashboard-nav-dropdown-item">View Escalation</a>
+                   <a href="/viewlokpalcases.html" class="dashboard-nav-dropdown-item">View Lokpal</a>
+                   <a href="/viewcompletedcases.html" class="dashboard-nav-dropdown-item">View Completed</a>
+                   <a href="/viewpendingpaymentcases.html" class="dashboard-nav-dropdown-item">View Pending Payment</a>
+                   <a href="/viewfinishedcases.html" class="dashboard-nav-dropdown-item">View Finished</a>
+                   <a href="/viewholdcases.html" class="dashboard-nav-dropdown-item">View Hold</a>
+                   <a href="/viewsearchcases.html" class="dashboard-nav-dropdown-item">Search Case</a>
+                   
+
+                                      <!-- 
+                   <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
+                   <a href="/viewescalationcases.html" class="dashboard-nav-dropdown-item">View Escalation</a>
+                    -->
+
+                   <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
+               </div>
+            </div>
+
+            <div class='dashboard-nav-dropdown show'>
+              <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+               <i class="fas  fa-user-secret">
+                 </i>Admin Menu</a>
+               <div class='dashboard-nav-dropdown-menu'>
+                   <a href="/changepassword.html" class="dashboard-nav-dropdown-item">Change Password</a>
+                   <a href="/createcp.html" class="dashboard-nav-dropdown-item">Add CP</a>
+                  <a href="/editcp.html" class="dashboard-nav-dropdown-item">Edit CP</a>
+                   <a href="/deletecases.html" class="dashboard-nav-dropdown-item">Delete Case</a>
+                   <a href="/editcase.html" class="dashboard-nav-dropdown-item">Edit Case</a>
+               </div>
+             </div>
+
+          </div>
+
+          <div id="showtocpandmanager" style="display: none;">
+
+            <div class='dashboard-nav-dropdown show'>
+               <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+                <i class="fas fa-photo-video">
+                  </i>Card Menu</a>
+                <div class='dashboard-nav-dropdown-menu'>
+                    <a href="/newcard.html" class="dashboard-nav-dropdown-item">Add Card</a>
+                </div>
+             </div>
+
+             <div class='dashboard-nav-dropdown show'>
+              <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+               <i class="fas fa-photo-video">
+                 </i>Case Menu</a>
+               <div class='dashboard-nav-dropdown-menu'>
+                   <a href="/addprospect.html" class="dashboard-nav-dropdown-item">Add Case</a>
+               </div>
+            </div>
+
+          </div>
+
+
+          <div id="showtomedicalofficer" style="display: none;">
+
+            <div class='dashboard-nav-dropdown show'>
+             <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+              <i class="fas fa-photo-video">
+                </i>Case Menu</a>
+              <div class='dashboard-nav-dropdown-menu'>
+                <a href="/viewmedicalopinioncases.html" class="dashboard-nav-dropdown-item">View Medical</a>
+                <a href="/viewpendingdraftcases.html" class="dashboard-nav-dropdown-item">View Pending Draft</a>
+                <a href="/viewlokpalcases.html" class="dashboard-nav-dropdown-item">View Lokpal</a>
+                <a href="/viewcompletedcases.html" class="dashboard-nav-dropdown-item">View Completed</a>
+                <a href="/viewholdcases.html" class="dashboard-nav-dropdown-item">View Hold</a>
+                <a href="/viewsearchcases.html" class="dashboard-nav-dropdown-item">Search Case</a>
+                <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
+              </div>
+
+           </div>
+
+         </div>
+
+         <div id="showtoadvocate" style="display: none;">
+
+          <div class='dashboard-nav-dropdown show'>
+           <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+            <i class="fas fa-photo-video">
+              </i>Case Menu</a>
+            <div class='dashboard-nav-dropdown-menu'>
+                <a href="/viewpendingdraftcases.html" class="dashboard-nav-dropdown-item">View Pending Draft</a>
+            </div>
+
+         </div>
+
+       </div>
+
+         <div id="showtomarketing" style="display: none;">
+
+          <div class='dashboard-nav-dropdown show'>
+           <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+            <i class="fas fa-photo-video">
+              </i>Case Menu</a>
+            <div class='dashboard-nav-dropdown-menu'>
+              <a href="/addprospect.html" class="dashboard-nav-dropdown-item">Add Case</a>
+              <a href="/viewprospectcases.html" class="dashboard-nav-dropdown-item">View Prospect</a>
+              <a href="/viewapprovedcases.html" class="dashboard-nav-dropdown-item">View Approved</a>
+              <a href="/viewrejectedcases.html" class="dashboard-nav-dropdown-item">View Rejected</a>
+              <a href="/viewsearchcases.html" class="dashboard-nav-dropdown-item">Search Case</a>
+              <a href="/viewholdcases.html" class="dashboard-nav-dropdown-item">View Hold</a>
+              <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
+              <a href="/createcp.html" class="dashboard-nav-dropdown-item">Add CP</a>
+            </div>
+
+         
+          </div>
+
+
+         </div>
+
+        <div class="nav-item-divider"></div>
+        <a  id="login-menu"
+                  href="/login.html" class="dashboard-nav-item"><i class="fas  fa-sign-in "></i> Login </a>
+      </nav>
+  </div>
+    <div class='dashboard-app'>
+        <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
+        <div class='dashboard-content' style="background-image: url('/images/background20.jpg');  background-repeat: repeat;  background-size: cover;">
+          <div class="container mt-5">
+            <div class="row justify-content-center">
+              <div class="col-lg-12 col-md-6 col-sm-8">
+                <h2 class="text-center mb-4">Edit Case Details</h2>
+
+                <div class="frame" style="color:black;background-image: url('/images/background18.jpg');  font-weight: bold;  font-family: monospace;font-size: large; background-size: cover;">
+                  <form id="loginForm" enctype="multipart/form-data">
+
+                    <div class="row mb-3 justify-content-center">
+                      <div class="col-sm-6">
+                          <input type="text" class="form-control" id="queryInput" placeholder="Enter Reference Number">
+                      </div>
+                      
+                  </div>
+
+                <div class="row mb-3 justify-content-center">
+                  <div class="col-sm-4 text-center">
+                    <button type="button" class="btn btn-primary mt-2" onclick="fetchData()">Fetch Data</button>
+                  </div>
+                </div>
+  
+                  <hr class="dashed">
+    
+                    <div class="row mb-3">
+    
+                      <div class="col-sm-3">
+                        <label for="case-number" class="form-label">Case Number</label>
+                        <input type="text" class="form-control" id="case-number" style="background-color:#495057" disabled>
+                      </div>
+      
+                      <div class="col-sm-3">
+                        <label for="prospectZone" class="form-label">Zone</label>
+                        <div class="input-group">
+                          <select class="form-control" id="prospectZone-dropdown">
+                            <option value="indore">Indore</option>
+                            <option value="bhopal">Bhopal</option>
+                            <option value="dewas">Dewas</option>
+                            <option value="khandwa">Khandwa</option>
+                            <option value="ujjain">Ujjain</option>
+                            <option value="raipur">Raipur</option>
+                            <option value="ratlam">Ratlam</option>
+                            <option value="mandideep">Mandideep</option>
+                            <option value="sagar">Sagar</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="col-sm-3">
+                        <label for="claim-number" class="form-label">Claim Number</label>
+                        <input type="text" class="form-control" id="claim-number" required>
+                      </div>
+    
+                      <div class="col-sm-3">
+                        <label for="total-claim-amount" class="form-label">Claim Amount</label>
+                        <input type="number" class="form-control" id="total-claim-amount" required>
+                      </div>
+
+                    </div>
+
+    
+                    <div class="row mb-3">
+    
+                      <div class="col-sm-3">
+                        <label for="manager-name" class="form-label">Manager Name</label>
+                        <div class="input-group">
+                          <select class="form-control" id="manager-name-dropdown" >
+                            <option value="">None</option>
+                          </select>
+                        </div>
+                      </div>
+      
+                      <div class="col-sm-3">
+                        <label for="cp-name" class="form-label">Channel Partner </label>
+                        <div class="input-group">
+                          <select class="form-control" id="cp-name-dropdown" >
+                            <option value="">None</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="col-sm-3">
+                        <label for="patient-name" class="form-label">Patient Name</label>
+                        <input type="text" class="form-control" id="patient-name" required>
+                      </div>
+                      <div class="col-sm-3">
+                        <label for="patient-phone" class="form-label">Patient Phone</label>
+                        <input type="text" class="form-control" id="patient-phone" required pattern="[0-9]{10}" required maxlength="10">
+                      </div>
+
+
+                    </div>
+    
+                    <div class="row mb-3">
+                      <div class="col-sm-3">
+                        <label for="complainant-name" class="form-label">Complainant Name</label>
+                        <input type="text" class="form-control" id="complainant-name" required>
+                      </div>
+                      <div class="col-sm-3">
+                        <label for="complainant-phone" class="form-label">Complainant Phone</label>
+                        <input type="text" class="form-control" id="complainant-phone" required pattern="[0-9]{10}" required maxlength="10">
+                      </div>
+
+                      <div class="col-sm-3">
+                        <label for="insurance-company" class="form-label">Insurance Company Name</label>
+                        <div class="input-group">
+                          <select class="form-control" id="insurance-company-dropdown" required>
+                            <option value="">None</option>
+                            <option value="Other">Other</option>
+                          </select>
+                          <input type="text" class="form-control" id="insurance-company-other" placeholder="Enter other insurance company name" style="display: none;">
+                        </div>
+                      </div>
+    
+                        <div class="col-sm-3">
+                          <label for="case-of-dropdown" class="form-label">Case of:</label>
+                          <div class="input-group">
+                            <select class="form-control" id="case-of-dropdown" >
+                              <option value="">None</option>
+                              <option value="abhishek solanki">Abhishek Solanki</option>
+                              <option value="annapurna kasera">Annapurna Kasera</option>
+                              <option value="aparna pare">Aparna Pare</option>
+                              <option value="ashish dubey">Ashish Dubey</option>
+                              <option value="ashish khandelwal">Ashish khandelwal</option>
+                              <option value="ashwin kaushal">Ashwin kaushal</option>
+                              <option value="avi mishra">Avi Mishra</option>
+                              <option value="dimple batra">Dimple Batra</option>
+                              <option value="khushi bhite">Khushi Bhite</option>
+                              <option value="mahi mishra">Mahi Mishra</option>
+                              <option value="mansi sawant">Mansi Sawant</option>
+                              <option value="mona dodiya">Mona Dodiya</option>
+                              <option value="robin mehkali">Robin Mehkali</option>
+                              <option value="swati sarathe">Swati Sarathe</option>
+                              <option value="vijay nagar">Vijay Nagar</option>
+                            </select>
+                          </div>
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="row mb-3">
+    
+                      <div class="col-sm-6 row-sm-5">
+                        <label for="rejection-reason" class="form-label">Case Rejection Reason</label>
+                        <textarea style="height:50%; width:80%; "  type="text" class="form-control" rows="5" id="case-rejection-reason" ></textarea>
+                      </div>
+      
+                      <div class="col-sm-6 row-sm-5">
+                        <label for="manual-gist" class="form-label">Manual Gist</label>
+                        <textarea style="height:50%; width:80%; "  type="text" class="form-control" rows="5" id="manual-gist" ></textarea>
+
+                      </div>
+
+                    </div>
+
+
+                      <div class="row mb-3">
+
+                        <div class="col-sm-3">
+                          <label for="claim-type-dropdown" class="form-label">Claim Type</label>
+                          
+
+                          <div class="input-group">
+                            <select class="form-control" id="claim-type-dropdown" required>
+                              <option value="">None</option>
+                              <option value="Reimbursement">Reimbursement</option>
+                              <option value="Deduction">Deduction</option>
+                              <option value="Rejection">Rejection</option>
+                              <option value="Query">Query</option>
+                              <option value="Consumer">Consumer</option>
+                              <option value="Delay in process">Delay in process</option>
+                            </select>
+                          </div>
+
+                        </div>
+
+
+                        <div class="col-sm-3">
+                          <label for="policy-number" class="form-label">Policy Number</label>
+                          <input type="text" class="form-control" id="policy-number" required >
+                        </div>
+
+                        <div class="col-sm-3">
+                          <label for="policy-date" class="form-label">Date of Policy Inception</label>
+                          <input type="date" class="form-control" id="policy-date" required >
+                        </div>
+
+                        <div class="col-sm-3">
+                          <label for="hospital-name" class="form-label">Hospital Name</label>
+                          <input type="text" class="form-control" id="hospital-name" required >
+                        </div>
+
+                        
+
+                      </div>
+
+                      <div class="row mb-3">
+
+                        
+
+                        <div class="col-sm-3">
+                          <label for="admission-date" class="form-label">Date of Admission</label>
+                          <input type="date" class="form-control" id="admission-date" required >
+                        </div>
+
+                        <div class="col-sm-3">
+                          <label for="discharge-date" class="form-label">Date of Discharge</label>
+                          <input type="date" class="form-control" id="discharge-date" required >
+                        </div>
+
+                        <div class="col-sm-3">
+                          <label for="case-diagnosis" class="form-label">Diagnosis</label>
+                          <input type="text" class="form-control" id="case-diagnosis" required >
+                        </div>
+
+                        <div class="col-sm-3">
+                          <label for="patient-complain" class="form-label">Patient complain</label>
+                          <input type="text" class="form-control" id="patient-complain" required >
+                        </div>
+
+
+                      </div>
+
+                      
+                      <div class="row mb-3">
+                        
+                        <div class="col-sm-3">
+                          <label for="rejection-reason" class="form-label">Rejection Reason</label>
+                          <input type="text" class="form-control" id="rejection-reason" required >
+                        </div>
+
+                        <div class="col-sm-3">
+                          <label for="rejection-date" class="form-label">Rejection date</label>
+                          <input type="date" class="form-control" id="rejection-date" required >
+                        </div>
+
+                        <div class="col-sm-3">
+                          <label for="case-comment" class="form-label">Gist Comments</label>
+                          <input type="text" class="form-control" id="case-comment"  >
+                        </div>
+
+                        <div class="col-sm-3">
+                          <label for="case-emailid" class="form-label">Email ID</label>
+                          <input type="text" class="form-control" id="case-emailid"  >
+                        </div>
+
+                      </div>
+
+                      <div class="row mb-3">
+
+                        <div class="col-sm-3">
+                          <label for="case-emailpassword" class="form-label">Email Password</label>
+                          <input type="text" class="form-control" id="case-emailpassword"  >
+                        </div>
+
+                        <div class="col-sm-3">
+                          <label for="bhp-number" class="form-label">Online BHP Number</label>
+                          <input type="text" class="form-control" id="bhp-number" >
+                        </div>
+
+                        <div class="col-sm-3">
+                          <label for="registration-date" class="form-label">Registration Date</label>
+                          <input type="date" required dateFormat: "dd/mm/yy" class="form-control" id="registration-date" ">
+                        </div>
+
+                        <div class="col-sm-3">
+                          <label for="annexure-five" class="form-label">Annexure 5 Number</label>
+                          <input type="text" class="form-control" id="annexure-five"  >
+                        </div>
+
+                      </div>
+
+                      <div class="row mb-3">
+
+                        <div class="col-sm-3">
+                          <label for="annexure-five-date" class="form-label">Annexure 5 Reply Date</label>
+                          <input type="date" dateFormat: "dd/mm/yy" class="form-control" id="annexure-five-date"  >
+                        </div>
+                    
+                        <div class="col-sm-3">
+                          <label for="lokpal-complaint-number" class="form-label">Lokpal Complaint Number</label>
+                          <input type="text" class="form-control" id="lokpal-complaint-number" >
+                        </div>
+
+                        <div class="col-sm-3">
+                          <label for="annexure-six-date" class="form-label">Annexure 6 Reply Date</label>
+                          <input type="date" dateFormat: "dd/mm/yy" class="form-control" id="annexure-six-date"  >
+                        </div>
+
+                        <div class="col-sm-3">
+                          <label for="hearing-date" class="form-label">Hearing Date</label>
+                          <input type="date" dateFormat: "dd/mm/yy" class="form-control" id="hearing-date"  >
+                        </div>
+
+                      </div>
+
+                      <div class="row mb-3">
+
+                        <label for="editor" class="form-label">Draft</label>
+                        <div id="editor"  style="
+                        background-color: white;
+                        color: black;
+                    ">
+                        
+                        </div>
+                        
+                        </div>
+                      
+
+                        <div class="row mb-3">
+                          <label for="editor1" class="form-label">Lokpal Draft</label>
+                          <div id="editor1"  style="
+                          background-color: white;
+                          color: black;
+                      ">
+                            
+                          </div>
+                      </div>
+
+    
+                    <div class="text-center">
+                      <button type="submit" class="btn btn-primary" onclick="saveData()">Save Details</button>
+                    </div>
+                  </form>
+                </div>
+
+                
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.4/dist/quill.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+  <script>
+
+    
+const toolbarOptions =['bold', 'italic', 'underline'];
+
+const quill = new Quill('#editor', {
+    theme: 'snow',
+    modules: {
+    toolbar: toolbarOptions
+  }
+  });
+
+  const quill1 = new Quill('#editor1', {
+    theme: 'snow',
+    modules: {
+    toolbar: toolbarOptions
+  }
+  });
+    $(document).ready(function () {
+
+      
+      
+      $.ajax({
+        url: '/api/whoami',
+        type: 'POST',
+        success: function (response) {
+          // Populate the options in the select element
+           
+            if(response.message =='admin')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showonlogin").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              table.buttons(0).enable();
+             
+            }
+            else if(response.message =='operation' )
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showonlogin").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+            }
+            else if(response.message =='cp' || response.message =='manager')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtocpandmanager").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+            }
+            else if(response.message =='medicalofficer')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtomedicalofficer").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+            }
+            else if(response.message =='advocate')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtoadvocate").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+            }
+            else if(response.message =='marketing')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtomarketing").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+            }
+            else
+            {
+              window.location.href = "/login.html"
+            }
+            
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+
+
+      const mobileScreen = window.matchMedia("(max-width: 990px )");
+
+      $.ajax({
+        url: '/api/getinsurancecompany',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          const optionsSelect = $('#insurance-company-dropdown');
+          response.forEach(function (option) {
+            optionsSelect.append($('<option>', {
+              value: option.companyName,
+              text: option.companyName
+            }));
+          });
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+
+            // AJAX call on page load get manager details
+            $.ajax({
+        url: '/api/getmanagerdetail',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          const optionsSelect = $('#manager-name-dropdown');
+          response.forEach(function (option) {
+            optionsSelect.append($('<option>', {
+              value: option.managerID,
+              text: option.managerName
+            }));
+          });
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+
+                 // AJAX call on page load get manager details
+                 $.ajax({
+        url: '/api/getcpdetail',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          const optionsSelect = $('#cp-name-dropdown');
+          response.forEach(function (option) {
+            optionsSelect.append($('<option>', {
+              value: option.cpID,
+              text: option.cpName
+            }));
+          });
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+
+
+          $(".dashboard-nav-dropdown-toggle").click(function () {
+        $(this).closest(".dashboard-nav-dropdown")
+            .toggleClass("show")
+            .find(".dashboard-nav-dropdown")
+            .removeClass("show");
+        $(this).parent()
+            .siblings()
+            .removeClass("show");
+    });
+    $(".menu-toggle").click(function () {
+        if (mobileScreen.matches) {
+            $(".dashboard-nav").toggleClass("mobile-show");
+        } else {
+            $(".dashboard").toggleClass("dashboard-compact");
+        }
+    });
+
+
+});
+  
+  
+    function fetchData()
+    {
+
+      $.ajax({
+        url: '/api/getcasedetailbyref',
+        type: 'GET',
+        data: {
+          casereferenceNumber: document.getElementById("queryInput").value
+        },
+
+        success: function (response) {
+          // Populate the options in the select elemens
+
+          document.getElementById("case-number").value = response[0].casereferenceNumber ? response[0].casereferenceNumber : "";
+          document.getElementById("prospectZone-dropdown").value = response[0].prospectZone ? response[0].prospectZone : "";
+          document.getElementById("claim-number").value = response[0].claimNumber ? response[0].claimNumber : "";
+          document.getElementById("total-claim-amount").value = response[0].claimAmount ? response[0].claimAmount : "";
+          document.getElementById("manager-name-dropdown").value = response[0].managerID ? response[0].managerID : "";
+          document.getElementById("cp-name-dropdown").value = response[0].cpID ? response[0].cpID : "";
+          document.getElementById("patient-name").value = response[0].patientName ? response[0].patientName : "";
+          document.getElementById("patient-phone").value = response[0].patientMobile ? response[0].patientMobile : "";
+            document.getElementById("complainant-name").value = response[0].complainantName ? response[0].complainantName: "";
+            document.getElementById("complainant-phone").value = response[0].complainantMobile ? response[0].complainantMobile: "";
+
+            document.getElementById("insurance-company-dropdown").value = response[0].insuranceCompanyName ? response[0].insuranceCompanyName : "";
+            document.getElementById("case-of-dropdown").value = response[0].caseHandler ? response[0].caseHandler : "";
+            document.getElementById("case-rejection-reason").value = response[0].caseRejectionReason ? response[0].caseRejectionReason : "";
+            document.getElementById("manual-gist").value = response[0].caseGist ? response[0].caseGist : "";
+    
+            document.getElementById("claim-type-dropdown").value = response[0].claimType ? response[0].claimType : "";
+            document.getElementById("policy-number").value = response[0].policyNumber ?  response[0].policyNumber : "";
+
+            document.getElementById("policy-date").value = response[0].dateOfPolicy ? moment(new Date(response[0].dateOfPolicy)).utc().format('YYYY-MM-DD') : "";
+            document.getElementById("hospital-name").value = response[0].hospitalName ? response[0].hospitalName : "";
+            document.getElementById("admission-date").value = response[0].dateOfAdmission ? moment(new Date(response[0].dateOfAdmission)).utc().format('YYYY-MM-DD') : "";
+            document.getElementById("discharge-date").value = response[0].dateOfDischarge ? moment(new Date(response[0].dateOfDischarge)).utc().format('YYYY-MM-DD') : "";
+            document.getElementById("case-diagnosis").value = response[0].diagnosis ? response[0].diagnosis : "";
+            document.getElementById("patient-complain").value = response[0].patientComplainDuringAdmission ? response[0].patientComplainDuringAdmission : "";
+            document.getElementById("rejection-reason").value = response[0].rejectionReason ? response[0].rejectionReason : "";
+
+            document.getElementById("rejection-date").value = response[0].initialRejectionDate ? moment(new Date(response[0].initialRejectionDate)).utc().format('YYYY-MM-DD') : "";
+            document.getElementById("case-comment").value = response[0].gistComments ? response[0].gistComments : "";
+
+            document.getElementById("case-emailid").value = response[0].caseEmail ? response[0].caseEmail : "";
+
+            document.getElementById("case-emailpassword").value = response[0].caseEmailPassword ? response[0].caseEmailPassword : "";
+  
+
+            document.getElementById("bhp-number").value = response[0].LokpalBHPComplaintNumber ? response[0].LokpalBHPComplaintNumber :  "";
+            document.getElementById("registration-date").value = response[0].lokpalBHPComplaintDate ? moment(new Date(response[0].lokpalBHPComplaintDate)).utc().format('YYYY-MM-DD') : "";
+            document.getElementById("annexure-five-date").value = response[0].annexure5ComplaintDate  ? moment(new Date(response[0].annexure5ComplaintDate)).utc().format('YYYY-MM-DD') : "";
+            document.getElementById("annexure-five").value = response[0].annexure5ComplaintNumber ?response[0].annexure5ComplaintNumber : "";
+            document.getElementById("lokpal-complaint-number").value = response[0].lokpalComplaintNumber ? response[0].lokpalComplaintNumber  : "";
+            document.getElementById("annexure-six-date").value = response[0].lokpalComplaintDate  ? moment(new Date(response[0].lokpalComplaintDate)).utc().format('YYYY-MM-DD') : ""; ;
+            document.getElementById("hearing-date").value = response[0].dateOfLokpalHearing  ? moment(new Date(response[0].dateOfLokpalHearing)).utc().format('YYYY-MM-DD') : ""; ;;
+
+            quill.root.innerHTML= response[0].caseDraft ? response[0].caseDraft : "";
+            quill1.root.innerHTML= response[0].lokpalDraft ?  response[0].lokpalDraft:"" ;
+
+
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      }); 
+
+    }
+
+    function saveData()
+    {
+
+            var prospectzone = $('#prospectZone-dropdown').val(); 
+            var claimnumber = $('#claim-number').val(); 
+            var claimamount = $('#total-claim-amount').val(); 
+            var managername = $("#manager-name-dropdown option:selected").text();
+            var managerid =  $('#manager-name-dropdown').val()
+            var cpname = $("#cp-name-dropdown option:selected").text();
+            var cpid=   $('#cp-name-dropdown').val()
+
+            var patientname =  $('#patient-name').val()
+            var patientphone =  $('#patient-phone').val()
+            var complainantname =  $('#complainant-name').val()
+            var complainantphone =  $('#complainant-phone').val()
+            var insurancecompanyname =  $('#insurance-company-dropdown').val()
+            
+            var casehandler = $("#case-of-dropdown option:selected").text();
+            var caserejectionreason =  $('#case-rejection-reason').val()
+            var manualgist =  $('#manual-gist').val()
+            var claimtype =  $('#claim-type-dropdown').val()
+            var policynumber =  $('#policy-number').val()
+
+
+            var policydate =  $('#policy-date').val()
+            var hospitalname =  $('#hospital-name').val()
+            var admissiondate =  $('#admission-date').val()
+            var dischargedate =  $('#discharge-date').val()
+            var casediagnosis =  $('#case-diagnosis').val()
+            var patientcomplain =  $('#patient-complain').val()
+            var rejectionreason =  $('#rejection-reason').val()
+            var rejectiondate =  $('#rejection-date').val()
+            var casecomment =  $('#case-comment').val()
+
+            var caseemailid =  $('#case-emailid').val()
+            var caseemailpassword =  $('#case-emailpassword').val()
+            var bhpNumber = $('#bhp-number').val();
+            var bhpDate = $('#registration-date').val();
+            var annexure5Date = $('#annexure-five-date').val();
+            var annexure5number = $('#annexure-five').val();
+            var lokpalComplaintNumber = $('#lokpal-complaint-number').val();
+            var annexure6Date = $('#annexure-six-date').val();
+            var hearingDate = $('#hearing-date').val();
+
+      $.ajax({
+          url: '/api/editcasedetails',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          data: {
+            casereferenceNumber: document.getElementById("queryInput").value,
+            prospectZone:  prospectzone, 
+            claimNumber : claimnumber ,
+            claimAmount : claimamount ,
+            managerName :  managername ,
+            managerID   :  managerid,
+            cpName      :  cpname,
+            cpID        :  cpid,
+            patientName  : patientname,
+            patientMobile :    patientphone, 
+            complainantName : complainantname, 
+            complainantMobile :  complainantphone, 
+            insuranceCompanyName: insurancecompanyname, 
+            caseHandler: casehandler,
+            caseRejectionReason:  caserejectionreason,
+            caseGist:  manualgist,
+            claimType:  claimtype,
+            policyNumber:  policynumber,
+            dateOfPolicy: policydate ,
+            hospitalName: hospitalname,
+            dateOfAdmission: admissiondate ,
+            dateOfDischarge: dischargedate,
+            diagnosis: casediagnosis,
+            patientComplainDuringAdmission: patientcomplain,
+            rejectionReason: rejectionreason,
+            initialRejectionDate: rejectiondate,
+            gistComments: casecomment,
+            caseEmail: caseemailid,
+            caseEmailPassword: caseemailpassword,
+            LokpalBHPComplaintNumber:  bhpNumber ,
+            lokpalBHPComplaintDate: bhpDate ,
+            annexure5ComplaintDate: annexure5Date ,
+             annexure5ComplaintNumber:  annexure5number ,
+             lokpalComplaintNumber: lokpalComplaintNumber ,
+             lokpalComplaintDate: annexure6Date ,
+             dateOfLokpalHearing: hearingDate ,
+            caseDraft:  quill.root.innerHTML,
+            lokpalDraft:  quill1.root.innerHTML,
+          },
+          success: function (response) {
+            if(response.message == "success")
+              {
+                alert("Details saved!");
+                window.location.href = "/editcase.html";
+              }
+              else{
+                alert("Error saving details!")
+              }
+          },
+          error: function (error) {
+            document.getElementById('loginForm').reset();
+            alert("Error saving details!");
+            // Display an error message to the user
+          }
+        });
+
+    }
+
+
+
+</script>
+</body>
+
+</html>

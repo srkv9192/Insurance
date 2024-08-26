@@ -66,6 +66,7 @@ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS
   useUnifiedTopology: true,
 });
 
+
 /*
 
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
@@ -991,6 +992,66 @@ app.post('/api/addescalationdetails', async(req, res) => {
   {
     console.error(err);
     res.status(500).json({ error: 'Error adding gist and rejection reason' });
+  } 
+
+});
+
+app.post('/api/editcasedetails', async(req, res) => {
+  try{
+
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ 
+        prospectZone: req.body.prospectZone,
+                claimNumber : req.body.claimnumber ,
+                claimAmount : req.body.claimAmount ,
+                managerName :  req.body.managerName ,
+                managerID   :  req.body.managerID,
+                cpName      :  req.body.cpName,
+                cpID        :  req.body.cpID,
+                patientName  : req.body.patientName,
+                patientMobile :    req.body.patientMobile, 
+                complainantName : req.body.complainantName, 
+                complainantMobile :  req.body.complainantMobile, 
+                insuranceCompanyName: req.body.insuranceCompanyName, 
+                caseHandler: req.body.caseHandler,
+                caseRejectionReason:  req.body.caseRejectionReason,
+                caseGist:  req.body.caseGist,
+                claimType:  req.body.claimType,
+                policyNumber:  req.body.policyNumber,
+                dateOfPolicy: req.body.dateOfPolicy ,
+                hospitalName: req.body.hospitalName,
+                dateOfAdmission: req.body.dateOfAdmission ,
+                dateOfDischarge: req.body.dateOfDischarge,
+                diagnosis: req.body.diagnosis,
+                patientComplainDuringAdmission: req.body.patientComplainDuringAdmission,
+                rejectionReason: req.body.rejectionReason,
+                initialRejectionDate: req.body.initialRejectionDate,
+                gistComments: req.body.gistComments,
+                caseEmail: req.body.caseEmail,
+                caseEmailPassword: req.body.caseEmailPassword,
+                LokpalBHPComplaintNumber:  req.body.LokpalBHPComplaintNumber ,
+                lokpalBHPComplaintDate: req.body.lokpalBHPComplaintDate ,
+                annexure5ComplaintDate: req.body.annexure5ComplaintDate ,
+                 annexure5ComplaintNumber:  req.body.annexure5ComplaintNumber ,
+                 lokpalComplaintNumber: req.body.lokpalComplaintNumber ,
+                 lokpalComplaintDate: req.body.lokpalComplaintDate ,
+                 dateOfLokpalHearing: req.body.dateOfLokpalHearing ,
+                caseDraft:   req.body.caseDraft,
+                lokpalDraft:   req.body.lokpalDraft, },});
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not save case details', refnum:req.body.casereferenceNumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error saving case details' });
   } 
 
 });
