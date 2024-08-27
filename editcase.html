@@ -291,12 +291,12 @@
 
                       <div class="col-sm-3">
                         <label for="claim-number" class="form-label">Claim Number</label>
-                        <input type="text" class="form-control" id="claim-number" required>
+                        <input type="text" class="form-control" id="claim-number" >
                       </div>
     
                       <div class="col-sm-3">
                         <label for="total-claim-amount" class="form-label">Claim Amount</label>
-                        <input type="number" class="form-control" id="total-claim-amount" required>
+                        <input type="number" class="form-control" id="total-claim-amount" >
                       </div>
 
                     </div>
@@ -324,11 +324,11 @@
 
                       <div class="col-sm-3">
                         <label for="patient-name" class="form-label">Patient Name</label>
-                        <input type="text" class="form-control" id="patient-name" required>
+                        <input type="text" class="form-control" id="patient-name" >
                       </div>
                       <div class="col-sm-3">
                         <label for="patient-phone" class="form-label">Patient Phone</label>
-                        <input type="text" class="form-control" id="patient-phone" required pattern="[0-9]{10}" required maxlength="10">
+                        <input type="text" class="form-control" id="patient-phone"  pattern="[0-9]{10}"  maxlength="10">
                       </div>
 
 
@@ -337,17 +337,17 @@
                     <div class="row mb-3">
                       <div class="col-sm-3">
                         <label for="complainant-name" class="form-label">Complainant Name</label>
-                        <input type="text" class="form-control" id="complainant-name" required>
+                        <input type="text" class="form-control" id="complainant-name" >
                       </div>
                       <div class="col-sm-3">
                         <label for="complainant-phone" class="form-label">Complainant Phone</label>
-                        <input type="text" class="form-control" id="complainant-phone" required pattern="[0-9]{10}" required maxlength="10">
+                        <input type="text" class="form-control" id="complainant-phone"  pattern="[0-9]{10}"  maxlength="10">
                       </div>
 
                       <div class="col-sm-3">
                         <label for="insurance-company" class="form-label">Insurance Company Name</label>
                         <div class="input-group">
-                          <select class="form-control" id="insurance-company-dropdown" required>
+                          <select class="form-control" id="insurance-company-dropdown" >
                             <option value="">None</option>
                             <option value="Other">Other</option>
                           </select>
@@ -406,7 +406,7 @@
                           
 
                           <div class="input-group">
-                            <select class="form-control" id="claim-type-dropdown" required>
+                            <select class="form-control" id="claim-type-dropdown" >
                               <option value="">None</option>
                               <option value="Reimbursement">Reimbursement</option>
                               <option value="Deduction">Deduction</option>
@@ -422,17 +422,17 @@
 
                         <div class="col-sm-3">
                           <label for="policy-number" class="form-label">Policy Number</label>
-                          <input type="text" class="form-control" id="policy-number" required >
+                          <input type="text" class="form-control" id="policy-number"  >
                         </div>
 
                         <div class="col-sm-3">
                           <label for="policy-date" class="form-label">Date of Policy Inception</label>
-                          <input type="date" class="form-control" id="policy-date" required >
+                          <input type="date" class="form-control" id="policy-date"  >
                         </div>
 
                         <div class="col-sm-3">
                           <label for="hospital-name" class="form-label">Hospital Name</label>
-                          <input type="text" class="form-control" id="hospital-name" required >
+                          <input type="text" class="form-control" id="hospital-name"  >
                         </div>
 
                         
@@ -445,22 +445,22 @@
 
                         <div class="col-sm-3">
                           <label for="admission-date" class="form-label">Date of Admission</label>
-                          <input type="date" class="form-control" id="admission-date" required >
+                          <input type="date" class="form-control" id="admission-date"  >
                         </div>
 
                         <div class="col-sm-3">
                           <label for="discharge-date" class="form-label">Date of Discharge</label>
-                          <input type="date" class="form-control" id="discharge-date" required >
+                          <input type="date" class="form-control" id="discharge-date"  >
                         </div>
 
                         <div class="col-sm-3">
                           <label for="case-diagnosis" class="form-label">Diagnosis</label>
-                          <input type="text" class="form-control" id="case-diagnosis" required >
+                          <input type="text" class="form-control" id="case-diagnosis"  >
                         </div>
 
                         <div class="col-sm-3">
                           <label for="patient-complain" class="form-label">Patient complain</label>
-                          <input type="text" class="form-control" id="patient-complain" required >
+                          <input type="text" class="form-control" id="patient-complain"  >
                         </div>
 
 
@@ -471,12 +471,12 @@
                         
                         <div class="col-sm-3">
                           <label for="rejection-reason" class="form-label">Rejection Reason</label>
-                          <input type="text" class="form-control" id="rejection-reason" required >
+                          <input type="text" class="form-control" id="rejection-reason"  >
                         </div>
 
                         <div class="col-sm-3">
                           <label for="rejection-date" class="form-label">Rejection date</label>
-                          <input type="date" class="form-control" id="rejection-date" required >
+                          <input type="date" class="form-control" id="rejection-date"  >
                         </div>
 
                         <div class="col-sm-3">
@@ -505,7 +505,7 @@
 
                         <div class="col-sm-3">
                           <label for="registration-date" class="form-label">Registration Date</label>
-                          <input type="date" required dateFormat: "dd/mm/yy" class="form-control" id="registration-date" ">
+                          <input type="date" dateFormat: "dd/mm/yy" class="form-control" id="registration-date" ">
                         </div>
 
                         <div class="col-sm-3">
@@ -621,7 +621,6 @@ const quill = new Quill('#editor', {
               $("#showonlogin").show();
               $("#hideonlogin").hide();
               localStorage['userName'] = response.username;
-              table.buttons(0).enable();
              
             }
             else if(response.message =='operation' )
@@ -785,7 +784,7 @@ const quill = new Quill('#editor', {
             document.getElementById("complainant-phone").value = response[0].complainantMobile ? response[0].complainantMobile: "";
 
             document.getElementById("insurance-company-dropdown").value = response[0].insuranceCompanyName ? response[0].insuranceCompanyName : "";
-            document.getElementById("case-of-dropdown").value = response[0].caseHandler ? response[0].caseHandler : "";
+            document.getElementById("case-of-dropdown").value = response[0].caseHandler ? (response[0].caseHandler).toLowerCase() : "";
             document.getElementById("case-rejection-reason").value = response[0].caseRejectionReason ? response[0].caseRejectionReason : "";
             document.getElementById("manual-gist").value = response[0].caseGist ? response[0].caseGist : "";
     
