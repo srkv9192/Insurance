@@ -272,6 +272,7 @@ div.dataTables_filter {
                      <a href="/viewlokpalcases.html" class="dashboard-nav-dropdown-item">View Lokpal</a>
                      <a href="/viewcompletedcases.html" class="dashboard-nav-dropdown-item">View Completed</a>
                      <a href="/viewpendingpaymentcases.html" class="dashboard-nav-dropdown-item">View Pending Payment</a>
+                     <a href="/viewpendingcppaymentcases.html" class="dashboard-nav-dropdown-item">View CP Payment</a>
                      <a href="/viewfinishedcases.html" class="dashboard-nav-dropdown-item">View Finished</a>
                      <a href="/viewholdcases.html" class="dashboard-nav-dropdown-item">View Hold</a>
                      <a href="/viewsearchcases.html" class="dashboard-nav-dropdown-item">Search Case</a>
@@ -334,6 +335,7 @@ div.dataTables_filter {
                    <a href="/viewlokpalcases.html" class="dashboard-nav-dropdown-item">View Lokpal</a>
                    <a href="/viewcompletedcases.html" class="dashboard-nav-dropdown-item">View Completed</a>
                    <a href="/viewpendingpaymentcases.html" class="dashboard-nav-dropdown-item">View Pending Payment</a>
+                   <a href="/viewpendingcppaymentcases.html" class="dashboard-nav-dropdown-item">View CP Payment</a>
                    <a href="/viewfinishedcases.html" class="dashboard-nav-dropdown-item">View Finished</a>
                    <a href="/viewholdcases.html" class="dashboard-nav-dropdown-item">View Hold</a>
                    <a href="/viewsearchcases.html" class="dashboard-nav-dropdown-item">Search Case</a>
@@ -440,6 +442,7 @@ div.dataTables_filter {
               <a href="/viewrejectedcases.html" class="dashboard-nav-dropdown-item">View Rejected</a>
               <a href="/viewcompletedcases.html" class="dashboard-nav-dropdown-item">View Completed</a>
               <a href="/viewpendingpaymentcases.html" class="dashboard-nav-dropdown-item">View Pending Payment</a>
+              <a href="/viewpendingcppaymentcases.html" class="dashboard-nav-dropdown-item">View CP Payment</a>
               <a href="/viewfinishedcases.html" class="dashboard-nav-dropdown-item">View Finished</a>
               <a href="/viewsearchcases.html" class="dashboard-nav-dropdown-item">Search Case</a>
               <a href="/viewholdcases.html" class="dashboard-nav-dropdown-item">View Hold</a>
@@ -516,10 +519,7 @@ div.dataTables_filter {
                         <th>Collection Loss</th>
                         <th>CP Amount</th>
                         <th>Action</th>
-                        <th>Action</th>
-                        <th>Action</th>
-                        <th>Action</th>
-                        
+                        <th>Action</th>   
                       </tr>
                     </thead>
                   </table>
@@ -984,7 +984,7 @@ div.dataTables_filter {
                       <h2 id="remarkcontent">Add details</h2>
                       <form id="remarkForm">
 
-                        <label for="payment-mode" class="form-label">Payment Mode</label>
+                        <label for="payment-mode" style="color: black;" class="form-label">Payment Mode</label>
                                 <div class="input-group">
                                   <select class="form-control" id="payment-mode-dropdown" required>
                                     <option value="">None</option>
@@ -1736,10 +1736,8 @@ function movetolive(referencenumber) {
               data[i].caseNidaanReceivedAmount,
               `${lossAmount}`,
               data[i].caseCPFinalAmount ,
-              `<a href="#popup6"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Add CP payment details</button> </a>`,
               `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
               `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')">View Documents</button> </a>`,
-              `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
               ];
 
               table.row.add(rowData);

@@ -66,7 +66,6 @@ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS
   useUnifiedTopology: true,
 });
 
-
 /*
 
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
@@ -75,7 +74,6 @@ mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
 });
 
 */
-
 
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
@@ -232,6 +230,7 @@ const dataSchema = new mongoose.Schema({
   isLive: String,
   isCompleted: String,
   isPendingPayment: String,
+  isPendingCPPayment: String,
   isFinished: String,
   caseCompletionRemark: String,
   caseCompletionType: String,
@@ -620,8 +619,6 @@ app.get('/api/downloadExcel', async (req, res) => {
               { header: 'Medical Officer', key: 'field14', width: 20 },
               { header: 'Case Status', key: 'field15', width: 20 },
           ];
-    
-    
     
                 // Add rows to worksheet
                 records.forEach(record => {
@@ -1110,7 +1107,7 @@ app.post('/api/addcasecustomerpaymentdetails', async(req, res) => {
 app.post('/api/addcaseclosedcppaymentdetails', async(req, res) => {
   try{
 
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{caseRemarks:req.body.caseRemarks}, $set:{ caseCPFinalReceivedAmountDate:req.body.caseCPFinalReceivedAmountDate, caseCPFinalReceivedAmount: req.body.caseCPFinalReceivedAmount, caseCPFinalReceivedAmountMode: req.body.caseCPFinalReceivedAmountMode, newCaseStatus: "Case Closed" }});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{caseRemarks:req.body.caseRemarks}, $set:{ caseCPFinalReceivedAmountDate:req.body.caseCPFinalReceivedAmountDate, caseCPFinalReceivedAmount: req.body.caseCPFinalReceivedAmount, caseCPFinalReceivedAmountMode: req.body.caseCPFinalReceivedAmountMode, isPendingCPPayment:"false", isFinished:"true", newCaseStatus: "Case Closed" }});
 
       if(newData == null)
       {
@@ -1134,7 +1131,7 @@ app.post('/api/addcaseclosedcppaymentdetails', async(req, res) => {
 app.post('/api/addcasenidaanpaymentdetails', async(req, res) => {
   try{
 
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{caseRemarks:req.body.caseRemarks}, $set:{ caseNidaanReceivedAmountDate:req.body.caseNidaanReceivedAmountDate, caseNidaanReceivedAmount: req.body.caseNidaanReceivedAmount, caseNidaanReceivedAmountMode: req.body.caseNidaanReceivedAmountMode, caseCPFinalAmount: req.body.caseCPFinalAmount, isPendingPayment: "false", isFinished: "true", newCaseStatus: "CP Payment Pending" }});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{caseRemarks:req.body.caseRemarks}, $set:{ caseNidaanReceivedAmountDate:req.body.caseNidaanReceivedAmountDate, caseNidaanReceivedAmount: req.body.caseNidaanReceivedAmount, caseNidaanReceivedAmountMode: req.body.caseNidaanReceivedAmountMode, caseCPFinalAmount: req.body.caseCPFinalAmount, isPendingPayment: "false", isPendingCPPayment: "true", newCaseStatus: "CP Payment Pending" }});
 
       if(newData == null)
       {
@@ -1169,9 +1166,16 @@ app.post('/api/getCpCommission', async (req, res) => {
 
       if (!dataRecord) {
         res.json({ cpCommission: 0 });
+        return;
       }
 
       console.log(dataRecord)
+
+      if(dataRecord.cpID == null)
+      {
+        res.json({ cpCommission: 0 });
+        return;
+      }
 
       // Step 2: Fetch cpCommission from cp collection using cpId
       const cpRecord = await cpSchemaObject.findOne({ cpID: dataRecord.cpID }).exec();
@@ -1180,6 +1184,7 @@ app.post('/api/getCpCommission', async (req, res) => {
 
       if (!cpRecord) {
         res.json({ cpCommission: 0 });
+        return;
       }
 
       console.log(cpRecord)
@@ -2415,6 +2420,17 @@ app.get("/api/getfinishedcases", async(req, res) => {
   }
 });
 
+app.get("/api/getpendingcppaymentcases", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  dataSchemaObject.find({isPendingCPPayment: "true"});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get pending cp payment case details' });
+  }
+});
+
 app.get("/api/getallcases", async(req, res) => {
   try {
     // Retrieve all tpa list from database
@@ -3299,6 +3315,7 @@ app.get('/viewcompletedcases.html', (req, res) => res.sendFile(__dirname+'/viewc
 app.get('/viewfinishedcases.html', (req, res) => res.sendFile(__dirname+'/viewfinishedcases.html'))
 
 app.get('/viewpendingpaymentcases.html', (req, res) => res.sendFile(__dirname+'/viewpendingpaymentcases.html'))
+app.get('/viewpendingcppaymentcases.html', (req, res) => res.sendFile(__dirname+'/viewpendingcppaymentcases.html'))
 
 app.get('/viewsearchcases.html', (req, res) => res.sendFile(__dirname+'/viewsearchcases.html'))
 

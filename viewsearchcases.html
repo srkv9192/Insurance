@@ -230,6 +230,7 @@ div.dataTables_filter {
                      <a href="/viewlokpalcases.html" class="dashboard-nav-dropdown-item">View Lokpal</a>
                      <a href="/viewcompletedcases.html" class="dashboard-nav-dropdown-item">View Completed</a>
                      <a href="/viewpendingpaymentcases.html" class="dashboard-nav-dropdown-item">View Pending Payment</a>
+                     <a href="/viewpendingcppaymentcases.html" class="dashboard-nav-dropdown-item">View CP Payment</a>
                      <a href="/viewfinishedcases.html" class="dashboard-nav-dropdown-item">View Finished</a>
                      <a href="/viewholdcases.html" class="dashboard-nav-dropdown-item">View Hold</a>
                      <a href="/viewsearchcases.html" class="dashboard-nav-dropdown-item">Search Case</a>
@@ -292,6 +293,7 @@ div.dataTables_filter {
                    <a href="/viewlokpalcases.html" class="dashboard-nav-dropdown-item">View Lokpal</a>
                    <a href="/viewcompletedcases.html" class="dashboard-nav-dropdown-item">View Completed</a>
                    <a href="/viewpendingpaymentcases.html" class="dashboard-nav-dropdown-item">View Pending Payment</a>
+                   <a href="/viewpendingcppaymentcases.html" class="dashboard-nav-dropdown-item">View CP Payment</a>
                    <a href="/viewfinishedcases.html" class="dashboard-nav-dropdown-item">View Finished</a>
                    <a href="/viewholdcases.html" class="dashboard-nav-dropdown-item">View Hold</a>
                    <a href="/viewsearchcases.html" class="dashboard-nav-dropdown-item">Search Case</a>
@@ -398,6 +400,7 @@ div.dataTables_filter {
               <a href="/viewrejectedcases.html" class="dashboard-nav-dropdown-item">View Rejected</a>
               <a href="/viewcompletedcases.html" class="dashboard-nav-dropdown-item">View Completed</a>
               <a href="/viewpendingpaymentcases.html" class="dashboard-nav-dropdown-item">View Pending Payment</a>
+              <a href="/viewpendingcppaymentcases.html" class="dashboard-nav-dropdown-item">View CP Payment</a>
               <a href="/viewfinishedcases.html" class="dashboard-nav-dropdown-item">View Finished</a>
               <a href="/viewsearchcases.html" class="dashboard-nav-dropdown-item">Search Case</a>
               <a href="/viewholdcases.html" class="dashboard-nav-dropdown-item">View Hold</a>
@@ -463,6 +466,7 @@ div.dataTables_filter {
                         <th>Claim Number</th>
                         <th>Claim Amount</th> 
                         <th>Case Status</th>
+                        <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
                       </tr>
@@ -1230,7 +1234,7 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
             localStorage.removeItem("addRemarkForRefNumber");
 
             document.getElementById("newremark").value ="";
-            window.location.href = "/viewrejectedcases.html";
+            window.location.href = "/viewsearchcases.html";
             
           }
           else{
@@ -1571,6 +1575,7 @@ function movetolive(referencenumber) {
               data[i].claimNumber,
               data[i].claimAmount,
               data[i].newCaseStatus,
+              `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
               `<a href="#popup44"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
               `<a href="#popup55"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
           ];

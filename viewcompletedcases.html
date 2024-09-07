@@ -275,6 +275,7 @@ div.dataTables_filter {
                      <a href="/viewlokpalcases.html" class="dashboard-nav-dropdown-item">View Lokpal</a>
                      <a href="/viewcompletedcases.html" class="dashboard-nav-dropdown-item">View Completed</a>
                      <a href="/viewpendingpaymentcases.html" class="dashboard-nav-dropdown-item">View Pending Payment</a>
+                     <a href="/viewpendingcppaymentcases.html" class="dashboard-nav-dropdown-item">View CP Payment</a>
                      <a href="/viewfinishedcases.html" class="dashboard-nav-dropdown-item">View Finished</a>
                      <a href="/viewholdcases.html" class="dashboard-nav-dropdown-item">View Hold</a>
                      <a href="/viewsearchcases.html" class="dashboard-nav-dropdown-item">Search Case</a>
@@ -337,6 +338,7 @@ div.dataTables_filter {
                    <a href="/viewlokpalcases.html" class="dashboard-nav-dropdown-item">View Lokpal</a>
                    <a href="/viewcompletedcases.html" class="dashboard-nav-dropdown-item">View Completed</a>
                    <a href="/viewpendingpaymentcases.html" class="dashboard-nav-dropdown-item">View Pending Payment</a>
+                   <a href="/viewpendingcppaymentcases.html" class="dashboard-nav-dropdown-item">View CP Payment</a>
                    <a href="/viewfinishedcases.html" class="dashboard-nav-dropdown-item">View Finished</a>
                    <a href="/viewholdcases.html" class="dashboard-nav-dropdown-item">View Hold</a>
                    <a href="/viewsearchcases.html" class="dashboard-nav-dropdown-item">Search Case</a>
@@ -443,6 +445,7 @@ div.dataTables_filter {
               <a href="/viewrejectedcases.html" class="dashboard-nav-dropdown-item">View Rejected</a>
               <a href="/viewcompletedcases.html" class="dashboard-nav-dropdown-item">View Completed</a>
               <a href="/viewpendingpaymentcases.html" class="dashboard-nav-dropdown-item">View Pending Payment</a>
+              <a href="/viewpendingcppaymentcases.html" class="dashboard-nav-dropdown-item">View CP Payment</a>
               <a href="/viewfinishedcases.html" class="dashboard-nav-dropdown-item">View Finished</a>
               <a href="/viewsearchcases.html" class="dashboard-nav-dropdown-item">Search Case</a>
               <a href="/viewholdcases.html" class="dashboard-nav-dropdown-item">View Hold</a>
@@ -1487,6 +1490,16 @@ function viewremark(referencenumber) {
 
 
         
+const today = new Date();
+const yyyy = today.getFullYear();
+let mm = today.getMonth() + 1; // Months start at 0!
+let dd = today.getDate();
+
+if (dd < 10) dd = '0' + dd;
+if (mm < 10) mm = '0' + mm;
+
+const formattedToday = dd + '/' + mm + '/' + yyyy;
+
         $.ajax({
             url: '/api/addcasecustomerpaymentdetails', // Replace with your API endpoint
             type: 'POST',
@@ -1494,7 +1507,7 @@ function viewremark(referencenumber) {
             data: JSON.stringify({
               casereferenceNumber:  localStorage['addRemarkForRefNumber'],
               caseCustomerReceivedAmountDate : paymentdate,
-              caseRemarks: remark,
+              caseRemarks: formattedToday+ " - [ " +  localStorage['userName'] + " ] - "+ remark,
               caseCustomerReceivedAmount: customerAmount, 
             }),
             success: function(response) {
