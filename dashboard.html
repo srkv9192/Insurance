@@ -322,7 +322,7 @@
         <div class='dashboard-content' style="background-image: url('/images/background20.jpg');  background-repeat: repeat;  background-size: cover;">
             <div  style=" font-size: 20px; padding-top: 50px; padding-right: 20px; padding-left: 20px;">  
 
-              
+             
               <div class="frame" style=" color:black;background-image: url('/images/background18.jpg');  font-family: monospace;font-size: large; background-size: cover;">
 
                 <h2 class="text-center mb-4">Case Data</h2>
@@ -396,9 +396,7 @@
                     </div>
 
 
-                    
-
-               <!--     
+<!--                         
                     <div class="col-lg-2 col-md-2" style="margin-top: 5px;">
                       <a href="/viewprospectcases.html">
                           <div class="card prospects">
@@ -427,7 +425,7 @@
 
                     </div>
 
-                  -->
+   -->               
                   
                   </div>
              </div>
@@ -463,7 +461,19 @@
 
                 </div>
             </div>
-             
+
+          
+
+
+
+          <button class="btn btn-primary btn-sm" style="
+          height: 50px;
+          width: 200px;
+          margin-top:20px;
+      "  onclick="downloadexcelfile()" >Download excel</button>
+
+
+
             </div>
   
         </div>
@@ -697,6 +707,26 @@ $(document).ready(function () {
     });
 });
 
+
+function downloadexcelfile()
+      {
+
+    const url = '/api/downloadExcel'; // Change this to your API's URL
+    fetch(url)
+        .then(response => response.blob())
+        .then(blob => {
+            // Create a new URL for the blob object
+            const downloadUrl = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = downloadUrl;
+            a.download = 'Case_Data.xlsx'; // Specify the file name to download
+            document.body.appendChild(a);
+            a.click();
+            a.remove(); // Clean up after download
+        })
+        .catch(e => console.error('Error downloading the file: ', e));
+    
+      }
   </script>
 
 </body>

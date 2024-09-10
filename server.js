@@ -61,6 +61,7 @@ const port = process.env.PORT || 80
 //});
 
 
+
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -74,6 +75,7 @@ mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
 });
 
 */
+
 
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
@@ -618,6 +620,45 @@ app.get('/api/downloadExcel', async (req, res) => {
               { header: 'Operation Officer', key: 'field13', width: 20 },
               { header: 'Medical Officer', key: 'field14', width: 20 },
               { header: 'Case Status', key: 'field15', width: 20 },
+              { header: 'Rejection Reason', key: 'field16', width: 30 },
+              { header: 'Manual Gist Reason', key: 'field17', width: 30 },
+              { header: 'Case Remarks', key: 'field18', width: 30 },
+              { header: 'PF amount', key: 'field19', width: 20 },
+              { header: 'Consultation charge', key: 'field20', width: 20 },
+              { header: 'Cheque Amount', key: 'field21', width: 20 },
+              { header: 'Cheque Number', key: 'field22', width: 20 },
+              { header: 'Bank Name', key: 'field23', width: 20 },
+              { header: 'Payment Mode', key: 'field24', width: 20 },
+              { header: 'Payment Date', key: 'field25', width: 20 },
+              { header: 'Payment Remark', key: 'field26', width: 20 },
+              { header: 'Email', key: 'field27', width: 20 },
+              { header: 'Password', key: 'field28', width: 20 },
+
+
+              { header: 'Claim Type', key: 'field29', width: 20 },
+              { header: 'Policy Number', key: 'field30', width: 20 },
+              { header: 'Policy Inception Date', key: 'field31', width: 20 },
+              { header: 'Hospital Name', key: 'field32', width: 20 },
+              { header: 'Date Of Admission', key: 'field33', width: 20 },
+              { header: 'Date Of Discharge', key: 'field34', width: 20 },
+              { header: 'Diagnosis', key: 'field35', width: 20 },
+              { header: 'Patient Complain', key: 'field36', width: 20 },
+              { header: 'Rejection Reason', key: 'field37', width: 20 },
+              { header: 'Rejection Date', key: 'field38', width: 20 },
+              { header: 'Draft', key: 'field39', width: 40 },
+              { header: 'Lokpal Draft', key: 'field40', width: 40 },
+              { header: 'Escalation date', key: 'field41', width: 20 },
+
+
+              { header: 'BHP number', key: 'field42', width: 20 },
+              { header: 'Registration date', key: 'field43', width: 20 },
+              { header: 'Annexure 5 number', key: 'field44', width: 20 },
+              { header: 'Annexure 5 date', key: 'field45', width: 20 },
+              { header: 'lokpal complain number', key: 'field46', width: 20 },
+              { header: 'Annexure 6 date', key: 'field47', width: 20 },
+              { header: 'Hearing date', key: 'field48', width: 20 },
+
+
           ];
     
                 // Add rows to worksheet
@@ -638,6 +679,39 @@ app.get('/api/downloadExcel', async (req, res) => {
                         field13: record.operationOfficer,
                         field14: record.medicalOpinionOfficer,
                         field15: record.newCaseStatus,
+                        field16: record.caseRejectionReason,
+                        field17: record.caseGist,
+                        field18: record.caseRemarks,
+                        field19: record.pfAmount,
+                        field20: record.cfPercentage,
+                        field21 : record.cfAmount,
+                        field22 : record.cfChequeNumber,
+                        field23 : record.cfBankName,
+                        field24 : record.pfpaymentMode,
+                        field25 : record.pfpaymentDate,
+                        field26 : record.pfpaymentRemarks,
+                        field27 : record.caseEmail,
+                        field28 : record.caseEmailPassword,
+                        field29 : record.claimType,
+                        field30 : record.policyNumber,
+                        field31 : record.dateOfPolicy,
+                        field32 : record.hospitalName,
+                        field33 : record.dateOfAdmission,
+                        field34 : record.dateOfDischarge,
+                        field35 : record.diagnosis,
+                        field36 : record.patientComplainDuringAdmission,
+                        field37 : record.rejectionReason,
+                        field38 : record.initialRejectionDate,
+                        field39 : record.caseDraft,
+                        field40 : record.lokpalDraft,
+                        field41 : record.dateofEscalationToInsurer,
+                        field42 : record.LokpalBHPComplaintNumber,
+                        field43: record.lokpalBHPComplaintDate,
+                        field44: record.annexure5ComplaintNumber,
+                        field45: record.annexure5ComplaintDate,
+                        field46: record.lokpalComplaintNumber,
+                        field47: record.lokpalComplaintDate,
+                        field48: record.dateOfLokpalHearing,
                     });
                 });
       // Create a buffer from the workbook
@@ -1059,18 +1133,35 @@ app.post('/api/editcasedetails', async(req, res) => {
 
 app.post('/api/addcasesettlementdetails', async(req, res) => {
   try{
-
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ caseResult:req.body.caseResult, caseSettlementAmount: req.body.caseSettlementAmount }});
-
-      if(newData == null)
+      if(req.body.caseResult === "LOST")
       {
-        res.json({ message: 'Could not save case settlement details', refnum:req.body.casereferenceNumber});
+        const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ caseResult:req.body.caseResult, caseSettlementAmount: req.body.caseSettlementAmount ,  isFinished:"true", newCaseStatus: "Case Closed", isCompleted: "false", }});
+
+        if(newData == null)
+        {
+          res.json({ message: 'Could not save case settlement details', refnum:req.body.casereferenceNumber});
+        }
+        else
+        {
+          const savedData = newData.save();
+          res.json({ message: 'success'});
+        }
       }
       else
       {
-        const savedData = newData.save();
-        res.json({ message: 'success'});
+        const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ caseResult:req.body.caseResult, caseSettlementAmount: req.body.caseSettlementAmount }});
+
+        if(newData == null)
+        {
+          res.json({ message: 'Could not save case settlement details', refnum:req.body.casereferenceNumber});
+        }
+        else
+        {
+          const savedData = newData.save();
+          res.json({ message: 'success'});
+        }
       }
+      
     }
   catch(err)
   {

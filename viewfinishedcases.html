@@ -1705,7 +1705,12 @@ function movetolive(referencenumber) {
             var caseResult = "Not Availble";
             var caseSettlementamount = "Not Availble";
 
-            var lossAmount = ( data[i].caseCustomerReceivedAmount *(data[i].cfPercentage / 100)) - (data[i].caseNidaanReceivedAmount)
+            var lossAmount = 0;
+
+            if( data[i].caseCustomerReceivedAmount &&  data[i].caseNidaanReceivedAmount &&  data[i].cfPercentage)
+          {
+             lossAmount = ( data[i].caseCustomerReceivedAmount *(data[i].cfPercentage / 100)) - (data[i].caseNidaanReceivedAmount)
+          }
 
             if(data[i].caseResult)
             {
@@ -1732,10 +1737,10 @@ function movetolive(referencenumber) {
               data[i].caseCompletionType,
               data[i].newCaseStatus,
               `${caseSettlementamount}`,
-              data[i].caseCustomerReceivedAmount *(data[i].cfPercentage / 100),
-              data[i].caseNidaanReceivedAmount,
-              `${lossAmount}`,
-              data[i].caseCPFinalAmount ,
+              data[i].caseCustomerReceivedAmount ? data[i].caseCustomerReceivedAmount *(data[i].cfPercentage / 100) : 0,
+              data[i].caseNidaanReceivedAmount ? data[i].caseNidaanReceivedAmount : 0,
+              `${lossAmount}` ? `${lossAmount}`: 0,
+              data[i].caseCPFinalAmount ? data[i].caseCPFinalAmount:0,
               `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
               `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')">View Documents</button> </a>`,
               ];
