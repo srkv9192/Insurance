@@ -994,6 +994,8 @@ div.dataTables_filter {
                                     <option value="Cash">Cash</option>
                                     <option value="UPI">UPI</option>
                                     <option value="Bank Transfer">Bank Transfer</option>
+                                    <option value="FOC">FOC</option>
+                                    <option value="Cheque">Cheque</option>
                                   </select>
                                 </div>
         
@@ -1456,6 +1458,7 @@ function viewremark(referencenumber) {
                 list.appendChild(li);
                }
 
+
         },
         error: function (error) {
           console.error('Error:', error);
@@ -1590,6 +1593,7 @@ function movetolive(referencenumber) {
             //alert(response.message)
             var table = new DataTable('#dataTable');
             table.buttons(0).disable();
+            localStorage.setItem('userType',  response.message);
            
             if(response.message =='admin')
             {
@@ -1598,7 +1602,8 @@ function movetolive(referencenumber) {
               $("#showonlogin").show();
               $("#hideonlogin").hide();
               table.buttons(0).enable();
-             
+             // localStorage['userType'] = response.message;
+              localStorage.setItem('userType',  response.message);
             }
             else if(response.message =='operation' )
             {
@@ -1731,7 +1736,37 @@ function movetolive(referencenumber) {
 
             // You could also use an ajax property on the data table initialization
 
-            var rowData = [data[i].casereferenceNumber,
+            if( localStorage['userType'] === 'admin')
+            {
+              var rowData = [data[i].casereferenceNumber,
+            moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),
+            `${caseage}`,
+            data[i].patientName,
+              data[i].patientMobile,
+              data[i].complainantName,
+              data[i].managerName,
+              data[i].cpName,
+              data[i].insuranceCompanyName,
+              data[i].claimNumber,
+              data[i].claimAmount,
+              data[i].caseCompletionType,
+              data[i].newCaseStatus,
+              `${caseSettlementamount}`,
+              Math.round(data[i].caseCustomerReceivedAmount *(data[i].cfPercentage / 100)),
+              Math.round(data[i].caseNidaanReceivedAmount),
+              Math.round(`${lossAmount}`),
+              Math.round(data[i].caseCPFinalAmount) ,
+              `<a href="#popup6"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to finished</button> </a>`,
+              `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
+              `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')">View Documents</button> </a>`,
+              `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
+              ];
+
+              table.row.add(rowData);
+
+            }
+            else{
+              var rowData = [data[i].casereferenceNumber,
             moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),
             `${caseage}`,
             data[i].patientName,
@@ -1749,13 +1784,16 @@ function movetolive(referencenumber) {
               data[i].caseNidaanReceivedAmount,
               `${lossAmount}`,
               data[i].caseCPFinalAmount ,
-              `<a href="#popup6"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to finished</button> </a>`,
+              `<button class="btn btn-primary btn-sm" disabled  onclick="addremark('${rfno}')" >Move to finished</button>`,
               `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
               `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')">View Documents</button> </a>`,
               `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
               ];
 
               table.row.add(rowData);
+            }
+
+           
           }
           table.draw(false);
         }

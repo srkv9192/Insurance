@@ -524,6 +524,7 @@ div.dataTables_filter {
                         <th>Claim Number</th>
                         <th>Claim Amount</th> 
                         <th>Completion Type</th>
+                        <th>Completion Date</th>
                         <th>Result</th>
                         <th>Settlement Amount</th>
                         <th>Action</th>
@@ -1734,6 +1735,7 @@ function movetolive(referencenumber) {
               data[i].claimNumber,
               data[i].claimAmount,
               data[i].caseCompletionType,
+              moment(new Date(data[i].completedDate)).utc().format('DD-MM-YYYY'),
               `${caseResult}`,
               `${caseSettlementamount}`,
               `<a href="#popup10"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >Add Details</button> </a>`,

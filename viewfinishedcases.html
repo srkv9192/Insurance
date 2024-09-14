@@ -513,6 +513,7 @@ div.dataTables_filter {
                         <th>Claim Amount</th> 
                         <th>Completion Type</th>
                         <th>Status</th>
+                        <th>Case Result</th>
                         <th>Settlement Amount</th>
                         <th>CF Amount</th>
                         <th>Nidaan Amount</th>
@@ -1736,6 +1737,7 @@ function movetolive(referencenumber) {
               data[i].claimAmount,
               data[i].caseCompletionType,
               data[i].newCaseStatus,
+              `${caseResult}`,
               `${caseSettlementamount}`,
               data[i].caseCustomerReceivedAmount ? data[i].caseCustomerReceivedAmount *(data[i].cfPercentage / 100) : 0,
               data[i].caseNidaanReceivedAmount ? data[i].caseNidaanReceivedAmount : 0,

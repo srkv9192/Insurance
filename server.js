@@ -61,7 +61,6 @@ const port = process.env.PORT || 80
 //});
 
 
-
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -75,7 +74,6 @@ mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
 });
 
 */
-
 
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
@@ -454,6 +452,30 @@ app.post('/api/login', async(req, res) => {
     }
   
 });
+
+app.post('/api/updateRemarks', async (req, res) => {
+  try {
+      const result = await dataSchemaObject.updateMany(
+          { caseCompletionRemark: { $exists: true, $ne: null } },
+          [{
+              $set: {
+                  caseRemarks: {
+                      $concatArrays: [
+                          "$caseRemarks",
+                          ["$caseCompletionRemark"]
+                      ]
+                  },
+                 // caseCompletionRemark: "$$REMOVE" // Optionally remove the field after adding to the array
+              }
+          }]
+      );
+      res.json({ success: true, result });
+  } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+
 
 app.post('/api/logout', async(req, res) => {
   try{
@@ -866,7 +888,7 @@ app.post('/api/addlivecasequeryremark', async(req, res) => {
 
 app.post('/api/movetocompleted', async(req, res) => {
   try{
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ isInLokpalStage:"false", isInEscalationStage : "false", newCaseStatus: "Completed", isCompleted: "true", caseCompletionType: req.body.caseCompletionType, caseCompletionRemark: req.body.caseCompletionRemark,  completedDate: req.body.completedDate }});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{ caseRemarks:req.body.caseCompletionRemark}, $set:{ isInLokpalStage:"false", isInEscalationStage : "false", newCaseStatus: "Completed", isCompleted: "true", caseCompletionType: req.body.caseCompletionType, completedDate: req.body.completedDate }});
 
       if(newData == null)
       {
