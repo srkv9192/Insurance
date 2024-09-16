@@ -66,6 +66,7 @@ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS
   useUnifiedTopology: true,
 });
 
+
 /*
 
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
@@ -1133,6 +1134,14 @@ app.post('/api/editcasedetails', async(req, res) => {
                 lokpalDraft:   req.body.lokpalDraft,
                 operationOfficer: req.body.operationOfficer,
                 medicalOpinionOfficer: req.body.medicalOpinionOfficer,
+
+                caseResult: req.body.caseResult,
+                caseSettlementAmount: req.body.caseSettlementAmount,
+                caseNidaanReceivedAmount: req.body.caseNidaanReceivedAmount,
+                caseNidaanReceivedAmountDate: req.body.caseNidaanReceivedAmountDate,
+                caseCPFinalAmount : req.body.caseCPFinalAmount,
+                caseCPFinalReceivedAmount : req.body.caseCPFinalReceivedAmount ,
+                caseCPFinalReceivedAmountDate: req.body.caseCPFinalReceivedAmountDate ,
               },});
 
       if(newData == null)
@@ -2938,7 +2947,7 @@ app.post('/api/movecasetomedicalfromlivebycasenumber', async(req, res) => {
          isPendingAuth:"true",
          isLive: "false",
          isInMedicalOpinion: "true",
-         medicalOpinionOfficer: "NONE",
+   // add back in case required     medicalOpinionOfficer: "NONE",
          isDraftGenerated: "NO",
       }, {new : true});
 
@@ -2956,7 +2965,7 @@ app.post('/api/movecasetomedicalfromprospectbyrefnumber', async(req, res) => {
     const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, 
       {  
          isInMedicalOpinion: "true",
-         medicalOpinionOfficer: "NONE",
+// add back in case required         medicalOpinionOfficer: "NONE",
          newCaseStatus: "In Medical"
       }, {new : true});
 

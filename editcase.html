@@ -618,6 +618,55 @@
                             </select>
                         </div>
 
+                        <div class="col-sm-3">
+
+                          <label for="casefinalstatus"  class="form-label">Final Case Status</label>
+                          <select class="form-control" id="casefinalstatus" style="margin-top: 5px;margin-bottom: 5px;">
+                              <option value="" disabled selected>Select status</option>
+                              <option value="WON">Won</option>
+                              <option value="LOST">Lost</option>
+                          </select>
+                        </div>
+
+                        <div class="col-sm-3">
+
+                          <label for="settlementAmount" style="color: black;"  class="form-label">Settlement Amount</label>
+                          <input type="number" class="form-control" id="settlementAmount" placeholder="Enter settlement amount" value="0"  style="margin-top: 5px;margin-bottom: 5px;">
+  
+                        </div>
+
+
+                      </div>
+
+                      <div class="row mb-3">
+
+                        <div class="col-sm-3">
+                            <label for="nidaanAmount"class="form-label">Amount Received by Nidaan</label>
+                            <input type="number" class="form-control" id="nidaanAmount" placeholder="Enter amount"  style="margin-top: 5px;margin-bottom: 5px;" >
+                        </div>
+
+                        <div class="col-sm-3">
+                          <label for="nidaanAmountDate"class="form-label">Amount Received Date</label>
+                          <input type="date" class="form-control" id="nidaanAmountDate" style="margin-top: 5px;margin-bottom: 5px;" >                   
+                        </div>
+                        
+                        <div class="col-sm-3">
+                          <label for="cpfinalamount"class="form-label">CP Amount</label>
+                            <input type="number" class="form-control" id="cpfinalamount" style="margin-top: 5px;margin-bottom: 5px;" >
+                        </div>
+
+                        <div class="col-sm-3">
+                          <label for="cpAmount"class="form-label">Amount received by CP</label>
+                          <input type="number" class="form-control" id="cpAmount" placeholder="Enter amount"  style="margin-top: 5px;margin-bottom: 5px;" >
+                      </div>
+
+                      </div>
+
+                      <div class="row mb-3">
+                        <div class="col-sm-3">
+                          <label for="cpAmountDate"class="form-label">CP Amount Received Date</label>
+                          <input type="date" class="form-control" id="cpAmountDate" style="margin-top: 5px;margin-bottom: 5px;" >                   
+                        </div>
                       </div>
 
                       <div class="row mb-3">
@@ -957,8 +1006,27 @@ const quill = new Quill('#editor', {
             document.getElementById("annexure-six-date").value = response[0].lokpalComplaintDate  ? moment(new Date(response[0].lokpalComplaintDate)).utc().format('YYYY-MM-DD') : ""; ;
             document.getElementById("hearing-date").value = response[0].dateOfLokpalHearing  ? moment(new Date(response[0].dateOfLokpalHearing)).utc().format('YYYY-MM-DD') : ""; ;;
 
-            document.getElementById("operationofficer").value = response[0].operationOfficer  ? response[0].operationOfficer   : ""; 
-            document.getElementById("medicalofficer").value = response[0].medicalOpinionOfficer  ?  response[0].medicalOpinionOfficer : "";
+         //   document.getElementById("operationofficer").value = response[0].operationOfficer  ? response[0].operationOfficer   : ""; 
+           
+            $("#operationofficer").val(response[0].operationOfficer ).change();
+            $("#medicalofficer").val(response[0].medicalOpinionOfficer ).change();
+            $("#casefinalstatus").val(response[0].caseResult ).change();
+
+            //document.getElementById("medicalofficer").value = response[0].medicalOpinionOfficer  ?  response[0].medicalOpinionOfficer : "";
+
+
+            //rajat
+           // document.getElementById("casefinalstatus").value = response[0].caseResult  ?  response[0].caseResult : "";
+            document.getElementById("settlementAmount").value = response[0].caseSettlementAmount  ?  response[0].caseSettlementAmount : "";
+            document.getElementById("nidaanAmount").value = response[0].caseNidaanReceivedAmount  ?  response[0].caseNidaanReceivedAmount : "";
+            document.getElementById("nidaanAmountDate").value = response[0].caseNidaanReceivedAmountDate  ?  moment(new Date(response[0].caseNidaanReceivedAmountDate)).utc().format('YYYY-MM-DD') : "";
+            document.getElementById("cpfinalamount").value = response[0].caseCPFinalAmount  ?  response[0].caseCPFinalAmount : "";
+            document.getElementById("cpAmount").value = response[0].caseCPFinalReceivedAmount  ?  response[0].caseCPFinalReceivedAmount : "";
+            document.getElementById("cpAmountDate").value = response[0].caseCPFinalReceivedAmountDate  ?  moment(new Date(response[0].caseCPFinalReceivedAmountDate)).utc().format('YYYY-MM-DD') : "";
+
+            //rajat
+
+
 
             quill.root.innerHTML= response[0].caseDraft ? response[0].caseDraft : "";
             quill1.root.innerHTML= response[0].lokpalDraft ?  response[0].lokpalDraft:"" ;
@@ -1016,6 +1084,14 @@ const quill = new Quill('#editor', {
             var annexure6Date = $('#annexure-six-date').val();
             var hearingDate = $('#hearing-date').val();
 
+            var settlementAmount = $('#settlementAmount').val();
+            var nidaanAmount = $('#nidaanAmount').val();
+            var nidaanAmountDate = $('#nidaanAmountDate').val();
+
+             var cpAmount = $('#cpfinalamount').val();
+            var cpAmountReceived = $('#cpAmount').val();
+            var cpAmountReceivedDate = $('#cpAmountDate').val();
+
       $.ajax({
           url: '/api/editcasedetails',
           type: 'POST',
@@ -1061,6 +1137,13 @@ const quill = new Quill('#editor', {
             lokpalDraft:  quill1.root.innerHTML,
             operationOfficer: $("#operationofficer option:selected").text(),
             medicalOpinionOfficer: $("#medicalofficer option:selected").text(),
+            caseResult: $("#casefinalstatus").val(),
+            caseSettlementAmount: settlementAmount,
+            caseNidaanReceivedAmount: nidaanAmount,
+            caseNidaanReceivedAmountDate: nidaanAmountDate,
+            caseCPFinalAmount : cpAmount ,
+            caseCPFinalReceivedAmount : cpAmountReceived ,
+            caseCPFinalReceivedAmountDate: cpAmountReceivedDate ,
 
           },
           success: function (response) {

@@ -512,6 +512,7 @@ div.dataTables_filter {
                         <th>Company</th>
                         <th>Claim Number</th>
                         <th>Claim Amount</th> 
+                        <th>Operation Officer</th> 
                         <th>Case status</th>
                         <th>Escalation Date</th>
                         <th>Case Email</th>
@@ -1727,6 +1728,7 @@ function populatereport(refnumber)
               data[i].insuranceCompanyName,
               data[i].claimNumber,
               data[i].claimAmount,
+              data[i].operationOfficer,
               data[i].newCaseStatus,
               moment(new Date(data[i].dateofEscalationToInsurer)).utc().format('DD-MM-YYYY'),
              // `${canEscalate}`,
@@ -1843,7 +1845,7 @@ error: function (error) {
           case "Escalation Pending":
           case "Escalation Query":
           $("#dataTable").DataTable()
-          .columns(11)
+          .columns(12)
           .search($(this).text())
           .draw();
             break;
@@ -1855,7 +1857,7 @@ error: function (error) {
       $('ul').on('click', 'a.all', function() {
         $("#dataTable").DataTable()
         .search('')
-        .columns(11)
+        .columns(12)
         .search('')
         .draw();
       });
