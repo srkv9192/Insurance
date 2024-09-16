@@ -516,6 +516,7 @@ div.dataTables_filter {
                         <th>Claim Amount</th> 
                         <th>Completion Type</th>
                         <th>Status</th>
+                        <th>Cutomer Payment Date</th>
                         <th>Settlement Amount</th>
                         <th>CF Amount</th>
                         <th>Action</th>
@@ -1778,6 +1779,7 @@ function movetolive(referencenumber) {
               data[i].claimAmount,
               data[i].caseCompletionType,
               data[i].newCaseStatus,
+              moment(new Date(data[i].caseCustomerReceivedAmountDate)).utc().format('DD-MM-YYYY'),
               Math.round(`${caseSettlementamount}`),
               Math.round(data[i].caseCustomerReceivedAmount *(data[i].cfPercentage / 100)),
               `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,

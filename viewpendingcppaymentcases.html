@@ -513,6 +513,7 @@ div.dataTables_filter {
                         <th>Claim Amount</th> 
                         <th>Completion Type</th>
                         <th>Status</th>
+                        <th>Nidaan Payment Date</th>
                         <th>Settlement Amount</th>
                         <th>CF Amount</th>
                         <th>Nidaan Amount</th>
@@ -1751,6 +1752,7 @@ function movetolive(referencenumber) {
               data[i].claimAmount,
               data[i].caseCompletionType,
               data[i].newCaseStatus,
+              moment(new Date(data[i].caseNidaanReceivedAmountDate)).utc().format('DD-MM-YYYY'),
               `${caseSettlementamount}`,
               Math.round(data[i].caseCustomerReceivedAmount *(data[i].cfPercentage / 100)),
               Math.round(data[i].caseNidaanReceivedAmount),
