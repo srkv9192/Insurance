@@ -745,7 +745,7 @@ const quill = new Quill('#editor', {
           const optionsSelect = $('#medicalofficer');
           response.forEach(function (option) {
             optionsSelect.append($('<option>', {
-              value: option.userID,
+              value: option.userName,
               text: option.userName
             }));
           });
@@ -766,7 +766,7 @@ const quill = new Quill('#editor', {
           const optionsSelect = $('#medicalofficer');
           response.forEach(function (option) {
             optionsSelect.append($('<option>', {
-              value: option.userID,
+              value: option.userName,
               text: option.userName
             }));
           });
@@ -785,7 +785,7 @@ const quill = new Quill('#editor', {
           const optionsSelect = $('#operationofficer');
           response.forEach(function (option) {
             optionsSelect.append($('<option>', {
-              value: option.userID,
+              value: option.userName,
               text: option.userName
             }));
           });
@@ -1008,7 +1008,7 @@ const quill = new Quill('#editor', {
 
          //   document.getElementById("operationofficer").value = response[0].operationOfficer  ? response[0].operationOfficer   : ""; 
            
-            $("#operationofficer").val(response[0].operationOfficer ).change();
+            $("#operationofficer").val(response[0].operationOfficer).change();
             $("#medicalofficer").val(response[0].medicalOpinionOfficer ).change();
             $("#casefinalstatus").val(response[0].caseResult ).change();
 
