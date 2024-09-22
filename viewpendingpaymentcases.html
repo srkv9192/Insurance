@@ -1035,6 +1035,13 @@ div.dataTables_filter {
                           <label for="cpCommission" style="color: black;" >CP Commision %</label>
                           <input type="number" class="form-control" id="cpCommission" >
 
+                          <label for="cpBankDetails" style="color: black;" >CP Bank Details</label>
+                          <select class="form-control" id="cpBankDetails">
+                            <option value="Available">Available</option>
+                            <option value="Not Available">Not Available</option>
+                          </select>
+
+
                           <label for="movetofinishedremark" style="color: black;">Remark</label>
                           <input type="text" class="form-control" id="movetofinishedremark" placeholder="Enter remark" required>
 
@@ -1291,8 +1298,6 @@ function populatereport(refnumber)
       }
 
 
-
-
 function addremark(referencenumber) {
         // Code to generate card
         localStorage['addRemarkForRefNumber'] =referencenumber; 
@@ -1307,17 +1312,16 @@ function addremark(referencenumber) {
       success: function (response) {
 
          document.getElementById("cpCommission").value = response.cpCommission;
+         document.getElementById("cpBankDetails").value = response.cpBankDetails;
+         
   
       },
       error: function (error) {
         document.getElementById("cpCommission").value = 0;
+        document.getElementById("cpBankDetails").value = "Not Available";
 
       }
     });
-  
-
-
-
 
   }
 
@@ -1558,6 +1562,7 @@ function viewremark(referencenumber) {
         var cpAmount =  ((nidaanAmount) *($('#cpCommission').val()) / 100);
 
         var modeofpaymentAmount = $('#payment-mode-dropdown').val();
+        var cpBankDetails = $('#cpBankDetails').val();
 
         const today = new Date();
       const yyyy = today.getFullYear();
@@ -1580,6 +1585,7 @@ function viewremark(referencenumber) {
               caseNidaanReceivedAmount: nidaanAmount, 
               caseNidaanReceivedAmountMode : modeofpaymentAmount,
               caseCPFinalAmount : cpAmount,
+              cpBankDetails : cpBankDetails,
               
             }),
             success: function(response) {

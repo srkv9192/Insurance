@@ -402,6 +402,14 @@
                           <input type="number" class="form-control" id="cpCommission" >
                         </div>
 
+                        <div class="col-sm-4">
+                          <label for="cpBankDetails" class="form-label">Bank Details</label>
+                          <select class="form-control" id="cpBankDetails">
+                            <option value="Available">Available</option>
+                            <option value="Not Available">Not Available</option>
+                          </select>
+                        </div>
+
                       </div>
  
                       <button type="submit" class="btn btn-primary" style="width: 300px; margin-left: 150px ;">Submit</button>
@@ -567,8 +575,8 @@
         var alternatePhone = $('#alternatePhone').val();
         var email = $('#email').val();
         var cpCommission = $('#cpCommission').val();
-
-
+        var cpBankDetails = $('#cpBankDetails').val();
+      
         // Make an API call with the username and password
         $.ajax({
           url: '/api/addcpdetail',
@@ -591,6 +599,7 @@
             alternatePhone: alternatePhone,
             email: email,
             cpCommission: cpCommission,
+            cpBankDetails: cpBankDetails,
           },
           success: function (response) {
             if(response.message == "success")

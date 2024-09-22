@@ -568,7 +568,13 @@ div.dataTables_filter {
                             <input type="email" class="form-control" id="email" placeholder="Enter email">
                           </div>
 
-                          
+                          <div class="col-sm-4">
+                            <label for="cpBankDetails" class="form-label">Bank Details</label>
+                            <select class="form-control" id="cpBankDetails">
+                              <option value="Available">Available</option>
+                              <option value="Not Available">Not Available</option>
+                            </select>
+                          </div>
 
                         </div>
   
@@ -745,6 +751,7 @@ $('#loginForm').on('submit', function (event) {
         var alternatePhone = $('#alternatePhone').val();
         var email = $('#email').val();
         var cpCommission = $('#cpCommission').val();
+        var cpBankDetails = $('#cpBankDetails').val();
 
 
         // Make an API call with the username and password
@@ -769,6 +776,7 @@ $('#loginForm').on('submit', function (event) {
             alternatePhone: alternatePhone,
             email: email,
             cpCommission: cpCommission,
+            cpBankDetails: cpBankDetails,
           },
           success: function (response) {
             if(response.message == "success")
@@ -878,7 +886,8 @@ function viewremark(referencenumber) {
         $('#alternatePhone').val(response[0].alternatePhone);
         $('#email').val(response[0].email);
         $('#cpCommission').val(response[0].cpCommission);
-
+        $('#cpBankDetails').val(response[0].cpBankDetails);
+        
         },
         error: function (error) {
           console.error('Error:', error);

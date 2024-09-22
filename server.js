@@ -61,6 +61,7 @@ const port = process.env.PORT || 80
 //});
 
 
+
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -282,6 +283,7 @@ const dataSchema = new mongoose.Schema({
   //
   caseDraft: String,
   lokpalDraft: String,
+  cpBankDetails: String,
 
 
   // Add more fields as needed
@@ -355,6 +357,7 @@ const cpSchema = new mongoose.Schema({
   alternatePhone: String,
   email: String,
   cpCommission: Number,
+  cpBankDetails: String,
   // Add more fields as needed
 });
 
@@ -1252,8 +1255,13 @@ app.post('/api/addcaseclosedcppaymentdetails', async(req, res) => {
 
 app.post('/api/addcasenidaanpaymentdetails', async(req, res) => {
   try{
+    var newstatus = "CP Payment Pending";
+    if(req.body.cpBankDetails === "Not Available")
+    {
+      newstatus = "Bank Details Missing"
+    }
 
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{caseRemarks:req.body.caseRemarks}, $set:{ caseNidaanReceivedAmountDate:req.body.caseNidaanReceivedAmountDate, caseNidaanReceivedAmount: req.body.caseNidaanReceivedAmount, caseNidaanReceivedAmountMode: req.body.caseNidaanReceivedAmountMode, caseCPFinalAmount: req.body.caseCPFinalAmount, isPendingPayment: "false", isPendingCPPayment: "true", newCaseStatus: "CP Payment Pending" }});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{caseRemarks:req.body.caseRemarks}, $set:{ caseNidaanReceivedAmountDate:req.body.caseNidaanReceivedAmountDate, caseNidaanReceivedAmount: req.body.caseNidaanReceivedAmount, caseNidaanReceivedAmountMode: req.body.caseNidaanReceivedAmountMode, caseCPFinalAmount: req.body.caseCPFinalAmount, isPendingPayment: "false", isPendingCPPayment: "true", newCaseStatus: newstatus, cpBankDetails: req.body.cpBankDetails}});
 
       if(newData == null)
       {
@@ -1287,7 +1295,7 @@ app.post('/api/getCpCommission', async (req, res) => {
       const dataRecord = await dataSchemaObject.findOne({casereferenceNumber: req.body.casereferenceNumber }).exec();
 
       if (!dataRecord) {
-        res.json({ cpCommission: 0 });
+        res.json({ cpCommission: 0 , cpBankDetails:  "Not Available",});
         return;
       }
 
@@ -1295,7 +1303,7 @@ app.post('/api/getCpCommission', async (req, res) => {
 
       if(dataRecord.cpID == null)
       {
-        res.json({ cpCommission: 0 });
+        res.json({ cpCommission: 0, cpBankDetails: "Not Available", });
         return;
       }
 
@@ -1305,14 +1313,14 @@ app.post('/api/getCpCommission', async (req, res) => {
       //rajat
 
       if (!cpRecord) {
-        res.json({ cpCommission: 0 });
+        res.json({ cpCommission: 0, cpBankDetails:  "Not Available", });
         return;
       }
 
       console.log(cpRecord)
 
       // Respond with cpCommission
-      res.json({ cpCommission: cpRecord.cpCommission });
+      res.json({ cpCommission: cpRecord.cpCommission,   cpBankDetails:  cpRecord.cpBankDetails, });
   } catch (err) {
       console.error(err);
       res.status(500).json({ message: 'Internal Server Error' });
@@ -2041,6 +2049,7 @@ app.post('/api/addcpdetail', async(req, res) => {
                         'alternatePhone' : req.body.alternatePhone,
                         'email' : req.body.email,
                         'cpCommission': req.body.cpCommission,
+                        'cpBankDetails': req.body.cpBankDetails,
                         });
         const savedData = newData.save();
         await incrementcpCount();
@@ -2056,7 +2065,7 @@ app.post('/api/addcpdetail', async(req, res) => {
 app.post('/api/editcpdetail', async(req, res) => {
   try{
 
-        const newData = await cpSchemaObject.findOneAndUpdate({cpID : req.body.cpID}, {$set:{ 'cpName' : req.body.cpName, 'cpAge' : req.body.cpAge, 'cpGender' : req.body.cpGender, 'cpFatherName' : req.body.cpFatherName,  'cpAddress' : req.body.cpAddress,'cpCity' : req.body.cpCity, 'cpState' : req.body.cpState,'cpQualification' : req.body.cpQualification,  'cpProfession' : req.body.cpProfession, 'cpCurrentCompany' : req.body.cpCurrentCompany,'managerID': req.body.managerID, 'phone' : req.body.phone, 'alternatePhone' : req.body.alternatePhone, 'email' : req.body.email,'cpCommission': req.body.cpCommission, }});
+        const newData = await cpSchemaObject.findOneAndUpdate({cpID : req.body.cpID}, {$set:{ 'cpName' : req.body.cpName, 'cpAge' : req.body.cpAge, 'cpGender' : req.body.cpGender, 'cpFatherName' : req.body.cpFatherName,  'cpAddress' : req.body.cpAddress,'cpCity' : req.body.cpCity, 'cpState' : req.body.cpState,'cpQualification' : req.body.cpQualification,  'cpProfession' : req.body.cpProfession, 'cpCurrentCompany' : req.body.cpCurrentCompany,'managerID': req.body.managerID, 'phone' : req.body.phone, 'alternatePhone' : req.body.alternatePhone, 'email' : req.body.email,'cpCommission': req.body.cpCommission, 'cpBankDetails': req.body.cpBankDetails,}});
 
         if(newData == null)
         {
