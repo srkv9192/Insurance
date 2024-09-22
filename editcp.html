@@ -430,6 +430,7 @@ div.dataTables_filter {
                         <th>City</th>
                         <th>Commission</th>
                         <th>Action</th>
+                        <th>Action</th>
                       </tr>
                     </thead>
                   </table>
@@ -589,7 +590,6 @@ div.dataTables_filter {
                 
                   
                   </div>
-
 
                 </div>
 
@@ -857,6 +857,33 @@ error: function (error) {
 }
 
 
+function deletecp(referencenumber) {
+        // Code to generate card
+
+        $.ajax({
+        url: '/api/deletecpdetailbyid',
+        type: 'GET',
+        data: {
+          cpID: referencenumber
+        },
+
+        success: function (response) { 
+
+          alert("Successfully deleted CP detail");
+           window.location.href = "/editcp.html"
+        
+        },
+        error: function (error) {
+          alert("Error while deleting CP detail");
+          console.error('Error:', error);
+        }
+      });
+
+  }
+
+
+
+
 
 function viewremark(referencenumber) {
         // Code to generate card
@@ -1046,6 +1073,7 @@ function movetolive(referencenumber) {
               data[i].cpCity ? data[i].cpCity: "",
               data[i].cpCommission ?data[i].cpCommission : "",
               `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >Edit Details</button> </a>`,
+              `<a href=""><button class="btn btn-primary btn-sm"  onclick="deletecp('${rfno}')" >Delete CP</button> </a>`,
             ]);
           }
         }

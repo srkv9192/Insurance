@@ -61,7 +61,6 @@ const port = process.env.PORT || 80
 //});
 
 
-
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -2104,6 +2103,17 @@ app.get("/api/getcpdetailbyid", async(req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to get CP details' });
+  }
+});
+
+app.get("/api/deletecpdetailbyid", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  cpSchemaObject.findOneAndDelete({cpID: req.query.cpID});
+    res.json({ message: 'success'});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to delete CP details' });
   }
 });
 
