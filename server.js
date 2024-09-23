@@ -61,11 +61,12 @@ const port = process.env.PORT || 80
 //});
 
 
-
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
+
 
 /*
 
@@ -75,7 +76,6 @@ mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
 });
 
 */
-
 
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
@@ -2568,7 +2568,8 @@ app.get("/api/getcompletedcases", async(req, res) => {
 app.get("/api/getpendingpaymentcases", async(req, res) => {
   try {
     // Retrieve all tpa list from database
-    const users = await  dataSchemaObject.find({isPendingPayment: "true"});
+           
+    const users = await  dataSchemaObject.find({isPendingPayment: "true"},{completedDate:1, caseSettlementAmount:1, prospectDate:1, caseResult:1, casereferenceNumber:1, prospectDate:1, patientName:1,patientMobile:1, complainantName:1, managerName:1, cpName:1, insuranceCompanyName:1, claimNumber:1 , claimAmount:1, caseCompletionType:1, newCaseStatus:1, caseCustomerReceivedAmountDate:1, caseCustomerReceivedAmount:1, cfPercentage:1});
     res.json(users);
   } catch (error) {
     console.error(error);
@@ -2578,8 +2579,8 @@ app.get("/api/getpendingpaymentcases", async(req, res) => {
 
 app.get("/api/getfinishedcases", async(req, res) => {
   try {
-    // Retrieve all tpa list from database
-    const users = await  dataSchemaObject.find({isFinished: "true"});
+    // Retrieve all tpa list from database             
+    const users = await  dataSchemaObject.find({isFinished: "true"},{caseSettlementAmount:1, caseResult:1, casereferenceNumber:1, completedDate:1,  prospectDate:1, patientName:1, patientMobile:1, complainantName:1, managerName:1, cpName:1, insuranceCompanyName:1, claimNumber:1, claimAmount:1, caseCompletionType:1, newCaseStatus:1, caseCustomerReceivedAmount:1, caseNidaanReceivedAmount:1, caseCPFinalAmount:1, cfPercentage:1  });
     res.json(users);
   } catch (error) {
     console.error(error);
@@ -2590,7 +2591,8 @@ app.get("/api/getfinishedcases", async(req, res) => {
 app.get("/api/getpendingcppaymentcases", async(req, res) => {
   try {
     // Retrieve all tpa list from database
-    const users = await  dataSchemaObject.find({isPendingCPPayment: "true"});
+
+    const users = await  dataSchemaObject.find({isPendingCPPayment: "true"},{prospectDate:1, completedDate:1, caseResult:1, caseSettlementAmount:1, casereferenceNumber:1, prospectDate:1, patientName:1, patientMobile:1, complainantName:1, managerName:1, cpName:1, insuranceCompanyName:1, claimNumber:1, claimAmount:1, caseCompletionType:1, newCaseStatus:1, caseNidaanReceivedAmountDate:1, caseNidaanReceivedAmountDate:1, caseCustomerReceivedAmount:1, caseNidaanReceivedAmount:1,caseCPFinalAmount:1, cfPercentage:1 });
     res.json(users);
   } catch (error) {
     console.error(error);
