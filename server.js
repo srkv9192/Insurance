@@ -67,7 +67,6 @@ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS
   useUnifiedTopology: true,
 });
 
-
 /*
 
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
@@ -76,6 +75,7 @@ mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
 });
 
 */
+
 
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
@@ -2601,7 +2601,7 @@ app.get("/api/getpendingcppaymentcases", async(req, res) => {
 app.get("/api/getallcases", async(req, res) => {
   try {
     // Retrieve all tpa list from database
-    const users = await  dataSchemaObject.find();
+    const users = await  dataSchemaObject.find({},{casereferenceNumber: 1, patientName: 1,   patientMobile:  1, complainantName:1, managerName: 1, cpName: 1,  operationOfficer:1, claimNumber: 1, claimAmount: 1, newCaseStatus: 1})
     res.json(users);
   } catch (error) {
     console.error(error);
