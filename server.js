@@ -2557,7 +2557,7 @@ app.get("/api/getprospectcasedetail", async(req, res) => {
 app.get("/api/getcompletedcases", async(req, res) => {
   try {
     // Retrieve all tpa list from database
-    const users = await  dataSchemaObject.find({isCompleted: "true"});
+    const users = await  dataSchemaObject.find({isCompleted: "true"}, {casereferenceNumber:1, prospectDate:1, patientName:1, patientMobile:1, complainantName:1, managerName:1, cpName:1, insuranceCompanyName:1, claimNumber:1,  claimAmount:1, caseCompletionType:1, completedDate:1, caseSettlementAmount:1, caseResult:1,  });
     res.json(users);
   } catch (error) {
     console.error(error);
@@ -2761,7 +2761,7 @@ app.get("/api/getmedicalopinioncasedetail", async(req, res) => {
 app.get("/api/getlokpalcasedetail", async(req, res) => {
   try {
     // Retrieve all medical opinion case list from database
-    const users = await  dataSchemaObject.find({isInLokpalStage : {"$exists" : true, "$eq" : "true"}});
+    const users = await  dataSchemaObject.find({isInLokpalStage : {"$exists" : true, "$eq" : "true"}}, {casereferenceNumber:1, prospectDate:1, patientName:1, patientMobile:1, complainantName:1, managerName:1, cpName:1, operationOfficer:1, insuranceCompanyName:1, claimNumber:1, claimAmount:1, caseEmail:1, caseEmailPassword:1, newCaseStatus:1, lokpalComplaintDate:1, LokpalBHPComplaintNumber:1, lokpalBHPComplaintDate:1,  annexure5ComplaintDate:1, annexure5ComplaintNumber:1, dateofEscalationToInsurer:1, lokpalComplaintNumber:1, lokpalComplaintDate:1, lokpalbucketDate:1, lokpalBHPComplaintDate:1, dateOfLokpalHearing:1, annexure5ComplaintDate:1, lokpalBHPComplaintDate:1  });
     res.json(users);
   } catch (error) {
     console.error(error);
@@ -2772,7 +2772,7 @@ app.get("/api/getlokpalcasedetail", async(req, res) => {
 app.get("/api/getescalationcasedetail", async(req, res) => {
   try {
     // Retrieve all medical opinion case list from database
-    const users = await  dataSchemaObject.find({isInEscalationStage : {"$exists" : true, "$eq" : "true"}});
+    const users = await  dataSchemaObject.find({isInEscalationStage : {"$exists" : true, "$eq" : "true"}}, {casereferenceNumber:1, prospectDate:1, patientName:1, patientMobile:1, complainantName:1, managerName:1, cpName:1, insuranceCompanyName:1, claimNumber :1, claimAmount:1, operationOfficer:1, newCaseStatus:1, dateofEscalationToInsurer:1, caseEmail:1, caseEmailPassword:1 });
     res.json(users);
   } catch (error) {
     console.error(error);
@@ -3067,7 +3067,8 @@ app.post('/api/movecasetoprospectformedicalquerybyref', async(req, res) => {
 app.get("/api/getlivecasedetail", async(req, res) => {
   try {
     // Retrieve all tpa list from database
-    const users = await  dataSchemaObject.find({isLive : {"$exists" : true, "$eq" : "true"}});
+   
+    const users = await  dataSchemaObject.find({isLive : {"$exists" : true, "$eq" : "true"}}, {casereferenceNumber:1, prospectDate:1, patientName:1, patientMobile:1, complainantName:1, managerName:1, cpName:1, insuranceCompanyName:1, claimNumber:1,  claimAmount:1, operationOfficer:1, medicalOpinionOfficer:1, newCaseStatus:1, liveDate:1 });
     res.json(users);
   } catch (error) {
     console.error(error);
