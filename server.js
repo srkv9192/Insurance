@@ -61,11 +61,11 @@ const port = process.env.PORT || 80
 //});
 
 
+
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
 
 
 /*
@@ -198,8 +198,10 @@ const dataSchema = new mongoose.Schema({
   LokpalBHPComplaintNumber: String,
   lokpalBHPComplaintDate: Date,
   annexure5ComplaintNumber: String,
+  annexure5ComplaintReceivedDate: Date,
   annexure5ComplaintDate: Date,
   lokpalComplaintNumber: String,
+  lokpalComplaintReceivedDate: Date,
   lokpalComplaintDate: Date,
   lokpalCaseStatus: String,
   dateOfLokpalHearing: Date,
@@ -564,6 +566,43 @@ app.post('/api/addprospect', upload.array('pdfFile', 10), async (req, res) => {
 
       await Promise.all(uploadPromises);
         res.json({ message: 'success', referencenumber:refNumber,data: savedData });
+      }
+    catch(err)
+    {
+      console.error(err);
+      res.status(500).json({ error: 'Error saving data' });
+    }
+  
+});
+
+// Define the API endpoint to save data
+app.post('/api/editprospect', async (req, res) => {
+  try{
+    console.log(req.body.referencenumber)
+    const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber},  {$set:{ patientName : req.body.patientName,
+      patientMobile: req.body.patientMobile,
+      complainantName : req.body.complainantName,
+      complainantMobile: req.body.complainantMobile,
+      insuranceCompanyName: req.body.insuranceCompanyName,
+      claimNumber: req.body.claimNumber,
+      claimAmount: req.body.claimAmount,
+      cpName: req.body.cpName,
+      cpID: req.body.cpID,
+      caseHandler: req.body.caseHandler,
+      managerName: req.body.managerName,
+      managerID: req.body.managerID,
+      directCase: req.body.directCase,
+      prospectZone: req.body.prospectZone,}});
+    if(newData == null)
+    {
+      res.json({ message: 'Could not save status', refnum:req.body.referencenumber});
+    }
+    else
+    {
+      const savedData = newData.save();
+      res.json({ message: 'success'});
+    }
+
       }
     catch(err)
     {
@@ -1506,7 +1545,8 @@ app.post('/api/addlivegistdata', async(req, res) => {
 
 app.post('/api/addlokpaldata', async(req, res) => {
   try{
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{ caseRemarks:req.body.caseRemarks}, $set:{ LokpalBHPComplaintNumber:req.body.LokpalBHPComplaintNumber, lokpalBHPComplaintDate:req.body.lokpalBHPComplaintDate, annexure5ComplaintDate:req.body.annexure5ComplaintDate, annexure5ComplaintNumber: req.body.annexure5ComplaintNumber, lokpalComplaintNumber: req.body.lokpalComplaintNumber,  lokpalComplaintDate: req.body.lokpalComplaintDate,  dateOfLokpalHearing: req.body.dateOfLokpalHearing, newCaseStatus: req.body.newCaseStatus}});
+    
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{ caseRemarks:req.body.caseRemarks}, $set:{ LokpalBHPComplaintNumber:req.body.LokpalBHPComplaintNumber, lokpalBHPComplaintDate:req.body.lokpalBHPComplaintDate, annexure5ComplaintDate:req.body.annexure5ComplaintDate, annexure5ComplaintNumber: req.body.annexure5ComplaintNumber, lokpalComplaintNumber: req.body.lokpalComplaintNumber,  lokpalComplaintDate: req.body.lokpalComplaintDate,  dateOfLokpalHearing: req.body.dateOfLokpalHearing, newCaseStatus: req.body.newCaseStatus, annexure5ComplaintReceivedDate: req.body.annexure5ComplaintReceivedDate, lokpalComplaintReceivedDate:req.body.lokpalComplaintReceivedDate }});
 
       if(newData == null)
       {
@@ -2761,7 +2801,7 @@ app.get("/api/getmedicalopinioncasedetail", async(req, res) => {
 app.get("/api/getlokpalcasedetail", async(req, res) => {
   try {
     // Retrieve all medical opinion case list from database
-    const users = await  dataSchemaObject.find({isInLokpalStage : {"$exists" : true, "$eq" : "true"}}, {casereferenceNumber:1, prospectDate:1, patientName:1, patientMobile:1, complainantName:1, managerName:1, cpName:1, operationOfficer:1, insuranceCompanyName:1, claimNumber:1, claimAmount:1, caseEmail:1, caseEmailPassword:1, newCaseStatus:1, lokpalComplaintDate:1, LokpalBHPComplaintNumber:1, lokpalBHPComplaintDate:1,  annexure5ComplaintDate:1, annexure5ComplaintNumber:1, dateofEscalationToInsurer:1, lokpalComplaintNumber:1, lokpalComplaintDate:1, lokpalbucketDate:1, lokpalBHPComplaintDate:1, dateOfLokpalHearing:1, annexure5ComplaintDate:1, lokpalBHPComplaintDate:1  });
+    const users = await  dataSchemaObject.find({isInLokpalStage : {"$exists" : true, "$eq" : "true"}}, {casereferenceNumber:1, prospectDate:1, patientName:1, patientMobile:1, complainantName:1, managerName:1, cpName:1, operationOfficer:1, insuranceCompanyName:1, claimNumber:1, claimAmount:1, caseEmail:1, caseEmailPassword:1, newCaseStatus:1, lokpalComplaintDate:1, LokpalBHPComplaintNumber:1, lokpalBHPComplaintDate:1,  annexure5ComplaintDate:1, annexure5ComplaintNumber:1, dateofEscalationToInsurer:1, lokpalComplaintNumber:1, lokpalComplaintDate:1, lokpalbucketDate:1, lokpalBHPComplaintDate:1, dateOfLokpalHearing:1, annexure5ComplaintDate:1, lokpalBHPComplaintDate:1, annexure5ComplaintReceivedDate:1, lokpalComplaintReceivedDate:1 });
     res.json(users);
   } catch (error) {
     console.error(error);

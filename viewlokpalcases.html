@@ -944,17 +944,32 @@ div.dataTables_filter {
                             </div>
 
                             <div class="col-sm-6">
-                              <label for="annexure-five-date" class="form-label">Annexure 5 Reply Date</label>
-                              <input type="date" dateFormat: "dd/mm/yy" class="form-control" id="annexure-five-date"  >
+                              <label for="annexure-five-received-date" class="form-label">Annexure 5 Received Date</label>
+                              <input type="date" dateFormat: "dd/mm/yy" class="form-control" id="annexure-five-received-date"  >
                             </div>
                         
                           </div>
 
+                          
                           <div class="row mb-3">
+
+                            <div class="col-sm-6">
+                              <label for="annexure-five-date" class="form-label">Annexure 5 Reply Date</label>
+                              <input type="date" dateFormat: "dd/mm/yy" class="form-control" id="annexure-five-date"  >
+                            </div>
 
                             <div class="col-sm-6">
                               <label for="lokpal-complaint-number" class="form-label">Lokpal Complaint Number</label>
                               <input type="text" class="form-control" id="lokpal-complaint-number" >
+                            </div>
+                        
+                          </div>
+
+                          <div class="row mb-3"> 
+
+                            <div class="col-sm-6">
+                              <label for="annexure-six-received-date" class="form-label">Annexure 6 Received Date</label>
+                              <input type="date" dateFormat: "dd/mm/yy" class="form-control" id="annexure-six-received-date"  >
                             </div>
 
                             <div class="col-sm-6">
@@ -1600,9 +1615,11 @@ function addremark(referencenumber) {
         var bhpNumber = $('#bhp-number').val();
         var bhpDate = $('#registration-date').val();
         var annexure5Date = $('#annexure-five-date').val();
+        var annexure5ReceivedDate = $('#annexure-five-received-date').val();
         var annexure5number = $('#annexure-five').val();
         var lokpalComplaintNumber = $('#lokpal-complaint-number').val();
         var annexure6Date = $('#annexure-six-date').val();
+        var annexure6ReceivedDate = $('#annexure-six-received-date').val();
         var hearingDate = $('#hearing-date').val();
         var detailremark = $('#detailremark').val();
 
@@ -1668,6 +1685,8 @@ function addremark(referencenumber) {
             lokpalComplaintDate: annexure6Date,
             dateOfLokpalHearing: hearingDate,
             newCaseStatus: lokpalcasestatus,
+            annexure5ComplaintReceivedDate: annexure5ReceivedDate,
+            lokpalComplaintReceivedDate: annexure6ReceivedDate,
             caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] "+ detailremark
           },
           success: function (response) {
@@ -1713,9 +1732,11 @@ function addlokpaldetails(referencenumber) {
             document.getElementById("bhp-number").value = response[0].LokpalBHPComplaintNumber ? response[0].LokpalBHPComplaintNumber :  "";
             document.getElementById("registration-date").value = response[0].lokpalBHPComplaintDate ? moment(new Date(response[0].lokpalBHPComplaintDate)).utc().format('YYYY-MM-DD') : "";
             document.getElementById("annexure-five-date").value = response[0].annexure5ComplaintDate  ? moment(new Date(response[0].annexure5ComplaintDate)).utc().format('YYYY-MM-DD') : "";
+            document.getElementById("annexure-five-received-date").value = response[0].annexure5ComplaintReceivedDate  ? moment(new Date(response[0].annexure5ComplaintReceivedDate)).utc().format('YYYY-MM-DD') : "";
             document.getElementById("annexure-five").value = response[0].annexure5ComplaintNumber ?response[0].annexure5ComplaintNumber : "";
             document.getElementById("lokpal-complaint-number").value = response[0].lokpalComplaintNumber ? response[0].lokpalComplaintNumber  : "";
             document.getElementById("annexure-six-date").value = response[0].lokpalComplaintDate  ? moment(new Date(response[0].lokpalComplaintDate)).utc().format('YYYY-MM-DD') : ""; ;
+            document.getElementById("annexure-six-received-date").value = response[0].lokpalComplaintReceivedDate  ? moment(new Date(response[0].lokpalComplaintReceivedDate)).utc().format('YYYY-MM-DD') : ""; ;
             document.getElementById("hearing-date").value = response[0].dateOfLokpalHearing  ? moment(new Date(response[0].dateOfLokpalHearing)).utc().format('YYYY-MM-DD') : ""; ;;
                      
 
@@ -2044,17 +2065,21 @@ $.ajax({
               if((data[i].lokpalBHPComplaintDate))
               {
                 var registrationdate = moment(data[i].lokpalBHPComplaintDate);
-                registrationage = registrationdate.diff(lokpalcasedate, 'days');
+              //  registrationage = registrationdate.diff(lokpalcasedate, 'days');
+                registrationage = todaysdate.diff(registrationdate, 'days');
+                
               }
-              if((data[i].annexure5ComplaintDate))
+              if((data[i].annexure5ComplaintReceivedDate))
               {
-                var annexure5date = moment(data[i].annexure5ComplaintDate);
-                annexure5age =  annexure5date.diff(lokpalcasedate, 'days');
+                var annexure5date = moment(data[i].annexure5ComplaintReceivedDate);
+               // annexure5age =  annexure5date.diff(lokpalcasedate, 'days');
+                annexure5age =  todaysdate.diff(annexure5date, 'days');
               }
-              if((data[i].lokpalComplaintDate))
+              if((data[i].lokpalComplaintReceivedDate))
               {
-                var annexure6date = moment(data[i].lokpalComplaintDate);
-                annexure6age =  annexure6date.diff(lokpalcasedate, 'days');
+                var annexure6date = moment(data[i].lokpalComplaintReceivedDate);
+               // annexure6age =  annexure6date.diff(lokpalcasedate, 'days');
+                annexure6age =  todaysdate.diff(annexure6date, 'days');
               }
            }
 

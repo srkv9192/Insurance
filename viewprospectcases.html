@@ -528,6 +528,7 @@ div.dataTables_filter {
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
+                        <th>Action</th>
                       </tr>
                     </thead>
                   </table>
@@ -744,6 +745,139 @@ div.dataTables_filter {
                     
                     <input type="text" placeholder="Add remark here" id="newremarkrejection" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
                     <button type="submit" onclick="addremarkInDBAndReject()" class="btn btn-primary btn-sm">Reject</button>
+                    
+                    <a class="close" href="#">&times;</a>
+                  </div>
+                </div>
+
+                <div id="popup10" class="overlay">
+                  <div class="popup" style = "background-color : slategrey">
+                    <h2  id = "remarkcontent" style= "text-align : center">Edit details</h2>
+                  
+                    <form id="editForm" enctype="multipart/form-data">
+
+                      <div class="row mb-3">
+      
+                        <div class="col-sm-4">
+                          <label for="direct-case" class="form-label">Direct Case</label>
+                          <div class="input-group">
+                            <select class="form-control" id="direct-case-dropdown">
+                              <option value="no">No</option>
+                              <option value="yes">Yes</option>
+                            </select>
+                          </div>
+                        </div>
+        
+                        <div class="col-sm-4">
+                          <label for="prospectZone" class="form-label">Zone</label>
+                          <div class="input-group">
+                            <select class="form-control" id="prospectZone-dropdown">
+                              <option value="indore">Indore</option>
+                              <option value="bhopal">Bhopal</option>
+                              <option value="dewas">Dewas</option>
+                              <option value="khandwa">Khandwa</option>
+                              <option value="ujjain">Ujjain</option>
+                              <option value="raipur">Raipur</option>
+                              <option value="ratlam">Ratlam</option>
+                              <option value="mandideep">Mandideep</option>
+                              <option value="sagar">Sagar</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                          <label for="manager-name" class="form-label">Manager Name</label>
+                          <div class="input-group">
+                            <select class="form-control" id="manager-name-dropdown" >
+                              <option value="">None</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+    
+      
+                      <div class="row mb-3">
+                        <div class="col-sm-4">
+                          <label for="cp-name" class="form-label">Channel Partner </label>
+                          <div class="input-group">
+                            <select class="form-control" id="cp-name-dropdown" >
+                              <option value="">None</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                          <label for="patient-name" class="form-label">Patient Name</label>
+                          <input type="text" class="form-control" id="patient-name" >
+                        </div>
+                        <div class="col-sm-4">
+                          <label for="patient-phone" class="form-label">Patient Phone</label>
+                          <input type="text" class="form-control" id="patient-phone"  pattern="[0-9]{10}"  maxlength="10">
+                        </div>
+                      </div>
+      
+                      <div class="row mb-3">
+                        <div class="col-sm-4">
+                          <label for="complainant-name" class="form-label">Complainant Name</label>
+                          <input type="text" class="form-control" id="complainant-name" >
+                        </div>
+                        <div class="col-sm-4">
+                          <label for="complainant-phone" class="form-label">Complainant Phone</label>
+                          <input type="text" class="form-control" id="complainant-phone"  pattern="[0-9]{10}"  maxlength="10">
+                        </div>
+
+                        <div class="col-sm-4">
+                          <label for="insurance-company" class="form-label">Insurance Company</label>
+                            <select class="form-control" id="insurance-company-dropdown" >
+                              <option value="">None</option>
+                              <option value="Other">Other</option>
+                            </select>
+                      </div>
+                      </div>
+      
+                      <div class="row mb-3">
+      
+                        <div class="col-sm-4">
+                          <label for="claim-number" class="form-label">Claim Number</label>
+                          <input type="text" class="form-control" id="claim-number" >
+                        </div>
+      
+                        <div class="col-sm-4">
+                          <label for="total-claim-amount" class="form-label">Claim Amount</label>
+                          <input type="number" class="form-control" id="total-claim-amount" >
+                        </div>
+
+                        <div class="col-sm-4">
+                          <label for="case-of-dropdown" class="form-label">Case of:</label>
+                         
+                            <select class="form-control" id="case-of-dropdown" >
+                              <option value="">None</option>
+                              <option value="abhishek solanki">Abhishek Solanki</option>
+                              <option value="annapurna kasera">Annapurna Kasera</option>
+                              <option value="aparna pare">Aparna Pare</option>
+                              <option value="ashish dubey">Ashish Dubey</option>
+                              <option value="ashish khandelwal">Ashish khandelwal</option>
+                              <option value="ashwin kaushal">Ashwin kaushal</option>
+                              <option value="avi mishra">Avi Mishra</option>
+                              <option value="dimple batra">Dimple Batra</option>
+                              <option value="khushi bhite">Khushi Bhite</option>
+                              <option value="mahi mishra">Mahi Mishra</option>
+                              <option value="mansi sawant">Mansi Sawant</option>
+                              <option value="mona dodiya">Mona Dodiya</option>
+                              <option value="robin mehkali">Robin Mehkali</option>
+                              <option value="swati sarathe">Swati Sarathe</option>
+                              <option value="vijay nagar">Vijay Nagar</option>
+                            </select>
+                          
+                        </div>
+      
+                      </div>
+
+      
+                      <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                      </div>
+                    </form>
                     
                     <a class="close" href="#">&times;</a>
                   </div>
@@ -983,6 +1117,47 @@ function addremark(referencenumber, medicalofficername) {
         localStorage['addRemarkForRefNumber'] =referencenumber; 
         localStorage['addmedicalofficerForRefNumber'] = medicalofficername; 
   }
+
+
+  function editdetails(referencenumber, medicalofficername) {
+        // Code to generate card
+        localStorage['addRemarkForRefNumber'] =referencenumber; 
+        localStorage['addmedicalofficerForRefNumber'] = medicalofficername; 
+
+        $.ajax({
+        url: '/api/getprospectcasedetailbyref',
+        type: 'GET',
+        data: {
+          casereferenceNumber: localStorage['addRemarkForRefNumber']
+        },
+
+        success: function (response) {
+          // Populate the options in the select elemen                     
+              document.getElementById("claim-number").value = response[0].claimNumber;
+              document.getElementById("total-claim-amount").value = response[0].claimAmount;
+             document.getElementById("case-of-dropdown").value =response[0].caseHandler ? (response[0].caseHandler).toLowerCase() : "";
+            document.getElementById("direct-case-dropdown").value = response[0].directCase;
+            document.getElementById("prospectZone-dropdown").value =response[0].prospectZone ;
+            document.getElementById("manager-name-dropdown").value = response[0].managerID;
+            document.getElementById("cp-name-dropdown").value = response[0].cpID;
+            document.getElementById("patient-name").value = response[0].patientName;
+
+            document.getElementById("patient-phone").value = response[0].patientMobile;
+            document.getElementById("complainant-name").value = response[0].complainantName;
+            document.getElementById("complainant-phone").value = response[0].complainantMobile;
+            document.getElementById("insurance-company-dropdown").value = response[0].insuranceCompanyName;
+            
+
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+      
+
+
+  }
+
   
 function addGistAndReason()
 {
@@ -1654,6 +1829,67 @@ function populatereport(refnumber)
       });
 
 
+
+            
+      // AJAX call on page load get manager details
+      $.ajax({
+        url: '/api/getmanagerdetail',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          const optionsSelect = $('#manager-name-dropdown');
+          response.forEach(function (option) {
+            optionsSelect.append($('<option>', {
+              value: option.managerID,
+              text: option.managerName
+            }));
+          });
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+
+                 // AJAX call on page load get manager details
+                 $.ajax({
+        url: '/api/getcpdetail',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          const optionsSelect = $('#cp-name-dropdown');
+          response.forEach(function (option) {
+            optionsSelect.append($('<option>', {
+              value: option.cpID,
+              text: option.cpName
+            }));
+          });
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+      $.ajax({
+        url: '/api/getinsurancecompany',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          const optionsSelect = $('#insurance-company-dropdown');
+          response.forEach(function (option) {
+            optionsSelect.append($('<option>', {
+              value: option.companyName,
+              text: option.companyName
+            }));
+          });
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+
+
       const mobileScreen = window.matchMedia("(max-width: 990px)");
 
       $(".dashboard-nav-dropdown-toggle").click(function () {
@@ -1780,6 +2016,7 @@ function populatereport(refnumber)
               data[i].medicalOpinionOfficer,
               data[i].newCaseStatus,
               `<a href="${canAddGist}"  ><button class="btn btn-primary btn-sm" ${gistbutton} onclick="addremark('${rfno}', '${casemedicalofficer}')" >Add Manual Gist</button> </a>`,
+              `<a href="#popup10"> <button class="btn btn-primary btn-sm"  onclick="editdetails('${rfno}', '${casemedicalofficer}')" >Edit details</button> </a>`,
               `<a href="#popup3"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}', '${casemedicalofficer}')" >Assign Officer</button> </a>`,
               `<a href="#popup1"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
               `<a href= ${canMovetoMedical}><button class="btn btn-primary btn-sm" ${movetomedicalbutton} onclick="addremark('${rfno}', '${casemedicalofficer}')" >Move to Medical</button> </a>`,
@@ -1835,6 +2072,112 @@ function populatereport(refnumber)
 
     // filter buttons end
   
+
+    $('#editForm').on('submit', function (event) {
+        event.preventDefault();
+
+        var patientname = $('#patient-name').val();
+        var patientphone = $('#patient-phone').val();
+
+        var complainantname = $('#complainant-name').val();
+        var complainantphone = $('#complainant-phone').val();
+        
+        var clientaddress = $('#client-address').val();
+
+        var clientphone = $('#client-phone').val();
+        var claimnumber = $('#claim-number').val();
+
+        var insurancecompany =  $('#insurance-company-dropdown').val()
+
+        var processingfee = $('#processing-fee').val();
+
+        var consultationcharge = $('#consultation-charge').val();
+        var claimamount = $('#total-claim-amount').val();
+
+        var chequeamount = $('#cheque-amount').val();
+        var chequenumber = $('#cheque-number').val();
+
+        var bankname = $('#bank-name').val();
+        var witnessname = $('#witness-name').val();
+
+        var directcase = $('#direct-case-dropdown').val()
+        var prospectzone = $('#prospectZone-dropdown').val()
+
+        var cpname = $("#cp-name-dropdown option:selected").text();
+        var casehandler = $("#case-of-dropdown option:selected").text();
+
+        var cpid=   $('#cp-name-dropdown').val()
+        var managername = $("#manager-name-dropdown option:selected").text();
+        var managerid =  $('#manager-name-dropdown').val()
+
+        var clientemail = $('#client-email').val();
+        var policynumber = $('#policy-number').val();
+
+        var formData = new FormData();
+        formData.append('cpName', cpname);
+        formData.append('cpID', cpid);
+        formData.append('caseHandler', casehandler);
+
+        formData.append('managerName', managername);
+        formData.append('managerID', managerid);
+        formData.append('directCase', directcase);
+
+
+        formData.append('prospectZone', prospectzone);
+        formData.append('patientName', patientname);
+        formData.append('patientMobile', patientphone);
+
+
+        formData.append('complainantName', complainantname);
+        formData.append('complainantMobile', complainantphone);
+
+        formData.append('claimAmount', claimamount);
+        formData.append('insuranceCompanyName', insurancecompany);
+        formData.append('claimNumber', claimnumber);
+
+        formData.append('prospectDate', new Date());
+
+        formData.append('referencenumber',  localStorage['addRemarkForRefNumber']);
+
+      console.log(localStorage['addRemarkForRefNumber'])
+        // Make an API call with the username and password
+        $.ajax({
+          url: '/api/editprospect',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          data:{
+            'cpName': cpname,
+        'cpID': cpid,
+        'caseHandler': casehandler,
+        'managerName': managername,
+        'managerID': managerid,
+        'directCase': directcase,
+        'prospectZone': prospectzone,
+        'patientName': patientname,
+        'patientMobile': patientphone,
+        'complainantName': complainantname,
+        'complainantMobile': complainantphone,
+        'claimAmount': claimamount,
+        'insuranceCompanyName': insurancecompany,
+        'claimNumber': claimnumber,
+       'referencenumber':  localStorage['addRemarkForRefNumber'],
+          } ,
+          success: function (response) {
+            if(response.message == "success")
+              {
+                document.getElementById('editForm').reset();
+                alert("Details Saved.")
+                window.location.href = "/viewprospectcases.html";
+              }
+
+          },
+          error: function (error) {
+            document.getElementById('editForm').reset();
+            alert("Failed to edit case details.");
+          }
+        });
+
+      });
   
   </script>
 </body>
