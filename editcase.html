@@ -444,6 +444,28 @@
 
                     </div>
 
+                    <div class="row mb-3">
+          
+                      <div class="col-sm-3">
+                        <label for="pf-amount-final" class="form-label">PF amount</label>
+                        <input type="text" class="form-control" id="pf-amount-final" required >
+                      </div>
+                      <div class="col-sm-3">
+                        <label for="consultation-charge-final" class="form-label">Consultation charge (%)</label>
+                        <input type="text" class="form-control" id="consultation-charge-final" required >
+                      </div>
+
+                      <div class="col-sm-3">
+                        <label for="cf_or_cheque-amount-final" class="form-label">Cheque Amount</label>
+                        <input type="text" class="form-control" id="cf_or_cheque-amount-final" required >
+                      </div>
+
+                      <div class="col-sm-3">
+                        <label for="cheque-number-final" class="form-label">Cheque Number</label>
+                        <input type="text" class="form-control" id="cheque-number-final">
+                      </div>
+
+                    </div>
 
                     <div class="row mb-3">
     
@@ -948,6 +970,40 @@ const quill = new Quill('#editor', {
 
 
 });
+
+
+
+
+// calculate cheque amount based on consulation charge percentage
+$('#total-claim-amount').change(function () {
+
+var claimamount = $('#total-claim-amount').val();
+var consultationcharge = $('#consultation-charge-final').val();
+
+document.getElementById("cf_or_cheque-amount-final").value= Math.round((claimamount * consultationcharge ) / (100) );
+
+});
+
+
+        // calculate cheque amount based on consulation charge percentage
+    $('#total-claim-amount-final').change(function () {
+
+    var claimamount = $('#total-claim-amount').val();
+    var consultationcharge = $('#consultation-charge-final').val();
+
+    document.getElementById("cf_or_cheque-amount-final").value= Math.round((claimamount * consultationcharge ) / (100) );
+
+    });
+
+    // calculate cheque amount based on consulation charge percentage
+    $('#consultation-charge-final').change(function () {
+
+    var claimamount = $('#total-claim-amount').val();
+    var consultationcharge = $('#consultation-charge-final').val();
+
+    document.getElementById("cf_or_cheque-amount-final").value=Math.round((claimamount * consultationcharge ) / (100));
+
+    });
   
   
     function fetchData()
@@ -973,6 +1029,12 @@ const quill = new Quill('#editor', {
           document.getElementById("patient-phone").value = response[0].patientMobile ? response[0].patientMobile : "";
             document.getElementById("complainant-name").value = response[0].complainantName ? response[0].complainantName: "";
             document.getElementById("complainant-phone").value = response[0].complainantMobile ? response[0].complainantMobile: "";
+
+
+            document.getElementById("pf-amount-final").value = response[0].pfAmount ? response[0].pfAmount : "";
+            document.getElementById("consultation-charge-final").value = response[0].cfPercentage ? response[0].cfPercentage : "";
+            document.getElementById("cf_or_cheque-amount-final").value = response[0].cfAmount ? response[0].cfAmount : "";
+            document.getElementById("cheque-number-final").value = response[0].cfChequeNumber ? response[0].cfChequeNumber : "";
 
             document.getElementById("insurance-company-dropdown").value = response[0].insuranceCompanyName ? response[0].insuranceCompanyName : "";
             document.getElementById("case-of-dropdown").value = response[0].caseHandler ? (response[0].caseHandler).toLowerCase() : "";
@@ -1056,6 +1118,11 @@ const quill = new Quill('#editor', {
             var complainantname =  $('#complainant-name').val()
             var complainantphone =  $('#complainant-phone').val()
             var insurancecompanyname =  $('#insurance-company-dropdown').val()
+
+            var pfamountfinal =  $('#pf-amount-final').val()
+            var cfpercentfinal =  $('#consultation-charge-final').val()
+            var cfamountfinal =  $('#cf_or_cheque-amount-final').val()
+            var chequenumberfinal =  $('#cheque-number-final').val()
             
             var casehandler = $("#case-of-dropdown option:selected").text();
             var caserejectionreason =  $('#case-rejection-reason').val()
@@ -1144,7 +1211,10 @@ const quill = new Quill('#editor', {
             caseCPFinalAmount : cpAmount ,
             caseCPFinalReceivedAmount : cpAmountReceived ,
             caseCPFinalReceivedAmountDate: cpAmountReceivedDate ,
-
+            pfAmount  : pfamountfinal,
+            cfPercentage : cfpercentfinal,
+            cfAmount : cfamountfinal,
+            cfChequeNumber  : chequenumberfinal,
           },
           success: function (response) {
             if(response.message == "success")

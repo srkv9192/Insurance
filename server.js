@@ -61,7 +61,6 @@ const port = process.env.PORT || 80
 //});
 
 
-
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -1209,6 +1208,12 @@ app.post('/api/editcasedetails', async(req, res) => {
                 caseCPFinalAmount : req.body.caseCPFinalAmount,
                 caseCPFinalReceivedAmount : req.body.caseCPFinalReceivedAmount ,
                 caseCPFinalReceivedAmountDate: req.body.caseCPFinalReceivedAmountDate ,
+
+                pfAmount : req.body.pfAmount,
+                cfPercentage : req.body.cfPercentage,
+                cfAmount : req.body.cfAmount,
+                cfChequeNumber  : req.body.cfChequeNumber,
+
               },});
 
       if(newData == null)
