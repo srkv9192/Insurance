@@ -462,9 +462,49 @@
                 </div>
             </div>
 
-          
+            <select class="form-control" id="casefinalstatus" style=" height: 50px;
+            width: 200px;
+            margin-top:10px;">
+                <option value="" disabled selected>Select status</option>
+                <option value="New Case">New Case</option>
+                <option value="In Medical">In Medical</option>
+                <option value="Medical Query">Medical Query</option>
+                <option value="Approved">Approved</option>
+                <option value="Rejected">Rejected</option>
+                <option value="Live">Live</option>
+                <option value="Draft Query">Draft Query</option>
+                <option value="Gist Generated">Gist Generated</option>
+                <option value="Pending Draft">Pending Draft</option>
+                <option value="Reimbursement">Reimbursement</option>
+                <option value="Pending Doc">Pending Doc</option>
 
+                <option value="Escalation Pending">Escalation Pending</option>
+                <option value="Escalation Query">Escalation Query</option>
+                <option value="Escalated">Escalated</option>
 
+                <option value="Lokpal Pending">Lokpal Pending</option>
+                <option value="Lokpal Registered">Lokpal Registered</option>
+                <option value="Annexure5 Pending">Annexure5 Pending</option>
+                <option value="Annexure5 Replied">Annexure5 Replied</option>
+
+                <option value="Annexure 6 Pending">Annexure 6 Pending</option>
+                <option value="Annexure 6 Replied">Annexure 6 Replied</option>
+                <option value="Hearing">Hearing</option>
+
+                <option value="Escalation Settlement">Escalation Settlement</option>
+                <option value="Consent">Consent</option>
+
+                <option value="Pending Payment">Pending Payment</option>
+                <option value="CP Payment Pending">CP Payment Pending</option>
+                <option value="Case Closed">Case Closed</option>
+
+              </select>
+
+              <button class="btn btn-primary btn-sm" style="
+              height: 50px;
+              width: 200px;
+              margin-top:20px;
+          "  onclick="downloadexcelfilebystatus()" >Download excel by status</button>
 
           <button class="btn btn-primary btn-sm" style="
           height: 50px;
@@ -671,8 +711,6 @@ $(document).ready(function () {
       });
 
 
-      
-
       $.ajax({
         url: '/api/getpendingauthcaseCount',
         type: 'GET',
@@ -685,8 +723,6 @@ $(document).ready(function () {
           console.error('Error:', error);
         }
       });
-
-      
 
 
     $(".dashboard-nav-dropdown-toggle").click(function () {
@@ -707,6 +743,32 @@ $(document).ready(function () {
     });
 });
 
+function downloadexcelfilebystatus(caseStatus)
+{
+  var caseStatus = $('#casefinalstatus').val();
+  const url = '/api/downloadExcelbystatus'; // Replace with your actual API endpoint
+  const data = {
+  casestatus: caseStatus,
+  };
+
+fetch(url, {
+    method: 'POST', // Set the method to POST
+    headers: {
+        'Content-Type': 'application/json' // Specify that you're sending JSON
+    },
+    body: JSON.stringify(data) // Convert the JavaScript object to a JSON string
+})
+.then(response => response.blob())
+.then(blob => {
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = downloadUrl;
+    a.download = 'Case_Data.xlsx'; // Specify the file name to download
+    document.body.appendChild(a);
+    a.click();
+    a.remove(); // Clean up after download
+}).catch(e => console.error('Error downloading the file: ', e));
+}
 
 function downloadexcelfile()
       {
