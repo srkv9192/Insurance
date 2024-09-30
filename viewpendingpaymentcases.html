@@ -1663,7 +1663,7 @@ function movetolive(referencenumber) {
           // Populate the options in the select element
             //alert(response.message)
             var table = new DataTable('#dataTable');
-            table.buttons(0).disable();
+            //// table.buttons(0).disable();
             localStorage.setItem('userType',  response.message);
            
             if(response.message =='admin')
@@ -1847,6 +1847,7 @@ function movetolive(referencenumber) {
               data[i].claimAmount,
               data[i].caseCompletionType,
               data[i].newCaseStatus,
+              moment(new Date(data[i].caseCustomerReceivedAmountDate)).utc().format('DD-MM-YYYY'),
               `${caseSettlementamount}`,
               data[i].caseCustomerReceivedAmount *(data[i].cfPercentage / 100),
               `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,

@@ -46,11 +46,9 @@ const storage = multer.diskStorage({
 
 var nodemailer = require('nodemailer');
 
-
 const upload = multer({ storage: storage });
 const app = express()
 const port = process.env.PORT || 80
-
 
 // Connect to local MongoDB database
 //mongodb+srv://<username>:<password>@cluster0.rldiof1.mongodb.net/?retryWrites=true&w=majority
@@ -59,7 +57,6 @@ const port = process.env.PORT || 80
 //  useNewUrlParser: true,
 //  useUnifiedTopology: true,
 //});
-
 
 
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
@@ -97,7 +94,6 @@ const storagegcp = new Storage(
   }
 );
 //const bucketName = storagegcp.bucket(process.env.GCLOUD_STORAGE_BUCKET);
-
 
 //for upload in background to gcp
 const {spawn} = require('child_process');
@@ -723,7 +719,15 @@ app.post('/api/downloadExcelbystatus', async (req, res) => {
               { header: 'Annexure 6 date', key: 'field47', width: 20 },
               { header: 'Hearing date', key: 'field48', width: 20 },
 
+              { header: 'Case Type', key: 'field49', width: 20 },
+              { header: 'Case Completion Date', key: 'field50', width: 20 },
 
+              { header: 'Case Result', key: 'field51', width: 20 },
+              { header: 'Case Settlement amount', key: 'field52', width: 20 },
+              { header: 'Customer Received amount', key: 'field53', width: 20 },
+              { header: 'Customer Payment Date', key: 'field54', width: 20 },
+              
+            
           ];
     
                 // Add rows to worksheet
@@ -777,6 +781,12 @@ app.post('/api/downloadExcelbystatus', async (req, res) => {
                         field46: record.lokpalComplaintNumber,
                         field47: record.lokpalComplaintDate,
                         field48: record.dateOfLokpalHearing,
+                        field49: record.caseCompletionType,
+                        field50: record.completedDate,
+                        field51 : record.caseResult,
+                        field52 : record.caseSettlementAmount,
+                        field53 : record.caseCustomerReceivedAmount,
+                        field54 : record.caseCustomerReceivedAmountDate,
                     });
                 });
       // Create a buffer from the workbook
@@ -849,7 +859,6 @@ app.get('/api/downloadExcel', async (req, res) => {
               { header: 'Lokpal Draft', key: 'field40', width: 40 },
               { header: 'Escalation date', key: 'field41', width: 20 },
 
-
               { header: 'BHP number', key: 'field42', width: 20 },
               { header: 'Registration date', key: 'field43', width: 20 },
               { header: 'Annexure 5 number', key: 'field44', width: 20 },
@@ -857,7 +866,8 @@ app.get('/api/downloadExcel', async (req, res) => {
               { header: 'lokpal complain number', key: 'field46', width: 20 },
               { header: 'Annexure 6 date', key: 'field47', width: 20 },
               { header: 'Hearing date', key: 'field48', width: 20 },
-
+              { header: 'Case Result', key: 'field49', width: 20 },
+              { header: 'Case Completion Date', key: 'field50', width: 20 },
 
           ];
     
@@ -912,6 +922,8 @@ app.get('/api/downloadExcel', async (req, res) => {
                         field46: record.lokpalComplaintNumber,
                         field47: record.lokpalComplaintDate,
                         field48: record.dateOfLokpalHearing,
+                        field49: record.caseCompletionType,
+                        field50: record.completedDate,
                     });
                 });
       // Create a buffer from the workbook
@@ -926,8 +938,6 @@ app.get('/api/downloadExcel', async (req, res) => {
       res.status(500).json({ message: 'Internal Server Error' });
   }
 });
-
-
 
 
 app.post('/api/editcasestatusforcpbankdetails', async(req, res) => {
