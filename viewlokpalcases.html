@@ -501,7 +501,7 @@ div.dataTables_filter {
     <div class='dashboard-app'>
         <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
         <div class='dashboard-content' style="background-image: url('/images/background20.jpg');  background-repeat: repeat;  background-size: cover;">
-          <div class="container mt-5">
+          <div class="container mt-5" style="max-width: unset;">
             <div class="row justify-content-center">
               <h2 class="text-center mb-4">Lokpal Cases</h2>
 
@@ -1470,7 +1470,7 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
             localStorage.removeItem("addRemarkForRefNumber");
 
             document.getElementById("newremark").value ="";
-            window.location.href = "/viewescalationcases.html";
+           // window.location.href = "/viewescalationcases.html";
             
           }
           else{
@@ -1584,7 +1584,7 @@ $('#paymentForm').on('submit', function (event) {
             if(response.message == "success")
               {
                 alert("lokpal details saved!");
-                window.location.href = "/viewlokpalcases.html";
+                //window.location.href = "/viewlokpalcases.html";
               }
               else{
                 alert("Error saving lokpal details!")
@@ -1696,7 +1696,7 @@ function addremark(referencenumber) {
             if(response.message == "success")
               {
                 alert("Lokpal data Saved!");
-                window.location.href = "/viewlokpalcases.html";
+               // window.location.href = "/viewlokpalcases.html";
               }
               else{
                 alert("Error saving lokpal data!")
@@ -2002,9 +2002,9 @@ $.ajax({
       });
 
       var table = $('#dataTable').DataTable();
-      new $.fn.dataTable.FixedColumns(table, {
-            leftColumns: 6 // Freeze the first 6 columns
-        });
+   //   new $.fn.dataTable.FixedColumns(table, {
+   //         leftColumns: 6 // Freeze the first 6 columns
+    //    });
       localStorage['baseurl'] = window.location; 
 
       $('#dataTable tbody').on('click', 'tr td:first-child', function () {

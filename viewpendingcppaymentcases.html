@@ -490,7 +490,7 @@ div.dataTables_filter {
     <div class='dashboard-app'>
         <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
         <div class='dashboard-content' style="background-image: url('/images/background20.jpg');  background-repeat: repeat;  background-size: cover;">
-          <div class="container mt-5">
+          <div class="container mt-5" style="max-width: unset;">
             <div class="row justify-content-center">
               <h2 class="text-center mb-4">Pending CP Payment Cases</h2>
 
@@ -1181,7 +1181,7 @@ const toolbarOptions =['bold', 'italic', 'underline'];
             //localStorage['userID'] = username;
             alert("Status updated!")
             localStorage.removeItem("addRemarkForRefNumber");
-            window.location.href = "/viewpendingcppaymentcases.html";
+           // window.location.href = "/viewpendingcppaymentcases.html";
             
           }
           else{
@@ -1436,7 +1436,7 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
             localStorage.removeItem("addRemarkForRefNumber");
 
             document.getElementById("newremark").value ="";
-            window.location.href = "/viewrejectedcases.html";
+           // window.location.href = "/viewrejectedcases.html";
             
           }
           else{
@@ -1822,9 +1822,9 @@ function movetolive(referencenumber) {
       });
 
       var table = $('#dataTable').DataTable();
-      new $.fn.dataTable.FixedColumns(table, {
-            leftColumns: 6 // Freeze the first 6 columns
-        });
+   //   new $.fn.dataTable.FixedColumns(table, {
+   //         leftColumns: 6 // Freeze the first 6 columns
+    //    });
       localStorage['baseurl'] = window.location; 
 
       $('#dataTable tbody').on('click', 'tr td:first-child', function () {

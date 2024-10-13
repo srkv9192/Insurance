@@ -486,7 +486,7 @@ div.dataTables_filter {
     <div class='dashboard-app'>
         <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
         <div class='dashboard-content' style="background-image: url('/images/background20.jpg');  background-repeat: repeat;  background-size: cover;">
-          <div class="container mt-5">
+          <div class="container mt-5" style="max-width: unset;">
             <div class="row justify-content-center">
               <h2 class="text-center mb-4">Escalation Cases</h2>
               <ul>
@@ -1029,7 +1029,7 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
             localStorage.removeItem("addRemarkForRefNumber");
 
             document.getElementById("newremark").value ="";
-            window.location.href = "/viewescalationcases.html";
+            //window.location.href = "/viewescalationcases.html";
             
           }
           else{
@@ -1282,7 +1282,7 @@ $('#emailForm').on('submit', function (event) {
             if(response.message == "success")
               {
                 alert("Email details saved!");
-                window.location.href = "/viewescalationcases.html";
+              //  window.location.href = "/viewescalationcases.html";
               }
               else{
                 alert("Error saving email details!")
@@ -1336,7 +1336,7 @@ $('#paymentForm').on('submit', function (event) {
             if(response.message == "success")
               {
                 alert("Escalation details saved!");
-                window.location.href = "/viewescalationcases.html";
+             //   window.location.href = "/viewescalationcases.html";
               }
               else{
                 alert("Error saving escalation details!")
@@ -1671,9 +1671,9 @@ function populatereport(refnumber)
       });
 
       var table = $('#dataTable').DataTable();
-      new $.fn.dataTable.FixedColumns(table, {
-            leftColumns: 6 // Freeze the first 6 columns
-        });
+    //  new $.fn.dataTable.FixedColumns(table, {
+          //rajat  leftColumns: 6 // Freeze the first 6 columns
+     //   });
       localStorage['baseurl'] = window.location; 
 
       $('#dataTable tbody').on('click', 'tr td:first-child', function () {

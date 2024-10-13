@@ -493,7 +493,7 @@ div.dataTables_filter {
     <div class='dashboard-app'>
         <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
         <div class='dashboard-content' style="background-image: url('/images/background20.jpg');  background-repeat: repeat;  background-size: cover;">
-          <div class="container mt-5">
+          <div class="container mt-5" style="max-width: unset;">
             <div class="row justify-content-center">
               <h2 class="text-center mb-4">Completed Cases</h2>
               <ul>
@@ -1335,7 +1335,7 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
             localStorage.removeItem("addRemarkForRefNumber");
 
             document.getElementById("newremark").value ="";
-            window.location.href = "/viewrejectedcases.html";
+           // window.location.href = "/viewrejectedcases.html";
             
           }
           else{
@@ -1584,7 +1584,7 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
                 alert('Details saved successfully.');
                 $('#popup9').fadeOut();
                 $('#remarkForm')[0].reset();
-                window.location.href = "/viewcompletedcases.html";
+               // window.location.href = "/viewcompletedcases.html";
             },
             error: function() {
                 alert('Failed to save details.');
@@ -1712,9 +1712,9 @@ function movetolive(referencenumber) {
       });
 
       var table = $('#dataTable').DataTable();
-      new $.fn.dataTable.FixedColumns(table, {
-            leftColumns: 6 // Freeze the first 6 columns
-        });
+    //  new $.fn.dataTable.FixedColumns(table, {
+     //       leftColumns: 6 // Freeze the first 6 columns
+      //  });
       localStorage['baseurl'] = window.location; 
 
       $('#dataTable tbody').on('click', 'tr td:first-child', function () {

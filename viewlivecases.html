@@ -487,7 +487,7 @@ div.dataTables_filter {
     <div class='dashboard-app'>
         <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
         <div class='dashboard-content' style="background-image: url('/images/background20.jpg');  background-repeat: repeat;  background-size: cover;">
-          <div class="container mt-5">
+          <div class="container mt-5" style="max-width: unset;">
             <div class="row justify-content-center">
               <h2 class="text-center mb-4">Live Cases</h2>
               <ul>
@@ -1385,7 +1385,7 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
             localStorage.removeItem("addRemarkForRefNumber");
 
             document.getElementById("newremark").value ="";
-            window.location.href = "/viewlivecases.html";
+           // window.location.href = "/viewlivecases.html";
             
           }
           else{
@@ -1518,7 +1518,7 @@ success: function (response) {
       alert("Operation Officer assigned!")
       localStorage.removeItem("addRemarkForRefNumber");
 
-      window.location.href = "/viewlivecases.html";
+     // window.location.href = "/viewlivecases.html";
     }
     else{
       alert("Error saving details!")
@@ -2119,7 +2119,7 @@ function movetolive(referencenumber) {
               {
 
                 alert("Gist data Saved!");
-                window.location.href = "/viewlivecases.html";
+               // window.location.href = "/viewlivecases.html";
                 //localStorage.removeItem("caseNumber");
 
                 
@@ -2248,9 +2248,9 @@ function movetolive(referencenumber) {
 
       var table = $('#dataTable').DataTable();
 
-      new $.fn.dataTable.FixedColumns(table, {
-            leftColumns: 6 // Freeze the first 6 columns
-        });
+    //  new $.fn.dataTable.FixedColumns(table, {
+     //       leftColumns: 6 // Freeze the first 6 columns
+     //   });
 
       localStorage['baseurl'] = window.location; 
 
