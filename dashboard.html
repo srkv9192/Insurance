@@ -515,12 +515,12 @@
             </div>
 
             <div style="margin-top: 10px; margin-left:15px">
-              <label>Inception start Date:</label>
-              <input type="date" id="inceptionstartDate" class="form-control" style="height: 50px; width: 200px;"/>
+              <label>Nidaan Payment start Date:</label>
+              <input type="date" id="nidaanstartDate" class="form-control" style="height: 50px; width: 200px;"/>
           </div>
           <div style="margin-top: 10px; margin-left:15px">
-              <label>Inception End Date:</label>
-              <input type="date" id="inceptionendDate" class="form-control" style="height: 50px; width: 200px;"/>
+              <label>Nidaan Payment End Date:</label>
+              <input type="date" id="nidaanendDate" class="form-control" style="height: 50px; width: 200px;"/>
           </div>
 
           </div>
@@ -541,14 +541,13 @@
           height: 50px;
           width: 200px;
           margin-top:20px;
-          "  onclick="downloadexcelfilebyinceptiondate()" >Download excel by Inception Date</button>
+          "  onclick="downloadexcelfilebynidaandate()" >Download excel by Nidaan Date</button>
 
           <button class="btn btn-primary btn-sm" style="
           height: 50px;
           width: 200px;
           margin-top:20px;
       "  onclick="downloadexcelfile()" >Download excel</button>
-
 
 
             </div>
@@ -780,14 +779,14 @@ $(document).ready(function () {
     });
 });
 
-function downloadexcelfilebyinceptiondate()
+function downloadexcelfilebynidaandate()
 {
-  var inceptionstartdate = $('#inceptionstartDate').val();
-  var inceptionenddate = $('#inceptionendDate').val();
-  const url = '/api/downloadExcelbyinceptiondate'; // Replace with your actual API endpoint
+  var nidaanstartdate = $('#nidaanstartDate').val();
+  var nidaanenddate = $('#nidaanendDate').val();
+  const url = '/api/downloadExcelbynidaandate'; // Replace with your actual API endpoint
   const data = {
-    inceptionstartdate: inceptionstartdate,
-    inceptionenddate:inceptionenddate,
+    nidaanstartdate: nidaanstartdate,
+    nidaanenddate:nidaanenddate,
   };
 
 fetch(url, {

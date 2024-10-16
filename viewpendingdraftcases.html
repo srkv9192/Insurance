@@ -1054,6 +1054,8 @@ div.dataTables_filter {
 <script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.print.min.js"></script>
 -->
+<script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.html5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <!-- saving pdf end-->
 
    <!-- FixedColumns -->
@@ -1943,7 +1945,7 @@ function movetolive(referencenumber) {
           // Populate the options in the select element
             //alert(response.message)
             var table = new DataTable('#dataTable');
-            // table.buttons(0).disable();
+             table.buttons(0).disable();
            
             if(response.message =='admin')
             {
