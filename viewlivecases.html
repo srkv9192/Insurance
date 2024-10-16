@@ -510,7 +510,7 @@ div.dataTables_filter {
                     <thead>
                       <tr>
                         <th>Reference Number</th>
-                        <th>Case Inception Date</th>
+                        <th>Case Live Date</th>
                         <th>Case Age</th>
                         <th>Patient Name</th>
                         <th>Patient Phone</th>
@@ -2295,7 +2295,7 @@ function movetolive(referencenumber) {
            if( localStorage['userType'] === 'admin')
            {
             var rowData = [data[i].casereferenceNumber,
-            moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),
+            moment(new Date(data[i].liveDate)).utc().format('DD-MM-YYYY'),
             `${caseage}`,
             data[i].patientName,
               data[i].patientMobile,

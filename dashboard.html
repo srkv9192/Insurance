@@ -462,9 +462,11 @@
                 </div>
             </div>
 
+            <div style="display : flex">
+              <div style="margin-top: 10px;">
+                <label>Select Case Status:</label>
             <select class="form-control" id="casefinalstatus" style=" height: 50px;
-            width: 200px;
-            margin-top:10px;">
+            width: 200px;">
                 <option value="" disabled selected>Select status</option>
                 <option value="New Case">New Case</option>
                 <option value="In Medical">In Medical</option>
@@ -501,12 +503,45 @@
                 <option value="Case Closed">Case Closed</option>
 
               </select>
+              </div>
+
+              <div style="margin-top: 10px; margin-left:15px">
+                <label>Live Start Date:</label>
+                <input type="date" id="livestartDate" class="form-control" style="height: 50px; width: 200px;"/>
+            </div>
+            <div style="margin-top: 10px; margin-left:15px">
+                <label>Live End Date:</label>
+                <input type="date" id="liveendDate" class="form-control" style="height: 50px; width: 200px;"/>
+            </div>
+
+            <div style="margin-top: 10px; margin-left:15px">
+              <label>Inception start Date:</label>
+              <input type="date" id="inceptionstartDate" class="form-control" style="height: 50px; width: 200px;"/>
+          </div>
+          <div style="margin-top: 10px; margin-left:15px">
+              <label>Inception End Date:</label>
+              <input type="date" id="inceptionendDate" class="form-control" style="height: 50px; width: 200px;"/>
+          </div>
+
+          </div>
 
               <button class="btn btn-primary btn-sm" style="
               height: 50px;
               width: 200px;
               margin-top:20px;
           "  onclick="downloadexcelfilebystatus()" >Download excel by status</button>
+
+            <button class="btn btn-primary btn-sm" style="
+            height: 50px;
+            width: 200px;
+            margin-top:20px;
+            "  onclick="downloadexcelfilebylivedate()" >Download excel by Live Date</button>
+
+          <button class="btn btn-primary btn-sm" style="
+          height: 50px;
+          width: 200px;
+          margin-top:20px;
+          "  onclick="downloadexcelfilebyinceptiondate()" >Download excel by Inception Date</button>
 
           <button class="btn btn-primary btn-sm" style="
           height: 50px;
@@ -744,6 +779,67 @@ $(document).ready(function () {
         }
     });
 });
+
+function downloadexcelfilebyinceptiondate()
+{
+  var inceptionstartdate = $('#inceptionstartDate').val();
+  var inceptionenddate = $('#inceptionendDate').val();
+  const url = '/api/downloadExcelbyinceptiondate'; // Replace with your actual API endpoint
+  const data = {
+    inceptionstartdate: inceptionstartdate,
+    inceptionenddate:inceptionenddate,
+  };
+
+fetch(url, {
+    method: 'POST', // Set the method to POST
+    headers: {
+        'Content-Type': 'application/json' // Specify that you're sending JSON
+    },
+    body: JSON.stringify(data) // Convert the JavaScript object to a JSON string
+})
+.then(response => response.blob())
+.then(blob => {
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = downloadUrl;
+    a.download = 'Case_Data.xlsx'; // Specify the file name to download
+    document.body.appendChild(a);
+    a.click();
+    a.remove(); // Clean up after download
+}).catch(e => console.error('Error downloading the file: ', e));
+}
+
+
+
+function downloadexcelfilebylivedate()
+{
+  var livestartdate = $('#livestartDate').val();
+  var liveenddate = $('#liveendDate').val();
+  const url = '/api/downloadExcelbylivedate'; // Replace with your actual API endpoint
+  const data = {
+    livestartdate: livestartdate,
+    liveenddate:liveenddate,
+  };
+
+fetch(url, {
+    method: 'POST', // Set the method to POST
+    headers: {
+        'Content-Type': 'application/json' // Specify that you're sending JSON
+    },
+    body: JSON.stringify(data) // Convert the JavaScript object to a JSON string
+})
+.then(response => response.blob())
+.then(blob => {
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = downloadUrl;
+    a.download = 'Case_Data.xlsx'; // Specify the file name to download
+    document.body.appendChild(a);
+    a.click();
+    a.remove(); // Clean up after download
+}).catch(e => console.error('Error downloading the file: ', e));
+}
+
 
 function downloadexcelfilebystatus(caseStatus)
 {
