@@ -839,6 +839,81 @@ div.dataTables_filter {
                               <label class="form-label"><strong>Lokpal Hearing Date :</strong></label>
                               <span data-info="lokpal-hearing-date">[None]</span>
                             </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Completion Type :</strong></label>
+                              <span data-info="case-completion-type">[None]</span>
+                            </div>
+
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Case Result :</strong></label>
+                              <span data-info="case-result">[None]</span>
+                            </div>
+
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Settlement Amount :</strong></label>
+                              <span data-info="case-settlement-amount">[None]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Amount received by customer:</strong></label>
+                              <span data-info="customer-received-amount">[None]</span>
+                            </div>
+
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Customer Payment Date :</strong></label>
+                              <span data-info="customer-received-amount-date">[None]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Amount received by Nidaan:</strong></label>
+                              <span data-info="nidaan-received-amount">[None]</span>
+                            </div>
+
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Nidaan Payment Date :</strong></label>
+                              <span data-info="nidaan-received-amount-date">[None]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Nidaan payment mode :</strong></label>
+                              <span data-info="nidaan-payment-mode">[None]</span>
+                            </div>
+
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>CP Amount :</strong></label>
+                              <span data-info="cp-commision-amount">[None]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Amount received by CP:</strong></label>
+                              <span data-info="cp-received-amount">[None]</span>
+                            </div>
+
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>CP Payment Date :</strong></label>
+                              <span data-info="cp-received-amount-date">[None]</span>
+                            </div>
+                          </div>
+                          <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>CP Payment mode :</strong></label>
+                              <span data-info="cp-payment-mode">[None]</span>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>CP Payment Transaction Number :</strong></label>
+                              <span data-info="cp-payment-transaction-number">[None]</span>
+                            </div>
                           </div>
 
 
@@ -1150,7 +1225,22 @@ function populatereport(refnumber)
               document.querySelector('[data-info="annexure-5"]').textContent =response[0].annexure5ComplaintNumber ? response[0].annexure5ComplaintNumber : "";
               document.querySelector('[data-info="annexure-6"]').textContent =response[0].lokpalComplaintNumber ? response[0].lokpalComplaintNumber : "";
               
+              document.querySelector('[data-info="case-settlement-amount"]').textContent =response[0].caseSettlementAmount ? response[0].caseSettlementAmount : "";
+              document.querySelector('[data-info="case-completion-type"]').textContent =response[0].caseCompletionType ? response[0].caseCompletionType : "";
+              document.querySelector('[data-info="case-result"]').textContent =response[0].caseResult ? response[0].caseResult : "";
+              document.querySelector('[data-info="customer-received-amount-date"]').textContent =response[0].caseCustomerReceivedAmountDate ? moment(new Date(response[0].caseCustomerReceivedAmountDate)).utc().format('MM-DD-YYYY'): "";
+              document.querySelector('[data-info="customer-received-amount"]').textContent =response[0].caseCustomerReceivedAmount ? response[0].caseCustomerReceivedAmount : "";
 
+              document.querySelector('[data-info="nidaan-received-amount"]').textContent =response[0].caseNidaanReceivedAmount ? response[0].caseNidaanReceivedAmount : "";
+              document.querySelector('[data-info="nidaan-received-amount-date"]').textContent =response[0].caseNidaanReceivedAmountDate ? moment(new Date(response[0].caseNidaanReceivedAmountDate)).utc().format('MM-DD-YYYY'): "";
+              document.querySelector('[data-info="nidaan-payment-mode"]').textContent =response[0].caseNidaanReceivedAmountMode ? response[0].caseNidaanReceivedAmountMode : "";
+              document.querySelector('[data-info="cp-commision-amount"]').textContent =response[0].caseCPFinalAmount ? response[0].caseCPFinalAmount : "";
+                      
+              document.querySelector('[data-info="cp-payment-mode"]').textContent =response[0].caseCPFinalReceivedAmountMode ? response[0].caseCPFinalReceivedAmountMode : "";
+              document.querySelector('[data-info="cp-payment-transaction-number"]').textContent =response[0].caseCPPaymentTransactionNumber ? response[0].caseCPPaymentTransactionNumber : "";
+              
+              document.querySelector('[data-info="cp-received-amount-date"]').textContent =response[0].caseCPFinalReceivedAmountDate ? moment(new Date(response[0].caseCPFinalReceivedAmountDate)).utc().format('MM-DD-YYYY') : "";
+              document.querySelector('[data-info="cp-received-amount"]').textContent =response[0].caseCPFinalReceivedAmount ? response[0].caseCPFinalReceivedAmount : "";
               //document.querySelector('[data-info="reportdraft"]').textContent =response[0].rejectionReason ? response[0].rejectionReason : "";
 
              // document.querySelector('[data-info="reportlokpaldraft"]').textContent =response[0].rejectionReason ? response[0].rejectionReason : "";

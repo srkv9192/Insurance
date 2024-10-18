@@ -1083,6 +1083,9 @@ div.dataTables_filter {
                           <label for="cpreceivedAmountDate" style="color: black;">Date</label>
                           <input type="date" class="form-control" id="cpreceivedAmountDate"  required>
 
+                          <label for="transactionNumber" style="color: black;">Transaction Number</label>
+                          <input type="text" class="form-control" id="transactionNumber" placeholder="Enter transaction number" required>
+
                           <label for="movetcaseclosedremark" style="color: black;">Remark</label>
                           <input type="text" class="form-control" id="movetcaseclosedremark" placeholder="Enter remark" required>
 
@@ -1622,6 +1625,13 @@ function viewremark(referencenumber) {
         return;
       }
 
+      if( document.getElementById("transactionNumber").value == "")
+        {
+        alert("Empty transaction number not allowed!!");
+        return;
+      }
+
+
       if( document.getElementById("cpreceivedAmountDate").value == "")
         {
         alert("Empty date not allowed!!");
@@ -1637,6 +1647,7 @@ function viewremark(referencenumber) {
         var remark = $('#movetcaseclosedremark').val();
         var cpreceivedAmount = $('#cpreceivedAmount').val();
         var modeofpaymentAmount = $('#payment-mode-dropdown').val();
+        var transactionNumber =  $('#transactionNumber').val();
 
         const today = new Date();
       const yyyy = today.getFullYear();
@@ -1658,6 +1669,7 @@ function viewremark(referencenumber) {
               caseRemarks: formattedToday+ " - [ " +  localStorage['userName'] + " ] - "+ remark,
               caseCPFinalReceivedAmount: cpreceivedAmount, 
               caseCPFinalReceivedAmountMode : modeofpaymentAmount,
+              caseCPPaymentTransactionNumber: transactionNumber,
             }),
             success: function(response) {
                 alert('Case Closed');

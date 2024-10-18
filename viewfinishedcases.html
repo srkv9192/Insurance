@@ -963,6 +963,10 @@ div.dataTables_filter {
                               <label class="form-label"><strong>CP Payment mode :</strong></label>
                               <span data-info="cp-payment-mode">[None]</span>
                             </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>CP Payment Transaction Number :</strong></label>
+                              <span data-info="cp-payment-transaction-number">[None]</span>
+                            </div>
                           </div>
 
 
@@ -1294,6 +1298,8 @@ function populatereport(refnumber)
               document.querySelector('[data-info="cp-commision-amount"]').textContent =response[0].caseCPFinalAmount ? response[0].caseCPFinalAmount : "";
                       
               document.querySelector('[data-info="cp-payment-mode"]').textContent =response[0].caseCPFinalReceivedAmountMode ? response[0].caseCPFinalReceivedAmountMode : "";
+              document.querySelector('[data-info="cp-payment-transaction-number"]').textContent =response[0].caseCPPaymentTransactionNumber ? response[0].caseCPPaymentTransactionNumber : "";
+              
               document.querySelector('[data-info="cp-received-amount-date"]').textContent =response[0].caseCPFinalReceivedAmountDate ? moment(new Date(response[0].caseCPFinalReceivedAmountDate)).utc().format('MM-DD-YYYY') : "";
               document.querySelector('[data-info="cp-received-amount"]').textContent =response[0].caseCPFinalReceivedAmount ? response[0].caseCPFinalReceivedAmount : "";
                    

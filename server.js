@@ -59,7 +59,6 @@ const port = process.env.PORT || 80
 //});
 
 
-
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -248,6 +247,7 @@ const dataSchema = new mongoose.Schema({
   caseCPFinalReceivedAmount: Number,
   caseCPFinalReceivedAmountDate: Date,
   caseCPFinalReceivedAmountMode :String,
+  caseCPPaymentTransactionNumber: String,
 
   // Add stages of case here based on thier colour coding
   isEmailGenerated: String,
@@ -1836,7 +1836,7 @@ app.post('/api/addcasecustomerpaymentdetails', async(req, res) => {
 app.post('/api/addcaseclosedcppaymentdetails', async(req, res) => {
   try{
 
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{caseRemarks:req.body.caseRemarks}, $set:{ caseCPFinalReceivedAmountDate:req.body.caseCPFinalReceivedAmountDate, caseCPFinalReceivedAmount: req.body.caseCPFinalReceivedAmount, caseCPFinalReceivedAmountMode: req.body.caseCPFinalReceivedAmountMode, isPendingCPPayment:"false", isFinished:"true", newCaseStatus: "Case Closed" }});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{caseRemarks:req.body.caseRemarks}, $set:{ caseCPFinalReceivedAmountDate:req.body.caseCPFinalReceivedAmountDate, caseCPFinalReceivedAmount: req.body.caseCPFinalReceivedAmount, caseCPFinalReceivedAmountMode: req.body.caseCPFinalReceivedAmountMode, caseCPPaymentTransactionNumber:req.body.caseCPPaymentTransactionNumber , isPendingCPPayment:"false", isFinished:"true", newCaseStatus: "Case Closed" }});
 
       if(newData == null)
       {
