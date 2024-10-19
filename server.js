@@ -733,9 +733,10 @@ app.post('/api/downloadExcelbystatus', async (req, res) => {
 
               { header: 'CP Amount', key: 'field58', width: 20 },
               { header: 'CP Received Amount', key: 'field59', width: 20 },
-              { header: 'CP Payment Date', key: 'field60', width: 20 },
-              { header: 'CP Payment Mode', key: 'field61', width: 20 },
-              { header: 'Live Case Date', key: 'field62', width: 20 },
+              { header: 'CP Received Transaction Number', key: 'field60', width: 20 },
+              { header: 'CP Payment Date', key: 'field61', width: 20 },
+              { header: 'CP Payment Mode', key: 'field62', width: 20 },
+              { header: 'Live Case Date', key: 'field63', width: 20 },
               
             
           ];
@@ -802,9 +803,10 @@ app.post('/api/downloadExcelbystatus', async (req, res) => {
                         field57: record.caseNidaanReceivedAmountMode,
                         field58: record.caseCPFinalAmount,
                         field59: record.caseCPFinalReceivedAmount,
-                        field60: record.caseCPFinalReceivedAmountDate,
-                        field61: record.caseCPFinalReceivedAmountMode,
-                        field62: record.liveDate,
+                        field60: record.caseCPPaymentTransactionNumber,
+                        field61: record.caseCPFinalReceivedAmountDate,
+                        field62: record.caseCPFinalReceivedAmountMode,
+                        field63: record.liveDate,
                     });
                 });
       // Create a buffer from the workbook
@@ -904,9 +906,10 @@ app.post('/api/downloadExcelbylivedate', async (req, res) => {
 
               { header: 'CP Amount', key: 'field58', width: 20 },
               { header: 'CP Received Amount', key: 'field59', width: 20 },
-              { header: 'CP Payment Date', key: 'field60', width: 20 },
-              { header: 'CP Payment Mode', key: 'field61', width: 20 },
-              { header: 'Live Case Date', key: 'field62', width: 20 },
+              { header: 'CP Received Transaction Number', key: 'field60', width: 20 },
+              { header: 'CP Payment Date', key: 'field61', width: 20 },
+              { header: 'CP Payment Mode', key: 'field62', width: 20 },
+              { header: 'Live Case Date', key: 'field63', width: 20 },
               
             
           ];
@@ -973,9 +976,10 @@ app.post('/api/downloadExcelbylivedate', async (req, res) => {
                         field57: record.caseNidaanReceivedAmountMode,
                         field58: record.caseCPFinalAmount,
                         field59: record.caseCPFinalReceivedAmount,
-                        field60: record.caseCPFinalReceivedAmountDate,
-                        field61: record.caseCPFinalReceivedAmountMode,
-                        field62: record.liveDate,
+                        field60: record.caseCPPaymentTransactionNumber,
+                        field61: record.caseCPFinalReceivedAmountDate,
+                        field62: record.caseCPFinalReceivedAmountMode,
+                        field63: record.liveDate,
                     });
                 });
       // Create a buffer from the workbook
@@ -1074,9 +1078,10 @@ app.post('/api/downloadExcelbynidaandate', async (req, res) => {
 
               { header: 'CP Amount', key: 'field58', width: 20 },
               { header: 'CP Received Amount', key: 'field59', width: 20 },
-              { header: 'CP Payment Date', key: 'field60', width: 20 },
-              { header: 'CP Payment Mode', key: 'field61', width: 20 },
-              { header: 'Live Case Date', key: 'field62', width: 20 },
+              { header: 'CP Received Transaction Number', key: 'field60', width: 20 },
+              { header: 'CP Payment Date', key: 'field61', width: 20 },
+              { header: 'CP Payment Mode', key: 'field62', width: 20 },
+              { header: 'Live Case Date', key: 'field63', width: 20 },
               
             
           ];
@@ -1144,9 +1149,10 @@ app.post('/api/downloadExcelbynidaandate', async (req, res) => {
 
                         field58: record.caseCPFinalAmount,
                         field59: record.caseCPFinalReceivedAmount,
-                        field60: record.caseCPFinalReceivedAmountDate,
-                        field61: record.caseCPFinalReceivedAmountMode,
-                        field62: record.liveDate,
+                        field60: record.caseCPPaymentTransactionNumber,
+                        field61: record.caseCPFinalReceivedAmountDate,
+                        field62: record.caseCPFinalReceivedAmountMode,
+                        field63: record.liveDate,
                     });
                 });
       // Create a buffer from the workbook
@@ -1219,6 +1225,7 @@ app.get('/api/downloadExcel', async (req, res) => {
               { header: 'Lokpal Draft', key: 'field40', width: 40 },
               { header: 'Escalation date', key: 'field41', width: 20 },
 
+
               { header: 'BHP number', key: 'field42', width: 20 },
               { header: 'Registration date', key: 'field43', width: 20 },
               { header: 'Annexure 5 number', key: 'field44', width: 20 },
@@ -1227,7 +1234,6 @@ app.get('/api/downloadExcel', async (req, res) => {
               { header: 'Annexure 6 date', key: 'field47', width: 20 },
               { header: 'Hearing date', key: 'field48', width: 20 },
 
-
               { header: 'Case Type', key: 'field49', width: 20 },
               { header: 'Case Completion Date', key: 'field50', width: 20 },
 
@@ -1235,17 +1241,16 @@ app.get('/api/downloadExcel', async (req, res) => {
               { header: 'Case Settlement amount', key: 'field52', width: 20 },
               { header: 'Customer Received amount', key: 'field53', width: 20 },
               { header: 'Customer Payment Date', key: 'field54', width: 20 },
-
               { header: 'Nidaan Received Amount', key: 'field55', width: 20 },
               { header: 'Nidaan Payment Date', key: 'field56', width: 20 },
               { header: 'Nidaan Received Mode', key: 'field57', width: 20 },
 
-              { header: 'CP Received Amount', key: 'field58', width: 20 },
-              { header: 'CP Payment Date', key: 'field59', width: 20 },
-              { header: 'CP Payment Mode', key: 'field60', width: 20 },
-
-              { header: 'Live Case Date', key: 'field61', width: 20 },
-
+              { header: 'CP Amount', key: 'field58', width: 20 },
+              { header: 'CP Received Amount', key: 'field59', width: 20 },
+              { header: 'CP Received Transaction Number', key: 'field60', width: 20 },
+              { header: 'CP Payment Date', key: 'field61', width: 20 },
+              { header: 'CP Payment Mode', key: 'field62', width: 20 },
+              { header: 'Live Case Date', key: 'field63', width: 20 },
           ];
     
                 // Add rows to worksheet
@@ -1310,9 +1315,10 @@ app.get('/api/downloadExcel', async (req, res) => {
                         field57: record.caseNidaanReceivedAmountMode,
                         field58: record.caseCPFinalAmount,
                         field59: record.caseCPFinalReceivedAmount,
-                        field60: record.caseCPFinalReceivedAmountDate,
-                        field61: record.caseCPFinalReceivedAmountMode,
-                        field62: record.liveDate,
+                        field60: record.caseCPPaymentTransactionNumber,
+                        field61: record.caseCPFinalReceivedAmountDate,
+                        field62: record.caseCPFinalReceivedAmountMode,
+                        field63: record.liveDate,
                     });
                 });
       // Create a buffer from the workbook
