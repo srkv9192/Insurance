@@ -501,7 +501,7 @@ hr.dashed {
                               <option value="avi mishra">Avi Mishra</option>
                               <option value="dimple batra">Dimple Batra</option>
                               <option value="khushi bhite">Khushi Bhite</option>
-                              <option value="kumkum sisodiya">Kumkum Sisodiya</option>
+                              <option value="kumkum sanodiya">Kumkum Sanodiya</option>
                               <option value="mahi mishra">Mahi Mishra</option>
                               <option value="mansi sawant">Mansi Sawant</option>
                               <option value="mona dodiya">Mona Dodiya</option>
@@ -564,8 +564,12 @@ hr.dashed {
                 </div>
           
                   <div class="text-center">
-                      <button type="submit" class="btn btn-primary">Save & Submit</button>
-                  </div>
+                      <button id="adminbutton" type="submit" class="btn btn-primary">Save & Submit</button>
+                      <button id="marketingbutton" onclick="downloadagreement()" class="btn btn-primary">Download Agreement</button>
+
+                    </div>
+                 
+                  
               </form>
           </div>
 
@@ -711,13 +715,14 @@ function fetchData() {
         success: function (response) {
           // Populate the options in the select element
             //alert(response.message)
-           
+            $("#adminbutton").hide();
             if(response.message =='admin')
             {
               $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showonlogin").show();
               $("#hideonlogin").hide();
+              $("#adminbutton").show();
              
             }
             else if(response.message =='operation' )
@@ -726,6 +731,7 @@ function fetchData() {
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showtooperation").show();
               $("#hideonlogin").hide();
+              $("#adminbutton").show();
             }
             else if(response.message =='cp' || response.message =='manager')
             {
@@ -907,7 +913,76 @@ function fetchData() {
     });
   
   
-  
+  function downloadagreement(){  
+        var clientname = $('#patient-name').val();
+        var clientaddress = $('#client-address').val();
+
+        var clientphone = $('#client-phone').val();
+        var claimnumber = $('#claim-number').val();
+
+        var behalfof = $('#behalf-of-dropdown').val();;
+        var complainantname = $('#complainant-name').val();
+
+        var insurancecompanyname = $('#insurance-company-dropdown').val();
+        var processingfee = $('#processing-fee').val();
+
+        var consultationcharge = $('#consultation-charge').val();
+        var claimamount = $('#total-claim-amount').val();
+
+        var chequeamount = $('#cheque-amount').val();
+        var chequenumber = $('#cheque-number').val();
+
+        var bankname = $('#bank-name').val();
+        var witnessname = $("#case-of-dropdown option:selected").text();
+
+        var idnumber = $('#id-number').val();
+
+        var emailid = $('#email-id').val();
+        var emailpassword = $('#email-password').val();
+
+        // Make an API call with the username and password
+        $.ajax({
+          url: '/api/getlegalpdf',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          xhrFields: {
+            responseType: 'blob'
+        },
+          data: {
+          clientName:clientname,
+          clientAddress: clientaddress,
+          clientPhone: clientphone,
+          claimNumber: claimnumber,
+          insuranceCompanyName: insurancecompanyname,
+          processingFee: processingfee,
+          consultationCharge: consultationcharge,
+          claimAmount:  claimamount,
+          chequeAmount: chequeamount,
+          chequeNumber: chequenumber,
+          bankName:  bankname,
+          witnessName: witnessname,
+          behalfOf: behalfof,
+          complainantName: complainantname,
+          idNumber: idnumber,
+          },
+          success: function (response) {
+            var a = document.createElement('a');
+            var url = window.URL.createObjectURL(response);
+            a.href = url;
+            a.download = 'AuthorizationForm.pdf';
+            document.body.append(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+            document.getElementById('loginForm').reset();
+          },
+          error: function (error) {
+            document.getElementById('loginForm').reset();
+            alert("PDF generation failed even after bug fix");
+            // Display an error message to the user
+          }
+        });
+}
   
   </script>
 </body>
