@@ -469,6 +469,7 @@ div.dataTables_filter {
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
+                        <th>Action</th>
                       </tr>
                     </thead>
                   </table>
@@ -1003,6 +1004,25 @@ div.dataTables_filter {
 
                 </div>
    
+                <div id="popup56" class="overlay" >
+                  <div class="popup" style =" display: flex;
+                  justify-content: space-between;
+                  width: 30%;">
+                   
+                   <div>
+                    <h2 style="color: black;">Delete documents for -</h2>
+                    <input type="text" id="deletedocsid" required disabled style="margin-top: 5px;margin-bottom: 5px;"><br>
+                    <button id= "deletedocbutton" class="btn btn-primary btn-sm"  onclick="deletedocs()" >Delete docs</button>
+
+                   </div>
+
+                    
+                    <a class="close" href="#close">&times;</a>
+
+                  </div>
+
+
+                </div>
 
 
 
@@ -1448,6 +1468,38 @@ error: function (error) {
 }
 
 
+function deletedocs() {
+        // Code to generate card
+        $.ajax({
+        url: '/api/deletedocsbyref',
+        type: 'GET',
+        data: {
+          casereferenceNumber:  localStorage['deletedocRefNumber']
+        },
+
+        success: function (response) {
+  
+           alert("Docs deleted!!")
+           localStorage['deletedocRefNumber'] = ""; 
+           document.getElementById("deletedocsid").value ="";
+
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+
+  
+  }
+
+function deletedocsref(referencenumber) {
+        // Code to generate card
+  localStorage['deletedocRefNumber'] = referencenumber; 
+  document.getElementById("deletedocsid").value =referencenumber;
+  }
+
+
 
 function viewremark(referencenumber) {
         // Code to generate card
@@ -1529,13 +1581,15 @@ function movetolive(referencenumber) {
             //alert(response.message)
             var table = new DataTable('#dataTable');
              table.buttons(0).disable();
-           
+             $("#deletedocbutton").prop('disabled', true);
             if(response.message =='admin')
             {
               $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showonlogin").show();
               $("#hideonlogin").hide();
+              $("#deletedocbutton").prop('disabled', false);
+              
               localStorage['userName'] = response.username;
 
               table.buttons(0).enable();
@@ -1673,12 +1727,10 @@ function movetolive(referencenumber) {
               `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
               `<a href="#popup44"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
               `<a href="#popup55"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
+              `<a href="#popup56"><button id="deletebutton" class="btn btn-primary btn-sm"  onclick="deletedocsref('${rfno}')" >Delete docs</button> </a>`,
           ];
 
           table.row.add(rowData);
-
-
-           
           
           }
           table.draw(false);

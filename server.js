@@ -3281,6 +3281,22 @@ app.get("/api/getprospectcasedetailbyref", async(req, res) => {
   }
 });
 
+
+//
+app.get("/api/deletedocsbyref", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    console.log(req.query.casereferenceNumber)
+
+    const users = await  dataSchemaObject.updateOne({casereferenceNumber: req.query.casereferenceNumber}, {$set:{docUrl:[]}});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to delete doc by ref' });
+  }
+});
+//
+
 app.get("/api/getlivecaseRemarkbyref", async(req, res) => {
   try {
     // Retrieve all tpa list from database
