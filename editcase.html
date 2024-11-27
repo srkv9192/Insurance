@@ -690,6 +690,18 @@
                           <label for="cpAmountDate"class="form-label">CP Amount Received Date</label>
                           <input type="date" class="form-control" id="cpAmountDate" style="margin-top: 5px;margin-bottom: 5px;" >                   
                         </div>
+
+                        <div class="col-sm-3">
+                          <label for="customerAmountDate"class="form-label">Customer Amount Received Date</label>
+                          <input type="date" class="form-control" id="customerAmountDate" style="margin-top: 5px;margin-bottom: 5px;" >                   
+                        </div>
+
+                        <div class="col-sm-3">
+                          <label for="customerAmount"class="form-label">Amount received by Customer</label>
+                          <input type="number" class="form-control" id="customerAmount" placeholder="Enter amount"  style="margin-top: 5px;margin-bottom: 5px;" >
+                      </div>
+
+
                       </div>
 
                       <div class="row mb-3">
@@ -1087,6 +1099,10 @@ document.getElementById("cf_or_cheque-amount-final").value= Math.round((claimamo
             document.getElementById("cpAmount").value = response[0].caseCPFinalReceivedAmount  ?  response[0].caseCPFinalReceivedAmount : "";
             document.getElementById("cpAmountDate").value = response[0].caseCPFinalReceivedAmountDate  ?  moment(new Date(response[0].caseCPFinalReceivedAmountDate)).utc().format('YYYY-MM-DD') : "";
 
+
+            document.getElementById("customerAmount").value = response[0].caseCustomerReceivedAmount  ?  response[0].caseCustomerReceivedAmount : "";
+            document.getElementById("customerAmountDate").value = response[0].caseCustomerReceivedAmountDate  ?  moment(new Date(response[0].caseCustomerReceivedAmountDate)).utc().format('YYYY-MM-DD') : "";
+            
             //rajat
 
 
@@ -1160,6 +1176,10 @@ document.getElementById("cf_or_cheque-amount-final").value= Math.round((claimamo
             var cpAmountReceived = $('#cpAmount').val();
             var cpAmountReceivedDate = $('#cpAmountDate').val();
 
+            var customerAmountReceived = $('#customerAmount').val();
+            var customerAmountReceivedDate = $('#customerAmountDate').val();
+          
+
       $.ajax({
           url: '/api/editcasedetails',
           type: 'POST',
@@ -1212,6 +1232,8 @@ document.getElementById("cf_or_cheque-amount-final").value= Math.round((claimamo
             caseCPFinalAmount : cpAmount ,
             caseCPFinalReceivedAmount : cpAmountReceived ,
             caseCPFinalReceivedAmountDate: cpAmountReceivedDate ,
+            caseCustomerReceivedAmount: customerAmountReceived,
+            caseCustomerReceivedAmountDate: customerAmountReceivedDate,
             pfAmount  : pfamountfinal,
             cfPercentage : cfpercentfinal,
             cfAmount : cfamountfinal,
