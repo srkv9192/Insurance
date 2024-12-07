@@ -423,6 +423,8 @@ function generateCard(referencenumber) {
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showonlogin").show();
               $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
              
             }
             else if(response.message =='operation' )
@@ -431,6 +433,8 @@ function generateCard(referencenumber) {
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showtooperation").show();
               $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
             }
             else if(response.message =='cp' || response.message =='manager')
             {
@@ -438,6 +442,8 @@ function generateCard(referencenumber) {
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showtocpandmanager").show();
               $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
             }
             else if(response.message =='medicalofficer')
             {
@@ -445,6 +451,8 @@ function generateCard(referencenumber) {
               document.getElementById("login-menu").href="/logout.html"; 
               $("#showtomedicalofficer").show();
               $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
             }
             else if(response.message =='advocate')
             {
@@ -453,6 +461,7 @@ function generateCard(referencenumber) {
               $("#showtoadvocate").show();
               $("#hideonlogin").hide();
               localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
             }
             else
             {

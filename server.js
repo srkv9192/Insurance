@@ -59,12 +59,14 @@ const port = process.env.PORT || 80
 //});
 
 
+
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
 /*
+
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -1702,7 +1704,7 @@ app.post('/api/editcasedetails', async(req, res) => {
 
       const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ 
         prospectZone: req.body.prospectZone,
-                claimNumber : req.body.claimnumber ,
+                claimNumber : req.body.claimNumber ,
                 claimAmount : req.body.claimAmount ,
                 managerName :  req.body.managerName ,
                 managerID   :  req.body.managerID,
@@ -2632,6 +2634,11 @@ app.get("/api/getmanagerdetail", async(req, res) => {
 app.post('/api/addcpdetail', async(req, res) => {
   try{
 
+    const docs1 = await cpSchemaObject.findOne({cpName: req.body.cpName});
+    if (docs1) {
+      res.json({message : 'duplicatename'});
+      return;
+    }
         const docs = await cpSchemaObject.findOne({cpID: req.body.cpID});
         if (docs) {
           res.json({message : 'duplicate'});
@@ -4052,6 +4059,9 @@ app.post('/api/whoami', async(req,res) => {
   }
   else if(req.session.userId && (req.session.userType == 'marketing')){
     res.json({message : 'marketing', username : req.session.userName})
+  }
+  else if(req.session.userId && (req.session.userType == 'marketingmanager')){
+    res.json({message : 'marketingmanager', username : req.session.userName})
   }
   else if(req.session.userId && (req.session.userType == 'operation')){
     res.json({message : 'operation', username : req.session.userName})

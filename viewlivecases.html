@@ -453,6 +453,35 @@ div.dataTables_filter {
 
          </div>
 
+         <div id="showtomarketingmanager" style="display: none;">
+
+          <div class='dashboard-nav-dropdown show'>
+           <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+            <i class="fas fa-photo-video">
+              </i>Case Menu</a>
+            <div class='dashboard-nav-dropdown-menu'>
+              <a href="/addprospect.html" class="dashboard-nav-dropdown-item">Add Case</a>
+              <a href="/viewprospectcases.html" class="dashboard-nav-dropdown-item">View Prospect</a>
+              <a href="/viewapprovedcases.html" class="dashboard-nav-dropdown-item">View Approved</a>
+              <a href="/viewrejectedcases.html" class="dashboard-nav-dropdown-item">View Rejected</a>
+              <a href="/viewlivecases.html" class="dashboard-nav-dropdown-item">View Live</a>
+              <a href="/viewpendingdraftcases.html" class="dashboard-nav-dropdown-item">View Pending Draft</a>
+              <a href="/viewescalationcases.html" class="dashboard-nav-dropdown-item">View Escalation</a>
+              <a href="/viewlokpalcases.html" class="dashboard-nav-dropdown-item">View Lokpal</a>
+              <a href="/viewcompletedcases.html" class="dashboard-nav-dropdown-item">View Completed</a>
+              <a href="/viewpendingpaymentcases.html" class="dashboard-nav-dropdown-item">View Pending Payment</a>
+              <a href="/viewpendingcppaymentcases.html" class="dashboard-nav-dropdown-item">View CP Payment</a>
+              <a href="/viewfinishedcases.html" class="dashboard-nav-dropdown-item">View Finished</a>
+              <a href="/viewsearchcases.html" class="dashboard-nav-dropdown-item">Search Case</a>
+              <a href="/viewholdcases.html" class="dashboard-nav-dropdown-item">View Hold</a>
+              <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
+              <a href="/createcp.html" class="dashboard-nav-dropdown-item">Add CP</a>
+            </div>
+
+          </div>
+
+         </div>
+
           <div id="showtocoordinator" style="display: none;">
 
             <div class='dashboard-nav-dropdown show'>
@@ -2163,6 +2192,7 @@ function movetolive(referencenumber) {
               $("#showonlogin").show();
               $("#hideonlogin").hide();
               localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
               table.buttons(0).enable();
              
             }
@@ -2173,6 +2203,7 @@ function movetolive(referencenumber) {
               $("#showtooperation").show();
               $("#hideonlogin").hide();
               localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
             }
             else if(response.message =='cp' || response.message =='manager')
             {
@@ -2181,6 +2212,7 @@ function movetolive(referencenumber) {
               $("#showtocpandmanager").show();
               $("#hideonlogin").hide();
               localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
             }
             else if(response.message =='medicalofficer')
             {
@@ -2189,6 +2221,7 @@ function movetolive(referencenumber) {
               $("#showtomedicalofficer").show();
               $("#hideonlogin").hide();
               localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
             }
             else if(response.message =='advocate')
             {
@@ -2197,6 +2230,7 @@ function movetolive(referencenumber) {
               $("#showtoadvocate").show();
               $("#hideonlogin").hide();
               localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
             }
             else if(response.message =='marketing')
             {
@@ -2205,6 +2239,18 @@ function movetolive(referencenumber) {
               $("#showtomarketing").show();
               $("#hideonlogin").hide();
               localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+             
+              $(':button').prop('disabled', true); // Disable all the buttons
+            }
+            else if(response.message =='marketingmanager')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtomarketingmanager").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
             }
             else
             {
@@ -2348,8 +2394,40 @@ function movetolive(referencenumber) {
               `<a href="#popup11"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Reimbursement</button> </a>`,
               `<a href="#popup12"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to PendingDocs</button> </a>`,
             ];
-            
+
+            var rowDataRobin = [data[i].casereferenceNumber,
+            moment(new Date(data[i].liveDate)).utc().format('DD-MM-YYYY'),
+            `${caseage}`,
+            data[i].patientName,
+              data[i].patientMobile,
+              data[i].complainantName,
+              data[i].managerName,
+              data[i].cpName,
+              data[i].insuranceCompanyName,
+              data[i].claimNumber,
+              data[i].claimAmount,
+              data[i].operationOfficer,
+              data[i].medicalOpinionOfficer,
+              data[i].newCaseStatus,             
+             "Not Available",
+              "Not Available",
+              "Not Available",
+              "Not Available",
+              "Not Available",
+              "Not Available",
+              "Not Available",
+              "Not Available",
+              "Not Available",
+            ];
+
+            if(localStorage['userType'] =="marketingmanager")
+           {
+              table.row.add(rowDataRobin);
+           }
+           else
+           {
             table.row.add(rowData);
+           }
 
            }
 
