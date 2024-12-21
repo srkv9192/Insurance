@@ -3343,6 +3343,22 @@ app.get("/api/getcasedetailbyref", async(req, res) => {
   }
 });
 
+
+
+app.get("/api/getcasedetailbycpid", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    console.log(req.query.cpID)
+
+    const users = await  dataSchemaObject.find({cpID: req.query.cpID});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get case details by cp id' });
+  }
+});
+
+
 app.get("/api/getlivecasedetailbynumber", async(req, res) => {
   try {
     
@@ -4046,28 +4062,28 @@ async function updateCardDetails (refNumber, cardnumber)  {
 app.post('/api/whoami', async(req,res) => {
  // session=req.session;
   if(req.session.userId && (req.session.userType == 'admin')){
-      res.json({message : 'admin', username : req.session.userName})
+      res.json({message : 'admin', username : req.session.userName, userid:req.session.userId})
   }
   else if(req.session.userId && (req.session.userType == 'cp')){
-      res.json({message : 'cp', username : req.session.userName})
+      res.json({message : 'cp', username : req.session.userName, userid:req.session.userId})
   }
   else if(req.session.userId && (req.session.userType == 'manager')){
-      res.json({message : 'manager', username : req.session.userName})
+      res.json({message : 'manager', username : req.session.userName, userid:req.session.userId})
   }
   else if(req.session.userId && (req.session.userType == 'medicalofficer')){
-    res.json({message : 'medicalofficer', username : req.session.userName})
+    res.json({message : 'medicalofficer', username : req.session.userName, userid:req.session.userId})
   }
   else if(req.session.userId && (req.session.userType == 'marketing')){
-    res.json({message : 'marketing', username : req.session.userName})
+    res.json({message : 'marketing', username : req.session.userName, userid:req.session.userId})
   }
   else if(req.session.userId && (req.session.userType == 'marketingmanager')){
-    res.json({message : 'marketingmanager', username : req.session.userName})
+    res.json({message : 'marketingmanager', username : req.session.userName, userid:req.session.userId})
   }
   else if(req.session.userId && (req.session.userType == 'operation')){
-    res.json({message : 'operation', username : req.session.userName})
+    res.json({message : 'operation', username : req.session.userName, userid:req.session.userId})
   }
   else if(req.session.userId && (req.session.userType == 'advocate')){
-    res.json({message : 'advocate', username : req.session.userName})
+    res.json({message : 'advocate', username : req.session.userName, userid:req.session.userId})
   }
   else
      res.json({message : 'invalid'})
@@ -4096,6 +4112,8 @@ app.get('/viewholdcases.html', (req, res) => res.sendFile(__dirname+'/viewholdca
 app.get('/viewcompletedcases.html', (req, res) => res.sendFile(__dirname+'/viewcompletedcases.html'))
 
 app.get('/viewfinishedcases.html', (req, res) => res.sendFile(__dirname+'/viewfinishedcases.html'))
+
+app.get('/viewcasestatus.html', (req, res) => res.sendFile(__dirname+'/viewcasestatus.html'))
 
 app.get('/viewpendingpaymentcases.html', (req, res) => res.sendFile(__dirname+'/viewpendingpaymentcases.html'))
 app.get('/viewpendingcppaymentcases.html', (req, res) => res.sendFile(__dirname+'/viewpendingcppaymentcases.html'))
