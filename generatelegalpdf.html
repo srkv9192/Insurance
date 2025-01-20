@@ -578,20 +578,7 @@ hr.dashed {
                           <input type="text" class="form-control" id="id-number" required>
                       </div>
 
-                      <div class="col-sm-6">
-                        <label for="email-id" class="form-label">Email Id</label>
-                        <input type="text" class="form-control" id="email-id">
-                    </div>
-
                   </div>
-                  <div class="row mb-3">
-
-                    <div class="col-sm-6">
-                      <label for="email-password" class="form-label">Email Password</label>
-                      <input type="text" class="form-control" id="email-password">
-                  </div>
-
-                </div>
           
                   <div class="text-center">
                       <button id="adminbutton" type="submit" class="btn btn-primary">Save & Submit</button>
@@ -653,8 +640,8 @@ function fetchData() {
             document.getElementById("id-number").value = response[0].casereferenceNumber ? response[0].casereferenceNumber : "";
             document.getElementById("insurance-company-dropdown").value = response[0].insuranceCompanyName ? response[0].insuranceCompanyName : "";
 
-            document.getElementById("email-id").value = response[0].caseEmail ? response[0].caseEmail : "";
-            document.getElementById("email-password").value = response[0].caseEmailPassword ? response[0].caseEmailPassword : "";
+           // document.getElementById("email-id").value = response[0].caseEmail ? response[0].caseEmail : "";
+           // document.getElementById("email-password").value = response[0].caseEmailPassword ? response[0].caseEmailPassword : "";
 
             
             // add payment related info here-
@@ -892,8 +879,8 @@ function fetchData() {
             insuranceCompanyName: insurancecompanyname,
             caseHandler: witnessname,
             claimAmount: claimamount,
-            caseEmail :emailid,
-            caseEmailPassword : emailpassword,
+            //caseEmail :emailid,
+            //caseEmailPassword : emailpassword,
 
           },
           success: function (response) {

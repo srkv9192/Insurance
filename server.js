@@ -65,6 +65,7 @@ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS
   useUnifiedTopology: true,
 });
 
+
 /*
 
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
@@ -2164,7 +2165,7 @@ app.post('/api/addlivedraftdata', async(req, res) => {
 app.post('/api/addpfdetailsduringlegalgeneration', async(req, res) => {
   try{
 
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfpaymentRemarks:req.body.pfpaymentRemarks, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,  cfBankName: req.body.cfBankName, patientAddress: req.body.patientAddress, behalfOf : req.body.behalfOf, patientName: req.body.patientName, patientMobile: req.body.patientMobile, complainantName: req.body.complainantName, claimNumber: req.body.claimNumber, insuranceCompanyName: req.body.insuranceCompanyName, claimAmount:req.body.claimAmount, caseHandler:req.body.caseHandler, caseEmail: req.body.caseEmail, caseEmailPassword:req.body.caseEmailPassword }});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfpaymentRemarks:req.body.pfpaymentRemarks, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,  cfBankName: req.body.cfBankName, patientAddress: req.body.patientAddress, behalfOf : req.body.behalfOf, patientName: req.body.patientName, patientMobile: req.body.patientMobile, complainantName: req.body.complainantName, claimNumber: req.body.claimNumber, insuranceCompanyName: req.body.insuranceCompanyName, claimAmount:req.body.claimAmount, caseHandler:req.body.caseHandler,/* caseEmail: req.body.caseEmail, caseEmailPassword:req.body.caseEmailPassword */ }});
 
       if(newData == null)
       {
@@ -2185,6 +2186,28 @@ app.post('/api/addpfdetailsduringlegalgeneration', async(req, res) => {
 });
 
 
+app.post('/api/editemaildetails', async(req, res) => {
+  try{
+
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber},  { $push:{ caseRemarks:req.body.caseRemarks}, $set:{ caseEmail: req.body.caseEmail, caseEmailPassword:req.body.caseEmailPassword  }});
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not save email details', refnum:req.body.caseNumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding email details ' });
+  } 
+
+});
 
 app.post('/api/addemailremark', async(req, res) => {
   try{
@@ -4148,6 +4171,7 @@ app.get('/viewpendingcards.html', (req, res) => res.sendFile(__dirname+'/viewpen
 app.get('/generatelegalpdf.html', (req, res) => res.sendFile(__dirname+'/generatelegalpdf.html'))
 app.get('/generatelegalfromlive.html', (req, res) => res.sendFile(__dirname+'/generatelegalfromlive.html'))
 
+app.get('/editemail.html', (req, res) => res.sendFile(__dirname+'/editemail.html'))
 
 app.get('/generatecardpdf.html', (req, res) => res.sendFile(__dirname+'/generatecardpdf.html'))
 app.get('/addprospect.html', (req, res) => res.sendFile(__dirname+'/addprospect.html'))
