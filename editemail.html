@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+  
+  <link rel="stylesheet" href="css/menubar.css">
+  <style>
+
+hr.dashed {
+  border-top: 3px dashed #bbb;
+}
+
+  input.form-control:read-only {
+        background-color:  #343a40;
+    }
+    input.form-control:disabled {
+        background-color:  #343a40;
+    }
+    body {
+      background-color: #343a40;
+      color: #fff;
+    }
+
+    .navbar-light .navbar-brand {
+      color: #fff;
+    }
+
+    .navbar-light .navbar-nav .nav-link {
+      color: #fff;
+    }
+
+    .navbar-light .navbar-nav .nav-link:hover,
+    .navbar-light .navbar-nav .nav-link:focus {
+      color: #e9ecef;
+    }
+
+    
+    .navbar-dark .navbar-brand {
+      color: #343a40;
+    }
+
+    .navbar-dark .navbar-nav .nav-link {
+      color: #343a40;
+    }
+
+    .navbar-dark .navbar-nav .nav-link:hover,
+    .navbar-dark .navbar-nav .nav-link:focus {
+      color: #343a40;
+    }
+
+    .form-control {
+      background-color: #495057;
+      color: #fff;
+    }
+
+    .form-control:focus {
+      background-color: #343a40;
+      color: #fff;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      border-color: #007bff;
+    }
+
+    .btn-primary:hover,
+    .btn-primary:focus {
+      background-color: #0062cc;
+      border-color: #005cbf;
+    }
+  </style>
+  <title>Edit Email</title>
+</head>
+
+<body>
+
+  <div class='dashboard'>
+    <div class="dashboard-nav">
+      <header>
+        <a href="#"class="brand-logo"> 
+          <img src="/images/logoround.png" class="navbar-brand" href="/" align="left" width="130" height="130">
+         </a>
+         <a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a>
+        </header>
+      <nav class="dashboard-nav-list"><a href="/" class="dashboard-nav-item"><i class="fas fa-home"></i>
+          Home </a>
+
+          <div id="hideonlogin">
+            <nav class="dashboard-nav-list"><a href="/newcarddirect.html" class="dashboard-nav-item"><i class="fas fa-inr"></i>
+              Buy Card </a>
+
+              <nav class="dashboard-nav-list"><a href="/paymentinfo.html" class="dashboard-nav-item"><i class="fas fa-inr"></i>
+                Payment Info </a>
+          </div>
+
+
+
+          <div id="showonlogin" style="display: none;">
+
+            <nav class="dashboard-nav-list"><a href="/dashboard.html" class="dashboard-nav-item"><i class="fas fa-dashboard"></i>
+              Dashboard </a>
+
+            <div class='dashboard-nav-dropdown show'>
+               <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+                <i class="fas fa-photo-video">
+                  </i>Card Menu</a>
+                <div class='dashboard-nav-dropdown-menu'>
+                    <a href="/newcard.html" class="dashboard-nav-dropdown-item">Add Card</a>
+                    <a href="/viewpendingcards.html" class="dashboard-nav-dropdown-item">View Pending</a>
+                    <a href="/viewcards.html" class="dashboard-nav-dropdown-item">View Completed</a>
+                    <a href="/generatecardpdf.html" class="dashboard-nav-dropdown-item">Download Card</a>
+                </div>
+             </div>
+
+             <div class='dashboard-nav-dropdown show'>
+              <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+               <i class="fas fa-photo-video">
+                 </i>Case Menu</a>
+               <div class='dashboard-nav-dropdown-menu'>
+                   <a href="/addprospect.html" class="dashboard-nav-dropdown-item">Add Case</a>
+                   <a href="/viewprospectcases.html" class="dashboard-nav-dropdown-item">View Prospect</a>
+                   
+                  
+                   <a href="/viewmedicalopinioncases.html" class="dashboard-nav-dropdown-item">View Medical</a>
+                   <a href="/viewapprovedcases.html" class="dashboard-nav-dropdown-item">View Approved</a>
+                   <a href="/viewrejectedcases.html" class="dashboard-nav-dropdown-item">View Rejected</a>
+                   <a href="/viewlivecases.html" class="dashboard-nav-dropdown-item">View Live</a>
+                   <a href="/viewpendingdraftcases.html" class="dashboard-nav-dropdown-item">View Pending Draft</a>
+                   <a href="/viewescalationcases.html" class="dashboard-nav-dropdown-item">View Escalation</a>
+                   <a href="/viewlokpalcases.html" class="dashboard-nav-dropdown-item">View Lokpal</a>
+                   <a href="/viewcompletedcases.html" class="dashboard-nav-dropdown-item">View Completed</a>
+                   <a href="/viewpendingpaymentcases.html" class="dashboard-nav-dropdown-item">View Pending Payment</a>
+                   <a href="/viewpendingcppaymentcases.html" class="dashboard-nav-dropdown-item">View CP Payment</a>
+                   <a href="/viewfinishedcases.html" class="dashboard-nav-dropdown-item">View Finished</a>
+                   <a href="/viewholdcases.html" class="dashboard-nav-dropdown-item">View Hold</a>
+                   <a href="/viewsearchcases.html" class="dashboard-nav-dropdown-item">Search Case</a>
+
+                   
+                                      <!-- 
+                   <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
+                   <a href="/viewescalationcases.html" class="dashboard-nav-dropdown-item">View Escalation</a>
+                    -->
+                    
+                   <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
+               </div>
+            </div>
+
+            <div class='dashboard-nav-dropdown show'>
+              <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+               <i class="fas  fa-user-secret">
+                 </i>Admin Menu</a>
+               <div class='dashboard-nav-dropdown-menu'>
+                   <a href="/changepassword.html" class="dashboard-nav-dropdown-item">Change Password</a>
+                   <a href="/createcp.html" class="dashboard-nav-dropdown-item">Add CP</a>
+                  <a href="/editcp.html" class="dashboard-nav-dropdown-item">Edit CP</a>
+                   <a href="/deletecases.html" class="dashboard-nav-dropdown-item">Delete Case</a>
+                   <a href="/editcase.html" class="dashboard-nav-dropdown-item">Edit Case</a>
+               </div>
+             </div>
+
+          </div>
+
+          <div id="showtooperation" style="display: none;">
+
+            <div class='dashboard-nav-dropdown show'>
+              <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+               <i class="fas fa-photo-video">
+                 </i>Case Menu</a>
+               <div class='dashboard-nav-dropdown-menu'>
+                   <a href="/addprospect.html" class="dashboard-nav-dropdown-item">Add Case</a>
+                   <a href="/viewprospectcases.html" class="dashboard-nav-dropdown-item">View Prospect</a>
+                   
+                   <a href="/viewmedicalopinioncases.html" class="dashboard-nav-dropdown-item">View Medical</a>
+                   <a href="/viewapprovedcases.html" class="dashboard-nav-dropdown-item">View Approved</a>
+                   <a href="/viewrejectedcases.html" class="dashboard-nav-dropdown-item">View Rejected</a>
+                   <a href="/viewlivecases.html" class="dashboard-nav-dropdown-item">View Live</a>
+                   <a href="/viewpendingdraftcases.html" class="dashboard-nav-dropdown-item">View Pending Draft</a>
+                   <a href="/viewescalationcases.html" class="dashboard-nav-dropdown-item">View Escalation</a>
+                   <a href="/viewlokpalcases.html" class="dashboard-nav-dropdown-item">View Lokpal</a>
+                   <a href="/viewcompletedcases.html" class="dashboard-nav-dropdown-item">View Completed</a>
+                   <a href="/viewpendingpaymentcases.html" class="dashboard-nav-dropdown-item">View Pending Payment</a>
+                   <a href="/viewpendingcppaymentcases.html" class="dashboard-nav-dropdown-item">View CP Payment</a>
+                   <a href="/viewfinishedcases.html" class="dashboard-nav-dropdown-item">View Finished</a>
+                   <a href="/viewholdcases.html" class="dashboard-nav-dropdown-item">View Hold</a>
+                   <a href="/viewsearchcases.html" class="dashboard-nav-dropdown-item">Search Case</a>
+                  
+                                     <!-- 
+                   <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
+                   <a href="/viewescalationcases.html" class="dashboard-nav-dropdown-item">View Escalation</a>
+                    -->
+
+                   <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
+                   <a href="/editemail.html" class="dashboard-nav-dropdown-item">Edit Email</a>
+               </div>
+            </div>
+
+          <div class='dashboard-nav-dropdown show'>
+             <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+              <i class="fas fa-photo-video">
+                </i>Card Menu</a>
+              <div class='dashboard-nav-dropdown-menu'>
+                  <a href="/newcard.html" class="dashboard-nav-dropdown-item">Add Card</a>
+                  <a href="/viewpendingcards.html" class="dashboard-nav-dropdown-item">View Pending</a>
+                  <a href="/viewcards.html" class="dashboard-nav-dropdown-item">View Completed</a>
+                  <a href="/generatecardpdf.html" class="dashboard-nav-dropdown-item">Download Card</a>
+              </div>
+           </div>
+
+          <div class='dashboard-nav-dropdown show'>
+            <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+             <i class="fas  fa-user-secret">
+               </i>Admin Menu</a>
+             <div class='dashboard-nav-dropdown-menu'>
+                 <a href="/createcp.html" class="dashboard-nav-dropdown-item">Add CP</a>
+             </div>
+           </div>
+
+        </div>
+
+          <div id="showtocpandmanager" style="display: none;">
+
+            <div class='dashboard-nav-dropdown show'>
+               <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+                <i class="fas fa-photo-video">
+                  </i>Card Menu</a>
+                <div class='dashboard-nav-dropdown-menu'>
+                    <a href="/newcard.html" class="dashboard-nav-dropdown-item">Add Card</a>
+                </div>
+             </div>
+
+             <div class='dashboard-nav-dropdown show'>
+              <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+               <i class="fas fa-photo-video">
+                 </i>Case Menu</a>
+               <div class='dashboard-nav-dropdown-menu'>
+                   <a href="/addprospect.html" class="dashboard-nav-dropdown-item">Add Case</a>
+                   <a href="/viewcasestatus.html" class="dashboard-nav-dropdown-item">View Case Status</a>
+               </div>
+            </div>
+
+          </div>
+
+
+          <div id="showtomedicalofficer" style="display: none;">
+
+            <div class='dashboard-nav-dropdown show'>
+             <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+              <i class="fas fa-photo-video">
+                </i>Case Menu</a>
+              <div class='dashboard-nav-dropdown-menu'>
+                <a href="/viewmedicalopinioncases.html" class="dashboard-nav-dropdown-item">View Medical</a>
+                  <a href="/viewpendingdraftcases.html" class="dashboard-nav-dropdown-item">View Pending Draft</a>
+                  <a href="/viewlokpalcases.html" class="dashboard-nav-dropdown-item">View Lokpal</a>
+                  <a href="/viewcompletedcases.html" class="dashboard-nav-dropdown-item">View Completed</a>
+                  <a href="/viewholdcases.html" class="dashboard-nav-dropdown-item">View Hold</a>
+                  <a href="/viewsearchcases.html" class="dashboard-nav-dropdown-item">Search Case</a>
+                  <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
+              </div>
+
+           </div>
+
+         </div>
+
+         <div id="showtoadvocate" style="display: none;">
+
+          <div class='dashboard-nav-dropdown show'>
+           <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+            <i class="fas fa-photo-video">
+              </i>Case Menu</a>
+            <div class='dashboard-nav-dropdown-menu'>
+                <a href="/viewpendingdraftcases.html" class="dashboard-nav-dropdown-item">View Pending Draft</a>
+            </div>
+
+         </div>
+
+       </div>
+
+         <div id="showtomarketing" style="display: none;">
+
+          <div class='dashboard-nav-dropdown show'>
+           <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+            <i class="fas fa-photo-video">
+              </i>Case Menu</a>
+            <div class='dashboard-nav-dropdown-menu'>
+              <a href="/addprospect.html" class="dashboard-nav-dropdown-item">Add Case</a>
+              <a href="/viewprospectcases.html" class="dashboard-nav-dropdown-item">View Prospect</a>
+              <a href="/viewapprovedcases.html" class="dashboard-nav-dropdown-item">View Approved</a>
+              <a href="/viewrejectedcases.html" class="dashboard-nav-dropdown-item">View Rejected</a>
+              <a href="/viewcompletedcases.html" class="dashboard-nav-dropdown-item">View Completed</a>
+              <a href="/viewpendingpaymentcases.html" class="dashboard-nav-dropdown-item">View Pending Payment</a>
+              <a href="/viewpendingcppaymentcases.html" class="dashboard-nav-dropdown-item">View CP Payment</a>
+              <a href="/viewfinishedcases.html" class="dashboard-nav-dropdown-item">View Finished</a>
+              <a href="/viewsearchcases.html" class="dashboard-nav-dropdown-item">Search Case</a>
+              <a href="/viewholdcases.html" class="dashboard-nav-dropdown-item">View Hold</a>
+              <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
+              <a href="/createcp.html" class="dashboard-nav-dropdown-item">Add CP</a>
+            </div>
+          </div>
+         </div>
+
+         <div id="showtomarketingmanager" style="display: none;">
+
+          <div class='dashboard-nav-dropdown show'>
+           <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+            <i class="fas fa-photo-video">
+              </i>Case Menu</a>
+            <div class='dashboard-nav-dropdown-menu'>
+              <a href="/addprospect.html" class="dashboard-nav-dropdown-item">Add Case</a>
+              <a href="/viewprospectcases.html" class="dashboard-nav-dropdown-item">View Prospect</a>
+              <a href="/viewapprovedcases.html" class="dashboard-nav-dropdown-item">View Approved</a>
+              <a href="/viewrejectedcases.html" class="dashboard-nav-dropdown-item">View Rejected</a>
+              <a href="/viewlivecases.html" class="dashboard-nav-dropdown-item">View Live</a>
+              <a href="/viewpendingdraftcases.html" class="dashboard-nav-dropdown-item">View Pending Draft</a>
+              <a href="/viewescalationcases.html" class="dashboard-nav-dropdown-item">View Escalation</a>
+              <a href="/viewlokpalcases.html" class="dashboard-nav-dropdown-item">View Lokpal</a>
+              <a href="/viewcompletedcases.html" class="dashboard-nav-dropdown-item">View Completed</a>
+              <a href="/viewpendingpaymentcases.html" class="dashboard-nav-dropdown-item">View Pending Payment</a>
+              <a href="/viewpendingcppaymentcases.html" class="dashboard-nav-dropdown-item">View CP Payment</a>
+              <a href="/viewfinishedcases.html" class="dashboard-nav-dropdown-item">View Finished</a>
+              <a href="/viewsearchcases.html" class="dashboard-nav-dropdown-item">Search Case</a>
+              <a href="/viewholdcases.html" class="dashboard-nav-dropdown-item">View Hold</a>
+              <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
+              <a href="/createcp.html" class="dashboard-nav-dropdown-item">Add CP</a>
+            </div>
+
+          </div>
+
+         </div>
+          
+        <div class="nav-item-divider"></div>
+        <a  id="login-menu"
+                  href="/login.html" class="dashboard-nav-item"><i class="fas  fa-sign-in "></i> Login </a>
+      </nav>
+  </div>
+
+  <div class='dashboard-app'>
+    <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
+
+    <div class='dashboard-content' style="background-image: url('/images/background20.jpg');  background-repeat: repeat;  background-size: cover;">
+      <div class="container mt-5" style="max-width: unset;">
+        <div class="row justify-content-center">
+          <div class="col-lg-6">
+            <h2 class="text-center mb-4">Edit Email Detail</h2>
+
+            <div class="frame" style="color:black;background-image: url('/images/background18.jpg'); font-weight: bold; font-family: monospace;font-size: large; background-size: cover;">
+              <form id="loginForm">
+                  <!-- Query Section -->
+                  <div class="row mb-3 justify-content-center">
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="queryInput" placeholder="Enter Reference Number">
+                    </div>
+
+                    <div class="col-sm-4 text-center">
+                      <button type="button" class="btn btn-primary mt-2" onclick="fetchData()">Fetch Data</button>
+                  </div>
+                 
+
+                </div>
+
+                <hr class="dashed">
+
+                <div class="row mb-3">
+                    <div class="col-sm-6">
+                      <label for="email-id" class="form-label">Email ID</label>
+                      <input type="text" class="form-control" id="email-id" >
+                    </div>
+
+                      <div class="col-sm-6">
+                        <label for="email-password" class="form-label">Email Password</label>
+                        <input type="text" class="form-control" id="email-password" >
+                      </div>
+                </div>
+            
+              <div class="row mb-3">
+                <div class="col-sm-6">
+                  <label for="editemailremark" class="form-label">Remark</label>
+                  <input type="text" class="form-control" id="editemailremark" >
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <div class="text-center">
+                  <button id="" type="submit" class="btn btn-primary">Save Details</button>
+                </div>
+          </div>
+                  
+              </form>
+          </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div> 
+
+</div>
+
+
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+
+function fetchData() {
+    var refNumber = document.getElementById('queryInput').value;
+    $.ajax({
+        url: '/api/getcasedetailbyref',
+        type: 'GET',
+        data: {
+          casereferenceNumber: refNumber
+        },
+
+        success: function (response) {
+          // Populate the options in the select elemen
+                
+          
+           
+            document.getElementById("email-id").value = response[0].caseEmail ? response[0].caseEmail : "";
+            document.getElementById("email-password").value = response[0].caseEmailPassword ? response[0].caseEmailPassword : "";
+
+            
+
+
+           
+
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+      
+}
+
+    $(document).ready(function () {
+
+
+            // behalf of change function
+            $('#behalf-of-dropdown').change(function () {
+
+            var behalfof = $('#behalf-of-dropdown').val();
+
+            if(behalfof =="Self")
+            {
+              document.getElementById("patient-name").value = $('#complainant-name').val();
+            }
+
+            });
+
+
+      // calculate cheque amount based on consulation charge percentage
+      $('#total-claim-amount').change(function () {
+
+        var claimamount = $('#total-claim-amount').val();
+        var consultationcharge = $('#consultation-charge').val();
+
+        document.getElementById("cheque-amount").value=Math.round((claimamount * consultationcharge ) / (100));
+
+        });
+
+      // calculate cheque amount based on consulation charge percentage
+      $('#consultation-charge').change(function () {
+
+        var claimamount = $('#total-claim-amount').val();
+        var consultationcharge = $('#consultation-charge').val();
+
+        document.getElementById("cheque-amount").value=Math.round((claimamount * consultationcharge ) / (100));
+
+        });
+
+      
+      $.ajax({
+        url: '/api/getinsurancecompany',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          const optionsSelect = $('#insurance-company-dropdown');
+          response.forEach(function (option) {
+            optionsSelect.append($('<option>', {
+              value: option.companyName,
+              text: option.companyName
+            }));
+          });
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+
+      $.ajax({
+        url: '/api/whoami',
+        type: 'POST',
+        success: function (response) {
+          // Populate the options in the select element
+            //alert(response.message)
+           
+            if(response.message =='admin')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showonlogin").show();
+              $("#hideonlogin").hide();
+            
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+             
+            }
+            else if(response.message =='operation' )
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtooperation").show();
+              $("#hideonlogin").hide();
+             
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+            }
+            else if(response.message =='cp' || response.message =='manager')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtocpandmanager").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+            }
+            else if(response.message =='medicalofficer')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtomedicalofficer").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+            }
+            else if(response.message =='advocate')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtoadvocate").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+            }
+            else if(response.message =='marketing')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtomarketing").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+            }
+            else if(response.message =='marketingmanager')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtomarketingmanager").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+            }
+            else
+            {
+              window.location.href = "/login.html"
+            }
+            
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+
+      const mobileScreen = window.matchMedia("(max-width: 990px )");
+
+          $(".dashboard-nav-dropdown-toggle").click(function () {
+        $(this).closest(".dashboard-nav-dropdown")
+            .toggleClass("show")
+            .find(".dashboard-nav-dropdown")
+            .removeClass("show");
+        $(this).parent()
+            .siblings()
+            .removeClass("show");
+    });
+    $(".menu-toggle").click(function () {
+        if (mobileScreen.matches) {
+            $(".dashboard-nav").toggleClass("mobile-show");
+        } else {
+            $(".dashboard").toggleClass("dashboard-compact");
+        }
+    });
+
+      $('#loginForm').on('submit', function (event) {
+        event.preventDefault();
+
+        if( document.getElementById("email-id").value == "")
+      {
+        alert("Empty email not allowed!")
+        return;
+      }
+
+      if( document.getElementById("email-password").value == "")
+      {
+        alert("Empty password not allowed!")
+        return;
+      }
+
+        if( document.getElementById("editemailremark").value == "")
+        {
+          alert("Empty remark not allowed!")
+          return;
+        }
+
+        var emailid = $('#email-id').val();
+        var emailpassword = $('#email-password').val();
+        var idnumber = $('#queryInput').val();
+
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        let mm = today.getMonth() + 1; // Months start at 0!
+        let dd = today.getDate();
+
+        if (dd < 10) dd = '0' + dd;
+        if (mm < 10) mm = '0' + mm;
+
+        const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+        $.ajax({
+          url: '/api/editemaildetails',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          data: {
+            casereferenceNumber: idnumber, 
+            caseEmail :emailid,
+            caseEmailPassword : emailpassword,
+            caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] [ Email  Edit ]- "+ document.getElementById("editemailremark").value
+          },
+          success: function (response) {
+            if(response.message == "success")
+              {
+                alert("Saved details!")
+                  document.getElementById('loginForm').reset();
+              }
+              else{
+                alert("Error saving remark!")
+                document.getElementById('loginForm').reset();
+              }
+            
+          },
+          error: function (error) {
+            //document.getElementById('loginForm').reset();
+            //alert("login failed");
+            // Display an error message to the user
+          }
+        });
+
+
+
+      });
+    });
+  
+  
+  function downloadagreement(){  
+        var clientname = $('#patient-name').val();
+        var clientaddress = $('#client-address').val();
+
+        var clientphone = $('#client-phone').val();
+        var claimnumber = $('#claim-number').val();
+
+        var behalfof = $('#behalf-of-dropdown').val();;
+        var complainantname = $('#complainant-name').val();
+
+        var insurancecompanyname = $('#insurance-company-dropdown').val();
+        var processingfee = $('#processing-fee').val();
+
+        var consultationcharge = $('#consultation-charge').val();
+        var claimamount = $('#total-claim-amount').val();
+
+        var chequeamount = $('#cheque-amount').val();
+        var chequenumber = $('#cheque-number').val();
+
+        var bankname = $('#bank-name').val();
+        var witnessname = $("#case-of-dropdown option:selected").text();
+
+        var idnumber = $('#id-number').val();
+
+        var emailid = $('#email-id').val();
+        var emailpassword = $('#email-password').val();
+
+        // Make an API call with the username and password
+        $.ajax({
+          url: '/api/getlegalpdf',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          xhrFields: {
+            responseType: 'blob'
+        },
+          data: {
+          clientName:clientname,
+          clientAddress: clientaddress,
+          clientPhone: clientphone,
+          claimNumber: claimnumber,
+          insuranceCompanyName: insurancecompanyname,
+          processingFee: processingfee,
+          consultationCharge: consultationcharge,
+          claimAmount:  claimamount,
+          chequeAmount: chequeamount,
+          chequeNumber: chequenumber,
+          bankName:  bankname,
+          witnessName: witnessname,
+          behalfOf: behalfof,
+          complainantName: complainantname,
+          idNumber: idnumber,
+          },
+          success: function (response) {
+            var a = document.createElement('a');
+            var url = window.URL.createObjectURL(response);
+            a.href = url;
+            a.download = 'AuthorizationForm.pdf';
+            document.body.append(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+            document.getElementById('loginForm').reset();
+          },
+          error: function (error) {
+            document.getElementById('loginForm').reset();
+            alert("PDF generation failed even after bug fix");
+            // Display an error message to the user
+          }
+        });
+}
+  
+  </script>
+</body>
+
+</html>
