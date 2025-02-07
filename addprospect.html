@@ -126,6 +126,7 @@
                      <a href="/viewmedicalopinioncases.html" class="dashboard-nav-dropdown-item">View Medical</a>
                      <a href="/viewapprovedcases.html" class="dashboard-nav-dropdown-item">View Approved</a>
                      <a href="/viewrejectedcases.html" class="dashboard-nav-dropdown-item">View Rejected</a>
+                     <a href="/viewconsumercases.html" class="dashboard-nav-dropdown-item">View Consumer</a>
                      <a href="/viewlivecases.html" class="dashboard-nav-dropdown-item">View Live</a>
                      <a href="/viewpendingdraftcases.html" class="dashboard-nav-dropdown-item">View Pending Draft</a>
                      <a href="/viewescalationcases.html" class="dashboard-nav-dropdown-item">View Escalation</a>
@@ -184,6 +185,7 @@
                    <a href="/viewmedicalopinioncases.html" class="dashboard-nav-dropdown-item">View Medical</a>
                    <a href="/viewapprovedcases.html" class="dashboard-nav-dropdown-item">View Approved</a>
                    <a href="/viewrejectedcases.html" class="dashboard-nav-dropdown-item">View Rejected</a>
+                   <a href="/viewconsumercases.html" class="dashboard-nav-dropdown-item">View Consumer</a>
                    <a href="/viewlivecases.html" class="dashboard-nav-dropdown-item">View Live</a>
                    <a href="/viewpendingdraftcases.html" class="dashboard-nav-dropdown-item">View Pending Draft</a>
                    <a href="/viewescalationcases.html" class="dashboard-nav-dropdown-item">View Escalation</a>
@@ -322,6 +324,7 @@
               <a href="/viewprospectcases.html" class="dashboard-nav-dropdown-item">View Prospect</a>
               <a href="/viewapprovedcases.html" class="dashboard-nav-dropdown-item">View Approved</a>
               <a href="/viewrejectedcases.html" class="dashboard-nav-dropdown-item">View Rejected</a>
+              <a href="/viewconsumercases.html" class="dashboard-nav-dropdown-item">View Consumer</a>
               <a href="/viewlivecases.html" class="dashboard-nav-dropdown-item">View Live</a>
               <a href="/viewpendingdraftcases.html" class="dashboard-nav-dropdown-item">View Pending Draft</a>
               <a href="/viewescalationcases.html" class="dashboard-nav-dropdown-item">View Escalation</a>
@@ -503,7 +506,19 @@
                         <option value="vijay nagar">Vijay Nagar</option>
                       </select>
                     </div>
-                  </div>
+                    </div>
+                 
+                    <div class="col-sm-6">
+                        <label for="case-type-dropdown" class="form-label">Case Type:</label>
+                        <div class="input-group">
+                          <select class="form-control" id="case-type-dropdown" >
+                            <option value="Lokpal">Lokpal</option>
+                            <option value="Consumer">Consumer</option>
+                          </select>
+                        </div>
+                    </div>
+                 
+                  
                 </div>
 
 
@@ -821,7 +836,7 @@
         var clientemail = $('#client-email').val();
         var policynumber = $('#policy-number').val();
 
-
+        var casetype = $("#case-type-dropdown option:selected").text();
     
         var formData = new FormData();
         formData.append('casereferenceNumber', localStorage['casereferencenumber']);
@@ -846,7 +861,11 @@
         formData.append('insuranceCompanyName', insurancecompany);
         formData.append('claimNumber', claimnumber);
 
+
         formData.append('prospectDate', new Date());
+
+        formData.append('caseType', casetype);
+        
 
 
         $.each($('#pdf-input')[0].files, function(i, file) {

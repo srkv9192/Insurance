@@ -8,8 +8,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
   
   <link rel="stylesheet" href="css/menubar.css">
-
-  <!-- for editable text box area   https://quilljs.com/docs/quickstart-->
   <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.4/dist/quill.snow.css" rel="stylesheet" />
   <style>
 
@@ -27,7 +25,7 @@
       text-decoration: none;
 
       float: left;
-      width: 170px;
+      width: 150px;
       list-style-type: none;
       margin-left: 10px;
     }
@@ -41,20 +39,11 @@
       background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
       text-decoration: none;
     }
-
+    
     li a {
       color: blue;
       text-decoration: none;
     }
-    
-.ql-snow .ql-stroke {
-    fill: none;
-    stroke: white;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-width: 2
-}
-
 
     body {
       background-color: #343a40;
@@ -149,13 +138,6 @@ div.dataTables_filter {
 
 }
 
-#uploadingdiv {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-
 /*for pop up box
 
 */
@@ -185,6 +167,8 @@ div.dataTables_filter {
   width: 55%;
   position: relative;
   transition: all 5s ease-in-out;
+  max-height: 80vh; /* Limit the height */
+  overflow-y: auto; /* Enable vertical scroll */
 }
 
 .popup h2 {
@@ -216,10 +200,7 @@ div.dataTables_filter {
 .popup .close:hover {
   color: #06D85F;
 }
-.popup .content {
-  max-height: 30%;
-  overflow: auto;
-}
+
 
 @media screen and (max-width: 700px){
   .box{
@@ -232,11 +213,16 @@ div.dataTables_filter {
 
 /*pop up box end*/
 
-
+#uploadingdiv {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
 
 
   </style>
-  <title>Pending Draft Cases</title>
+  <title>Consumer Cases</title>
 </head>
 
 <body>
@@ -288,7 +274,7 @@ div.dataTables_filter {
                      <a href="/viewfinishedcases.html" class="dashboard-nav-dropdown-item">View Finished</a>
                      <a href="/viewholdcases.html" class="dashboard-nav-dropdown-item">View Hold</a>
                      <a href="/viewsearchcases.html" class="dashboard-nav-dropdown-item">Search Case</a>
-                    
+                     
                     
                                        <!-- 
                      <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
@@ -417,12 +403,12 @@ div.dataTables_filter {
                 </i>Case Menu</a>
               <div class='dashboard-nav-dropdown-menu'>
                 <a href="/viewmedicalopinioncases.html" class="dashboard-nav-dropdown-item">View Medical</a>
-                  <a href="/viewpendingdraftcases.html" class="dashboard-nav-dropdown-item">View Pending Draft</a>
-                  <a href="/viewlokpalcases.html" class="dashboard-nav-dropdown-item">View Lokpal</a>
-                  <a href="/viewcompletedcases.html" class="dashboard-nav-dropdown-item">View Completed</a>
-                  <a href="/viewholdcases.html" class="dashboard-nav-dropdown-item">View Hold</a>
-                  <a href="/viewsearchcases.html" class="dashboard-nav-dropdown-item">Search Case</a>
-                  <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
+                <a href="/viewpendingdraftcases.html" class="dashboard-nav-dropdown-item">View Pending Draft</a>
+                <a href="/viewlokpalcases.html" class="dashboard-nav-dropdown-item">View Lokpal</a>
+                <a href="/viewcompletedcases.html" class="dashboard-nav-dropdown-item">View Completed</a>
+                <a href="/viewholdcases.html" class="dashboard-nav-dropdown-item">View Hold</a>
+                <a href="/viewsearchcases.html" class="dashboard-nav-dropdown-item">Search Case</a>
+                <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
               </div>
 
            </div>
@@ -536,20 +522,26 @@ div.dataTables_filter {
         <div class='dashboard-content' style="background-image: url('/images/background20.jpg');  background-repeat: repeat;  background-size: cover;">
           <div class="container mt-5" style="max-width: unset;">
             <div class="row justify-content-center">
-              <h2 class="text-center mb-4">Pending Draft Cases</h2>
+              <h2 class="text-center mb-4">Consumer Cases(Under Development)</h2>
+              <!--
               <ul>
                 <li class="btn_special"><a href="#" class="all">All</a></li>
+                <li class="btn_special"><a href="#" >Live</a></li>
+                <li class="btn_special"><a href="#">Draft Query</a></li>
+                <li class="btn_special"><a href="#">Gist Generated</a></li>
                 <li class="btn_special"><a href="#">Pending Draft</a></li>
-                <li class="btn_special"><a href="#">Draft Generated</a></li>
+                <li class="btn_special"><a href="#">Reimbursement</a></li>
+                <li class="btn_special"><a href="#">Pending Doc</a></li>
               </ul>
+            -->
               <div class="col-lg-12">
-                
+       
                 <div class="table-responsive">
                   <table id ="dataTable" class="table table-dark table-bordered">
                     <thead>
                       <tr>
                         <th>Reference Number</th>
-                        <th>Case Inception Date</th>
+                        <th>Case Live Date</th>
                         <th>Case Age</th>
                         <th>Patient Name</th>
                         <th>Patient Phone</th>
@@ -562,6 +554,7 @@ div.dataTables_filter {
                         <th>Operation Officer</th>
                         <th>Medical Officer</th>
                         <th>Case Status</th>
+                        <!--
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
@@ -570,141 +563,171 @@ div.dataTables_filter {
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
+                        <th>Action</th>
+                        -->
                       </tr>
                     </thead>
                   </table>
                 </div>
 
-                <div id="popup2" class="overlay" style="overflow:scroll;">
-                  <div class="popup" style="width: 80%;">
+                <div id="popup2" class="overlay">
+                  <div class="popup">
                       <div class="frame">
                         <form id="gistForm">
                           <div class="row mb-3">
 
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                               <label for="patient-name" class="form-label">Patient Name</label>
                               <input type="text" class="form-control" id="patient-name" required >
                             </div>
 
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                               <label for="complainant-name" class="form-label">Complainant name</label>
                               <input type="text" class="form-control" id="complainant-name" required >
                             </div>
-                            <div class="col-sm-3">
-                              <label for="claim-type" class="form-label">Claim Type</label>
-                              <input type="text" class="form-control" id="claim-type" required >
+
+                            <div class="col-sm-4">
+                              <label for="behalf-of" class="form-label">On Behalf of</label>
+                                <div class="input-group">
+                                  <select class="form-control" id="behalf-of-dropdown" required>
+                                    <option value="">None</option>
+                                    <option value="Self">Self</option>
+                                    <option value="Father">Father</option>
+                                    <option value="Mother">Mother</option>
+                                    <option value="Wife">Wife</option>
+                                    <option value="Husband">Husband</option>
+                                    <option value="Children">Children</option>
+                                    <option value="Brother">Brother</option>
+                                    <option value="Sister">Sister</option>
+                                    <option value="Friend">Friend</option>
+                                  </select>
+                                </div>
                             </div>
 
-                            <div class="col-sm-3">
-                              <label for="claim-amount" class="form-label">Claim Amount</label>
-                              <input type="text" class="form-control" id="claim-amount" required >
-                            </div>
+                            
                             
                           </div>
                           <div class="row mb-3">
 
-                            
+                            <div class="col-sm-4">
+                              <label for="claim-type-dropdown" class="form-label">Claim Type</label>
+                              
 
-                            <div class="col-sm-3">
+                              <div class="input-group">
+                                <select class="form-control" id="claim-type-dropdown" required>
+                                  <option value="">None</option>
+                                  <option value="Reimbursement">Reimbursement</option>
+                                  <option value="Deduction">Deduction</option>
+                                  <option value="Rejection">Rejection</option>
+                                  <option value="Query">Query</option>
+                                  <option value="Consumer">Consumer</option>
+                                  <option value="Delay in process">Delay in process</option>
+                                </select>
+                              </div>
+
+                            </div>
+
+                            <div class="col-sm-4">
+                              <label for="claim-amount" class="form-label">Claim Amount</label>
+                              <input type="text" class="form-control" id="claim-amount" required >
+                            </div>
+
+                            <div class="col-sm-4">
                               <label for="policy-number" class="form-label">Policy Number</label>
                               <input type="text" class="form-control" id="policy-number" required >
                             </div>
 
-                            <div class="col-sm-3">
+                            
+
+                          </div>
+
+                          <div class="row mb-3">
+
+                            <div class="col-sm-4">
                               <label for="claim-number" class="form-label">Claim Number</label>
                               <input type="text" class="form-control" id="claim-number" required>
                             </div>
 
-                            <div class="col-sm-3">
-                              <label for="policy-date" class="form-label">Date of Policy</label>
+                            <div class="col-sm-4">
+                              <label for="policy-date" class="form-label">Date of Policy Inception</label>
                               <input type="date" class="form-control" id="policy-date" required >
                             </div>
 
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                               <label for="company-name" class="form-label">Company Name</label>
                               <input type="text" class="form-control" id="company-name" required >
                             </div>
 
-
+                            
                           </div>
 
                           <div class="row mb-3">
 
-
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                               <label for="hospital-name" class="form-label">Hospital Name</label>
                               <input type="text" class="form-control" id="hospital-name" required >
                             </div>
 
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                               <label for="admission-date" class="form-label">Date of Admission</label>
                               <input type="date" class="form-control" id="admission-date" required >
                             </div>
 
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                               <label for="discharge-date" class="form-label">Date of Discharge</label>
                               <input type="date" class="form-control" id="discharge-date" required >
                             </div>
 
-                            <div class="col-sm-3">
+
+                          </div>
+
+                          
+                          <div class="row mb-3">
+                            
+                            <div class="col-sm-4">
                               <label for="case-diagnosis" class="form-label">Diagnosis</label>
                               <input type="text" class="form-control" id="case-diagnosis" required >
                             </div>
 
-
-                          </div>
-
-
-                          
-                          <div class="row mb-3">
-
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                               <label for="patient-complain" class="form-label">Patient complain</label>
                               <input type="text" class="form-control" id="patient-complain" required >
                             </div>
 
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                               <label for="rejection-reason" class="form-label">Rejection Reason</label>
                               <input type="text" class="form-control" id="rejection-reason" required >
-                            </div>
-
-                            <div class="col-sm-3">
-                              <label for="rejection-date" class="form-label">Rejection date</label>
-                              <input type="date" class="form-control" id="rejection-date" required >
-                            </div>
-
-                            <div class="col-sm-3">
-                              <label for="case-comment" class="form-label">Comments</label>
-                              <input type="text" class="form-control" id="case-comment" required >
                             </div>
 
 
                           </div>
 
                           <div class="row mb-3">
-
-                            <label for="editor" class="form-label">Draft</label>
-                            <div id="editor"  style="
-                            background-color: white;
-                            color: black;
-                        ">
-                            
+                            <div class="col-sm-4">
+                              <label for="rejection-date" class="form-label">Rejection date</label>
+                              <input type="date" class="form-control" id="rejection-date" required >
                             </div>
-                            
-                            </div>
-                          
 
-                            <div class="row mb-3">
-                              <label for="editor1" class="form-label">Lokpal Draft</label>
-                              <div id="editor1"  style="
-                              background-color: white;
-                              color: black;
-                          ">
-                                
-                              </div>
+                            <div class="col-sm-4">
+                              <label for="case-comment" class="form-label">Comments</label>
+                              <input type="text" class="form-control" id="case-comment"  >
+                            </div>
+
+                            <div class="col-sm-4">
+                              <label for="case-emailid" class="form-label">Email ID</label>
+                              <input type="text" class="form-control" id="case-emailid"  >
+                            </div>
+
                           </div>
 
+                          <div class="row mb-3">
 
+                            <div class="col-sm-4">
+                              <label for="case-emailpassword" class="form-label">Email Password</label>
+                              <input type="text" class="form-control" id="case-emailpassword"  >
+                            </div>
+
+                          </div>
           
                           <div class="text-center">
                             <button type="submit" class="btn btn-primary">Submit</button>
@@ -907,6 +930,9 @@ div.dataTables_filter {
                             </div>
                           </div>
 
+                         
+
+                         
 
                       </div>
                       <a class="close" href="#close">&times;</a>
@@ -916,9 +942,9 @@ div.dataTables_filter {
                 
                 <div id="popup4"  class="overlay">
                   <div class="popup" style="width:45%">
-                    <h2 >Upload Docs</h2>
+                    <h2 >Upload document-</h2>
 
-                    <form id="loginForm" enctype="multipart/form-data">
+                    <form id="DocUploadForm" enctype="multipart/form-data">
                       <div class="col-sm-6">
                         <label for="pdf-input" class="form-label">Documents</label>
                           <input type="file" class="form-control" id="pdf-input"  multiple>
@@ -974,7 +1000,6 @@ div.dataTables_filter {
                     <div style="margin-top: 10px; margin-left:40px;">
                       <p><strong>NAME OF PATIENT:</strong>  <span data-info="patientName">[Patient Name]</span></p>
                       <p><strong>NAME OF COMPLAINANT:</strong>  <span data-info="complainantName">[Complainant Name]</span></p>
-                      <p><strong>RELATIONSHIP:</strong>  <span data-info="relationship">[Relation]</span></p>
                       <p><strong>Type of Claim / Rejection / Deduction:</strong> <span data-info="claimType">[Type]</span></p>
                       <p><strong>Claim Amount:</strong><span data-info="claimAmount">[Amount]</span> </p>
                       <p><strong>POLICY NUMBER:</strong> <span data-info="policyNumber">[Policy Number]</span> </p>
@@ -996,13 +1021,79 @@ div.dataTables_filter {
                         -->
                         
                     </div>
-
                     <a class="close" href="#close">&times;</a>
                   </div>
                   
                 </div>
 
 
+                <div id="popup7" class="overlay">
+                  <div class="popup" style="width:25%">
+                    <h2  id = "remarkcontent">Assign Case</h2>
+
+                      <select name="operationofficer" id="operationofficer"  style="margin-top: 5px;margin-bottom: 5px;">
+                      <option value="NONE">NONE</option>
+                      </select>
+
+                      <br>        
+                      <br>              
+                      <button type="submit" onclick="addOfficerToCase()" class="btn btn-primary btn-sm">Save Officer</button>
+                    
+                    <a class="close" href="#close">&times;</a>
+                  </div>
+                </div>
+
+                <div id="popup8" class="overlay">
+                  <div class="popup" style="width:30%">
+                    <h2  id = "remarkcontent">Assign Medical officer</h2>
+
+                      <select name="medicalofficer" id="medicalofficer"  style="margin-top: 5px;margin-bottom: 5px;">
+                      <option value="NONE">NONE</option>
+                      </select>
+
+                      <br> 
+                      <input type="text" placeholder="Add remark here" id="movetopendingdraftremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+    
+                      <br>              
+                      <button type="submit" onclick="addMedicalOfficerToCase()" class="btn btn-primary btn-sm">Save Officer</button>
+                    
+                    <a class="close" href="#close">&times;</a>
+                  </div>
+                </div>
+
+                <div id="popup10" class="overlay" >
+                  <div class="popup" style ="width:30%">
+                    <h2  id = "remarkcontent">Move to Hold-</h2>
+                    
+                    <input type="text" placeholder="Add hold remark here" id="holdremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                    <button type="submit" onclick="addholdremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
+                    
+                    <a class="close" href="#close">&times;</a>
+                  </div>
+                </div>
+
+                <div id="popup11" class="overlay" >
+                  <div class="popup" style ="width:30%">
+                    <h2  id = "remarkcontent">Move to Reimbursement-</h2>
+                    
+                    <input type="text" placeholder="Add hold reimbursement remark here" id="reimbursementremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                    <button type="submit" onclick="addreimbursementremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
+                    
+                    <a class="close" href="#close">&times;</a>
+                  </div>
+                </div>
+
+                <div id="popup12" class="overlay" >
+                  <div class="popup" style ="width:30%">
+                    <h2  id = "remarkcontent">Move to Pending Docs-</h2>
+                    
+                    <input type="text" placeholder="Add pending doc remark" id="pendingdocremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                    <button type="submit" onclick="addpendingdocremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
+                    
+                    <a class="close" href="#close">&times;</a>
+                  </div>
+                </div>
+                
                 <div id="popup9" class="overlay" >
                   <div class="popup" style ="width:45%">
                     <h2  id = "remarkcontent">Remarks-</h2>
@@ -1016,50 +1107,13 @@ div.dataTables_filter {
                   </div>
                 </div>
 
-                <div id="popup10" class="overlay" >
-                  <div class="popup" style ="width:45%">
-                    <h2  id = "remarkcontent">Query Remarks-</h2>
-                    <ul id="remarkcontentlist"></ul>
-
-                    
-                    <input type="text" placeholder="Add new remark here" id="newqueryremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
-                    <button type="submit" onclick="addqueryremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
-                    
-                    <a class="close" href="#close">&times;</a>
-                  </div>
-                </div>
-
-                <div id="popup12" class="overlay" >
-                  <div class="popup" style ="width:30%">
-                    <h2  id = "remarkcontent">Move to Hold-</h2>
-                    
-                    <input type="text" placeholder="Add hold remark here" id="holdremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
-                    <button type="submit" onclick="addholdremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
-                    
-                    <a class="close" href="#close">&times;</a>
-                  </div>
-                </div>
-
-                
-                <div id="popup11" class="overlay" >
-                  <div class="popup" style ="width:45%">
-                    <h2  id = "remarkcontent">Move to Escalation-</h2>
-                    <ul id="remarkcontentlist"></ul>
-
-                    
-                    <input type="text" placeholder="Add new remark here" id="escalationremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
-                    <button type="submit" onclick="addescalationremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
-                    
-                    <a class="close" href="#close">&times;</a>
-                  </div>
-                </div>
-
                 <div id="uploadingdiv" style="display: none;">
                   <img src="/images/uploading3.webp">
                 </div>
-                
+
 
               </div>
+
             </div>
           </div>
         </div>
@@ -1068,77 +1122,324 @@ div.dataTables_filter {
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-  <!-- for saving pdf-->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.4/dist/quill.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.4/dist/quill.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+  <script src="https://cdn.datatables.net/2.1.3/js/dataTables.js"></script>
+  <script src="https://cdn.datatables.net/buttons/3.1.1/js/dataTables.buttons.js"></script>
+  <script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.dataTables.js"></script>
 
-<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-<script src="https://cdn.datatables.net/2.1.3/js/dataTables.js"></script>
-<script src="https://cdn.datatables.net/buttons/3.1.1/js/dataTables.buttons.js"></script>
-<script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.dataTables.js"></script>
-<!--
-<script src="https://cdn.datatables.net/buttons/3.1.1/js/dataTables.buttons.js"></script>
-<script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.dataTables.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.print.min.js"></script>
+  <!--
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+  <script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.html5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.print.min.js"></script>
+
 -->
 <script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.html5.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <!-- saving pdf end-->
 
-   <!-- FixedColumns -->
+  <!-- FixedColumns -->
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedcolumns/4.0.1/css/fixedColumns.dataTables.min.css">
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/fixedcolumns/4.0.1/js/dataTables.fixedColumns.min.js"></script>
-
 
   <script>
 
 const toolbarOptions =['bold', 'italic', 'underline'];
 
-const quill = new Quill('#editor', {
+const quill = new Quill('#reportdraft', {
     theme: 'snow',
     modules: {
     toolbar: toolbarOptions
   }
   });
 
-  const quill1 = new Quill('#editor1', {
+  const quill1 = new Quill('#reportlokpaldraft', {
     theme: 'snow',
     modules: {
     toolbar: toolbarOptions
   }
   });
 
-
-  const quill2 = new Quill('#reportdraft', {
-    theme: 'snow',
-    modules: {
-    toolbar: toolbarOptions
-  }
-  });
-
-  const quill3 = new Quill('#reportlokpaldraft', {
-    theme: 'snow',
-    modules: {
-    toolbar: toolbarOptions
-  }
-  });
-
-
-
-
-
-function addremark(referencenumber, casestatus) {
+function addremark(referencenumber) {
         // Code to generate card
         localStorage['addRemarkForRefNumber'] =referencenumber; 
-        localStorage['addcaseStatusForRefNumber'] = casestatus; 
   }
 
+  function uploadDocsInDB()
+{
+
+  $('#uploadingdiv').show();
+
+  var formData = new FormData();
+        formData.append('casereferenceNumber', localStorage['addRemarkForRefNumber']);
+       
+        $.each($('#pdf-input')[0].files, function(i, file) {
+          formData.append('pdfFile', file);
+      });
+
+      $.ajax({
+          url: '/api/uploadadditionaldocs',
+          type: 'POST',
+          contentType: false,
+          processData: false,
+          data: formData,
+          success: function (response) {
+            if(response.message == "success")
+              {
+                //window.location.href = "/dashboard.html"
+                $('#uploadingdiv').hide({done: function() { alert("Additional docs uploaded."); } });
+               // alert("Case added reference number- " + response.referencenumber);
+                document.getElementById('DocUploadForm').reset();
+              }
+              else{
+                $('#uploadingdiv').hide({done: function() { alert(response.error); } });
+               // alert(response.message);
+                document.getElementById('DocUploadForm').reset();
+                //document.getElementById('loginForm').reset();
+              }
+          },
+          error: function (error) {
+            $('#uploadingdiv').hide({done: function() { alert("Failed to upload docs!!!"); } });
+            document.getElementById('DocUploadForm').reset();
+           // alert("Failed to add case!!!");
+            // Display an error message to the user
+          }
+        });
+
+}
+
+
+function addholdremarkInDB() {
+
+  if( document.getElementById("holdremark").value == "")
+  {
+    alert("Empty remark not allowed!")
+    return;
+  }
+
+
+const today = new Date();
+const yyyy = today.getFullYear();
+let mm = today.getMonth() + 1; // Months start at 0!
+let dd = today.getDate();
+
+if (dd < 10) dd = '0' + dd;
+if (mm < 10) mm = '0' + mm;
+
+const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+    $.ajax({
+      url: '/api/movetohold',
+      type: 'POST',
+      contentType: "application/x-www-form-urlencoded",
+      data: {
+        referencenumber: localStorage['addRemarkForRefNumber'],
+        caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - [Hold Remark] "+ document.getElementById("holdremark").value
+      },
+      success: function (response) {
+        if(response.message == "success")
+          {
+           // window.location.href = "/index.html"
+            //localStorage['userID'] = username;
+            alert("Case moved to hold phase!")
+            localStorage.removeItem("addRemarkForRefNumber");
+
+            document.getElementById("holdremark").value ="";
+            window.location.href = "/viewlivecases.html";
+            
+          }
+          else{
+            alert("Error saving remark!")
+            //document.getElementById('loginForm').reset();
+          }
+        //alert("login success");
+        // Redirect to the dashboard or perform any other actions
+      },
+      error: function (error) {
+        document.getElementById('loginForm').reset();
+        alert("login failed");
+        // Display an error message to the user
+      }
+    });
+
+}
+
+
+
+function addpendingdocremarkInDB() {
+
+if( document.getElementById("pendingdocremark").value == "")
+{
+  alert("Empty remark not allowed!")
+  return;
+}
+
+
+const today = new Date();
+const yyyy = today.getFullYear();
+let mm = today.getMonth() + 1; // Months start at 0!
+let dd = today.getDate();
+
+if (dd < 10) dd = '0' + dd;
+if (mm < 10) mm = '0' + mm;
+
+const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+  $.ajax({
+    url: '/api/movetopendingdoc',
+    type: 'POST',
+    contentType: "application/x-www-form-urlencoded",
+    data: {
+      referencenumber: localStorage['addRemarkForRefNumber'],
+      caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - [Pending Doc Remark] "+ document.getElementById("pendingdocremark").value
+    },
+    success: function (response) {
+      if(response.message == "success")
+        {
+         // window.location.href = "/index.html"
+          //localStorage['userID'] = username;
+          alert("Case moved to Pending Doc!")
+          localStorage.removeItem("addRemarkForRefNumber");
+
+          document.getElementById("pendingdocremark").value ="";
+          window.location.href = "/viewlivecases.html";
+          
+        }
+        else{
+          alert("Error saving remark!")
+          //document.getElementById('loginForm').reset();
+        }
+      //alert("login success");
+      // Redirect to the dashboard or perform any other actions
+    },
+    error: function (error) {
+      document.getElementById('loginForm').reset();
+      alert("login failed");
+      // Display an error message to the user
+    }
+  });
+
+}
+
+
+
+
+
+function addreimbursementremarkInDB() {
+
+if( document.getElementById("reimbursementremark").value == "")
+{
+  alert("Empty remark not allowed!")
+  return;
+}
+
+
+const today = new Date();
+const yyyy = today.getFullYear();
+let mm = today.getMonth() + 1; // Months start at 0!
+let dd = today.getDate();
+
+if (dd < 10) dd = '0' + dd;
+if (mm < 10) mm = '0' + mm;
+
+const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+  $.ajax({
+    url: '/api/movetoreimbursement',
+    type: 'POST',
+    contentType: "application/x-www-form-urlencoded",
+    data: {
+      referencenumber: localStorage['addRemarkForRefNumber'],
+      caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - [Reimbursement Remark] "+ document.getElementById("reimbursementremark").value
+    },
+    success: function (response) {
+      if(response.message == "success")
+        {
+         // window.location.href = "/index.html"
+          //localStorage['userID'] = username;
+          alert("Case moved to reimbursement phase!")
+          localStorage.removeItem("addRemarkForRefNumber");
+
+          document.getElementById("reimbursementremark").value ="";
+          window.location.href = "/viewlivecases.html";
+          
+        }
+        else{
+          alert("Error saving remark!")
+          //document.getElementById('loginForm').reset();
+        }
+      //alert("login success");
+      // Redirect to the dashboard or perform any other actions
+    },
+    error: function (error) {
+      document.getElementById('loginForm').reset();
+      alert("login failed");
+      // Display an error message to the user
+    }
+  });
+
+}
+
+
+
+
+  function addremarkInDB() {
+
+  if( document.getElementById("newremark").value == "")
+  {
+    alert("Empty remark not allowed!")
+    return;
+  }
+
+const today = new Date();
+const yyyy = today.getFullYear();
+let mm = today.getMonth() + 1; // Months start at 0!
+let dd = today.getDate();
+
+if (dd < 10) dd = '0' + dd;
+if (mm < 10) mm = '0' + mm;
+
+const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+    $.ajax({
+      url: '/api/addlivecaseremark',
+      type: 'POST',
+      contentType: "application/x-www-form-urlencoded",
+      data: {
+        referencenumber: localStorage['addRemarkForRefNumber'],
+        caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ document.getElementById("newremark").value
+      },
+      success: function (response) {
+        if(response.message == "success")
+          {
+           // window.location.href = "/index.html"
+            //localStorage['userID'] = username;
+            alert("Remark saved!")
+            localStorage.removeItem("addRemarkForRefNumber");
+
+            document.getElementById("newremark").value ="";
+           // window.location.href = "/viewlivecases.html";
+            
+          }
+          else{
+            alert("Error saving remark!")
+            //document.getElementById('loginForm').reset();
+          }
+        //alert("login success");
+        // Redirect to the dashboard or perform any other actions
+      },
+      error: function (error) {
+        document.getElementById('loginForm').reset();
+        alert("login failed");
+        // Display an error message to the user
+      }
+    });
+  
+
+
+}
   
 
   function viewremark(referencenumber) {
@@ -1180,18 +1481,16 @@ function addremark(referencenumber, casestatus) {
   }
 
 
-
   
-function addholdremarkInDB() {
+function addMedicalOfficerToCase() {
 
-if( document.getElementById("holdremark").value == "")
-{
-  alert("Empty remark not allowed!")
+  if( document.getElementById("movetopendingdraftremark").value == "")
+  {
+  alert("Empty remark not allowed!!");
   return;
-}
+ }
 
-
-const today = new Date();
+ const today = new Date();
 const yyyy = today.getFullYear();
 let mm = today.getMonth() + 1; // Months start at 0!
 let dd = today.getDate();
@@ -1201,272 +1500,40 @@ if (mm < 10) mm = '0' + mm;
 
 const formattedToday = dd + '/' + mm + '/' + yyyy;
 
-  $.ajax({
-    url: '/api/movetohold',
-    type: 'POST',
-    contentType: "application/x-www-form-urlencoded",
-    data: {
-      referencenumber: localStorage['addRemarkForRefNumber'],
-      caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - [Hold Remark] "+ document.getElementById("holdremark").value
-    },
-    success: function (response) {
-      if(response.message == "success")
-        {
-         // window.location.href = "/index.html"
-          //localStorage['userID'] = username;
-          alert("Case moved to hold phase!")
-          localStorage.removeItem("addRemarkForRefNumber");
+$.ajax({
+url: '/api/addmedicalofficertocaseandmovetopendingdraft',
+type: 'POST',
+contentType: "application/x-www-form-urlencoded",
+data: {
+  casereferenceNumber: localStorage['addRemarkForRefNumber'],
+  medicalOpinionOfficer: $("#medicalofficer option:selected").text(),
+  caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ document.getElementById("movetopendingdraftremark").value,
+},
+success: function (response) {
+  if(response.message == "success")
+    {
+    // window.location.href = "/index.html"
+      //localStorage['userID'] = username;
+      alert("Case moved to pending draft!")
+      localStorage.removeItem("addRemarkForRefNumber");
 
-          document.getElementById("holdremark").value ="";
-          window.location.href = "/viewpendingdraftcases.html";
-          
-        }
-        else{
-          alert("Error saving remark!")
-          //document.getElementById('loginForm').reset();
-        }
-      //alert("login success");
-      // Redirect to the dashboard or perform any other actions
-    },
-    error: function (error) {
-      document.getElementById('loginForm').reset();
-      alert("login failed");
-      // Display an error message to the user
+      window.location.href = "/viewlivecases.html";
     }
-  });
+    else{
+      alert("Error saving details!")
+      //document.getElementById('loginForm').reset();
+    }
+  //alert("login success");
+  // Redirect to the dashboard or perform any other actions
+},
+error: function (error) {
+  document.getElementById('loginForm').reset();
+  alert("login failed");
+  // Display an error message to the user
+}
+});
 
 }
-
-
-
-  
-
-function addescalationremarkInDB() {
-
-  if( document.getElementById("escalationremark").value == "")
-  {
-    alert("Empty remark not allowed!")
-    return;
-  }
-
-  if(localStorage['addcaseStatusForRefNumber'] != "Draft Generated")
-  {
-    alert("Please add draft details before moving to escalation!")
-    return;
-  }
-
-
-const today = new Date();
-const yyyy = today.getFullYear();
-let mm = today.getMonth() + 1; // Months start at 0!
-let dd = today.getDate();
-
-if (dd < 10) dd = '0' + dd;
-if (mm < 10) mm = '0' + mm;
-
-const formattedToday = dd + '/' + mm + '/' + yyyy;
-
-    $.ajax({
-      url: '/api/movetoescalation',
-      type: 'POST',
-      contentType: "application/x-www-form-urlencoded",
-      data: {
-        referencenumber: localStorage['addRemarkForRefNumber'],
-        caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ document.getElementById("escalationremark").value
-      },
-      success: function (response) {
-        if(response.message == "success")
-          {
-           // window.location.href = "/index.html"
-            //localStorage['userID'] = username;
-            alert("Case moved to escalation phase!")
-            localStorage.removeItem("addRemarkForRefNumber");
-
-            document.getElementById("escalationremark").value ="";
-            window.location.href = "/viewpendingdraftcases.html";
-            
-          }
-          else{
-            alert("Error saving remark!")
-            //document.getElementById('loginForm').reset();
-          }
-        //alert("login success");
-        // Redirect to the dashboard or perform any other actions
-      },
-      error: function (error) {
-        document.getElementById('loginForm').reset();
-        alert("login failed");
-        // Display an error message to the user
-      }
-    });
-
-}
-
-
-  
-
-function addqueryremarkInDB() {
-
-  if( document.getElementById("newqueryremark").value == "")
-  {
-    alert("Empty remark not allowed!")
-    return;
-  }
-
-const today = new Date();
-const yyyy = today.getFullYear();
-let mm = today.getMonth() + 1; // Months start at 0!
-let dd = today.getDate();
-
-if (dd < 10) dd = '0' + dd;
-if (mm < 10) mm = '0' + mm;
-
-const formattedToday = dd + '/' + mm + '/' + yyyy;
-
-    $.ajax({
-      url: '/api/addlivecasequeryremark',
-      type: 'POST',
-      contentType: "application/x-www-form-urlencoded",
-      data: {
-        referencenumber: localStorage['addRemarkForRefNumber'],
-        caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ document.getElementById("newqueryremark").value
-      },
-      success: function (response) {
-        if(response.message == "success")
-          {
-           // window.location.href = "/index.html"
-            //localStorage['userID'] = username;
-            alert("Query Raised!")
-            localStorage.removeItem("addRemarkForRefNumber");
-
-            document.getElementById("newqueryremark").value ="";
-            window.location.href = "/viewpendingdraftcases.html";
-            
-          }
-          else{
-            alert("Error saving remark!")
-            //document.getElementById('loginForm').reset();
-          }
-        //alert("login success");
-        // Redirect to the dashboard or perform any other actions
-      },
-      error: function (error) {
-        document.getElementById('loginForm').reset();
-        alert("login failed");
-        // Display an error message to the user
-      }
-    });
-  
-
-
-}
-
-
-  
-  function addremarkInDB() {
-
-    if( document.getElementById("newremark").value == "")
-  {
-    alert("Empty remark not allowed!")
-    return;
-  }
-
-const today = new Date();
-const yyyy = today.getFullYear();
-let mm = today.getMonth() + 1; // Months start at 0!
-let dd = today.getDate();
-
-if (dd < 10) dd = '0' + dd;
-if (mm < 10) mm = '0' + mm;
-
-const formattedToday = dd + '/' + mm + '/' + yyyy;
-
-    $.ajax({
-      url: '/api/addlivecaseremark',
-      type: 'POST',
-      contentType: "application/x-www-form-urlencoded",
-      data: {
-        referencenumber: localStorage['addRemarkForRefNumber'],
-        caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ document.getElementById("newremark").value
-      },
-      success: function (response) {
-        if(response.message == "success")
-          {
-           // window.location.href = "/index.html"
-            //localStorage['userID'] = username;
-            alert("Remark saved!")
-            localStorage.removeItem("addRemarkForRefNumber");
-
-            document.getElementById("newremark").value ="";
-           // window.location.href = "/viewpendingdraftcases.html";
-            
-          }
-          else{
-            alert("Error saving remark!")
-            //document.getElementById('loginForm').reset();
-          }
-        //alert("login success");
-        // Redirect to the dashboard or perform any other actions
-      },
-      error: function (error) {
-        document.getElementById('loginForm').reset();
-        alert("login failed");
-        // Display an error message to the user
-      }
-    });
-  
-
-
-}
-  
-
-
-
-  function uploadDocsInDB()
-{
-
-  $('#uploadingdiv').show();
-
-  var formData = new FormData();
-        formData.append('casereferenceNumber', localStorage['addRemarkForRefNumber']);
-       
-        $.each($('#pdf-input')[0].files, function(i, file) {
-          formData.append('pdfFile', file);
-      });
-
-      $.ajax({
-          url: '/api/uploadadditionaldocs',
-          type: 'POST',
-          contentType: false,
-          processData: false,
-          data: formData,
-          success: function (response) {
-            if(response.message == "success")
-              {
-                //window.location.href = "/dashboard.html"
-                $('#uploadingdiv').hide({done: function() { alert("Draft uploaded."); } });
-               // alert("Case added reference number- " + response.referencenumber);
-                document.getElementById('loginForm').reset();
-              }
-              else{
-                $('#uploadingdiv').hide({done: function() { alert(response.error); } });
-               // alert(response.message);
-                document.getElementById('loginForm').reset();
-                //document.getElementById('loginForm').reset();
-              }
-          },
-          error: function (error) {
-            $('#uploadingdiv').hide({done: function() { alert("Failed to upload docs!!!"); } });
-            document.getElementById('loginForm').reset();
-           // alert("Failed to add case!!!");
-            // Display an error message to the user
-          }
-        });
-
-}
-
-
-
 
 function addOfficerToCase() {
 
@@ -1486,7 +1553,7 @@ success: function (response) {
       alert("Operation Officer assigned!")
       localStorage.removeItem("addRemarkForRefNumber");
 
-      window.location.href = "/viewpendingdraftcases.html";
+     // window.location.href = "/viewlivecases.html";
     }
     else{
       alert("Error saving details!")
@@ -1546,6 +1613,7 @@ success: function (response) {
         let smallfilename= filename.substring(0, filename.lastIndexOf('-'));
         //li.innerHTML = `<a target='inlineFrameExample' href="${response[0].docUrl[i]}" >${filename}</a>`;
         li.innerHTML = `<a target='inlineFrameExample' href="${response[0].docUrl[i]}" >${smallfilename}</a>`;
+
         list.appendChild(li);
        }
 
@@ -1576,7 +1644,11 @@ error: function (error) {
                 
             document.getElementById("patient-name").value = response[0].patientName ? response[0].patientName : "";
             document.getElementById("complainant-name").value = response[0].complainantName ? response[0].complainantName: "";
-            document.getElementById("claim-type").value = response[0].claimType ? response[0].claimType : "";
+            document.getElementById("claim-type-dropdown").value = response[0].claimType ? response[0].claimType : "";
+            
+            document.getElementById("behalf-of-dropdown").value = response[0].behalfOf ? response[0].behalfOf : "";
+
+            
             document.getElementById("claim-amount").value = response[0].claimAmount ? response[0].claimAmount : "";
             document.getElementById("claim-number").value = response[0].claimNumber ? response[0].claimNumber : "";
             document.getElementById("policy-number").value = response[0].policyNumber ?  response[0].policyNumber : "";
@@ -1595,25 +1667,12 @@ error: function (error) {
             document.getElementById("rejection-date").value = response[0].initialRejectionDate ? moment(new Date(response[0].initialRejectionDate)).utc().format('YYYY-MM-DD') : "";
             document.getElementById("case-comment").value = response[0].gistComments ? response[0].gistComments : "";
 
-          //  document.getElementById("editor").innerHTML = response[0].caseDraft ? response[0].caseDraft : "";
-
-           // quill.setText(response[0].caseDraft);
-           // quill1.setText( response[0].lokpalDraft);
-
-            quill.root.innerHTML= response[0].caseDraft ? response[0].caseDraft : "";
-            quill1.root.innerHTML= response[0].lokpalDraft ?  response[0].lokpalDraft:"" ;
-
-          //  quill.setContents(response[0].caseDraft);
-          //  quill1.setContents( response[0].lokpalDraft);
-
-
-            //document.getElementById("editor1").innerHTML = response[0].lokpalDraft ? response[0].lokpalDraft : "";
-
+            document.getElementById("case-emailid").value = response[0].caseEmail ? response[0].caseEmail : "";
+            document.getElementById("case-emailpassword").value = response[0].caseEmailPassword ? response[0].caseEmailPassword : "";
 
             document.querySelector('[data-info="patientName"]').textContent =response[0].patientName ? response[0].patientName : "";
 
             document.querySelector('[data-info="complainantName"]').textContent =response[0].complainantName ? response[0].complainantName : "";
-            document.querySelector('[data-info="relationship"]').textContent =response[0].behalfOf ? response[0].behalfOf : "";
             document.querySelector('[data-info="claimType"]').textContent = response[0].claimType ? response[0].claimType : "";
             document.querySelector('[data-info="claimAmount"]').textContent = response[0].claimAmount ? response[0].claimAmount : "";
             document.querySelector('[data-info="policyNumber"]').textContent =response[0].policyNumber ?  response[0].policyNumber : "";
@@ -1628,9 +1687,7 @@ error: function (error) {
             document.querySelector('[data-info="diagnosis"]').textContent =response[0].diagnosis ? response[0].diagnosis : "";
             document.querySelector('[data-info="patientComplain"]').textContent = response[0].patientComplainDuringAdmission ? response[0].patientComplainDuringAdmission : "";
             document.querySelector('[data-info="rejectionDate"]').textContent = response[0].initialRejectionDate ? moment(new Date(response[0].initialRejectionDate)).utc().format('DD-MM-YYYY') : "";
-
             document.querySelector('[data-info="rejectionReason"]').textContent = response[0].rejectionReason ? response[0].rejectionReason : "";
-
             document.querySelector('[data-info="caseComment"]').textContent = response[0].gistComments ? response[0].gistComments : "";
 
         },
@@ -1727,11 +1784,11 @@ function movetolive(referencenumber) {
 
               document.querySelector('[data-info="reportprocessingfees"]').textContent =response[0].pfAmount ? response[0].pfAmount : "";
 
-              document.querySelector('[data-info="reportchequeamount"]').textContent = response[0].cfAmount ? response[0].cfAmount : "";
+              document.querySelector('[data-info="reportchequeamount"]').textContent =response[0].cfAmount ? response[0].cfAmount : "";
 
-              document.querySelector('[data-info="reportchequenumber"]').textContent = response[0].cfChequeNumber ? response[0].cfChequeNumber : "";
+              document.querySelector('[data-info="reportchequenumber"]').textContent =response[0].cfChequeNumber ? response[0].cfChequeNumber : "";
 
-              document.querySelector('[data-info="reportbankname"]').textContent = response[0].cfBankName ? response[0].cfBankName : "";
+              document.querySelector('[data-info="reportbankname"]').textContent =response[0].cfBankName ? response[0].cfBankName : "";
 
               document.querySelector('[data-info="reportoperationofficer"]').textContent =response[0].operationOfficer ? response[0].operationOfficer : "";
 
@@ -1764,8 +1821,8 @@ function movetolive(referencenumber) {
              // document.querySelector('[data-info="reportlokpaldraft"]').textContent =response[0].rejectionReason ? response[0].rejectionReason : "";
 
 
-              quill2.root.innerHTML= response[0].caseDraft ?  response[0].caseDraft : "";
-              quill3.root.innerHTML= response[0].lokpalDraft ?  response[0].lokpalDraft : "";
+              quill.root.innerHTML= response[0].caseDraft;
+              quill1.root.innerHTML= response[0].lokpalDraft;
               
              
               // Assuming the JSON response object is 'response' and it contains 'caseRemarks' as a comma-separated string
@@ -1806,14 +1863,54 @@ function movetolive(referencenumber) {
               console.error('Error:', error);
             }
           });
-      
-        }
-
+      }
 
 
 
       
     $(document).ready(function () {
+
+      
+      
+
+      $.ajax({
+        url: '/api/getmedicalteamlist',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          const optionsSelect = $('#medicalofficer');
+          response.forEach(function (option) {
+            optionsSelect.append($('<option>', {
+              value: option.userID,
+              text: option.userName
+            }));
+          });
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+
+
+      
+      $.ajax({
+        url: '/api/getadvocateteamlist',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          const optionsSelect = $('#medicalofficer');
+          response.forEach(function (option) {
+            optionsSelect.append($('<option>', {
+              value: option.userID,
+              text: option.userName
+            }));
+          });
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
 
 
       $.ajax({
@@ -1835,17 +1932,123 @@ function movetolive(referencenumber) {
       });
 
 
-      // behalf of change function
-      $('#behalf-of-dropdown').change(function () {
 
-      var behalfof = $('#behalf-of-dropdown').val();
 
-      if(behalfof =="Self")
-      {
-        document.getElementById("complainant-name").value = $('#client-name').val();
-      }
+      $('#loginForm').on('submit', function (event) {
+        event.preventDefault();
 
+        var clientname = $('#client-name').val();
+        var clientaddress = $('#client-address').val();
+
+        var clientphone = $('#client-phone').val();
+        var claimnumber = $('#claim-number').val();
+
+        var behalfof = $('#behalf-of-dropdown').val();;
+        var complainantname = $('#complainant-name').val();
+
+        var insurancecompanyname = $('#insurance-company-dropdown').val();
+        var processingfee = $('#processing-fee').val();
+
+        var consultationcharge = $('#consultation-charge').val();
+        var claimamount = $('#total-claim-amount').val();
+
+        var chequeamount = $('#cheque-amount').val();
+        var chequenumber = $('#cheque-number').val();
+
+        var bankname = $('#bank-name').val();
+        var witnessname = $('#witness-name').val();
+        var idnumber = $('#id-number').val();
+
+
+        $.ajax({
+          url: '/api/addpfdetailsduringlegalgeneration',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          data: {
+            casereferenceNumber: localStorage['casereferencenumber'], 
+            pfAmount: processingfee,
+            cfPercentage: consultationcharge,
+            cfAmount: chequeamount,
+            cfChequeNumber: chequenumber,
+            cfBankName: bankname,
+            patientAddress: clientaddress,
+            claimNumber : claimnumber,
+          },
+          success: function (response) {
+            if(response.message == "success")
+              {
+              
+                
+              }
+              else{
+                //alert("Error saving remark!")
+                //document.getElementById('loginForm').reset();
+              }
+            
+          },
+          error: function (error) {
+            //document.getElementById('loginForm').reset();
+            //alert("login failed");
+            // Display an error message to the user
+          }
+        });
+
+
+
+        //addcaselegalgenerateddetails
+
+        // Make an API call with the username and password
+        $.ajax({
+          url: '/api/getlegalpdf',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          xhrFields: {
+            responseType: 'blob'
+        },
+          data: {
+          clientName:clientname,
+          clientAddress: clientaddress,
+          clientPhone: clientphone,
+          claimNumber: claimnumber,
+          insuranceCompanyName: insurancecompanyname,
+          processingFee: processingfee,
+          consultationCharge: consultationcharge,
+          claimAmount:  claimamount,
+          chequeAmount: chequeamount,
+          chequeNumber: chequenumber,
+          bankName:  bankname,
+          witnessName: witnessname,
+          behalfOf: behalfof,
+          complainantName: complainantname,
+          idNumber: idnumber,
+          },
+          success: function (response) {
+            var a = document.createElement('a');
+            var url = window.URL.createObjectURL(response);
+            a.href = url;
+            a.download = `${localStorage['casereferencenumber']}_legal.pdf`;
+            document.body.append(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+
+            addCasaddlegalgenerateddetailseVerdict();
+
+              // call another ajax to save case status as legal generated
+
+
+          },
+          error: function (error) {
+            document.getElementById('loginForm').reset();
+            alert("PDF generation failed even after bug fix");
+            // Display an error message to the user
+          }
+        });
+      
+      
+      
       });
+
 
 
         // calculate cheque amount based on consulation charge percentage
@@ -1893,18 +2096,6 @@ function movetolive(referencenumber) {
         $('#gistForm').on('submit', function (event) {
         event.preventDefault();
 
-        if(quill.root.innerHTML==  "<p><br></p>")
-        {
-          alert("Please add Draft.");
-            return;
-        }
-        if(quill1.root.innerHTML==  "<p><br></p>")
-        {
-          alert("Please add Lokpal Draft.")
-          return;
-        }
-
-
         var policydate = $('#policy-date').val();
         var hospitalname = $('#hospital-name').val();
         var admissiondate = $('#admission-date').val();
@@ -1914,17 +2105,25 @@ function movetolive(referencenumber) {
         var rejectionreason = $('#rejection-reason').val();
         var rejectiondate = $('#rejection-date').val();
         var casecomment = $('#case-comment').val();
+        var caseemail = $('#case-emailid').val();
+        var caseemailpassword = $('#case-emailpassword').val();
 
-        var claimtype = $('#claim-type').val();
+        var claimtype = $('#claim-type-dropdown').val();
+        var behalfOfValue = $('#behalf-of-dropdown').val();
         var policynumber = $('#policy-number').val();
 
-        //var casedraft =  $('#policy-number').val();
-        //var lokpaldraft =  $('#policy-number').val();
+        var  patientname  = $('#patient-name').val();
+        var  complainantname = $('#complainant-name').val();
+
+
+        var claimnumber = $('#claim-number').val();
+        var policynumber = $('#policy-number').val();
+        var claimamount = $('#claim-amount').val();
 
           // call ajax to save these details--
 
           $.ajax({
-          url: '/api/addlivedraftdata',
+          url: '/api/addlivegistdata',
           type: 'POST',
           contentType: "application/x-www-form-urlencoded",
           data: {
@@ -1937,18 +2136,25 @@ function movetolive(referencenumber) {
             rejectionReason: rejectionreason,
             initialRejectionDate: rejectiondate,
             gistComments: casecomment,
+            caseEmail : caseemail,
+            caseEmailPassword:caseemailpassword,
             hospitalName: hospitalname,
             claimType: claimtype,
+            behalfOf: behalfOfValue,
             policyNumber: policynumber,
-            caseDraft:  quill.root.innerHTML,
-            lokpalDraft:  quill1.root.innerHTML,
+            patientName : patientname ,
+            complainantName: complainantname,
+            claimAmount: claimamount ,
+            claimNumber: claimnumber ,
+            policyNumber: policynumber,
+
           },
           success: function (response) {
             if(response.message == "success")
               {
 
-                alert("Draft data Saved!");
-               // window.location.href = "/viewpendingdraftcases.html";
+                alert("Gist data Saved!");
+               // window.location.href = "/viewlivecases.html";
                 //localStorage.removeItem("caseNumber");
 
                 
@@ -1971,6 +2177,8 @@ function movetolive(referencenumber) {
       });
 
 
+
+      
       $.ajax({
         url: '/api/whoami',
         type: 'POST',
@@ -1979,6 +2187,7 @@ function movetolive(referencenumber) {
             //alert(response.message)
             var table = new DataTable('#dataTable');
              table.buttons(0).disable();
+            localStorage.setItem('userType',  response.message);
            
             if(response.message =='admin')
             {
@@ -2035,6 +2244,8 @@ function movetolive(referencenumber) {
               $("#hideonlogin").hide();
               localStorage['userName'] = response.username;
               localStorage['userType'] = response.message;
+             
+              $(':button').prop('disabled', true); // Disable all the buttons
             }
             else if(response.message =='marketingmanager')
             {
@@ -2044,24 +2255,11 @@ function movetolive(referencenumber) {
               $("#hideonlogin").hide();
               localStorage['userName'] = response.username;
               localStorage['userType'] = response.message;
-              $(':button').prop('disabled', true); // Disable all the buttons
             }
             else
             {
               window.location.href = "/login.html"
             }
-                   // AJAX call on page load get manager details
-            $.ajax({
-              url: '/api/getpendingdraftcasedetail',
-              type: 'GET',
-              success: function (response) {
-                // Populate the options in the select element
-                populateDataTable(response);
-              },
-              error: function (error) {
-                console.error('Error:', error);
-              }
-            });
             
         },
         error: function (error) {
@@ -2099,39 +2297,57 @@ function movetolive(referencenumber) {
         },
       });
 
+
       var table = $('#dataTable').DataTable();
-   //   new $.fn.dataTable.FixedColumns(table, {
-   //         leftColumns: 6 // Freeze the first 6 columns
-   //     });
+
+    //  new $.fn.dataTable.FixedColumns(table, {
+     //       leftColumns: 6 // Freeze the first 6 columns
+     //   });
+
       localStorage['baseurl'] = window.location; 
 
-      $('#dataTable tbody').on('click', 'tr td:first-child', function () {
+        $('#dataTable tbody').on('click', 'tr td:first-child', function () {
       var data = table.row(this).data();
       populatereport(data[0]);  // Assuming data[0] is the data in the first column
       //alert( 'You clicked on ' + data[0] + '\'s row' );
       });
       
+       // AJAX call on page load get manager details
+       $.ajax({
+        url: '/api/getconsumercasedetail',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          populateDataTable(response);
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
 
           // populate the data table with JSON data
           function populateDataTable(data) {
           console.log("populating data table...");
           // clear the table before populating it with more data
           $("#dataTable").DataTable().clear();
+
           var table = $('#dataTable').DataTable();
           var length = Object.keys(data).length;
           for(var i = 0; i < length; i++) {
             var rfno= data[i].casereferenceNumber
-            var caseststaus =  data[i].newCaseStatus
             var todaysdate = moment(new Date());
-            var prospectcasedate = moment(data[i].prospectDate);
-            var caseage  =    todaysdate.diff(prospectcasedate, 'days');
-
-          if( localStorage['userName'] === data[i].medicalOpinionOfficer)
-          { 
-            // You could also use an ajax property on the data table initialization
-
-            var rowData = [ data[i].casereferenceNumber,
-            moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),
+           // var prospectcasedate = moment(data[i].prospectDate);
+           var caseage  =  "Not Available"
+           if((data[i].liveDate))
+           {
+            var livecasedate = moment(data[i].liveDate);
+            caseage  =    todaysdate.diff(livecasedate, 'days');
+           }
+          
+           if( localStorage['userType'] === 'admin')
+           {
+            var rowData = [data[i].casereferenceNumber,
+            moment(new Date(data[i].liveDate)).utc().format('DD-MM-YYYY'),
             `${caseage}`,
             data[i].patientName,
               data[i].patientMobile,
@@ -2141,23 +2357,23 @@ function movetolive(referencenumber) {
               data[i].insuranceCompanyName,
               data[i].claimNumber,
               data[i].claimAmount,
-              data[i].operationOfficer ? data[i].operationOfficer: "",
+              data[i].operationOfficer,
               data[i].medicalOpinionOfficer,
               data[i].newCaseStatus,             
-              `<a href="#popup6"> <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">View Case Gist</button> </a>`,
-              `<a href="#popup2"> <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Add Draft</button> </a>`,
+              `<a href="#popup7"> <button class="btn btn-primary btn-sm" onclick="addremark('${rfno}')">Assign Case</button> </a>`,
+              `<a href="#popup2"> <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Add Gist Data</button> </a>`,
               `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
-              `<a href="#popup10"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >Raise Query</button> </a>`,
-              `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}', '${caseststaus}')" >Upload Docs</button> </a>`,
+              `<a href="#popup8"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Pending draft</button> </a>`,
+              `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
               `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
-              `<a href="#popup11"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}', '${caseststaus}')" >Move to Escalation</button> </a>`,
-              `<a href="#popup12"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Hold</button> </a>`,];
-
-              table.row.add(rowData);
-          }
-          else if( localStorage['userType'] === 'admin')
-          { 
-            // You could also use an ajax property on the data table initialization
+              `<a href="#popup10"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Hold</button> </a>`,
+              `<a href="#popup11"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Reimbursement</button> </a>`,
+              `<a href="#popup12"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to PendingDocs</button> </a>`,
+            ];
+            
+            table.row.add(rowData);
+           }
+           else{
             var rowData = [data[i].casereferenceNumber,
             moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),
             `${caseage}`,
@@ -2169,26 +2385,22 @@ function movetolive(referencenumber) {
               data[i].insuranceCompanyName,
               data[i].claimNumber,
               data[i].claimAmount,
-              data[i].operationOfficer ? data[i].operationOfficer: "",
+              data[i].operationOfficer,
               data[i].medicalOpinionOfficer,
               data[i].newCaseStatus,             
-              `<a href="#popup6"> <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">View Case Gist</button> </a>`,
-              `<a href="#popup2"> <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Add Draft</button> </a>`,
+              ` <button class="btn btn-primary btn-sm" disabled onclick="addremark('${rfno}')">Assign Case</button>`,
+              `<a href="#popup2"> <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Add Gist Data</button> </a>`,
               `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
-              `<a href="#popup10"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >Raise Query</button> </a>`,
-              `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}', '${caseststaus}')" >Upload Docs</button> </a>`,
+              `<a href="#popup8"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Pending draft</button> </a>`,
+              `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
               `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
-              `<a href="#popup11"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}', '${caseststaus}')" >Move to Escalation</button> </a>`,
-              `<a href="#popup12"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Hold</button> </a>`, ];
+              `<a href="#popup10"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Hold</button> </a>`,
+              `<a href="#popup11"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Reimbursement</button> </a>`,
+              `<a href="#popup12"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to PendingDocs</button> </a>`,
+            ];
 
-
-              table.row.add(rowData);
-          }
-          else if( localStorage['userType'] === 'marketingmanager')
-          { 
-            // You could also use an ajax property on the data table initialization
-            var rowData = [data[i].casereferenceNumber,
-            moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),
+            var rowDataRobin = [data[i].casereferenceNumber,
+            moment(new Date(data[i].liveDate)).utc().format('DD-MM-YYYY'),
             `${caseage}`,
             data[i].patientName,
               data[i].patientMobile,
@@ -2198,9 +2410,10 @@ function movetolive(referencenumber) {
               data[i].insuranceCompanyName,
               data[i].claimNumber,
               data[i].claimAmount,
-              data[i].operationOfficer ? data[i].operationOfficer: "",
+              data[i].operationOfficer,
               data[i].medicalOpinionOfficer,
-              data[i].newCaseStatus,    
+              data[i].newCaseStatus,             
+             "Not Available",
               "Not Available",
               "Not Available",
               "Not Available",
@@ -2208,13 +2421,23 @@ function movetolive(referencenumber) {
               "Not Available",
               "Not Available",
               "Not Available",
-              "Not Available",];
+              "Not Available",
+            ];
 
-              table.row.add(rowData);
+            if(localStorage['userType'] =="marketingmanager")
+           {
+              table.row.add(rowDataRobin);
+           }
+           else
+           {
+            table.row.add(rowData);
+           }
+
+           }
+
+           
           }
 
-
-          }
           table.draw(false);
         }
       
@@ -2234,8 +2457,12 @@ function movetolive(referencenumber) {
 
         switch (nameFilter)
         {
-          case "Draft Generated":
+          case "Live":
+          case "Draft Query":
+          case "Gist Generated":
           case "Pending Draft":
+          case "Reimbursement":
+          case "Pending Doc":
           $("#dataTable").DataTable()
           .columns(13)
           .search($(this).text())
@@ -2253,6 +2480,8 @@ function movetolive(referencenumber) {
         .search('')
         .draw();
       });
+
+    // filter buttons end
 
 
   </script>

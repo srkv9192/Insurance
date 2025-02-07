@@ -151,6 +151,7 @@ async function uploadFileToGCS(filePath, destination , referencenumber) {
 const dataSchema = new mongoose.Schema({
   prospectDate: Date,
   liveDate: Date,
+  consumerliveDate: Date,
   lokpalbucketDate: Date,
   completedDate: Date,
   prospectZone: String,
@@ -206,6 +207,7 @@ const dataSchema = new mongoose.Schema({
   isProspect: String,
   isPendingAuth: String,
   isLive: String,
+  isConsumer: String,
   isHold: String,
   isReimbursement: String,
   isInMedicalOpinion: String,
@@ -280,11 +282,11 @@ const dataSchema = new mongoose.Schema({
   gistComments: String,
   gistCommentsBy: String,
 
-  //
   caseDraft: String,
   lokpalDraft: String,
   cpBankDetails: String,
 
+  caseType: String,
 
   // Add more fields as needed
 });
@@ -549,6 +551,7 @@ app.post('/api/addprospect', upload.array('pdfFile', 10), async (req, res) => {
                         isGistGenerated: "NO",
                         medicalOpinionOfficer: "NONE",
                         operationOfficer: "NONE",
+                        caseType: req.body.caseType,
                       });
         const savedData = await newData.save();
         incrementCaseReferenceCount();
@@ -2042,6 +2045,39 @@ app.post('/api/addpfremark', upload.array('pdfFile', 10), async(req, res) => {
   try{
 
       const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfpaymentRemarks:req.body.pfpaymentRemarks,  pfpaymentDate:req.body.pfpaymentDate, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,   caseEmail: req.body.caseEmail, caseEmailPassword: req.body.caseEmailPassword, cfBankName: req.body.cfBankName, isLive: "true", newCaseStatus : "Live", liveDate : req.body.liveDate }});
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not save pf remark', refnum:req.body.caseNumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+         const uploadPromises = req.files.map(file => {
+          const randomString = require('crypto').randomBytes(16).toString('hex');
+          const fileNameExceptExtension =file.originalname.split('.')[0];
+          const extension = path.extname(file.originalname);
+
+          const destination = `uploads/${req.body.casereferenceNumber}-${fileNameExceptExtension}-${randomString}${extension}`;
+          return uploadFileToGCS(file.path, destination, req.body.casereferenceNumber);
+        });
+        await Promise.all(uploadPromises);
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding pf remark' });
+  } 
+
+});
+
+
+app.post('/api/addpfremark_consumer', upload.array('pdfFile', 10), async(req, res) => {
+  try{
+
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfpaymentRemarks:req.body.pfpaymentRemarks,  pfpaymentDate:req.body.pfpaymentDate, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,   caseEmail: req.body.caseEmail, caseEmailPassword: req.body.caseEmailPassword, cfBankName: req.body.cfBankName, isConsumer: "true", newCaseStatus : "Consumer", consumerliveDate : req.body.consumerliveDate }});
 
       if(newData == null)
       {
@@ -3726,6 +3762,20 @@ app.get("/api/getlivecasedetail", async(req, res) => {
 
 });
 
+// add logic later to differentiate live from completed
+app.get("/api/getconsumercasedetail", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+   
+    const users = await  dataSchemaObject.find({isConsumer : {"$exists" : true, "$eq" : "true"}}, {casereferenceNumber:1, prospectDate:1, patientName:1, patientMobile:1, complainantName:1, managerName:1, cpName:1, insuranceCompanyName:1, claimNumber:1,  claimAmount:1, operationOfficer:1, medicalOpinionOfficer:1, newCaseStatus:1, consumerliveDate:1 });
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get consumer case details' });
+  }
+
+});
+
 // 
 app.get("/api/getpendingauthcasedetail", async(req, res) => {
   try {
@@ -4125,6 +4175,8 @@ app.get('/editcase.html', (req, res) => res.sendFile(__dirname+'/editcase.html')
 app.get('/viewprospectcases.html', (req, res) => res.sendFile(__dirname+'/viewprospectcases.html'))
 app.get('/viewapprovedcases.html', (req, res) => res.sendFile(__dirname+'/viewapprovedcases.html'))
 app.get('/viewlivecases.html', (req, res) => res.sendFile(__dirname+'/viewlivecases.html'))
+app.get('/viewconsumercases.html', (req, res) => res.sendFile(__dirname+'/viewconsumercases.html'))
+
 app.get('/deletecases.html', (req, res) => res.sendFile(__dirname+'/deletecases.html'))
 app.get('/viewpendingdraftcases.html', (req, res) => res.sendFile(__dirname+'/viewpendingdraftcases.html'))
 app.get('/viewfullcasedetails.html', (req, res) => res.sendFile(__dirname+'/viewfullcasedetails.html'))
