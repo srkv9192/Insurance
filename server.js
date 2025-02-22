@@ -284,6 +284,8 @@ const dataSchema = new mongoose.Schema({
 
   caseDraft: String,
   lokpalDraft: String,
+  consumerDraft:String,
+  
   cpBankDetails: String,
 
   caseType: String,
@@ -2108,7 +2110,7 @@ app.post('/api/addpfremark_consumer', upload.array('pdfFile', 10), async(req, re
 
 app.post('/api/addlivegistdata', async(req, res) => {
   try{
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ dateOfPolicy:req.body.dateOfPolicy, dateOfAdmission:req.body.dateOfAdmission, dateOfDischarge:req.body.dateOfDischarge, diagnosis: req.body.diagnosis, patientComplainDuringAdmission: req.body.patientComplainDuringAdmission,  rejectionReason: req.body.rejectionReason,  initialRejectionDate: req.body.initialRejectionDate, gistComments: req.body.gistComments, hospitalName: req.body.hospitalName, claimType:  req.body.claimType, policyNumber:  req.body.policyNumber, caseDraft: req.body.caseDraft, lokpalDraft:  req.body.lokpalDraft, behalfOf : req.body.behalfOf,  newCaseStatus: "Gist Generated",  patientName : req.body.patientName , complainantName: req.body.complainantName, claimAmount: req.body.claimAmount, claimNumber:req.body.claimNumber, policyNumber: req.body.policyNumber, caseEmail : req.body.caseEmail, caseEmailPassword: req.body.caseEmailPassword,}});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ dateOfPolicy:req.body.dateOfPolicy, dateOfAdmission:req.body.dateOfAdmission, dateOfDischarge:req.body.dateOfDischarge, diagnosis: req.body.diagnosis, patientComplainDuringAdmission: req.body.patientComplainDuringAdmission,  rejectionReason: req.body.rejectionReason,  initialRejectionDate: req.body.initialRejectionDate, gistComments: req.body.gistComments, hospitalName: req.body.hospitalName, claimType:  req.body.claimType, policyNumber:  req.body.policyNumber, caseDraft: req.body.caseDraft, lokpalDraft:  req.body.lokpalDraft, behalfOf : req.body.behalfOf,  newCaseStatus: "Gist Generated",  patientName : req.body.patientName , complainantName: req.body.complainantName, claimAmount: req.body.claimAmount, claimNumber:req.body.claimNumber, policyNumber: req.body.policyNumber, caseEmail : req.body.caseEmail, caseEmailPassword: req.body.caseEmailPassword, insuranceCompanyName: req.body.insuranceCompanyName}});
 
       if(newData == null)
       {
@@ -2197,6 +2199,29 @@ app.post('/api/addlivedraftdata', async(req, res) => {
   } 
 
 });
+
+app.post('/api/addconsumerDraft', async(req, res) => {
+  try{
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ consumerDraft: req.body.consumerDraft, newCaseStatus: "Draft Generated", }});
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not save consumer draft data', refnum:req.body.caseNumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error addingconsumer draft data' });
+  } 
+
+});
+
 
 app.post('/api/addpfdetailsduringlegalgeneration', async(req, res) => {
   try{

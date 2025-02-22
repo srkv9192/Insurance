@@ -654,8 +654,14 @@ div.dataTables_filter {
                             </div>
 
                             <div class="col-sm-4">
-                              <label for="company-name" class="form-label">Company Name</label>
-                              <input type="text" class="form-control" id="company-name" required >
+                              <label for="insurance-company-dropdown" class="form-label">Company Name</label>
+
+                              <div class="input-group">
+                                <select class="form-control" id="insurance-company-dropdown" required>
+                                  <option value="">None</option>
+                                </select>
+                              </div>
+
                             </div>
 
                             
@@ -1210,6 +1216,24 @@ function addremark(referencenumber) {
 
 }
 
+$.ajax({
+        url: '/api/getinsurancecompany',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          const optionsSelect = $('#insurance-company-dropdown');
+          response.forEach(function (option) {
+            optionsSelect.append($('<option>', {
+              value: option.companyName,
+              text: option.companyName
+            }));
+          });
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
 
 function addholdremarkInDB() {
 
@@ -1652,7 +1676,7 @@ error: function (error) {
             document.getElementById("claim-amount").value = response[0].claimAmount ? response[0].claimAmount : "";
             document.getElementById("claim-number").value = response[0].claimNumber ? response[0].claimNumber : "";
             document.getElementById("policy-number").value = response[0].policyNumber ?  response[0].policyNumber : "";
-            document.getElementById("company-name").value = response[0].insuranceCompanyName ? response[0].insuranceCompanyName : "";
+            document.getElementById("insurance-company-dropdown").value = response[0].insuranceCompanyName ? response[0].insuranceCompanyName : "";
            
 
 
@@ -2120,6 +2144,8 @@ function movetolive(referencenumber) {
         var policynumber = $('#policy-number').val();
         var claimamount = $('#claim-amount').val();
 
+        var insurancecompany =  $('#insurance-company-dropdown').val()
+
           // call ajax to save these details--
 
           $.ajax({
@@ -2147,6 +2173,7 @@ function movetolive(referencenumber) {
             claimAmount: claimamount ,
             claimNumber: claimnumber ,
             policyNumber: policynumber,
+            insuranceCompanyName : insurancecompany,
 
           },
           success: function (response) {
