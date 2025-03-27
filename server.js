@@ -4225,7 +4225,6 @@ app.get('/createaccount.html', (req, res) => res.sendFile(__dirname+'/createacco
 app.get('/createcp.html', (req, res) => res.sendFile(__dirname+'/createcp.html'))
 app.get('/editcp.html', (req, res) => res.sendFile(__dirname+'/editcp.html'))
 
-app.get('/viewcases.html', (req, res) => res.sendFile(__dirname+'/viewcases.html'))
 app.get('/viewmedicalopinioncases.html', (req, res) => res.sendFile(__dirname+'/viewmedicalopinioncases.html'))
 app.get('/viewescalationcases.html', (req, res) => res.sendFile(__dirname+'/viewescalationcases.html'))
 app.get('/viewlokpalcases.html', (req, res) => res.sendFile(__dirname+'/viewlokpalcases.html'))
