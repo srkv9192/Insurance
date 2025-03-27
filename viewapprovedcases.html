@@ -2182,7 +2182,7 @@ function populatereport(refnumber)
               data[i].claimAmount,
               data[i].caseHandler ? data[i].caseHandler: " ",
               data[i].newCaseStatus, 
-              data[i].caseType, 
+              data[i].caseType ? data[i].caseType: " ", 
               `<a href="#popup8"><button class="btn btn-primary btn-sm"  onclick="getGistAndReason('${rfno}')" >Edit Manual Gist</button> </a>`,
               `<a href="#popup1"> <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Generate legal</button> </a>`,
               `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
