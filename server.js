@@ -72,8 +72,9 @@ mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
 */
+
+
 
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
@@ -289,6 +290,8 @@ const dataSchema = new mongoose.Schema({
   cpBankDetails: String,
 
   caseType: String,
+
+  partPaymentReceived : Number,
 
   // Add more fields as needed
 });
@@ -1387,6 +1390,28 @@ app.post('/api/addtcaseremark', async(req, res) => {
 
 });
 
+app.post('/api/addpartpaymentdetails', async(req, res) => {
+  try{
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ caseRemarks:req.body.caseRemarks} , $set:{ newCaseStatus: "Part Payment", }, $inc:{ partPaymentReceived: req.body.partPaymentReceived} });
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not save remark', refnum:req.body.referencenumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding remark' });
+  } 
+
+});
+
 
 app.post('/api/addtcaseremarkandmovetoprospect', async(req, res) => {
   try{
@@ -1880,7 +1905,7 @@ app.post('/api/addcasenidaanpaymentdetails', async(req, res) => {
       newstatus = "Bank Details Missing"
     }
 
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{caseRemarks:req.body.caseRemarks}, $set:{ caseNidaanReceivedAmountDate:req.body.caseNidaanReceivedAmountDate, caseNidaanReceivedAmount: req.body.caseNidaanReceivedAmount, caseNidaanReceivedAmountMode: req.body.caseNidaanReceivedAmountMode, caseCPFinalAmount: req.body.caseCPFinalAmount, isPendingPayment: "false", isPendingCPPayment: "true", newCaseStatus: newstatus, cpBankDetails: req.body.cpBankDetails}});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{caseRemarks:req.body.caseRemarks}, $set:{ caseNidaanReceivedAmountDate:req.body.caseNidaanReceivedAmountDate, caseNidaanReceivedAmount: req.body.caseNidaanReceivedAmount , caseNidaanReceivedAmountMode: req.body.caseNidaanReceivedAmountMode, caseCPFinalAmount: req.body.caseCPFinalAmount, isPendingPayment: "false", isPendingCPPayment: "true", newCaseStatus: newstatus, cpBankDetails: req.body.cpBankDetails}});
 
       if(newData == null)
       {
@@ -1939,7 +1964,7 @@ app.post('/api/getCpCommission', async (req, res) => {
       console.log(cpRecord)
 
       // Respond with cpCommission
-      res.json({ cpCommission: cpRecord.cpCommission,   cpBankDetails:  cpRecord.cpBankDetails, });
+      res.json({ cpCommission: cpRecord.cpCommission,   cpBankDetails:  cpRecord.cpBankDetails,  partPaymentReceived: dataRecord.partPaymentReceived});
   } catch (err) {
       console.error(err);
       res.status(500).json({ message: 'Internal Server Error' });
@@ -3247,7 +3272,7 @@ app.get("/api/getpendingpaymentcases", async(req, res) => {
   try {
     // Retrieve all tpa list from database
            
-    const users = await  dataSchemaObject.find({isPendingPayment: "true"},{completedDate:1, caseSettlementAmount:1, prospectDate:1, caseResult:1, casereferenceNumber:1, prospectDate:1, patientName:1,patientMobile:1, complainantName:1, managerName:1, cpName:1, insuranceCompanyName:1, claimNumber:1 , claimAmount:1, caseCompletionType:1, newCaseStatus:1, caseCustomerReceivedAmountDate:1, caseCustomerReceivedAmount:1, cfPercentage:1});
+    const users = await  dataSchemaObject.find({isPendingPayment: "true"},{completedDate:1, caseSettlementAmount:1, prospectDate:1, caseResult:1, casereferenceNumber:1, prospectDate:1, patientName:1,patientMobile:1, complainantName:1, managerName:1, cpName:1, insuranceCompanyName:1, claimNumber:1 , claimAmount:1, caseCompletionType:1, newCaseStatus:1, caseCustomerReceivedAmountDate:1, caseCustomerReceivedAmount:1, cfPercentage:1, partPaymentReceived:1});
     res.json(users);
   } catch (error) {
     console.error(error);
