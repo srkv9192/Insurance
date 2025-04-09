@@ -72,9 +72,9 @@ mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
+
 */
-
-
 
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
@@ -1939,7 +1939,7 @@ app.post('/api/getCpCommission', async (req, res) => {
       const dataRecord = await dataSchemaObject.findOne({casereferenceNumber: req.body.casereferenceNumber }).exec();
 
       if (!dataRecord) {
-        res.json({ cpCommission: 0 , cpBankDetails:  "Not Available",});
+        res.json({ cpCommission: 0 , cpBankDetails:  "Not Available",  partPaymentReceived: 0});
         return;
       }
 
@@ -1947,7 +1947,7 @@ app.post('/api/getCpCommission', async (req, res) => {
 
       if(dataRecord.cpID == null)
       {
-        res.json({ cpCommission: 0, cpBankDetails: "Not Available", });
+        res.json({ cpCommission: 0, cpBankDetails: "Not Available",  partPaymentReceived: dataRecord.partPaymentReceived});
         return;
       }
 
@@ -1957,7 +1957,7 @@ app.post('/api/getCpCommission', async (req, res) => {
       //rajat
 
       if (!cpRecord) {
-        res.json({ cpCommission: 0, cpBankDetails:  "Not Available", });
+        res.json({ cpCommission: 0, cpBankDetails:  "Not Available",   partPaymentReceived: dataRecord.partPaymentReceived});
         return;
       }
 
@@ -2071,7 +2071,7 @@ async function addDocURLInDBbycasenum(casenumber , url)
 app.post('/api/addpfremark', upload.array('pdfFile', 10), async(req, res) => {
   try{
 
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfpaymentRemarks:req.body.pfpaymentRemarks,  pfpaymentDate:req.body.pfpaymentDate, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,   caseEmail: req.body.caseEmail, caseEmailPassword: req.body.caseEmailPassword, cfBankName: req.body.cfBankName, isLive: "true", newCaseStatus : "Live", liveDate : req.body.liveDate }});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfpaymentRemarks:req.body.pfpaymentRemarks,  pfpaymentDate:req.body.pfpaymentDate, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,   caseEmail: req.body.caseEmail, caseEmailPassword: req.body.caseEmailPassword, cfBankName: req.body.cfBankName, isLive: "true", newCaseStatus : "Live", liveDate : req.body.liveDate , claimAmount:req.body.claimAmount}});
 
       if(newData == null)
       {
@@ -2104,7 +2104,7 @@ app.post('/api/addpfremark', upload.array('pdfFile', 10), async(req, res) => {
 app.post('/api/addpfremark_consumer', upload.array('pdfFile', 10), async(req, res) => {
   try{
 
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfpaymentRemarks:req.body.pfpaymentRemarks,  pfpaymentDate:req.body.pfpaymentDate, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,   caseEmail: req.body.caseEmail, caseEmailPassword: req.body.caseEmailPassword, cfBankName: req.body.cfBankName, isConsumer: "true", newCaseStatus : "Consumer", consumerliveDate : req.body.consumerliveDate }});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfpaymentRemarks:req.body.pfpaymentRemarks,  pfpaymentDate:req.body.pfpaymentDate, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,   caseEmail: req.body.caseEmail, caseEmailPassword: req.body.caseEmailPassword, cfBankName: req.body.cfBankName, isConsumer: "true", newCaseStatus : "Consumer", consumerliveDate : req.body.consumerliveDate,  claimAmount:req.body.claimAmount }});
 
       if(newData == null)
       {

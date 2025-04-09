@@ -1682,6 +1682,7 @@ function populatereport(refnumber)
             pfAmount: processingfee,
             cfPercentage: consultationcharge,
             cfAmount: chequeamount,
+            claimAmount:claimamount,
             cfChequeNumber: chequenumber,
             cfBankName: bankname,
             patientAddress: clientaddress,
@@ -1838,6 +1839,8 @@ function populatereport(refnumber)
 
         var paymentmodeFinal = $('#payment-mode-dropdown').val();
 
+        var claimamount = $('#total-claim-amount-final').val(); 
+
           // call ajax to save these details--
 
           var formData = new FormData();
@@ -1858,6 +1861,8 @@ function populatereport(refnumber)
 
           formData.append('cfChequeNumber', chequenumberFinal);
           formData.append('cfBankName', banknameFinal);
+          formData.append('claimAmount', claimamount);
+          
 
           formData.append('liveDate', new Date());
 
@@ -1933,6 +1938,7 @@ function populatereport(refnumber)
                 var caseemailpasswordFinal = $('#case-email-password-final_consumer').val();
 
                 var paymentmodeFinal = $('#payment-mode-dropdown_consumer').val();
+                var claimamount = $('#total-claim-amount-final_consumer').val(); 
 
                 // call ajax to save these details--
 
@@ -1954,6 +1960,7 @@ function populatereport(refnumber)
 
                 formData.append('cfChequeNumber', chequenumberFinal);
                 formData.append('cfBankName', banknameFinal);
+                formData.append('claimAmount', claimamount);
 
                 formData.append('consumerliveDate', new Date());
 
