@@ -733,6 +733,16 @@ div.dataTables_filter {
                               <input type="text" class="form-control" id="case-emailpassword"  >
                             </div>
 
+                            <div class="col-sm-4">
+                              <label for="case-cf-percent" class="form-label">Consultation charge %</label>
+                              <input type="text" class="form-control" id="case-cf-percent"  >
+                            </div>
+
+                            <div class="col-sm-4">
+                              <label for="case-cf-amount" class="form-label">CF Amount</label>
+                              <input type="text" class="form-control" id="case-cf-amount"  >
+                            </div>
+
                           </div>
           
                           <div class="text-center">
@@ -1674,6 +1684,10 @@ error: function (error) {
 
             
             document.getElementById("claim-amount").value = response[0].claimAmount ? response[0].claimAmount : "";
+            document.getElementById("case-cf-percent").value = response[0].cfPercentage ? response[0].cfPercentage : "";
+            document.getElementById("case-cf-amount").value = response[0].cfAmount ? response[0].cfAmount : "";
+
+            
             document.getElementById("claim-number").value = response[0].claimNumber ? response[0].claimNumber : "";
             document.getElementById("policy-number").value = response[0].policyNumber ?  response[0].policyNumber : "";
             document.getElementById("insurance-company-dropdown").value = response[0].insuranceCompanyName ? response[0].insuranceCompanyName : "";
@@ -2076,23 +2090,22 @@ function movetolive(referencenumber) {
 
 
         // calculate cheque amount based on consulation charge percentage
-        $('#total-claim-amount').change(function () {
+        $('#claim-amount').change(function () {
 
-        var claimamount = $('#total-claim-amount').val();
-        var consultationcharge = $('#consultation-charge').val();
+        var claimamount = $('#claim-amount').val();
+        var consultationcharge = $('#case-cf-percent').val();
 
-        document.getElementById("cheque-amount").value= Math.round((claimamount * consultationcharge ) / (100) );
+        document.getElementById("case-cf-amount").value= Math.round((claimamount * consultationcharge ) / (100) );
 
         });
 
         // calculate cheque amount based on consulation charge percentage
-        $('#consultation-charge').change(function () {
+        $('#case-cf-percent').change(function () {
 
-        var claimamount = $('#total-claim-amount').val();
-        var consultationcharge = $('#consultation-charge').val();
+          var claimamount = $('#claim-amount').val();
+        var consultationcharge = $('#case-cf-percent').val();
 
-        document.getElementById("cheque-amount").value=Math.round((claimamount * consultationcharge ) / (100));
-
+        document.getElementById("case-cf-amount").value= Math.round((claimamount * consultationcharge ) / (100) );
         });
 
 
@@ -2143,6 +2156,9 @@ function movetolive(referencenumber) {
         var claimnumber = $('#claim-number').val();
         var policynumber = $('#policy-number').val();
         var claimamount = $('#claim-amount').val();
+        var cfpercent= $('#case-cf-percent').val();
+        var cfamount= $('#case-cf-amount').val();
+
 
         var insurancecompany =  $('#insurance-company-dropdown').val()
 
@@ -2171,6 +2187,8 @@ function movetolive(referencenumber) {
             patientName : patientname ,
             complainantName: complainantname,
             claimAmount: claimamount ,
+            cfPercentage:  cfpercent,
+            cfAmount:  cfamount,
             claimNumber: claimnumber ,
             policyNumber: policynumber,
             insuranceCompanyName : insurancecompany,

@@ -60,6 +60,7 @@ const port = process.env.PORT || 80
 
 
 
+
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -72,7 +73,6 @@ mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
 
 */
 
@@ -2135,7 +2135,7 @@ app.post('/api/addpfremark_consumer', upload.array('pdfFile', 10), async(req, re
 
 app.post('/api/addlivegistdata', async(req, res) => {
   try{
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ dateOfPolicy:req.body.dateOfPolicy, dateOfAdmission:req.body.dateOfAdmission, dateOfDischarge:req.body.dateOfDischarge, diagnosis: req.body.diagnosis, patientComplainDuringAdmission: req.body.patientComplainDuringAdmission,  rejectionReason: req.body.rejectionReason,  initialRejectionDate: req.body.initialRejectionDate, gistComments: req.body.gistComments, hospitalName: req.body.hospitalName, claimType:  req.body.claimType, policyNumber:  req.body.policyNumber, caseDraft: req.body.caseDraft, lokpalDraft:  req.body.lokpalDraft, behalfOf : req.body.behalfOf,  newCaseStatus: "Gist Generated",  patientName : req.body.patientName , complainantName: req.body.complainantName, claimAmount: req.body.claimAmount, claimNumber:req.body.claimNumber, policyNumber: req.body.policyNumber, caseEmail : req.body.caseEmail, caseEmailPassword: req.body.caseEmailPassword, insuranceCompanyName: req.body.insuranceCompanyName}});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ dateOfPolicy:req.body.dateOfPolicy, dateOfAdmission:req.body.dateOfAdmission, dateOfDischarge:req.body.dateOfDischarge, diagnosis: req.body.diagnosis, patientComplainDuringAdmission: req.body.patientComplainDuringAdmission,  rejectionReason: req.body.rejectionReason,  initialRejectionDate: req.body.initialRejectionDate, gistComments: req.body.gistComments, hospitalName: req.body.hospitalName, claimType:  req.body.claimType, policyNumber:  req.body.policyNumber, caseDraft: req.body.caseDraft, lokpalDraft:  req.body.lokpalDraft, behalfOf : req.body.behalfOf,  newCaseStatus: "Gist Generated",  patientName : req.body.patientName , complainantName: req.body.complainantName, claimAmount: req.body.claimAmount, cfAmount: req.body.cfAmount, cfPercentage: req.body.cfPercentage, claimNumber:req.body.claimNumber, policyNumber: req.body.policyNumber, caseEmail : req.body.caseEmail, caseEmailPassword: req.body.caseEmailPassword, insuranceCompanyName: req.body.insuranceCompanyName}});
 
       if(newData == null)
       {
