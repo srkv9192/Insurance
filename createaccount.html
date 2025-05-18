@@ -76,17 +76,14 @@
          </a>
          <a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a>
         </header>
-      <nav class="dashboard-nav-list"><a href="/" class="dashboard-nav-item"><i class="fas fa-home"></i>
+        <nav class="dashboard-nav-list"><a href="/" class="dashboard-nav-item"><i class="fas fa-home"></i>
           Home </a>
-
           <div id="hideonlogin">
             <nav class="dashboard-nav-list"><a href="/newcarddirect.html" class="dashboard-nav-item"><i class="fas fa-inr"></i>
               Buy Card </a>
-
               <nav class="dashboard-nav-list"><a href="/paymentinfo.html" class="dashboard-nav-item"><i class="fas fa-inr"></i>
                 Payment Info </a>
           </div>
-
           
 
           <div id="showonlogin" style="display: none;">
@@ -105,7 +102,7 @@
                      
                      <a href="/viewmedicalopinioncases.html" class="dashboard-nav-dropdown-item">View Medical</a>
                      <a href="/viewapprovedcases.html" class="dashboard-nav-dropdown-item">View Approved</a>
-                     <a href="/viewrejectedcases.html" class="dashboard-nav-dropdown-item">View Rejected</a> 
+                     <a href="/viewrejectedcases.html" class="dashboard-nav-dropdown-item">View Rejected</a>
                      <a href="/viewconsumercases.html" class="dashboard-nav-dropdown-item">View Consumer</a>
                      <a href="/viewlivecases.html" class="dashboard-nav-dropdown-item">View Live</a>
                      <a href="/viewpendingdraftcases.html" class="dashboard-nav-dropdown-item">View Pending Draft</a>
@@ -117,10 +114,13 @@
                      <a href="/viewfinishedcases.html" class="dashboard-nav-dropdown-item">View Finished</a>
                      <a href="/viewholdcases.html" class="dashboard-nav-dropdown-item">View Hold</a>
                      <a href="/viewsearchcases.html" class="dashboard-nav-dropdown-item">Search Case</a>
-                     <!-- 
+                    
+                     
+                                       <!-- 
                      <a href="/viewcases.html" class="dashboard-nav-dropdown-item">View Live</a>
                      <a href="/viewescalationcases.html" class="dashboard-nav-dropdown-item">View Escalation</a>
                       -->
+  
                      <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
                  </div>
               </div>
@@ -138,12 +138,14 @@
              </div>
 
 
+
             <div class='dashboard-nav-dropdown show'>
               <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
                <i class="fas  fa-user-secret">
                  </i>Admin Menu</a>
                <div class='dashboard-nav-dropdown-menu'>
                    <a href="/changepassword.html" class="dashboard-nav-dropdown-item">Change Password</a>
+                   <a href="/createaccount.html" class="dashboard-nav-dropdown-item">Add Employee</a> <a href="/createmanager.html" class="dashboard-nav-dropdown-item">Add Manager</a>
                    <a href="/createcp.html" class="dashboard-nav-dropdown-item">Add CP</a>
                   <a href="/editcp.html" class="dashboard-nav-dropdown-item">Edit CP</a>
                    <a href="/deletecases.html" class="dashboard-nav-dropdown-item">Delete Case</a>
@@ -252,6 +254,7 @@
            </div>
 
          </div>
+
          <div id="showtoadvocate" style="display: none;">
 
           <div class='dashboard-nav-dropdown show'>
@@ -266,8 +269,33 @@
 
        </div>
 
-        <div class="nav-item-divider"></div>
-        <a  id="login-menu"
+          <div id="showtocoordinator" style="display: none;">
+
+            <div class='dashboard-nav-dropdown show'>
+               <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+                <i class="fas fa-photo-video">
+                  </i>Card Menu</a>
+                <div class='dashboard-nav-dropdown-menu'>
+                    <a href="/newcard.html" class="dashboard-nav-dropdown-item">Add Card</a>
+                </div>
+             </div>
+
+             <div class='dashboard-nav-dropdown show'>
+              <a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+               <i class="fas fa-photo-video">
+                 </i>Case Menu</a>
+               <div class='dashboard-nav-dropdown-menu'>
+                   <a href="/addprospect.html" class="dashboard-nav-dropdown-item">Add Case</a>
+                   <a href="/generatelegalpdf.html" class="dashboard-nav-dropdown-item">Generate Agreement</a>
+               </div>
+            </div>
+
+          </div>
+            
+        <div class="nav-item-divider">
+
+        </div>
+        <a id="login-menu"
                   href="/login.html" class="dashboard-nav-item"><i class="fas  fa-sign-in "></i> Login </a>
       </nav>
   </div>
@@ -277,32 +305,31 @@
           <div class="container mt-5" style="max-width: unset;">
             <div class="row justify-content-center">
               <div class="col-lg-4 col-md-6 col-sm-8">
-                <h2 class="text-center mb-4">Create New Account</h2>
+                <h2 class="text-center mb-4">Create Employee Account</h2>
                 <div class="frame" style=" color:black;display:flex ;background-image: url('/images/background18.jpg');  font-family: monospace;font-size: large; background-size: cover;">
 
                   <form id="loginForm">
-                    <div class="mb-3">
+                    <div class="mb-4" style=" width: 250px;">
                       <label for="username" class="form-label">Name</label>
-                      <input type="text" class="form-control" id="username" placeholder="Enter name">
+                      <input type="text" class="form-control" id="username" placeholder="format- Ashwin Kaushal">
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-4" style=" width: 250px;">
                       <label for="userid" class="form-label">User Name</label>
-                      <input type="text" class="form-control" id="userid" placeholder="Enter User Name">
+                      <input type="text" class="form-control" id="userid" placeholder="format: ashwin_kaushal">
                     </div>
 
-                    <div class="mb-3">
+                    <div class="mb-4" style=" width: 250px;">
                       <label for="userpassword" class="form-label">Password</label>
                       <input type="text" class="form-control" id="userpassword" placeholder="Enter password">
                     </div>
 
-                    <div class="mb-3">
+                    <div class="mb-4" style=" width: 250px;">
                       
                         <label for="user-type" class="form-label">User Type</label>
                         <div class="input-group">
                           <select class="form-control" id="user-type-dropdown" required>
                             <option value="admin">Admin</option>
-                            <option value="manager">Manager</option>
-                            <option value="cp">Channel Partner</option>
+                            <option value="marketing">Marketing</option>
                             <option value="operation">Operation</option>
                           </select>
                          </div>
@@ -328,6 +355,87 @@
     $(document).ready(function () {
 
       const mobileScreen = window.matchMedia("(max-width: 990px )");
+
+      
+      $.ajax({
+        url: '/api/whoami',
+        type: 'POST',
+        success: function (response) {
+          if(response.message =='admin')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showonlogin").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+            }
+            else if(response.message =='operation' )
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtooperation").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+            }
+            else if(response.message =='cp' || response.message =='manager')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtocpandmanager").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+            }
+            else if(response.message =='medicalofficer')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtomedicalofficer").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+            }
+            else if(response.message =='advocate')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtoadvocate").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+            }
+            else if(response.message =='marketing')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtomarketing").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+            }
+            else if(response.message =='marketingmanager')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtomarketingmanager").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+            }
+            else
+            {
+              window.location.href = "/login.html"
+            }
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+
+
 
           $(".dashboard-nav-dropdown-toggle").click(function () {
         $(this).closest(".dashboard-nav-dropdown")

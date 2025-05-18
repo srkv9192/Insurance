@@ -305,6 +305,7 @@ div.dataTables_filter {
                  </i>Admin Menu</a>
                <div class='dashboard-nav-dropdown-menu'>
                    <a href="/changepassword.html" class="dashboard-nav-dropdown-item">Change Password</a>
+                   <a href="/createaccount.html" class="dashboard-nav-dropdown-item">Add Employee</a> <a href="/createmanager.html" class="dashboard-nav-dropdown-item">Add Manager</a>
                    <a href="/createcp.html" class="dashboard-nav-dropdown-item">Add CP</a>
                   <a href="/editcp.html" class="dashboard-nav-dropdown-item">Edit CP</a>
                    <a href="/deletecases.html" class="dashboard-nav-dropdown-item">Delete Case</a>
@@ -556,6 +557,7 @@ div.dataTables_filter {
                         <th>Operation Officer</th>
                         <th>Medical Officer</th>
                         <th>Case Status</th>
+                        <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
@@ -1077,6 +1079,29 @@ div.dataTables_filter {
                   </div>
                 </div>
 
+                <div id="popup18" class="overlay" >
+                  <div class="popup" style ="width:30%">
+                    <h2  id = "remarkcontent">Completion Remark-</h2>
+                    <div class="frame">
+                      <form id="completedForm">
+
+                        <div class="row">
+      
+                          <label for="casecompleteremark" class="form-label" style="margin-top: 5px;margin-bottom: 5px;">Completion Remark</label>
+                          <input  class="form-control" type="text" placeholder="Add remark here" id="casecompleteremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                        </div>
+                       
+                        <button type="submit" class="btn btn-primary btn-sm" style="margin-top: 5px;margin-bottom: 5px;">Move to Complete</button>
+                        
+                        <a class="close" href="#close">&times;</a>
+                        </form>
+                    </div>
+                    
+                    
+
+                  </div>
+                </div>
+
                 <div id="popup10" class="overlay" >
                   <div class="popup" style ="width:30%">
                     <h2  id = "remarkcontent">Move to Hold-</h2>
@@ -1183,6 +1208,19 @@ function addremark(referencenumber) {
         localStorage['addRemarkForRefNumber'] =referencenumber; 
   }
 
+  function addremarkforcompletion(referencenumber, casestatus) {
+        // Code to generate card
+        if(casestatus!="Reimbursement")
+        {
+          alert("Only Reimburesement cases can be moved to completed.")
+          return;
+        }
+        else
+        {
+          localStorage['addRemarkForRefNumber'] =referencenumber; 
+        }
+  } 
+
   function uploadDocsInDB()
 {
 
@@ -1225,6 +1263,54 @@ function addremark(referencenumber) {
         });
 
 }
+
+  
+$('#completedForm').on('submit', function (event) {
+        event.preventDefault();
+
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        let mm = today.getMonth() + 1; // Months start at 0!
+        let dd = today.getDate();
+
+        if (dd < 10) dd = '0' + dd;
+        if (mm < 10) mm = '0' + mm;
+
+        const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+          $.ajax({
+          url: '/api/movetocompleted',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          data: {
+            casereferenceNumber: localStorage['addRemarkForRefNumber'], 
+            caseCompletionType: "Reimbursement Settlement",
+            completedDate: today,
+            caseCompletionRemark: formattedToday + " - [ " +  localStorage['userName'] + " ] - " + $('#casecompleteremark').val(),
+          },
+          success: function (response) {
+            if(response.message == "success")
+              {
+                alert("Case moved to completed!");
+                window.location.href = "/viewlivecases.html";
+              }
+              else{
+                alert("Error moving case to completed!")
+              }
+          },
+          error: function (error) {
+            document.getElementById('completedForm').reset();
+            alert("error moving case to completed failed");
+            // Display an error message to the user
+          }
+        });
+
+
+      });
+
+
+
+
 
 $.ajax({
         url: '/api/getinsurancecompany',
@@ -2391,6 +2477,13 @@ function movetolive(referencenumber) {
           
            if( localStorage['userType'] === 'admin')
            {
+
+            var movetocompletedbutton =  `<a href="#popup18"><button class="btn btn-primary btn-sm"  onclick="addremarkforcompletion('${rfno}', '${data[i].newCaseStatus}' )" >Move to Completed</button> </a>`;
+              if(data[i].newCaseStatus != "Reimbursement")
+              {
+                movetocompletedbutton = "Not Available"
+              }
+            
             var rowData = [data[i].casereferenceNumber,
             moment(new Date(data[i].liveDate)).utc().format('DD-MM-YYYY'),
             `${caseage}`,
@@ -2414,11 +2507,18 @@ function movetolive(referencenumber) {
               `<a href="#popup10"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Hold</button> </a>`,
               `<a href="#popup11"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Reimbursement</button> </a>`,
               `<a href="#popup12"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to PendingDocs</button> </a>`,
+              `${movetocompletedbutton}`,
             ];
             
             table.row.add(rowData);
            }
            else{
+
+            var movetocompletedbutton =  `<a href="#popup18"><button class="btn btn-primary btn-sm"  onclick="addremarkforcompletion('${rfno}', '${data[i].newCaseStatus}' )" >Move to Completed</button> </a>`;
+              if(data[i].newCaseStatus != "Reimbursement")
+              {
+                movetocompletedbutton = "Not Available"
+              }
             var rowData = [data[i].casereferenceNumber,
             moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),
             `${caseage}`,
@@ -2442,6 +2542,7 @@ function movetolive(referencenumber) {
               `<a href="#popup10"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Hold</button> </a>`,
               `<a href="#popup11"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Reimbursement</button> </a>`,
               `<a href="#popup12"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to PendingDocs</button> </a>`,
+              `${movetocompletedbutton}`,
             ];
 
             var rowDataRobin = [data[i].casereferenceNumber,

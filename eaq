@@ -1,0 +1,29 @@
+[1mdiff --git a/server.js b/server.js[m
+[1mindex 956714d..f0d982e 100644[m
+[1m--- a/server.js[m
+[1m+++ b/server.js[m
+[36m@@ -58,20 +58,21 @@[m [mconst port = process.env.PORT || 80[m
+ //  useUnifiedTopology: true,[m
+ //});[m
+ [m
+[31m-[m
+[32m+[m[32m/*[m
+ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {[m
+   useNewUrlParser: true,[m
+   useUnifiedTopology: true,[m
+ });[m
+ [m
+[31m-/*[m
+[32m+[m[32m*/[m
+[32m+[m
+ [m
+ mongoose.connect(`mongodb://127.0.0.1:27017/test`, {[m
+   useNewUrlParser: true,[m
+   useUnifiedTopology: true,[m
+ });[m
+ [m
+[31m-*/[m
+[32m+[m
+ [m
+ const cookieParser = require("cookie-parser");[m
+ const sessions = require('express-session');[m

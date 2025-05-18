@@ -66,7 +66,6 @@ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS
   useUnifiedTopology: true,
 });
 
-
 /*
 
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
@@ -1528,7 +1527,7 @@ app.post('/api/addlivecasequeryremark', async(req, res) => {
 
 app.post('/api/movetocompleted', async(req, res) => {
   try{
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{ caseRemarks:req.body.caseCompletionRemark}, $set:{ isInLokpalStage:"false", isInEscalationStage : "false", newCaseStatus: "Completed", isCompleted: "true", caseCompletionType: req.body.caseCompletionType, completedDate: req.body.completedDate }});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{ caseRemarks:req.body.caseCompletionRemark}, $set:{isLive:"false", isInLokpalStage:"false", isInEscalationStage : "false", newCaseStatus: "Completed", isCompleted: "true", caseCompletionType: req.body.caseCompletionType, completedDate: req.body.completedDate }});
 
       if(newData == null)
       {
@@ -2665,6 +2664,18 @@ app.get("/api/gettpadetail", async(req, res) => {
 
 app.post('/api/addmanagerdetail', async(req, res) => {
   try{
+
+    const docs1 = await managerSchemaObject.findOne({managerName: req.body.managerName});
+    if (docs1) {
+      res.json({message : 'duplicatename'});
+      return;
+    }
+        const docs = await managerSchemaObject.findOne({managerID: req.body.managerID});
+        if (docs) {
+          res.json({message : 'duplicate'});
+          return;
+        }
+
         const refNumber= await getManagerCount();
         if(refNumber == -1)
         {
@@ -2672,20 +2683,20 @@ app.post('/api/addmanagerdetail', async(req, res) => {
           return;
         }
         const newData = new managerSchemaObject({
-                        'managerID' : "MAN_" + refNumber,
+                        'managerID' : req.body.managerID,
                         'managerName' : req.body.managerName,
                         'phone' : req.body.phone,
                         'email' : req.body.email,
-                        'location': req.body.location,
+                        'location' : req.body.location,
                         });
         const savedData = newData.save();
         await incrementManagerCount();
-        res.json({ message: 'Manager data saved successfully', data: savedData });
+        res.json({ message: 'success', data: savedData });
       }
     catch(err)
     {
       console.error(err);
-      res.status(500).json({ error: 'Error saving Manager data' });
+      res.status(500).json({ error: 'Error saving cp data' });
     } 
 });
 
@@ -4248,6 +4259,7 @@ app.get('/viewsearchcases.html', (req, res) => res.sendFile(__dirname+'/viewsear
 app.get('/changepassword.html', (req, res) => res.sendFile(__dirname+'/changepassword.html'))
 app.get('/createaccount.html', (req, res) => res.sendFile(__dirname+'/createaccount.html'))
 app.get('/createcp.html', (req, res) => res.sendFile(__dirname+'/createcp.html'))
+app.get('/createmanager.html', (req, res) => res.sendFile(__dirname+'/createmanager.html'))
 app.get('/editcp.html', (req, res) => res.sendFile(__dirname+'/editcp.html'))
 
 app.get('/viewmedicalopinioncases.html', (req, res) => res.sendFile(__dirname+'/viewmedicalopinioncases.html'))
