@@ -179,7 +179,7 @@ div.dataTables_filter {
 /*pop up box end*/
 
   </style>
-  <title>Edit CP Details</title>
+  <title>Delete Account</title>
 </head>
 
 <body>
@@ -194,19 +194,14 @@ div.dataTables_filter {
           <div class="container mt-5" style="max-width: unset;">
             <div class="row justify-content-center">
               <div class="col-lg-12">
-                <h2 class="text-center mb-4">Edit CP Details</h2>
+                <h2 class="text-center mb-4">Delete Account</h2>
                 <div class="table-responsive">
                   <table id ="dataTable" class="table table-dark table-bordered">
                     <thead>
                       <tr>
-                        <th>CP ID</th>
                         <th>Name</th>
-                        <th>Phone</th>
-                        <th>Age</th>
-                        <th>City</th>
-                        <th>Commission</th>
-                        <th>Bank Details</th>
-                        <th>Action</th>
+                        <th>User ID</th>
+                        <th>UserType</th>
                         <th>Action</th>
                       </tr>
                     </thead>
@@ -652,31 +647,86 @@ error: function (error) {
 }
 
 
-function deletecp(referencenumber) {
+function deleteaccount(referencenumber, usertype) {
         // Code to generate card
 
         $.ajax({
-        url: '/api/deletecpdetailbyid',
+        url: '/api/deleteloginbyid',
         type: 'GET',
         data: {
-          cpID: referencenumber
+          userID: referencenumber
         },
 
         success: function (response) { 
 
-          alert("Successfully deleted CP detail");
-           window.location.href = "/editcp.html"
-        
+          if(response.message == "success")
+        {
+
+          if(usertype=="cp")
+        {
+          $.ajax({
+            url: '/api/deletecpdetailbyid',
+            type: 'GET',
+            data: {
+              cpID: referencenumber
+            },
+
+            success: function (response) { 
+
+              alert("Successfully deleted account detail");
+              window.location.href = "/deleteaccount.html"
+            
+            },
+            error: function (error) {
+              alert("Error while deleting account");
+              console.error('Error:', error);
+            }
+          });
+
+        }
+          else if(usertype=="manager")
+          {
+            
+            $.ajax({
+              url: '/api/deletemanagerdetailbyid',
+              type: 'GET',
+              data: {
+                managerID: referencenumber
+              },
+
+              success: function (response) { 
+
+                alert("Successfully deleted account detail");
+                window.location.href = "/deleteaccount.html"
+              
+              },
+              error: function (error) {
+                alert("Error while deleting account");
+                console.error('Error:', error);
+              }
+            });
+
+          }
+          else
+          {
+            alert("Successfully deleted account");
+             window.location.href = "/deleteaccount.html"
+          }
+
+        }
+        else
+        {
+          alert("Error while deleting account");
+        }
+
         },
         error: function (error) {
-          alert("Error while deleting CP detail");
+          alert("Error while deleting account");
           console.error('Error:', error);
         }
       });
 
   }
-
-
 
 
 
@@ -733,12 +783,13 @@ function movetolive(referencenumber) {
       
     $(document).ready(function () {
 
-      fetch('navbar.html')
+      // Load navbar.html and insert it into #navbar-placeholder
+fetch('navbar.html')
       .then(response => response.text())
       .then(data => {
         document.getElementById('navbar-placeholder').innerHTML = data;
 
-
+        
       $.ajax({
         url: '/api/getmanagerdetail',
         type: 'GET',
@@ -852,6 +903,7 @@ function movetolive(referencenumber) {
               buttons: ['excel', 'pageLength']
           }
         },
+        order: [[2, 'asc']]
         
       });
 
@@ -860,7 +912,7 @@ function movetolive(referencenumber) {
       
        // AJAX call on page load get manager details
        $.ajax({
-        url: '/api/getcpdetail',
+        url: '/api/getloginlist',
         type: 'GET',
         success: function (response) {
           // Populate the options in the select element
@@ -878,27 +930,33 @@ function movetolive(referencenumber) {
           // clear the table before populating it with more data
           $("#dataTable").DataTable().clear();
           var table = $('#dataTable').DataTable();
+
+          const userTypeMap = new Map();
+          userTypeMap.set('cp', 'CP');
+          userTypeMap.set('advocate', 'ADVOCATE');
+          userTypeMap.set('admin' ,'ADMIN');
+          userTypeMap.set('marketing' ,'MARKETING');
+          userTypeMap.set('marketingmanager' ,'MARKETING MANAGER');
+          userTypeMap.set('operation' ,'OPERATION');
+          userTypeMap.set('manager' ,'MANAGER');
+          userTypeMap.set('medicalofficer' ,'MEDICAL OFFICER');
+
           var length = Object.keys(data).length;
           for(var i = 0; i < length; i++) {
             console.log(i);
-            var rfno= data[i].cpID;
+            var rfno= data[i].userID;
+            var usertype = data[i].userType;
             // You could also use an ajax property on the data table initialization
-            var rowData = [ data[i].cpID ? data[i].cpID : "",
-              data[i].cpName ? data[i].cpName : "",
-              data[i].phone ?data[i].phone : "",
-              data[i].cpAge ?data[i].cpAge : "",
-              data[i].cpCity ? data[i].cpCity: "",
-              data[i].cpCommission ?data[i].cpCommission : "",
-              data[i].cpBankDetails ? data[i].cpBankDetails : "",
-              `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >Edit Details</button> </a>`,
-              `<a href=""><button class="btn btn-primary btn-sm"  onclick="deletecp('${rfno}')" >Delete CP</button> </a>`,];
+            var rowData = [ data[i].userName ? data[i].userName : "",
+              data[i].userID ? data[i].userID : "",
+              data[i].userType ? userTypeMap.get(data[i].userType) : "",
+              `<button type="button" class="btn btn-primary btn-sm"  onclick="deleteaccount('${rfno}', '${usertype}')" >Delete Account</button>`,];
  
             table.row.add(rowData);
           }
         
           table.draw(false);
         }
-      
 
       });
 

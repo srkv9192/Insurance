@@ -60,11 +60,11 @@ const port = process.env.PORT || 80
 
 
 
-
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
 
 /*
 
@@ -2471,6 +2471,19 @@ app.get("/api/getoperationteamlist", async(req, res) => {
   }
 });
 
+app.get("/api/getloginlist", async(req, res) => {
+  try {
+    // Retrieve all users login from the database
+    const users = await loginSchemaObject.find({},{userName:1, userID:1, userType:1});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get login details' });
+  }
+});
+
+
+
 app.get("/api/getmarketingteamlist", async(req, res) => {
   try {
     // Retrieve all users login from the database
@@ -2854,6 +2867,29 @@ app.get("/api/deletecpdetailbyid", async(req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to delete CP details' });
+  }
+});
+
+app.get("/api/deletemanagerdetailbyid", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  managerSchemaObject.findOneAndDelete({managerID: req.query.managerID});
+    res.json({ message: 'success'});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to delete manager details' });
+  }
+});
+
+
+app.get("/api/deleteloginbyid", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  loginSchemaObject.findOneAndDelete({userID: req.query.userID});
+    res.json({ message: 'success'});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to delete login details' });
   }
 });
 
@@ -4229,6 +4265,8 @@ app.use(express.static('public'));
 app.get('/', (req, res) => res.sendFile(__dirname+'/index.html'))
 app.get('/index.html', (req, res) => res.sendFile(__dirname+'/index.html'))
 
+app.get('/navbar.html', (req, res) => res.sendFile(__dirname+'/navbar.html'))
+
 app.get('/login.html', (req, res) => res.sendFile(__dirname+'/login.html'))
 app.get('/logout.html', (req, res) => res.sendFile(__dirname+'/logout.html'))
 app.get('/newcase.html', (req, res) => res.sendFile(__dirname+'/newcase.html'))
@@ -4239,6 +4277,9 @@ app.get('/viewlivecases.html', (req, res) => res.sendFile(__dirname+'/viewliveca
 app.get('/viewconsumercases.html', (req, res) => res.sendFile(__dirname+'/viewconsumercases.html'))
 
 app.get('/deletecases.html', (req, res) => res.sendFile(__dirname+'/deletecases.html'))
+
+app.get('/deleteaccount.html', (req, res) => res.sendFile(__dirname+'/deleteaccount.html'))
+
 app.get('/viewpendingdraftcases.html', (req, res) => res.sendFile(__dirname+'/viewpendingdraftcases.html'))
 app.get('/viewfullcasedetails.html', (req, res) => res.sendFile(__dirname+'/viewfullcasedetails.html'))
 app.get('/viewrejectedcases.html', (req, res) => res.sendFile(__dirname+'/viewrejectedcases.html'))
