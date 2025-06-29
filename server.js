@@ -58,8 +58,6 @@ const port = process.env.PORT || 80
 //  useUnifiedTopology: true,
 //});
 
-
-
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -1787,6 +1785,17 @@ app.post('/api/editcasedetails', async(req, res) => {
                 cfChequeNumber  : req.body.cfChequeNumber,
                 caseCustomerReceivedAmount:req.body.caseCustomerReceivedAmount,
                 caseCustomerReceivedAmountDate:req.body.caseCustomerReceivedAmountDate,
+                newCaseStatus:req.body.newCaseStatus,
+                isProspect: req.body.isProspect,
+                isInMedicalOpinion:req.body.isInMedicalOpinion,
+                isLive: req.body.isLive,
+                isHold: req.body.isHold,
+                isInEscalationStage : req.body.isInEscalationStage,
+                isInLokpalStage : req.body.isInLokpalStage,
+                isCompleted : req.body.isCompleted,
+                isPendingPayment : req.body.isPendingPayment,
+                isPendingCPPayment : req.body.isPendingCPPayment,
+                isFinished : req.body.isFinished,
 
               },});
 
@@ -4271,6 +4280,8 @@ app.get('/login.html', (req, res) => res.sendFile(__dirname+'/login.html'))
 app.get('/logout.html', (req, res) => res.sendFile(__dirname+'/logout.html'))
 app.get('/newcase.html', (req, res) => res.sendFile(__dirname+'/newcase.html'))
 app.get('/editcase.html', (req, res) => res.sendFile(__dirname+'/editcase.html'))
+
+
 app.get('/viewprospectcases.html', (req, res) => res.sendFile(__dirname+'/viewprospectcases.html'))
 app.get('/viewapprovedcases.html', (req, res) => res.sendFile(__dirname+'/viewapprovedcases.html'))
 app.get('/viewlivecases.html', (req, res) => res.sendFile(__dirname+'/viewlivecases.html'))

@@ -470,9 +470,41 @@
                         <div class="col-sm-3">
                           <label for="customerAmount"class="form-label">Amount received by Customer</label>
                           <input type="number" class="form-control" id="customerAmount" placeholder="Enter amount"  style="margin-top: 5px;margin-bottom: 5px;" >
+                        </div>
+
+                        <div class="col-sm-3">
+                          <label for="caseBucket" class="form-label">Case Bucket</label>
+                          <div class="input-group">
+                            <select class="form-control" id="caseBucket-dropdown">
+                              <option value="prospect">Prospect</option>
+                              <option value="medical">Medical</option>
+                              <option value="approved">Approved</option>
+                              <option value="rejected">Rejected</option>
+                              <option value="live">Live</option>
+                              <option value="pendingdraft">Pending Draft</option>
+                              <option value="escalation">Escalation</option>
+                              <option value="lokpal">Lokpal</option>
+                              <option value="completed">Completed</option>
+                              <option value="pendingpayment">Pending Payment</option>
+                              <option value="cppayment">CP Payment</option>
+                              <option value="finished">Finished</option>
+                              <option value="hold">Hold</option>
+                            </select>
+                          </div>
+                        </div>
+
+
                       </div>
 
-
+                      <div class="row mb-3">
+                        <div class="col-sm-3">
+                          <label for="caseStatus" class="form-label">Case Status</label>
+                          <div class="input-group">
+                            <select class="form-control" id="caseStatus-dropdown">
+                             
+                            </select>
+                          </div>
+                        </div>
                       </div>
 
                       <div class="row mb-3">
@@ -785,6 +817,206 @@ const quill = new Quill('#editor', {
 
 });
 
+//RAJAT bucket change
+
+$('#caseBucket-dropdown').change(function () {
+
+  const dropdown = document.getElementById('caseStatus-dropdown');
+  dropdown.innerHTML = '';
+
+if( document.getElementById("caseBucket-dropdown").value =="prospect")
+{
+  const newOption = document.createElement('option');
+  newOption.value = "New Case";
+  newOption.textContent = "New Case";
+  dropdown.appendChild(newOption);
+
+  const newOption1 = document.createElement('option');
+  newOption1.value = "Medical Query";
+  newOption1.textContent = "Medical Query";
+  dropdown.appendChild(newOption1);
+  
+}
+else if(document.getElementById("caseBucket-dropdown").value =="medical")
+{
+  const newOption = document.createElement('option');
+  newOption.value = "In Medical";
+  newOption.textContent = "In Medical";
+  dropdown.appendChild(newOption);
+  
+}
+else if(document.getElementById("caseBucket-dropdown").value =="approved")
+{
+  const newOption = document.createElement('option');
+  newOption.value = "Approved";
+  newOption.textContent = "Approved";
+  dropdown.appendChild(newOption);
+
+  const newOption1 = document.createElement('option');
+  newOption1.value = "Legal Generated";
+  newOption1.textContent = "Legal Generated";
+  dropdown.appendChild(newOption1);
+  
+}
+else if(document.getElementById("caseBucket-dropdown").value =="rejected")
+{
+  const newOption = document.createElement('option');
+  newOption.value = "Rejected";
+  newOption.textContent = "Rejected";
+  dropdown.appendChild(newOption);
+  
+}
+else if(document.getElementById("caseBucket-dropdown").value =="live")
+{
+  const newOption = document.createElement('option');
+  newOption.value = "Live";
+  newOption.textContent = "Live";
+  dropdown.appendChild(newOption);
+
+
+  const newOption1 = document.createElement('option');
+  newOption1.value = "Gist Generated";
+  newOption1.textContent = "Gist Generated";
+  dropdown.appendChild(newOption1);
+
+  const newOption3 = document.createElement('option');
+  newOption3.value = "Draft Query";
+  newOption3.textContent = "Draft Query";
+  dropdown.appendChild(newOption3);
+
+  const newOption4 = document.createElement('option');
+  newOption4.value = "Reimbursement";
+  newOption4.textContent = "Reimbursement";
+  dropdown.appendChild(newOption4);
+
+  const newOption5 = document.createElement('option');
+  newOption5.value = "Pending Doc";
+  newOption5.textContent = "Pending Doc";
+  dropdown.appendChild(newOption5);
+  
+}
+else if(document.getElementById("caseBucket-dropdown").value =="pendingdraft")
+{
+  const newOption = document.createElement('option');
+  newOption.value = "Pending Draft";
+  newOption.textContent = "Pending Draft";
+  dropdown.appendChild(newOption);
+
+  const newOption1 = document.createElement('option');
+  newOption1.value = "Draft Generated";
+  newOption1.textContent = "Draft Generated";
+  dropdown.appendChild(newOption1);
+  
+}
+else if(document.getElementById("caseBucket-dropdown").value =="escalation")
+{
+  const newOption = document.createElement('option');
+  newOption.value = "Escalation Pending";
+  newOption.textContent = "Escalation Pending";
+  dropdown.appendChild(newOption);
+
+  const newOption1 = document.createElement('option');
+  newOption1.value = "Escalation Query";
+  newOption1.textContent = "Escalation Query";
+  dropdown.appendChild(newOption1);
+
+  const newOption2 = document.createElement('option');
+  newOption2.value = "Escalated";
+  newOption2.textContent = "Escalated";
+  dropdown.appendChild(newOption2);
+  
+}
+else if(document.getElementById("caseBucket-dropdown").value =="lokpal")
+{
+  const newOption = document.createElement('option');
+  newOption.value = "Lokpal Pending";
+  newOption.textContent = "Lokpal Pending";
+  dropdown.appendChild(newOption);
+
+  const newOption1 = document.createElement('option');
+  newOption1.value = "Lokpal Registered";
+  newOption1.textContent = "Lokpal Registered";
+  dropdown.appendChild(newOption1);
+
+  const newOption2 = document.createElement('option');
+  newOption2.value = "Annexure5 Pending";
+  newOption2.textContent = "Annexure5 Pending";
+  dropdown.appendChild(newOption2);
+
+  const newOption3 = document.createElement('option');
+  newOption3.value = "Annexure5 Replied";
+  newOption3.textContent = "Annexure5 Replied";
+  dropdown.appendChild(newOption3);
+
+  const newOption4 = document.createElement('option');
+  newOption4.value = "Annexure 6 Pending";
+  newOption4.textContent = "Annexure 6 Pending";
+  dropdown.appendChild(newOption4);
+
+  const newOption5 = document.createElement('option');
+  newOption5.value = "Annexure 6 Replied";
+  newOption5.textContent = "Annexure 6 Replied";
+  dropdown.appendChild(newOption5);
+
+  const newOption6 = document.createElement('option');
+  newOption6.value = "Hearing";
+  newOption6.textContent = "Hearing";
+  dropdown.appendChild(newOption6);
+}
+else if(document.getElementById("caseBucket-dropdown").value =="completed")
+{
+  const newOption6 = document.createElement('option');
+  newOption6.value = "Completed";
+  newOption6.textContent = "Completed";
+  dropdown.appendChild(newOption6);
+  
+}
+else if(document.getElementById("caseBucket-dropdown").value =="pendingpayment")
+{
+  const newOption6 = document.createElement('option');
+  newOption6.value = "Part Payment";
+  newOption6.textContent = "Part Payment";
+  dropdown.appendChild(newOption6);
+  
+
+  const newOption2 = document.createElement('option');
+  newOption2.value = "Pending Payment";
+  newOption2.textContent = "Pending Payment";
+  dropdown.appendChild(newOption2);
+}
+else if(document.getElementById("caseBucket-dropdown").value =="cppayment")
+{
+  const newOption6 = document.createElement('option');
+  newOption6.value = "CP Payment Pending";
+  newOption6.textContent = "CP Payment Pending";
+  dropdown.appendChild(newOption6);
+  
+  const newOption2 = document.createElement('option');
+  newOption2.value = "Bank Details Missing";
+  newOption2.textContent = "Bank Details Missing";
+  dropdown.appendChild(newOption2);
+}
+else if(document.getElementById("caseBucket-dropdown").value =="finished")
+{
+  const newOption6 = document.createElement('option');
+  newOption6.value = "Case Closed";
+  newOption6.textContent = "Case Closed";
+  dropdown.appendChild(newOption6);
+}
+else if(document.getElementById("caseBucket-dropdown").value =="hold")
+{
+  const newOption6 = document.createElement('option');
+  newOption6.value = "Hold";
+  newOption6.textContent = "Hold";
+  dropdown.appendChild(newOption6);
+}
+  
+
+});
+
+
+//bucket change end
+
 
 
 
@@ -912,6 +1144,72 @@ document.getElementById("cf_or_cheque-amount-final").value= Math.round((claimamo
             quill1.root.innerHTML= response[0].lokpalDraft ?  response[0].lokpalDraft:"" ;
 
 
+            //rajat editcasebucket
+            if(response[0].isProspect =="true" && response[0].isInMedicalOpinion =="true")
+            {
+            document.getElementById("caseBucket-dropdown").value = "medical";
+            }
+            else if(response[0].isProspect =="false" && (response[0].newCaseStatus =="Approved" || response[0].newCaseStatus =="Legal Generated"  ))
+            {
+            document.getElementById("caseBucket-dropdown").value = "approved";
+            }
+            else if(response[0].isProspect =="false" &&(response[0].newCaseStatus =="Rejected"   ))
+            {
+            document.getElementById("caseBucket-dropdown").value = "rejected";
+            }
+            else if(response[0].isProspect =="true")
+            {
+            document.getElementById("caseBucket-dropdown").value = "prospect";
+            }
+            else if(response[0].isLive =="true" &&(response[0].newCaseStatus =="Draft Generated" || response[0].newCaseStatus =="Pending Draft" ))
+            {
+              document.getElementById("caseBucket-dropdown").value = "pendingdraft";
+            }
+            else if(response[0].isLive =="true")
+            {
+              document.getElementById("caseBucket-dropdown").value = "live";
+            }
+            else if(response[0].isInEscalationStage =="true" )
+            {
+              document.getElementById("caseBucket-dropdown").value = "escalation";
+            }
+            else if(response[0].isInLokpalStage =="true" )
+            {
+              document.getElementById("caseBucket-dropdown").value = "lokpal";
+            }
+            else if(response[0].isCompleted =="true" )
+            {
+              document.getElementById("caseBucket-dropdown").value = "completed";
+            }
+            else if(response[0].isPendingPayment =="true" )
+            {
+              document.getElementById("caseBucket-dropdown").value = "pendingpayment";
+            }
+            else if(response[0].isPendingCPPayment =="true" )
+            {
+              document.getElementById("caseBucket-dropdown").value = "cppayment";
+            }
+            else if(response[0].isFinished =="true" )
+            {
+              document.getElementById("caseBucket-dropdown").value = "finished";
+            }
+            else if(response[0].isHold =="true" )
+            {
+              document.getElementById("caseBucket-dropdown").value = "hold";
+            }
+            
+
+          //  casestatus-dropdown
+          const dropdown = document.getElementById('caseStatus-dropdown');
+          dropdown.innerHTML = ''; 
+          const newOption = document.createElement('option');
+          newOption.value = response[0].newCaseStatus;
+          newOption.textContent = response[0].newCaseStatus;
+          dropdown.appendChild(newOption);
+          document.getElementById("caseStatus-dropdown").value = response[0].newCaseStatus ? response[0].newCaseStatus : "";
+            //rajat editcasebucket end
+
+
         },
         error: function (error) {
           console.error('Error:', error);
@@ -979,6 +1277,70 @@ document.getElementById("cf_or_cheque-amount-final").value= Math.round((claimamo
 
             var customerAmountReceived = $('#customerAmount').val();
             var customerAmountReceivedDate = $('#customerAmountDate').val();
+
+            var casestatus= $('#caseStatus-dropdown').val();
+
+            var isProspect = "false";
+            var isInMedicalOpinion = "false";
+            var isLive = "false";
+            var isHold = "false";
+            var isInEscalationStage = "false";
+            var isInLokpalStage = "false";
+            var isCompleted = "false";
+            var isPendingPayment = "false";
+            var isPendingCPPayment = "false";
+            var isFinished = "false";
+            //
+          var bucketvalue= $('#caseBucket-dropdown').val() ;
+            if(bucketvalue =="prospect"  )
+            {
+              isProspect ="true";
+            }
+            else if(bucketvalue =="medical"  )
+            {
+              isInMedicalOpinion ="true";
+              isProspect ="true";
+            }
+            else if (bucketvalue =="live" || bucketvalue =="pendingdraft")
+            {
+              isLive = "true";
+            }
+            else if(bucketvalue =="hold")
+            {
+               isHold = "true";
+           
+            }
+            else if(bucketvalue =="escalation")
+            {
+               isInEscalationStage = "true";
+           
+            }
+            else if(bucketvalue =="lokpal")
+            {
+               isInLokpalStage = "true";
+           
+            }
+            else if(bucketvalue =="completed")
+            {
+               isCompleted = "true";
+            
+            }
+            else if(bucketvalue =="pendingpayment")
+            {
+              isPendingPayment = "true";
+            
+            }
+            else if(bucketvalue =="cppayment")
+            {
+              isPendingCPPayment = "true";
+            
+            }
+            else if(bucketvalue =="finished")
+            {
+              isFinished = "true";
+            }
+
+            //
           
 
       $.ajax({
@@ -1039,6 +1401,17 @@ document.getElementById("cf_or_cheque-amount-final").value= Math.round((claimamo
             cfPercentage : cfpercentfinal,
             cfAmount : cfamountfinal,
             cfChequeNumber  : chequenumberfinal,
+            newCaseStatus: casestatus,
+            isProspect: isProspect,
+            isInMedicalOpinion:isInMedicalOpinion,
+            isLive: isLive,
+            isHold: isHold,
+            isInEscalationStage : isInEscalationStage,
+            isInLokpalStage : isInLokpalStage,
+            isCompleted : isCompleted,
+            isPendingPayment : isPendingPayment,
+            isPendingCPPayment : isPendingCPPayment,
+            isFinished : isFinished,
           },
           success: function (response) {
             if(response.message == "success")
