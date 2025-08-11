@@ -58,6 +58,7 @@ const port = process.env.PORT || 80
 //  useUnifiedTopology: true,
 //});
 
+
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -4354,7 +4355,7 @@ app.listen(port, () => console.log(`Insurance app listening on port ${port}!`))
 app.post("/api/getlegalpdf", async (req, res) => {
   try{
 
-    const response = await createPDF(req);
+    const response = await createPDFNewformat(req);
     var fileName = 'file.pdf';
 
       console.log(response);
@@ -4670,6 +4671,316 @@ document.registerFontkit(fontkit);
 
          //
 
+  writeFileSync("Legal.pdf", await document.save());
+
+  return true;
+}
+
+async function createPDFNewformat(req) {
+  const document = await PDFDocument.load(readFileSync("./agreementtemplate22.pdf"));
+
+  const courierBoldFont = await document.embedFont(StandardFonts.Courier);
+  const timesFont = await document.embedFont(StandardFonts.TimesRoman);
+  const timesBoldFont = await document.embedFont(StandardFonts.TimesRomanBold);
+  const firstPage = document.getPage(0);
+  const secondPage = document.getPage(1);
+
+  console.log( firstPage.getHeight() + " " +  firstPage.getWidth());
+  
+
+var chequenumber = req.body.chequeNumber;
+var bankname =   req.body.bankName;
+
+
+
+var agreementdate = (new Date());
+const formattedDate = agreementdate.toLocaleDateString('en-GB', {
+  day: '2-digit',
+  
+});
+const formattedMonth = agreementdate.toLocaleDateString('en-GB', {
+  month: '2-digit',
+  
+});
+
+const formattedYear = agreementdate.toLocaleDateString('en-GB', {
+  year: '2-digit',
+  
+});
+
+ /*
+${agreementdate.getDate().toString()} day of month ${monthName[agreementdate.getMonth()]} ${agreementdate.getFullYear().toString()
+${req.body.clientName}
+${req.body.behalfOf} 
+${req.body.insuranceCompanyName} 
+${req.body.complainantName}
+
+${req.body.claimNumber}
+
+${req.body.consultationCharge}
+${req.body.claimAmount}
+${req.body.chequeAmount}
+
+${req.body.processingFee}
+
+${bankname}
+*/
+
+document.registerFontkit(fontkit);
+
+ const customFont = await document.embedFont(fs.readFileSync('./public/Karma-Regular.ttf'), { subset: true })
+
+
+ //Add Id name to legal doc
+ firstPage.moveTo(100, 850);
+ firstPage.drawText(req.body.idNumber, {
+   font: timesBoldFont,
+   size: 11,
+ });
+
+ firstPage.moveTo(195, 802);
+ firstPage.drawText(req.body.complainantName, {
+   font: timesBoldFont,
+   size: 11,
+ });
+
+ firstPage.moveTo(173, 737);
+ firstPage.drawText(req.body.insuranceCompanyName, {
+   font: timesBoldFont,
+   size: 11,
+ });
+
+ firstPage.moveTo(120, 718);
+ firstPage.drawText(req.body.claimNumber, {
+   font: timesBoldFont,
+   size: 11,
+ });
+
+ firstPage.moveTo(135, 700);
+ firstPage.drawText(req.body.clientName, {
+   font: timesBoldFont,
+   size: 11,
+ });
+
+
+ firstPage.moveTo(255, 680);
+ firstPage.drawText(req.body.behalfOf, {
+   font: timesBoldFont,
+   size: 11,
+ });
+
+ firstPage.moveTo(53, 654);
+ firstPage.drawText(req.body.complainantName, {
+   font: timesBoldFont,
+   size: 11,
+ });
+
+
+ firstPage.moveTo(160, 547);
+ firstPage.drawText( req.body.processingFee, {
+   font: timesBoldFont,
+   size: 11,
+ });
+
+
+ firstPage.moveTo(148, 530);
+ firstPage.drawText( req.body.consultationCharge, {
+   font: timesBoldFont,
+   size: 11,
+ });
+
+ firstPage.moveTo(200, 501);
+ firstPage.drawText( req.body.chequeAmount, {
+   font: timesBoldFont,
+   size: 11,
+ });
+ 
+ firstPage.moveTo(127, 486);
+ firstPage.drawText( req.body.chequeNumber, {
+   font: timesBoldFont,
+   size: 11,
+ });
+
+ firstPage.moveTo(225, 486);
+ firstPage.drawText( req.body.bankName, {
+   font: timesBoldFont,
+   size: 11,
+ });
+
+
+
+ firstPage.moveTo(430, 292);
+ firstPage.drawText( formattedDate, {
+   font: timesBoldFont,
+   size: 11,
+ });
+
+ firstPage.moveTo(447, 292);
+ firstPage.drawText( formattedMonth, {
+   font: timesBoldFont,
+   size: 11,
+ });
+
+ firstPage.moveTo(481, 292);
+ firstPage.drawText(  formattedYear, {
+   font: timesBoldFont,
+   size: 11,
+ });
+
+
+
+
+
+ firstPage.moveTo(78, 230);
+ firstPage.drawText( req.body.complainantName, {
+   font: timesBoldFont,
+   size: 11,
+ });
+
+ firstPage.moveTo(88, 210);
+ firstPage.drawText( req.body.clientAddress, {
+   font: timesBoldFont,
+   size: 11,
+ });
+
+ firstPage.moveTo(80, 178);
+ firstPage.drawText( req.body.clientPhone, {
+   font: timesBoldFont,
+   size: 11,
+ });
+
+ firstPage.moveTo(79, 110);
+ firstPage.drawText( req.body.witnessName, {
+   font: timesBoldFont,
+   size: 11,
+ });
+
+ 
+//rajat
+//Add Id name to legal doc
+secondPage.moveTo(125, 850);
+secondPage.drawText(req.body.idNumber, {
+  font: timesBoldFont,
+  size: 11,
+});
+
+secondPage.moveTo(175, 812);
+secondPage.drawText(req.body.complainantName, {
+  font: timesBoldFont,
+  size: 11,
+});
+
+secondPage.moveTo(114, 755);
+secondPage.drawText(req.body.insuranceCompanyName, {
+  font: timesBoldFont,
+  size: 11,
+});
+
+secondPage.moveTo(114, 738);
+secondPage.drawText(req.body.claimNumber, {
+  font: timesBoldFont,
+  size: 11,
+});
+
+secondPage.moveTo(153, 724);
+secondPage.drawText(req.body.clientName, {
+  font: timesBoldFont,
+  size: 11,
+});
+
+
+secondPage.moveTo(194, 708);
+secondPage.drawText(req.body.behalfOf, {
+  font: timesBoldFont,
+  size: 11,
+});
+
+secondPage.moveTo(59, 685);
+secondPage.drawText(req.body.complainantName, {
+  font: timesBoldFont,
+  size: 11,
+});
+
+
+secondPage.moveTo(140, 520);
+secondPage.drawText( req.body.processingFee, {
+  font: timesBoldFont,
+  size: 11,
+});
+
+
+secondPage.moveTo(174, 503);
+secondPage.drawText( req.body.consultationCharge, {
+  font: timesBoldFont,
+  size: 11,
+});
+
+secondPage.moveTo(178, 465);
+secondPage.drawText( req.body.chequeAmount, {
+  font: timesBoldFont,
+  size: 11,
+});
+
+secondPage.moveTo(117, 448);
+secondPage.drawText( req.body.chequeNumber, {
+  font: timesBoldFont,
+  size: 11,
+});
+
+secondPage.moveTo(227, 448);
+secondPage.drawText( req.body.bankName, {
+  font: timesBoldFont,
+  size: 11,
+});
+
+
+
+secondPage.moveTo(437, 248);
+secondPage.drawText( formattedDate, {
+  font: timesBoldFont,
+  size: 11,
+});
+
+secondPage.moveTo(455, 248);
+secondPage.drawText( formattedMonth, {
+  font: timesBoldFont,
+  size: 11,
+});
+
+secondPage.moveTo(488, 248);
+secondPage.drawText(  formattedYear, {
+  font: timesBoldFont,
+  size: 11,
+});
+
+
+
+
+
+secondPage.moveTo(78, 210);
+secondPage.drawText( req.body.complainantName, {
+  font: timesBoldFont,
+  size: 11,
+});
+
+secondPage.moveTo(78, 190);
+secondPage.drawText( req.body.clientAddress, {
+  font: timesBoldFont,
+  size: 11,
+});
+
+secondPage.moveTo(84, 173);
+secondPage.drawText( req.body.clientPhone, {
+  font: timesBoldFont,
+  size: 11,
+});
+
+secondPage.moveTo(74, 100);
+secondPage.drawText( req.body.witnessName, {
+  font: timesBoldFont,
+  size: 11,
+});
+//rajat
   writeFileSync("Legal.pdf", await document.save());
 
   return true;
