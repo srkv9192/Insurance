@@ -192,22 +192,6 @@
                           <div class="input-group">
                             <select class="form-control" id="case-of-dropdown" >
                               <option value="">None</option>
-                              <option value="abhishek solanki">Abhishek Solanki</option>
-                              <option value="annapurna kasera">Annapurna Kasera</option>
-                              <option value="aparna pare">Aparna Pare</option>
-                              <option value="ashish dubey">Ashish Dubey</option>
-                              <option value="ashish khandelwal">Ashish khandelwal</option>
-                              <option value="ashwin kaushal">Ashwin kaushal</option>
-                              <option value="avi mishra">Avi Mishra</option>
-                              <option value="dimple batra">Dimple Batra</option>
-                              <option value="khushi bhite">Khushi Bhite</option>
-                              <option value="kumkum sanodiya">Kumkum Sanodiya</option>
-                              <option value="mahi mishra">Mahi Mishra</option>
-                              <option value="mansi sawant">Mansi Sawant</option>
-                              <option value="mona dodiya">Mona Dodiya</option>
-                              <option value="robin mehkali">Robin Mehkali</option>
-                              <option value="suhana jain">Suhana Jain</option>
-                              <option value="swati sarathe">Swati Sarathe</option>
                               <option value="vijay nagar">Vijay Nagar</option>
                             </select>
                           </div>
@@ -608,6 +592,24 @@ const quill = new Quill('#editor', {
       });
 
 
+
+      $.ajax({
+        url: '/api/getmarketingandoperationteamlist',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          const optionsSelect = $('#case-of-dropdown');
+          response.forEach(function (option) {
+            optionsSelect.append($('<option>', {
+              value: option.userName.toLowerCase(),
+              text: option.userName
+            }));
+          });
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
 
       
       $.ajax({
