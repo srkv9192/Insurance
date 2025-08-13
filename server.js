@@ -2512,7 +2512,7 @@ app.get("/api/getmarketingteamlist", async(req, res) => {
 app.get("/api/getmarketingandoperationteamlist", async(req, res) => {
   try {
     // Retrieve all users login from the database
-    const users = await loginSchemaObject.find({ userType: { $in: ["marketing", "operation"] }}, {userName:1, userID:1});
+    const users = await loginSchemaObject.find({ userType: { $in: ["marketing", "operation", "marketingmanager"] }}, {userName:1, userID:1});
     res.json(users);
   } catch (error) {
     console.error(error);
