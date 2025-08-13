@@ -59,14 +59,10 @@ const port = process.env.PORT || 80
 //});
 
 
-
-
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
-
 
 /*
 
@@ -1626,6 +1622,31 @@ app.post('/api/movetoescalationquery', async(req, res) => {
       if(newData == null)
       {
         res.json({ message: 'Could not move case to escalation query', refnum:req.body.referencenumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding remark' });
+  } 
+
+});
+
+
+
+
+app.post('/api/movetoreimbursementquery', async(req, res) => {
+  try{
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ caseRemarks:req.body.caseRemarks}, $set:{ newCaseStatus: "Reimbursement Query", isReimbursement: "true"}});
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not move case to Reimbursement Query', refnum:req.body.referencenumber});
       }
       else
       {
