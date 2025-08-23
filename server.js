@@ -59,6 +59,7 @@ const port = process.env.PORT || 80
 //});
 
 
+
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -4824,6 +4825,11 @@ document.registerFontkit(fontkit);
    font: timesBoldFont,
    size: 11,
  });
+ firstPage.moveTo(259, 530);
+ firstPage.drawText( req.body.claimAmount, {
+   font: timesBoldFont,
+   size: 11,
+ });
 
  firstPage.moveTo(200, 501);
  firstPage.drawText( req.body.chequeAmount, {
@@ -4947,6 +4953,12 @@ secondPage.drawText( req.body.processingFee, {
 
 secondPage.moveTo(174, 503);
 secondPage.drawText( req.body.consultationCharge, {
+  font: timesBoldFont,
+  size: 11,
+});
+
+secondPage.moveTo(210, 503);
+secondPage.drawText( req.body.claimAmount, {
   font: timesBoldFont,
   size: 11,
 });
