@@ -918,7 +918,7 @@ function populatereport(refnumber)
               // Populate the options in the select element
               document.querySelector('[data-info="reportcasenumber"]').textContent =response[0].casereferenceNumber ? response[0].casereferenceNumber : "";
               document.querySelector('[data-info="reportcasehandler"]').textContent =response[0].caseHandler ? response[0].caseHandler : "";
-              document.querySelector('[data-info="reportinitialcasedate"]').textContent =response[0].prospectDate ? moment(new Date(response[0].prospectDate)).utc().format('MM-DD-YYYY') : "";
+              document.querySelector('[data-info="reportinitialcasedate"]').textContent =response[0].prospectDate ? moment(new Date(response[0].prospectDate)).utc().format('DD-MM-YYYY') : "";
 
               document.querySelector('[data-info="reportpatientname"]').textContent =response[0].patientName ? response[0].patientName : "";
 
@@ -961,15 +961,15 @@ function populatereport(refnumber)
               document.querySelector('[data-info="reportpolicynumber"]').textContent =response[0].policyNumber ? response[0].policyNumber : "";
 
 
-              document.querySelector('[data-info="reportpolicyinception"]').textContent =response[0].dateOfPolicy ? moment(new Date(response[0].dateOfPolicy)).utc().format('MM-DD-YYYY') : "";
+              document.querySelector('[data-info="reportpolicyinception"]').textContent =response[0].dateOfPolicy ? moment(new Date(response[0].dateOfPolicy)).utc().format('DD-MM-YYYY') : "";
 
               document.querySelector('[data-info="reporthospitalname"]').textContent =response[0].hospitalName ? response[0].hospitalName : "";
               
-              document.querySelector('[data-info="reportadmissiondate"]').textContent =response[0].dateOfAdmission ? moment(new Date(response[0].dateOfAdmission)).utc().format('MM-DD-YYYY') : "";
+              document.querySelector('[data-info="reportadmissiondate"]').textContent =response[0].dateOfAdmission ? moment(new Date(response[0].dateOfAdmission)).utc().format('DD-MM-YYYY') : "";
 
-              document.querySelector('[data-info="reportdischargedate"]').textContent =response[0].dateOfDischarge ? moment(new Date(response[0].dateOfDischarge)).utc().format('MM-DD-YYYY') : "";
+              document.querySelector('[data-info="reportdischargedate"]').textContent =response[0].dateOfDischarge ? moment(new Date(response[0].dateOfDischarge)).utc().format('DD-MM-YYYY') : "";
 
-              document.querySelector('[data-info="reportrejectiondate"]').textContent =response[0].initialRejectionDate ? moment(new Date(response[0].initialRejectionDate)).utc().format('MM-DD-YYYY') : "";
+              document.querySelector('[data-info="reportrejectiondate"]').textContent =response[0].initialRejectionDate ? moment(new Date(response[0].initialRejectionDate)).utc().format('DD-MM-YYYY') : "";
 
               document.querySelector('[data-info="reportdiagnosis"]').textContent =response[0].diagnosis ? response[0].diagnosis : "";
 
@@ -982,12 +982,12 @@ function populatereport(refnumber)
 
               document.querySelector('[data-info="reportemailpassword"]').textContent =response[0].caseEmailPassword ? response[0].caseEmailPassword : "";
 
-              document.querySelector('[data-info="reportescalationdate"]').textContent =response[0].dateofEscalationToInsurer ? moment(new Date(response[0].dateofEscalationToInsurer)).utc().format('MM-DD-YYYY') : "";
+              document.querySelector('[data-info="reportescalationdate"]').textContent =response[0].dateofEscalationToInsurer ? moment(new Date(response[0].dateofEscalationToInsurer)).utc().format('DD-MM-YYYY') : "";
 
-              document.querySelector('[data-info="lokpalregistrationdate"]').textContent =response[0].lokpalBHPComplaintDate ? moment(new Date(response[0].lokpalBHPComplaintDate)).utc().format('MM-DD-YYYY') : "";
-              document.querySelector('[data-info="annexure-5-replydate"]').textContent =response[0].annexure5ComplaintDate ? moment(new Date(response[0].annexure5ComplaintDate)).utc().format('MM-DD-YYYY') : "";
-              document.querySelector('[data-info="annexure-6-replydate"]').textContent =response[0].lokpalComplaintDate ? moment(new Date(response[0].lokpalComplaintDate)).utc().format('MM-DD-YYYY') : "";
-              document.querySelector('[data-info="lokpal-hearing-date"]').textContent =response[0].dateOfLokpalHearing ? moment(new Date(response[0].dateOfLokpalHearing)).utc().format('MM-DD-YYYY') : "";
+              document.querySelector('[data-info="lokpalregistrationdate"]').textContent =response[0].lokpalBHPComplaintDate ? moment(new Date(response[0].lokpalBHPComplaintDate)).utc().format('DD-MM-YYYY') : "";
+              document.querySelector('[data-info="annexure-5-replydate"]').textContent =response[0].annexure5ComplaintDate ? moment(new Date(response[0].annexure5ComplaintDate)).utc().format('DD-MM-YYYY') : "";
+              document.querySelector('[data-info="annexure-6-replydate"]').textContent =response[0].lokpalComplaintDate ? moment(new Date(response[0].lokpalComplaintDate)).utc().format('DD-MM-YYYY') : "";
+              document.querySelector('[data-info="lokpal-hearing-date"]').textContent =response[0].dateOfLokpalHearing ? moment(new Date(response[0].dateOfLokpalHearing)).utc().format('DD-MM-YYYY') : "";
               document.querySelector('[data-info="bhp-number"]').textContent =response[0].LokpalBHPComplaintNumber ? response[0].LokpalBHPComplaintNumber : "";
               document.querySelector('[data-info="annexure-5"]').textContent =response[0].annexure5ComplaintNumber ? response[0].annexure5ComplaintNumber : "";
               document.querySelector('[data-info="annexure-6"]').textContent =response[0].lokpalComplaintNumber ? response[0].lokpalComplaintNumber : "";
@@ -995,18 +995,18 @@ function populatereport(refnumber)
               document.querySelector('[data-info="case-settlement-amount"]').textContent =response[0].caseSettlementAmount ? response[0].caseSettlementAmount : "";
               document.querySelector('[data-info="case-completion-type"]').textContent =response[0].caseCompletionType ? response[0].caseCompletionType : "";
               document.querySelector('[data-info="case-result"]').textContent =response[0].caseResult ? response[0].caseResult : "";
-              document.querySelector('[data-info="customer-received-amount-date"]').textContent =response[0].caseCustomerReceivedAmountDate ? moment(new Date(response[0].caseCustomerReceivedAmountDate)).utc().format('MM-DD-YYYY'): "";
+              document.querySelector('[data-info="customer-received-amount-date"]').textContent =response[0].caseCustomerReceivedAmountDate ? moment(new Date(response[0].caseCustomerReceivedAmountDate)).utc().format('DD-MM-YYYY'): "";
               document.querySelector('[data-info="customer-received-amount"]').textContent =response[0].caseCustomerReceivedAmount ? response[0].caseCustomerReceivedAmount : "";
 
               document.querySelector('[data-info="nidaan-received-amount"]').textContent =response[0].caseNidaanReceivedAmount ? response[0].caseNidaanReceivedAmount : "";
-              document.querySelector('[data-info="nidaan-received-amount-date"]').textContent =response[0].caseNidaanReceivedAmountDate ? moment(new Date(response[0].caseNidaanReceivedAmountDate)).utc().format('MM-DD-YYYY'): "";
+              document.querySelector('[data-info="nidaan-received-amount-date"]').textContent =response[0].caseNidaanReceivedAmountDate ? moment(new Date(response[0].caseNidaanReceivedAmountDate)).utc().format('DD-MM-YYYY'): "";
               document.querySelector('[data-info="nidaan-payment-mode"]').textContent =response[0].caseNidaanReceivedAmountMode ? response[0].caseNidaanReceivedAmountMode : "";
               document.querySelector('[data-info="cp-commision-amount"]').textContent =response[0].caseCPFinalAmount ? response[0].caseCPFinalAmount : "";
                       
               document.querySelector('[data-info="cp-payment-mode"]').textContent =response[0].caseCPFinalReceivedAmountMode ? response[0].caseCPFinalReceivedAmountMode : "";
               document.querySelector('[data-info="cp-payment-transaction-number"]').textContent =response[0].caseCPPaymentTransactionNumber ? response[0].caseCPPaymentTransactionNumber : "";
               
-              document.querySelector('[data-info="cp-received-amount-date"]').textContent =response[0].caseCPFinalReceivedAmountDate ? moment(new Date(response[0].caseCPFinalReceivedAmountDate)).utc().format('MM-DD-YYYY') : "";
+              document.querySelector('[data-info="cp-received-amount-date"]').textContent =response[0].caseCPFinalReceivedAmountDate ? moment(new Date(response[0].caseCPFinalReceivedAmountDate)).utc().format('DD-MM-YYYY') : "";
               document.querySelector('[data-info="cp-received-amount"]').textContent =response[0].caseCPFinalReceivedAmount ? response[0].caseCPFinalReceivedAmount : "";
               //document.querySelector('[data-info="reportdraft"]').textContent =response[0].rejectionReason ? response[0].rejectionReason : "";
 
