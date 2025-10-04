@@ -2127,11 +2127,20 @@ function movetolive(referencenumber) {
               localStorage['userName'] = response.username;
               localStorage['userType'] = response.message;
             }
-            else if(response.message =='cp' || response.message =='manager')
+            else if(response.message =='manager')
             {
               $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
               document.getElementById("login-menu").href="/logout.html"; 
-              $("#showtocpandmanager").show();
+              $("#showtomanager").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+            }
+            else if(response.message =='cp')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtocp").show();
               $("#hideonlogin").hide();
               localStorage['userName'] = response.username;
               localStorage['userType'] = response.message;
@@ -2226,7 +2235,8 @@ function movetolive(referencenumber) {
 
         $('#dataTable tbody').on('click', 'tr td:first-child', function () {
       var data = table.row(this).data();
-      populatereport(data[0]);  // Assuming data[0] is the data in the first column
+      //commenting case report for live page
+      //populatereport(data[0]);  // Assuming data[0] is the data in the first column
       //alert( 'You clicked on ' + data[0] + '\'s row' );
       });
       
