@@ -2236,7 +2236,7 @@ function movetolive(referencenumber) {
         $('#dataTable tbody').on('click', 'tr td:first-child', function () {
       var data = table.row(this).data();
       //commenting case report for live page
-      //populatereport(data[0]);  // Assuming data[0] is the data in the first column
+      populatereport(data[0]);  // Assuming data[0] is the data in the first column
       //alert( 'You clicked on ' + data[0] + '\'s row' );
       });
       
