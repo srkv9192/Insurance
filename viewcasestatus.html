@@ -1498,7 +1498,8 @@ function movetolive(referencenumber) {
 
       $('#dataTable tbody').on('click', 'tr td:first-child', function () {
       var data = table.row(this).data();
-      populatereport(data[0]);  // Assuming data[0] is the data in the first column
+        // do not show case report to cp
+      //populatereport(data[0]);  // Assuming data[0] is the data in the first column
       //alert( 'You clicked on ' + data[0] + '\'s row' );
       });
       
