@@ -265,6 +265,8 @@ div.dataTables_filter {
                         <th>Reference Number</th>
                         <th>Case Inception Date</th>
                         <th>Case Age</th>
+                        <th>Bucket Date</th>
+                        <th>Bucket Age</th>
                         <th>Patient Name</th>
                         <th>Patient Phone</th>
                         <th>Complainant Name</th>
@@ -921,7 +923,8 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
     contentType: "application/x-www-form-urlencoded",
     data: {
       referencenumber: localStorage['addRemarkForRefNumber'],
-      caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - [Hold Remark] "+ document.getElementById("holdremark").value
+      caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - [Hold Remark] "+ document.getElementById("holdremark").value,
+      holdbucketDate : new Date(),
     },
     success: function (response) {
       if(response.message == "success")
@@ -986,7 +989,8 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
       contentType: "application/x-www-form-urlencoded",
       data: {
         referencenumber: localStorage['addRemarkForRefNumber'],
-        caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ document.getElementById("escalationremark").value
+        caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ document.getElementById("escalationremark").value,
+        escalationbucketDate: new Date(),
       },
       success: function (response) {
         if(response.message == "success")
@@ -1854,6 +1858,22 @@ function movetolive(referencenumber) {
             var prospectcasedate = moment(data[i].prospectDate);
             var caseage  =    todaysdate.diff(prospectcasedate, 'days');
 
+            var pendingdraftBucketDateValue = data[i].pendingdraftbucketDate;
+
+            // Check if medicalbucketDate is available (not null, not undefined, not an empty string)
+            if (pendingdraftBucketDateValue) {
+                // Medical bucket date is available, proceed with calculations and formatting
+                var bucketdate = moment(pendingdraftBucketDateValue);
+                var bucketage = todaysdate.diff(bucketdate, 'days');
+
+                var pendingdraftBucketDateFormatted = moment(new Date(pendingdraftBucketDateValue)).utc().format('DD-MM-YYYY');
+                var bucketAgeValue = `${bucketage}`;
+            } else {
+                // Medical bucket date is NOT available, set "Not applicable"
+                var pendingdraftBucketDateFormatted = "Not applicable";
+                var bucketAgeValue = "Not applicable";
+            }
+
           if( localStorage['userName'] === data[i].medicalOpinionOfficer)
           { 
             // You could also use an ajax property on the data table initialization
@@ -1861,6 +1881,8 @@ function movetolive(referencenumber) {
             var rowData = [ data[i].casereferenceNumber,
             moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),
             `${caseage}`,
+             pendingdraftBucketDateFormatted,
+            bucketAgeValue,
             data[i].patientName,
               data[i].patientMobile,
               data[i].complainantName,
@@ -1889,6 +1911,8 @@ function movetolive(referencenumber) {
             var rowData = [data[i].casereferenceNumber,
             moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),
             `${caseage}`,
+            pendingdraftBucketDateFormatted,
+            bucketAgeValue,
             data[i].patientName,
               data[i].patientMobile,
               data[i].complainantName,
@@ -1918,6 +1942,8 @@ function movetolive(referencenumber) {
             var rowData = [data[i].casereferenceNumber,
             moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),
             `${caseage}`,
+            pendingdraftBucketDateFormatted,
+            bucketAgeValue,
             data[i].patientName,
               data[i].patientMobile,
               data[i].complainantName,
@@ -1967,7 +1993,7 @@ function movetolive(referencenumber) {
           case "Draft Generated":
           case "Pending Draft":
           $("#dataTable").DataTable()
-          .columns(13)
+          .columns(15)
           .search($(this).text())
           .draw();
             break;
@@ -1979,7 +2005,7 @@ function movetolive(referencenumber) {
       $('ul').on('click', 'a.all', function() {
         $("#dataTable").DataTable()
         .search('')
-        .columns(13)
+        .columns(15)
         .search('')
         .draw();
       });

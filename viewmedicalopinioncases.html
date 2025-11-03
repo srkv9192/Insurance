@@ -206,6 +206,8 @@ div.dataTables_filter {
                         <th>Reference Number</th>
                         <th>Case Inception Date</th>
                         <th>Case Age</th>
+                        <th>Bucket Date</th>
+                        <th>Bucket Age</th>
                         <th>Patient Name</th>
                         <th>Patient Phone</th>
                         <th>Complainant Name</th>
@@ -737,6 +739,18 @@ function addremark(referencenumber) {
 
 function addCaseVerdict(status){
 
+    let approvedbucketDate;
+  let rejectedbucketDate;
+  if (status === "Approved") {
+        // If status is "Approved", set approvedBucketDate to today and rejectedBucketDate to empty
+        approvedbucketDate = new Date();
+        rejectedbucketDate = null; // Use null for an empty date value
+    } else {
+        // For any other status (e.g., "Rejected"), set rejectedBucketDate to today and approvedBucketDate to empty
+        rejectedbucketDate = new Date();
+        approvedbucketDate = null; // Use null for an empty date value
+    }
+
   $.ajax({
   url: '/api/addcaseverdictmedical',
   type: 'POST',
@@ -744,6 +758,8 @@ function addCaseVerdict(status){
   data: {
     casereferenceNumber:  localStorage['addRemarkForRefNumber'],
     casestatus: status,
+      approvedbucketDate: approvedbucketDate,
+      rejectedbucketDate: rejectedbucketDate,
   },
   success: function (response) {
     if(response.message == "success")
@@ -1154,11 +1170,30 @@ function populatereport(refnumber)
             var todaysdate = moment(new Date());
             var prospectcasedate = moment(data[i].prospectDate);
             var caseage  =    todaysdate.diff(prospectcasedate, 'days');
+            
+            var medicalBucketDateValue = data[i].medicalbucketDate;
+
+            // Check if medicalbucketDate is available (not null, not undefined, not an empty string)
+            if (medicalBucketDateValue) {
+                // Medical bucket date is available, proceed with calculations and formatting
+                var bucketdate = moment(medicalBucketDateValue);
+                var bucketage = todaysdate.diff(bucketdate, 'days');
+
+                var medicalBucketDateFormatted = moment(new Date(medicalBucketDateValue)).utc().format('DD-MM-YYYY');
+                var bucketAgeValue = `${bucketage}`;
+            } else {
+                // Medical bucket date is NOT available, set "Not applicable"
+                var medicalBucketDateFormatted = "Not applicable";
+                var bucketAgeValue = "Not applicable";
+            }
+
             // You could also use an ajax property on the data table initialization
 
             var rowData = [ data[i].casereferenceNumber,
               moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),
               `${caseage}`,
+              medicalBucketDateFormatted,
+              bucketAgeValue,
               data[i].patientName,
               data[i].patientMobile,
               data[i].complainantName,

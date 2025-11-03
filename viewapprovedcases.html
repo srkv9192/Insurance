@@ -214,6 +214,8 @@ div.dataTables_filter {
                         <th>Reference Number</th>
                         <th>Case Inception Date</th>
                         <th>Case Age</th>
+                        <th>Bucket Date</th>
+                        <th>Bucket Age</th>
                         <th>Patient Name</th>
                         <th>Patient Phone</th>
                         <th>Complainant Name</th>
@@ -1893,6 +1895,22 @@ function populatereport(refnumber)
             var caseage  =    todaysdate.diff(prospectcasedate, 'days');
             // You could also use an ajax property on the data table initialization
 
+            var approvedBucketDateValue = data[i].approvedbucketDate;
+
+            // Check if medicalbucketDate is available (not null, not undefined, not an empty string)
+            if (approvedBucketDateValue) {
+                // Medical bucket date is available, proceed with calculations and formatting
+                var bucketdate = moment(approvedBucketDateValue);
+                var bucketage = todaysdate.diff(bucketdate, 'days');
+
+                var approvedBucketDateFormatted = moment(new Date(approvedBucketDateValue)).utc().format('DD-MM-YYYY');
+                var bucketAgeValue = `${bucketage}`;
+            } else {
+                // Medical bucket date is NOT available, set "Not applicable"
+                var approvedBucketDateFormatted = "Not applicable";
+                var bucketAgeValue = "Not applicable";
+            }
+
             var buttonsformovingcasetolive="";
             var buttonsformovingcasetoconsumer="";
             if(data[i].caseType == "Consumer") 
@@ -1908,6 +1926,8 @@ function populatereport(refnumber)
             var rowData = [data[i].casereferenceNumber,
             moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),
             `${caseage}`,
+            approvedBucketDateFormatted,
+            bucketAgeValue,
               data[i].patientName,
               data[i].patientMobile,
               data[i].complainantName,

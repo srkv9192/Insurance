@@ -1021,6 +1021,19 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
 
 function addCaseVerdict(status){
 
+  let approvedbucketDate;
+  let rejectedbucketDate;
+  if (status === "Approved") {
+        // If status is "Approved", set approvedBucketDate to today and rejectedBucketDate to empty
+        approvedbucketDate = new Date();
+        rejectedbucketDate = null; // Use null for an empty date value
+    } else {
+        // For any other status (e.g., "Rejected"), set rejectedBucketDate to today and approvedBucketDate to empty
+        rejectedbucketDate = new Date();
+        approvedbucketDate = null; // Use null for an empty date value
+    }
+
+
 $.ajax({
 url: '/api/addcaseverdictmedical',
 type: 'POST',
@@ -1028,6 +1041,8 @@ contentType: "application/x-www-form-urlencoded",
 data: {
   casereferenceNumber:  localStorage['addRemarkForRefNumber'],
   casestatus: status,
+  approvedbucketDate: approvedbucketDate,
+  rejectedbucketDate: rejectedbucketDate,
 },
 success: function (response) {
   if(response.message == "success")
@@ -1154,6 +1169,7 @@ $.ajax({
   contentType: "application/x-www-form-urlencoded",
   data: {
     casereferenceNumber: localStorage['addRemarkForRefNumber'],
+    medicalbucketDate:  new Date(),
   },
   success: function (response) {
     if(response.message == "success")
@@ -1354,62 +1370,6 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
 }
   
 
-
-
-
-function addremarkInDBAndMoveToApproved() {
-
-  if( document.getElementById("newremarkapproved").value == "")
-  {
-    alert("Empty remark not allowed!")
-    return;
-  }
-
-const today = new Date();
-const yyyy = today.getFullYear();
-let mm = today.getMonth() + 1; // Months start at 0!
-let dd = today.getDate();
-
-if (dd < 10) dd = '0' + dd;
-if (mm < 10) mm = '0' + mm;
-
-const formattedToday = dd + '/' + mm + '/' + yyyy;
-
-    $.ajax({
-      url: '/api/addtcaseremark',
-      type: 'POST',
-      contentType: "application/x-www-form-urlencoded",
-      data: {
-        referencenumber: localStorage['addRemarkForRefNumber'],
-        caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ document.getElementById("newremarkapproved").value
-      },
-      success: function (response) {
-        if(response.message == "success")
-          {
-           // window.location.href = "/index.html"
-            //localStorage['userID'] = username;
-
-            movetopendingauth();
-           
-          }
-          else{
-            alert("Error moving case to medical!")
-            //document.getElementById('loginForm').reset();
-          }
-        //alert("login success");
-        // Redirect to the dashboard or perform any other actions
-      },
-      error: function (error) {
-        document.getElementById('loginForm').reset();
-        alert("Error moving case to medical!");
-        // Display an error message to the user
-      }
-    });
-  
-   // alert(  document.getElementById("newremark").value);
-
-}
-  
 
 function populatereport(refnumber)
       {

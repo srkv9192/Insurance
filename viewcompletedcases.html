@@ -262,6 +262,8 @@ div.dataTables_filter {
                         <th>Reference Number</th>
                         <th>Case Inception Date</th>
                         <th>Case Age</th>
+                        <th>Bucket Date</th>
+                        <th>Bucket Age</th>
                         <th>Patient Name</th>
                         <th>Patient Phone</th>
                         <th>Complainant Name</th>
@@ -1299,6 +1301,7 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
               caseCustomerReceivedAmountDate : paymentdate,
               caseRemarks: formattedToday+ " - [ " +  localStorage['userName'] + " ] - "+ remark,
               caseCustomerReceivedAmount: customerAmount, 
+              pendingpaymentbucketDate: pendingpaymentbucketDate,
             }),
             success: function(response) {
                 alert('Case moved to pending payment');
@@ -1529,6 +1532,23 @@ function movetolive(referencenumber) {
             var completeddate = moment(data[i].completedDate);
             var prospectcasedate = moment(data[i].prospectDate);
             var caseage  =    completeddate.diff(prospectcasedate, 'days');
+
+           var completedBucketDateValue = data[i].completedDate;
+
+            // Check if medicalbucketDate is available (not null, not undefined, not an empty string)
+            if (completedBucketDateValue) {
+                // Medical bucket date is available, proceed with calculations and formatting
+                var bucketdate = moment(completedBucketDateValue);
+                var bucketage = todaysdate.diff(bucketdate, 'days');
+
+                var completedBucketDateFormatted = moment(new Date(completedBucketDateValue)).utc().format('DD-MM-YYYY');
+                var bucketAgeValue = `${bucketage}`;
+            } else {
+                // Medical bucket date is NOT available, set "Not applicable"
+                var completedBucketDateFormatted = "Not applicable";
+                var bucketAgeValue = "Not applicable";
+            }
+
             var caseResult = "Not Availble";
             var caseSettlementamount = "Not Availble";
 
@@ -1546,6 +1566,8 @@ function movetolive(referencenumber) {
             var rowData = [data[i].casereferenceNumber,
             moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),
             `${caseage}`,
+             completedBucketDateFormatted,
+            bucketAgeValue,
             data[i].patientName,
               data[i].patientMobile,
               data[i].complainantName,
@@ -1588,7 +1610,7 @@ function movetolive(referencenumber) {
           case "Escalation Settlement":
           case "Consent":
           $("#dataTable").DataTable()
-          .columns(11)
+          .columns(13)
           .search($(this).text())
           .draw();
             break;
@@ -1600,7 +1622,7 @@ function movetolive(referencenumber) {
       $('ul').on('click', 'a.all', function() {
         $("#dataTable").DataTable()
         .search('')
-        .columns(11)
+        .columns(13)
         .search('')
         .draw();
       });

@@ -65,6 +65,7 @@ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS
   useUnifiedTopology: true,
 });
 
+
 /*
 
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
@@ -149,6 +150,17 @@ async function uploadFileToGCS(filePath, destination , referencenumber) {
 // Create a schema
 const dataSchema = new mongoose.Schema({
   prospectDate: Date,
+
+  medicalbucketDate:Date,
+  approvedbucketDate:Date,
+  rejectedbucketDate:Date,
+  pendingdraftbucketDate: Date,
+  escalationbucketDate:Date,
+  pendingpaymentbucketDate: Date,
+  cppaymentbucketDate:Date,
+  finishedbucketDate:Date,
+  holdbucketDate:Date,
+
   liveDate: Date,
   consumerliveDate: Date,
   lokpalbucketDate: Date,
@@ -1571,7 +1583,7 @@ app.post('/api/movetolokpal', async(req, res) => {
 
 app.post('/api/movetoescalation', async(req, res) => {
   try{
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ caseRemarks:req.body.caseRemarks}, $set:{ newCaseStatus: "Escalation Pending", isInEscalationStage: "true", isLive: "false"}});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ caseRemarks:req.body.caseRemarks}, $set:{ newCaseStatus: "Escalation Pending", isInEscalationStage: "true", isLive: "false", escalationbucketDate : req.body.escalationbucketDate }});
 
       if(newData == null)
       {
@@ -1594,7 +1606,7 @@ app.post('/api/movetoescalation', async(req, res) => {
 
 app.post('/api/movetohold', async(req, res) => {
   try{
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ caseRemarks:req.body.caseRemarks}, $set:{ newCaseStatus: "Hold", isHold: "true", isLive: "false", isInEscalationStage: "false", isInLokpalStage : "false"}});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ caseRemarks:req.body.caseRemarks}, $set:{ newCaseStatus: "Hold", isHold: "true", isLive: "false", isInEscalationStage: "false", isInLokpalStage : "false", holdbucketDate:req.body.holdbucketDate}});
 
       if(newData == null)
       {
@@ -1886,7 +1898,7 @@ app.post('/api/addcasesettlementdetails', async(req, res) => {
 app.post('/api/addcasecustomerpaymentdetails', async(req, res) => {
   try{
 
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{caseRemarks:req.body.caseRemarks}, $set:{ caseCustomerReceivedAmountDate:req.body.caseCustomerReceivedAmountDate, caseCustomerReceivedAmount: req.body.caseCustomerReceivedAmount, isPendingPayment: "true", isCompleted: "false", newCaseStatus: "Pending Payment" }});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{caseRemarks:req.body.caseRemarks}, $set:{ caseCustomerReceivedAmountDate:req.body.caseCustomerReceivedAmountDate, caseCustomerReceivedAmount: req.body.caseCustomerReceivedAmount, isPendingPayment: "true", isCompleted: "false", newCaseStatus: "Pending Payment", pendingpaymentbucketDate: req.body.pendingpaymentbucketDate }});
 
       if(newData == null)
       {
@@ -1939,7 +1951,7 @@ app.post('/api/addcasenidaanpaymentdetails', async(req, res) => {
       newstatus = "Bank Details Missing"
     }
 
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{caseRemarks:req.body.caseRemarks}, $set:{ caseNidaanReceivedAmountDate:req.body.caseNidaanReceivedAmountDate, caseNidaanReceivedAmount: req.body.caseNidaanReceivedAmount , caseNidaanReceivedAmountMode: req.body.caseNidaanReceivedAmountMode, caseCPFinalAmount: req.body.caseCPFinalAmount, isPendingPayment: "false", isPendingCPPayment: "true", newCaseStatus: newstatus, cpBankDetails: req.body.cpBankDetails}});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{caseRemarks:req.body.caseRemarks}, $set:{ caseNidaanReceivedAmountDate:req.body.caseNidaanReceivedAmountDate, caseNidaanReceivedAmount: req.body.caseNidaanReceivedAmount , caseNidaanReceivedAmountMode: req.body.caseNidaanReceivedAmountMode, caseCPFinalAmount: req.body.caseCPFinalAmount, isPendingPayment: "false", isPendingCPPayment: "true", newCaseStatus: newstatus, cpBankDetails: req.body.cpBankDetails, cppaymentbucketDate : req.body.cppaymentbucketDate }});
 
       if(newData == null)
       {
@@ -2011,7 +2023,7 @@ app.post('/api/addcaseverdictmedical', async(req, res) => {
   try{
       // isPendingAuth:"true",
 
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ newCaseStatus: req.body.casestatus, isInMedicalOpinion: "false", isProspect:"false",}});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ newCaseStatus: req.body.casestatus, approvedbucketDate : req.body.approvedbucketDate  , rejectedbucketDate: req.body.rejectedbucketDate , isInMedicalOpinion: "false", isProspect:"false",}});
 
       if(newData == null)
       {
@@ -2376,7 +2388,7 @@ app.post('/api/addmedicalofficertocase', async(req, res) => {
 app.post('/api/addmedicalofficertocaseandmovetopendingdraft', async(req, res) => {
   try{
     console.log(req.body.caseRemarks)
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber},  {$push:{ caseRemarks:req.body.caseRemarks}, $set:{ medicalOpinionOfficer:req.body.medicalOpinionOfficer, newCaseStatus: "Pending Draft" }});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber},  {$push:{ caseRemarks:req.body.caseRemarks}, $set:{ medicalOpinionOfficer:req.body.medicalOpinionOfficer, pendingdraftbucketDate : req.body.pendingdraftbucketDate , newCaseStatus: "Pending Draft" }});
 
       if(newData == null)
       {
@@ -3842,7 +3854,8 @@ app.post('/api/movecasetomedicalfromprospectbyrefnumber', async(req, res) => {
       {  
          isInMedicalOpinion: "true",
 // add back in case required         medicalOpinionOfficer: "NONE",
-         newCaseStatus: "In Medical"
+         newCaseStatus: "In Medical",
+         medicalbucketDate:req.body.medicalbucketDate,
       }, {new : true});
 
       res.json({ message: 'success', casereferenceNumber: req.body.casereferenceNumber });

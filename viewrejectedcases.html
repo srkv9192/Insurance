@@ -202,6 +202,8 @@ div.dataTables_filter {
                         <th>Reference Number</th>
                         <th>Case Inception Date</th>
                         <th>Case Age</th>
+                        <th>Bucket Date</th>
+                        <th>Bucket Age</th>
                         <th>Patient Name</th>
                         <th>Patient Phone</th>
                         <th>Complainant Name</th>
@@ -1033,6 +1035,23 @@ function populatereport(refnumber)
                 var todaysdate = moment(new Date());
                 var prospectcasedate = moment(data[i].prospectDate);
                 var caseage  =    todaysdate.diff(prospectcasedate, 'days');
+
+                var rejectedBucketDateValue = data[i].rejectedbucketDate;
+
+            // Check if medicalbucketDate is available (not null, not undefined, not an empty string)
+            if (rejectedBucketDateValue) {
+                // Medical bucket date is available, proceed with calculations and formatting
+                var bucketdate = moment(rejectedBucketDateValue);
+                var bucketage = todaysdate.diff(bucketdate, 'days');
+
+                var rejectedBucketDateFormatted = moment(new Date(rejectedBucketDateValue)).utc().format('DD-MM-YYYY');
+                var bucketAgeValue = `${bucketage}`;
+            } else {
+                // Medical bucket date is NOT available, set "Not applicable"
+                var rejectedBucketDateFormatted = "Not applicable";
+                var bucketAgeValue = "Not applicable";
+            }
+
                 // You could also use an ajax property on the data table initialization
                 var rowData = [ data[i].casereferenceNumber,
                 moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),

@@ -252,6 +252,8 @@ div.dataTables_filter {
                         <th>Reference Number</th>
                         <th>Case Inception Date</th>
                         <th>Case Age</th>
+                        <th>Bucket Date</th>
+                        <th>Bucket Age</th>
                         <th>Patient Name</th>
                         <th>Patient Phone</th>
                         <th>Complainant Name</th>
@@ -884,7 +886,8 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
     contentType: "application/x-www-form-urlencoded",
     data: {
       referencenumber: localStorage['addRemarkForRefNumber'],
-      caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - [Hold Remark] "+ document.getElementById("holdremark").value
+      caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - [Hold Remark] "+ document.getElementById("holdremark").value,
+      holdbucketDate : new Date(),
     },
     success: function (response) {
       if(response.message == "success")
@@ -1497,11 +1500,29 @@ function populatereport(refnumber)
             var prospectcasedate = moment(data[i].prospectDate);
             var caseage  =    todaysdate.diff(prospectcasedate, 'days');
 
+            var escalationBucketDateValue = data[i].escalationbucketDate;
+
+            // Check if medicalbucketDate is available (not null, not undefined, not an empty string)
+            if (escalationBucketDateValue) {
+                // Medical bucket date is available, proceed with calculations and formatting
+                var bucketdate = moment(escalationBucketDateValue);
+                var bucketage = todaysdate.diff(bucketdate, 'days');
+
+                var escalationBucketDateFormatted = moment(new Date(escalationBucketDateValue)).utc().format('DD-MM-YYYY');
+                var bucketAgeValue = `${bucketage}`;
+            } else {
+                // Medical bucket date is NOT available, set "Not applicable"
+                var escalationBucketDateFormatted = "Not applicable";
+                var bucketAgeValue = "Not applicable";
+            }
+
             // You could also use an ajax property on the data table initialization
 
             var rowData = [ data[i].casereferenceNumber,
               moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),
               `${caseage}`,
+              escalationBucketDateFormatted,
+            bucketAgeValue,
               data[i].patientName,
               data[i].patientMobile,
               data[i].complainantName,
@@ -1531,6 +1552,8 @@ function populatereport(refnumber)
 var rowDataRobin = [ data[i].casereferenceNumber,
               moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),
               `${caseage}`,
+              escalationBucketDateFormatted,
+            bucketAgeValue,
               data[i].patientName,
               data[i].patientMobile,
               data[i].complainantName,
@@ -1663,7 +1686,7 @@ error: function (error) {
           case "Escalation Pending":
           case "Escalation Query":
           $("#dataTable").DataTable()
-          .columns(12)
+          .columns(14)
           .search($(this).text())
           .draw();
             break;
@@ -1675,7 +1698,7 @@ error: function (error) {
       $('ul').on('click', 'a.all', function() {
         $("#dataTable").DataTable()
         .search('')
-        .columns(12)
+        .columns(14)
         .search('')
         .draw();
       });

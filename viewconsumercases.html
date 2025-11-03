@@ -1014,7 +1014,8 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
       contentType: "application/x-www-form-urlencoded",
       data: {
         referencenumber: localStorage['addRemarkForRefNumber'],
-        caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - [Hold Remark] "+ document.getElementById("holdremark").value
+        caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - [Hold Remark] "+ document.getElementById("holdremark").value,
+        holdbucketDate : new Date(),
       },
       success: function (response) {
         if(response.message == "success")
