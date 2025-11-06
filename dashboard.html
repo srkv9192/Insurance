@@ -122,7 +122,7 @@
             <div  style=" font-size: 20px; padding-top: 50px; padding-right: 20px; padding-left: 20px;">  
 
              
-              <div class="frame" style=" color:black;background-image: url('/images/background18.jpg');  font-family: monospace;font-size: large; background-size: cover;">
+              <div style="border: 2px solid #007bff; border-radius: 10px; padding: 20px; margin: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1); ">
 
                 <h2 class="text-center mb-4">Case Data</h2>
 
@@ -229,6 +229,7 @@
                   </div>
              </div>
 
+<!--  Hiding claim shield data as it is not being used
              <div class="frame"   style=" color:black;background-image: url('/images/background18.jpg');  font-family: monospace;font-size: large; background-size: cover; margin-top: 60px;">
               <h2 class="text-center mb-4">Claim Shield Data</h2>
                 <div class="row">
@@ -260,99 +261,96 @@
 
                 </div>
             </div>
+-->
+<div style="border: 2px solid #007bff; border-radius: 10px; padding: 20px; margin: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1); ">
+  <div style="display: flex; flex-wrap: wrap;">
+    <div style="margin-top: 10px;">
+      <label>Select Case Status:</label>
+      <select class="form-control" id="casefinalstatus" style="height: 50px; width: 200px;">
+        <option value="" disabled selected>Select status</option>
+        <option value="New Case">New Case</option>
+        <option value="In Medical">In Medical</option>
+        <option value="Medical Query">Medical Query</option>
+        <option value="Approved">Approved</option>
+        <option value="Rejected">Rejected</option>
+        <option value="Live">Live</option>
+        <option value="Draft Query">Draft Query</option>
+        <option value="Gist Generated">Gist Generated</option>
+        <option value="Pending Draft">Pending Draft</option>
+        <option value="Reimbursement">Reimbursement</option>
+        <option value="Pending Doc">Pending Doc</option>
+        <option value="Escalation Pending">Escalation Pending</option>
+        <option value="Escalation Query">Escalation Query</option>
+        <option value="Escalated">Escalated</option>
+        <option value="Lokpal Pending">Lokpal Pending</option>
+        <option value="Lokpal Registered">Lokpal Registered</option>
+        <option value="Annexure5 Pending">Annexure5 Pending</option>
+        <option value="Annexure5 Replied">Annexure5 Replied</option>
+        <option value="Annexure 6 Pending">Annexure 6 Pending</option>
+        <option value="Annexure 6 Replied">Annexure 6 Replied</option>
+        <option value="Completed">Completed</option>
+        <option value="Hearing">Hearing</option>
+        <option value="Escalation Settlement">Escalation Settlement</option>
+        <option value="Consent">Consent</option>
+        <option value="Pending Payment">Pending Payment</option>
+        <option value="CP Payment Pending">CP Payment Pending</option>
+        <option value="Case Closed">Case Closed</option>
+      </select>
+    </div>
 
-            <div style="display : flex">
-              <div style="margin-top: 10px;">
-                <label>Select Case Status:</label>
-            <select class="form-control" id="casefinalstatus" style=" height: 50px;
-            width: 200px;">
-                <option value="" disabled selected>Select status</option>
-                <option value="New Case">New Case</option>
-                <option value="In Medical">In Medical</option>
-                <option value="Medical Query">Medical Query</option>
-                <option value="Approved">Approved</option>
-                <option value="Rejected">Rejected</option>
-                <option value="Live">Live</option>
-                <option value="Draft Query">Draft Query</option>
-                <option value="Gist Generated">Gist Generated</option>
-                <option value="Pending Draft">Pending Draft</option>
-                <option value="Reimbursement">Reimbursement</option>
-                <option value="Pending Doc">Pending Doc</option>
+    <div style="margin-top: 10px; margin-left:15px;">
+      <label>Live Start Date:</label>
+      <input type="date" id="livestartDate" class="form-control" style="height: 50px; width: 200px;"/>
+    </div>
 
-                <option value="Escalation Pending">Escalation Pending</option>
-                <option value="Escalation Query">Escalation Query</option>
-                <option value="Escalated">Escalated</option>
+    <div style="margin-top: 10px; margin-left:15px;">
+      <label>Live End Date:</label>
+      <input type="date" id="liveendDate" class="form-control" style="height: 50px; width: 200px;"/>
+    </div>
 
-                <option value="Lokpal Pending">Lokpal Pending</option>
-                <option value="Lokpal Registered">Lokpal Registered</option>
-                <option value="Annexure5 Pending">Annexure5 Pending</option>
-                <option value="Annexure5 Replied">Annexure5 Replied</option>
+    <div style="margin-top: 10px; margin-left:15px;">
+      <label>Nidaan Payment Start Date:</label>
+      <input type="date" id="nidaanstartDate" class="form-control" style="height: 50px; width: 200px;"/>
+    </div>
 
-                <option value="Annexure 6 Pending">Annexure 6 Pending</option>
-                <option value="Annexure 6 Replied">Annexure 6 Replied</option>
+    <div style="margin-top: 10px; margin-left:15px;">
+      <label>Nidaan Payment End Date:</label>
+      <input type="date" id="nidaanendDate" class="form-control" style="height: 50px; width: 200px;"/>
+    </div>
+  </div>
 
-                <option value="Completed">Completed</option>
-                <option value="Hearing">Hearing</option>
-
-                <option value="Escalation Settlement">Escalation Settlement</option>
-                <option value="Consent">Consent</option>
-
-                <option value="Pending Payment">Pending Payment</option>
-                <option value="CP Payment Pending">CP Payment Pending</option>
-                <option value="Case Closed">Case Closed</option>
-
-              </select>
-              </div>
-
-              <div style="margin-top: 10px; margin-left:15px">
-                <label>Live Start Date:</label>
-                <input type="date" id="livestartDate" class="form-control" style="height: 50px; width: 200px;"/>
-            </div>
-            <div style="margin-top: 10px; margin-left:15px">
-                <label>Live End Date:</label>
-                <input type="date" id="liveendDate" class="form-control" style="height: 50px; width: 200px;"/>
-            </div>
-
-            <div style="margin-top: 10px; margin-left:15px">
-              <label>Nidaan Payment start Date:</label>
-              <input type="date" id="nidaanstartDate" class="form-control" style="height: 50px; width: 200px;"/>
-          </div>
-          <div style="margin-top: 10px; margin-left:15px">
-              <label>Nidaan Payment End Date:</label>
-              <input type="date" id="nidaanendDate" class="form-control" style="height: 50px; width: 200px;"/>
-          </div>
-
-          </div>
-
-              <button class="btn btn-primary btn-sm" style="
-              height: 50px;
-              width: 200px;
-              margin-top:20px;
-          "  onclick="downloadexcelfilebystatus()" >Download excel by status</button>
-
-            <button class="btn btn-primary btn-sm" style="
-            height: 50px;
-            width: 200px;
-            margin-top:20px;
-            "  onclick="downloadexcelfilebylivedate()" >Download excel by Live Date</button>
-
-          <button class="btn btn-primary btn-sm" style="
-          height: 50px;
-          width: 200px;
-          margin-top:20px;
-          "  onclick="downloadexcelfilebynidaandate()" >Download excel by Nidaan Date</button>
-
-          <button class="btn btn-primary btn-sm" style="
-          height: 50px;
-          width: 200px;
-          margin-top:20px;
-      "  onclick="downloadexcelfile()" >Download excel</button>
+  <div style="margin-top: 20px; display: flex; flex-wrap: wrap; gap: 15px;">
+    <button class="btn btn-primary btn-sm" style="height: 50px; width: 200px;" onclick="downloadexcelfilebystatus()">Download Excel by Status</button>
+    <button class="btn btn-primary btn-sm" style="height: 50px; width: 200px;" onclick="downloadexcelfilebylivedate()">Download Excel by Live Date</button>
+    <button class="btn btn-primary btn-sm" style="height: 50px; width: 200px;" onclick="downloadexcelfilebynidaandate()">Download Excel by Nidaan Date</button>
+    <button class="btn btn-primary btn-sm" style="height: 50px; width: 200px;" onclick="downloadexcelfile()">Download Excel</button>
+  </div>
+</div>
 
 
-            </div>
+<div style="border: 2px solid #007bff; border-radius: 10px; padding: 20px; margin: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
   
-        </div>
+  <!-- First row: form controls -->
+  <div style="display: flex; flex-wrap: wrap; gap: 15px;">
+    <div style="margin-top: 10px;">
+      <label>Select Medical Officer:</label>
+      <select class="form-control" id="medicalofficerdropdown" style="height: 50px; width: 200px;">
+        <option value="" disabled selected>Select officer</option>
 
+             </select>
+    </div>
+  </div>
+
+  <!-- Second row: buttons -->
+  <div style="margin-top: 20px; display: flex; flex-wrap: wrap; gap: 15px;">
+    <button class="btn btn-primary btn-sm" style="height: 50px; width: 200px;" onclick="downloadexcelmedicalofficer()">Download Excel by Medical Officer</button>
+  </div>
+
+</div>
+
+  
+  
+   </div>
 
    </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
@@ -438,6 +436,29 @@ $(document).ready(function () {
           console.error('Error:', error);
         }
       });
+
+
+       // AJAX call on page load get manager details
+      $.ajax({
+        url: '/api/getmedicalteamlist',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          const optionsSelect = $('#medicalofficerdropdown');
+          response.forEach(function (option) {
+            optionsSelect.append($('<option>', {
+              value: option.userID,
+              text: option.userName
+            }));
+          });
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+
+
 
 
       $.ajax({
@@ -663,6 +684,33 @@ fetch(url, {
 }).catch(e => console.error('Error downloading the file: ', e));
 }
 
+
+
+function downloadexcelmedicalofficer(caseStatus)
+{
+  const url = '/api/downloadExcelbymedicalofficer'; // Replace with your actual API endpoint
+  const data = {
+  medicalOpinionOfficer: $("#medicalofficerdropdown option:selected").text(),
+  };
+
+fetch(url, {
+    method: 'POST', // Set the method to POST
+    headers: {
+        'Content-Type': 'application/json' // Specify that you're sending JSON
+    },
+    body: JSON.stringify(data) // Convert the JavaScript object to a JSON string
+})
+.then(response => response.blob())
+.then(blob => {
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = downloadUrl;
+    a.download = 'Case_Data_Medical_Officer.xlsx'; // Specify the file name to download
+    document.body.appendChild(a);
+    a.click();
+    a.remove(); // Clean up after download
+}).catch(e => console.error('Error downloading the file: ', e));
+}
 
 function downloadexcelfilebystatus(caseStatus)
 {
