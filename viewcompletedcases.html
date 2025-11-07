@@ -1523,6 +1523,7 @@ function movetolive(referencenumber) {
           // populate the data table with JSON data
           function populateDataTable(data) {
           console.log("populating data table...");
+            var todaysdate = moment(new Date());
           // clear the table before populating it with more data
           $("#dataTable").DataTable().clear();
           var table = $('#dataTable').DataTable();
