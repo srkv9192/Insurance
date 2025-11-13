@@ -66,8 +66,8 @@ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS
 });
 
 
-/*
 
+/*
 
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
   useNewUrlParser: true,
@@ -1852,6 +1852,28 @@ app.post('/api/movetoreimbursement', async(req, res) => {
       if(newData == null)
       {
         res.json({ message: 'Could not move case to Reimbursement', refnum:req.body.referencenumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding remark' });
+  } 
+
+});
+
+app.post('/api/movetoreimbursementpending', async(req, res) => {
+  try{
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.referencenumber}, {$push:{ caseRemarks:req.body.caseRemarks}, $set:{ newCaseStatus: "Reimbursement Pending", isReimbursement: "true"}});
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not move case to Reimbursement Pending', refnum:req.body.referencenumber});
       }
       else
       {

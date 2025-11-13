@@ -1301,7 +1301,7 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
               caseCustomerReceivedAmountDate : paymentdate,
               caseRemarks: formattedToday+ " - [ " +  localStorage['userName'] + " ] - "+ remark,
               caseCustomerReceivedAmount: customerAmount, 
-              pendingpaymentbucketDate: pendingpaymentbucketDate,
+              pendingpaymentbucketDate: today,
             }),
             success: function(response) {
                 alert('Case moved to pending payment');
