@@ -59,13 +59,10 @@ const port = process.env.PORT || 80
 //});
 
 
-
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
-
 
 /*
 
@@ -3604,7 +3601,7 @@ app.get("/api/getpendingcppaymentcases", async(req, res) => {
 app.get("/api/getallcases", async(req, res) => {
   try {
     // Retrieve all tpa list from database
-    const users = await  dataSchemaObject.find({},{casereferenceNumber: 1, patientName: 1,   patientMobile:  1, complainantName:1, managerName: 1, cpName: 1,  operationOfficer:1, claimNumber: 1, claimAmount: 1, newCaseStatus: 1})
+    const users = await  dataSchemaObject.find({},{casereferenceNumber: 1, patientName: 1,   patientMobile:  1, complainantName:1, managerName: 1, cpName: 1,  operationOfficer:1, claimNumber: 1, claimAmount: 1, newCaseStatus: 1, caseHandler:1})
     res.json(users);
   } catch (error) {
     console.error(error);

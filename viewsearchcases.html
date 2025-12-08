@@ -1506,8 +1506,21 @@ function movetolive(referencenumber) {
                     `<a href="#popup55"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
                     `<a href="#popup56"><button id="deletebutton" class="btn btn-primary btn-sm"  onclick="deletedocsref('${rfno}')" >Delete docs</button> </a>`,
                 ];
+                console.log(localStorage['userName'])
 
-                table.row.add(rowData);
+                if ( localStorage['userName'] == "GIRISH BHATNAGAR")
+                {
+                  if(data[i].caseHandler =="GIRISH BHATNAGAR")
+                  {
+                    table.row.add(rowData);
+                  }
+                  
+                }
+                else
+                {
+                    table.row.add(rowData);
+                }
+                
                 
                 }
                 table.draw(false);
