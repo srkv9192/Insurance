@@ -241,6 +241,29 @@
                           <select class="form-control" id="case-type-dropdown" >
                             <option value="Lokpal">Lokpal</option>
                             <option value="Consumer">Consumer</option>
+                            <option value="Legal">Legal</option>
+                          </select>
+                        </div>
+                    </div>
+
+                  
+                </div>
+
+
+                <div class="row mb-3">
+
+                    <div class="col-sm-6" id="legalsubtypediv" style="display: none; margin-top: 15px;">
+                        <label for="legal-case-subtype-dropdown"  class="form-label">Legal Case SubType:</label>
+                        <div class="input-group">
+                          <select class="form-control" id="legal-case-subtype-dropdown" >
+                            <option value="Criminal">Criminal</option>
+                            <option value="Civil">Civil</option>
+                            <option value="Family">Family</option>
+                            <option value="Medical Negligence">Medical Negligence</option>
+                            <option value="Cyber Fraud">Cyber Fraud</option>
+                            <option value="Cheque Bounce">Cheque Bounce</option>
+                            <option value="MACT">MACT</option>
+                            <option value="Special Case">Special Case</option>
                           </select>
                         </div>
                     </div>
@@ -248,6 +271,19 @@
                   
                 </div>
 
+                <div class="row mb-3">
+
+                    <div id="legalcasedetailsdiv" style="display: none; margin-top: 15px;">
+                        <label for="legal-case-details">Legal Case Details:</label>
+                        <textarea 
+                          class="form-control" 
+                          id="legal-case-details" 
+                          placeholder=""
+                          style="height: 150px; resize: vertical;"></textarea>
+                    </div>
+                 
+                  
+                </div>
 
                 <div class="text-center">
                   <button type="submit" class="btn btn-primary">Submit</button>
@@ -600,6 +636,14 @@ $.ajax({
         var policynumber = $('#policy-number').val();
 
         var casetype = $("#case-type-dropdown option:selected").text();
+
+        //rajat
+        var legalsubcasetype = $("#legal-case-subtype-dropdown option:selected").text();
+        var legalcasedetails = document.getElementById('legal-case-details').value;
+
+        //rajat
+
+
     
         var formData = new FormData();
         formData.append('casereferenceNumber', localStorage['casereferencenumber']);
@@ -628,9 +672,10 @@ $.ajax({
         formData.append('prospectDate', new Date());
 
         formData.append('caseType', casetype);
+        formData.append('legalCaseSubType', legalsubcasetype);
+        formData.append('legalCaseDetails', legalcasedetails);
+
         
-
-
         $.each($('#pdf-input')[0].files, function(i, file) {
           formData.append('pdfFile', file);
          });
@@ -671,6 +716,26 @@ $.ajax({
     });
 
     });
+
+
+    //change dropdown for legal subtype
+    const legalsubcasecontainer = document.getElementById('legalsubtypediv');
+    const legalcasedetailscontainer = document.getElementById('legalcasedetailsdiv');
+    
+      $('#case-type-dropdown').change(function(){
+
+        if($('#case-type-dropdown option:selected').text() == "Legal")
+        {
+          legalsubcasecontainer.style.display = 'block';
+          legalcasedetailscontainer.style.display = 'block';
+        }
+        else
+        {
+          legalsubcasecontainer.style.display = 'none';
+          legalcasedetailscontainer.style.display = 'none';
+        }
+    });
+
 
 
     $('#direct-case-dropdown').change(function(){

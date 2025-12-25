@@ -59,12 +59,15 @@ const port = process.env.PORT || 80
 //});
 
 
+
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
+
 /*
+
 
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
   useNewUrlParser: true,
@@ -160,7 +163,7 @@ const dataSchema = new mongoose.Schema({
   holdbucketDate:Date,
 
   liveDate: Date,
-  consumerliveDate: Date,
+  legalliveDate: Date,
   lokpalbucketDate: Date,
   completedDate: Date,
   prospectZone: String,
@@ -216,7 +219,7 @@ const dataSchema = new mongoose.Schema({
   isProspect: String,
   isPendingAuth: String,
   isLive: String,
-  isConsumer: String,
+  isLegal: String,
   isHold: String,
   isReimbursement: String,
   isInMedicalOpinion: String,
@@ -298,7 +301,8 @@ const dataSchema = new mongoose.Schema({
   cpBankDetails: String,
 
   caseType: String,
-
+  legalCaseSubType: String,
+  legalCaseDetails: String,
   partPaymentReceived : Number,
 
   // Add more fields as needed
@@ -565,6 +569,8 @@ app.post('/api/addprospect', upload.array('pdfFile', 10), async (req, res) => {
                         medicalOpinionOfficer: "NONE",
                         operationOfficer: "NONE",
                         caseType: req.body.caseType,
+                        legalCaseSubType: req.body.legalCaseSubType,
+                        legalCaseDetails: req.body.legalCaseDetails,
                       });
         const savedData = await newData.save();
         incrementCaseReferenceCount();
@@ -2336,10 +2342,10 @@ app.post('/api/addpfremark', upload.array('pdfFile', 10), async(req, res) => {
 });
 
 
-app.post('/api/addpfremark_consumer', upload.array('pdfFile', 10), async(req, res) => {
+app.post('/api/addpfremark_legal', upload.array('pdfFile', 10), async(req, res) => {
   try{
 
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfpaymentRemarks:req.body.pfpaymentRemarks,  pfpaymentDate:req.body.pfpaymentDate, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,   caseEmail: req.body.caseEmail, caseEmailPassword: req.body.caseEmailPassword, cfBankName: req.body.cfBankName, isConsumer: "true", newCaseStatus : "Consumer", consumerliveDate : req.body.consumerliveDate,  claimAmount:req.body.claimAmount }});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfpaymentRemarks:req.body.pfpaymentRemarks,  pfpaymentDate:req.body.pfpaymentDate, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,   caseEmail: req.body.caseEmail, caseEmailPassword: req.body.caseEmailPassword, cfBankName: req.body.cfBankName, isLegal: "true", newCaseStatus : "Legal", legalliveDate : req.body.legalliveDate,  claimAmount:req.body.claimAmount }});
 
       if(newData == null)
       {
@@ -4113,7 +4119,7 @@ app.get("/api/getconsumercasedetail", async(req, res) => {
   try {
     // Retrieve all tpa list from database
    
-    const users = await  dataSchemaObject.find({isConsumer : {"$exists" : true, "$eq" : "true"}}, {casereferenceNumber:1, prospectDate:1, patientName:1, patientMobile:1, complainantName:1, managerName:1, cpName:1, insuranceCompanyName:1, claimNumber:1,  claimAmount:1, operationOfficer:1, medicalOpinionOfficer:1, newCaseStatus:1, consumerliveDate:1 });
+    const users = await  dataSchemaObject.find({isLegal : {"$exists" : true, "$eq" : "true"}}, {casereferenceNumber:1, prospectDate:1, patientName:1, patientMobile:1, complainantName:1, managerName:1, cpName:1, insuranceCompanyName:1, claimNumber:1,  claimAmount:1, operationOfficer:1, medicalOpinionOfficer:1, newCaseStatus:1, consumerliveDate:1 });
     res.json(users);
   } catch (error) {
     console.error(error);
@@ -4495,6 +4501,9 @@ app.post('/api/whoami', async(req,res) => {
   else if(req.session.userId && (req.session.userType == 'marketing')){
     res.json({message : 'marketing', username : req.session.userName, userid:req.session.userId})
   }
+  else if(req.session.userId && (req.session.userType == 'marketinghandler')){
+    res.json({message : 'marketinghandler', username : req.session.userName, userid:req.session.userId})
+  }
   else if(req.session.userId && (req.session.userType == 'marketingmanager')){
     res.json({message : 'marketingmanager', username : req.session.userName, userid:req.session.userId})
   }
@@ -4526,6 +4535,12 @@ app.get('/viewprospectcases.html', (req, res) => res.sendFile(__dirname+'/viewpr
 app.get('/viewapprovedcases.html', (req, res) => res.sendFile(__dirname+'/viewapprovedcases.html'))
 app.get('/viewlivecases.html', (req, res) => res.sendFile(__dirname+'/viewlivecases.html'))
 app.get('/viewconsumercases.html', (req, res) => res.sendFile(__dirname+'/viewconsumercases.html'))
+
+
+app.get('/viewlegallive.html', (req, res) => res.sendFile(__dirname+'/viewlegallive.html'))
+app.get('/viewlegalnotice.html', (req, res) => res.sendFile(__dirname+'/viewlegalnotice.html'))
+app.get('/viewcourtpetition.html', (req, res) => res.sendFile(__dirname+'/viewcourtpetition.html'))
+app.get('/viewlegalcompletedcases.html', (req, res) => res.sendFile(__dirname+'/viewlegalcompletedcases.html'))
 
 app.get('/deletecases.html', (req, res) => res.sendFile(__dirname+'/deletecases.html'))
 

@@ -1437,7 +1437,7 @@ function movetolive(referencenumber) {
               localStorage['userName'] = response.username;
               localStorage['userType'] = response.message;
             }
-            else if(response.message =='marketing')
+            else if(response.message =='marketing' || response.message =='marketinghandler'  )
             {
               $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
               document.getElementById("login-menu").href="/logout.html"; 
@@ -1588,7 +1588,19 @@ function movetolive(referencenumber) {
               `<a href="#popup6"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Pending Payment</button> </a>`,
               ];
 
-              table.row.add(rowData);
+              if ( localStorage['userType'] == "marketinghandler")
+                {
+                  if(data[i].caseHandler ==  localStorage['userName'])
+                  {
+                    table.row.add(rowData);
+                  }
+                }
+                else
+                {
+                    table.row.add(rowData);
+                }
+                
+              //table.row.add(rowData);
           }
           table.draw(false);
         }

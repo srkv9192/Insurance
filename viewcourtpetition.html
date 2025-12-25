@@ -1,0 +1,2282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+  
+  <link rel="stylesheet" href="css/menubar.css">
+  <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.4/dist/quill.snow.css" rel="stylesheet" />
+  <style>
+
+.btn_special {
+      background: #3498db;
+      background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
+      background-image: -moz-linear-gradient(top, #3498db, #2980b9);
+      background-image: -ms-linear-gradient(top, #3498db, #2980b9);
+      background-image: -o-linear-gradient(top, #3498db, #2980b9);
+      background-image: linear-gradient(to bottom, #3498db, #2980b9);
+      font-family: Arial;
+      color: #ffffff;
+      font-size: 16px;
+      padding: 10px 20px 10px 20px;
+      text-decoration: none;
+
+      float: left;
+      width: 150px;
+      list-style-type: none;
+      margin-left: 10px;
+    }
+
+    .btn_special:hover {
+      background: #3cb0fd;
+      background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+      background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+      background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+      background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+      background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+      text-decoration: none;
+    }
+    
+    li a {
+      color: blue;
+      text-decoration: none;
+    }
+
+    body {
+      background-color: #343a40;
+      color: #fff;
+    }
+
+    .navbar-light .navbar-brand {
+      color: #fff;
+    }
+
+    .navbar-light .navbar-nav .nav-link {
+      color: #fff;
+    }
+
+    .navbar-light .navbar-nav .nav-link:hover,
+    .navbar-light .navbar-nav .nav-link:focus {
+      color: #e9ecef;
+    }
+
+    .navbar-dark .navbar-brand {
+      color: #343a40;
+    }
+
+    .navbar-dark .navbar-nav .nav-link {
+      color: #343a40;
+    }
+
+    .navbar-dark .navbar-nav .nav-link:hover,
+    .navbar-dark .navbar-nav .nav-link:focus {
+      color: #343a40;
+    }
+
+    .form-control {
+      background-color: #495057;
+      color: #fff;
+    }
+
+    .form-control:focus {
+      background-color: #343a40;
+      color: #fff;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      border-color: #007bff;
+    }
+
+    .btn-primary:hover,
+    .btn-primary:focus {
+      background-color: #0062cc;
+      border-color: #005cbf;
+    }
+
+    .table-dark {
+      background-color: #343a40;
+    }
+
+    .table-dark th
+    {
+      color: #fff;
+    }
+    .table-dark td {
+      color: #fff;
+      background-color: cadetblue;
+    }
+
+    .table-dark tbody tr.card-missing td {
+      background-color: #dc3545;
+    }
+
+    .table-dark tbody tr.card-present td {
+      background-color: #28a745;
+    }
+
+    div.dataTables_info {
+  color: white !important;
+
+}
+
+div.dataTables_paginate {
+  color: white !important;
+
+}
+
+div.dataTables_length {
+  color: white !important;
+
+}
+
+div.dataTables_filter {
+  color: white !important;
+
+}
+
+/*for pop up box
+
+*/
+
+
+.overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  transition: opacity 500ms;
+  visibility: hidden;
+  opacity: 0;
+}
+.overlay:target {
+  visibility: visible;
+  opacity: 1;
+}
+
+.popup {
+  margin: 70px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 5px;
+  width: 55%;
+  position: relative;
+  transition: all 5s ease-in-out;
+  max-height: 80vh; /* Limit the height */
+  overflow-y: auto; /* Enable vertical scroll */
+}
+
+.popup h2 {
+  margin-top: 0;
+  color: #333;
+  font-family: Tahoma, Arial, sans-serif;
+}
+.popup ul {
+  margin-top: 0;
+  color: #333;
+  font-family: Tahoma, Arial, sans-serif;
+}
+.popup li {
+  margin-top: 0;
+  color: #333;
+  font-family: Tahoma, Arial, sans-serif;
+}
+
+.popup .close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  transition: all 200ms;
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #333;
+}
+.popup .close:hover {
+  color: #06D85F;
+}
+
+
+@media screen and (max-width: 700px){
+  .box{
+    width: 70%;
+  }
+  .popup{
+    width: 70%;
+  }
+}
+
+/*pop up box end*/
+
+#uploadingdiv {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+
+  </style>
+  <title>Legal Court Petition Cases</title>
+</head>
+
+<body>
+
+  <div class='dashboard'>
+
+    <div id="navbar-placeholder"></div>
+
+    <div class='dashboard-app'>
+        <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
+        <div class='dashboard-content' style="background-image: url('/images/background20.jpg');  background-repeat: repeat;  background-size: cover;">
+          <div class="container mt-5" style="max-width: unset;">
+            <div class="row justify-content-center">
+              <h2 class="text-center mb-4">Legal Court Petition Cases(Under Development)</h2>
+              <!--
+              <ul>
+                <li class="btn_special"><a href="#" class="all">All</a></li>
+                <li class="btn_special"><a href="#" >Live</a></li>
+                <li class="btn_special"><a href="#">Draft Query</a></li>
+                <li class="btn_special"><a href="#">Gist Generated</a></li>
+                <li class="btn_special"><a href="#">Pending Draft</a></li>
+                <li class="btn_special"><a href="#">Reimbursement</a></li>
+                <li class="btn_special"><a href="#">Pending Doc</a></li>
+              </ul>
+            -->
+              <div class="col-lg-12">
+       
+                <div class="table-responsive">
+                  <table id ="dataTable" class="table table-dark table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Reference Number</th>
+                        <th>Case Live Date</th>
+                        <th>Case Age</th>
+                        <th>Patient Name</th>
+                        <th>Patient Phone</th>
+                        <th>Complainant Name</th>
+                        <th>Manager Name</th>
+                        <th>CP Name</th>
+                        <th>Company</th>
+                        <th>Claim Number</th>
+                        <th>Claim Amount</th>
+                        <th>Operation Officer</th>
+                        <th>Medical Officer</th>
+                        <th>Case Status</th>
+                        <th>Action</th>
+                        <th>Action</th>
+                        <th>Action</th>
+                        <th>Action</th>
+                        <th>Action</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
+
+                <div id="popup2" class="overlay">
+                  <div class="popup">
+                      <div class="frame">
+                        <form id="gistForm">
+                          <div class="row mb-3">
+
+                            <div class="col-sm-4">
+                              <label for="patient-name" class="form-label">Patient Name</label>
+                              <input type="text" class="form-control" id="patient-name" required >
+                            </div>
+
+                            <div class="col-sm-4">
+                              <label for="complainant-name" class="form-label">Complainant name</label>
+                              <input type="text" class="form-control" id="complainant-name" required >
+                            </div>
+
+                            <div class="col-sm-4">
+                              <label for="behalf-of" class="form-label">On Behalf of</label>
+                                <div class="input-group">
+                                  <select class="form-control" id="behalf-of-dropdown" required>
+                                    <option value="">None</option>
+                                    <option value="Self">Self</option>
+                                    <option value="Father">Father</option>
+                                    <option value="Mother">Mother</option>
+                                    <option value="Wife">Wife</option>
+                                    <option value="Husband">Husband</option>
+                                    <option value="Children">Children</option>
+                                    <option value="Brother">Brother</option>
+                                    <option value="Sister">Sister</option>
+                                    <option value="Friend">Friend</option>
+                                  </select>
+                                </div>
+                            </div>
+
+                            
+                            
+                          </div>
+                          <div class="row mb-3">
+
+                            <div class="col-sm-4">
+                              <label for="claim-type-dropdown" class="form-label">Claim Type</label>
+                              
+
+                              <div class="input-group">
+                                <select class="form-control" id="claim-type-dropdown" required>
+                                  <option value="">None</option>
+                                  <option value="Reimbursement">Reimbursement</option>
+                                  <option value="Deduction">Deduction</option>
+                                  <option value="Rejection">Rejection</option>
+                                  <option value="Query">Query</option>
+                                  <option value="Consumer">Consumer</option>
+                                  <option value="Delay in process">Delay in process</option>
+                                </select>
+                              </div>
+
+                            </div>
+
+                            <div class="col-sm-4">
+                              <label for="claim-amount" class="form-label">Claim Amount</label>
+                              <input type="text" class="form-control" id="claim-amount" required >
+                            </div>
+
+                            <div class="col-sm-4">
+                              <label for="policy-number" class="form-label">Policy Number</label>
+                              <input type="text" class="form-control" id="policy-number" required >
+                            </div>
+
+                            
+
+                          </div>
+
+                          <div class="row mb-3">
+
+                            <div class="col-sm-4">
+                              <label for="claim-number" class="form-label">Claim Number</label>
+                              <input type="text" class="form-control" id="claim-number" required>
+                            </div>
+
+                            <div class="col-sm-4">
+                              <label for="policy-date" class="form-label">Date of Policy Inception</label>
+                              <input type="date" class="form-control" id="policy-date" required >
+                            </div>
+
+                            <div class="col-sm-4">
+                              <label for="company-name" class="form-label">Company Name</label>
+                              <input type="text" class="form-control" id="company-name" required >
+                            </div>
+
+                            
+                          </div>
+
+                          <div class="row mb-3">
+
+                            <div class="col-sm-4">
+                              <label for="hospital-name" class="form-label">Hospital Name</label>
+                              <input type="text" class="form-control" id="hospital-name" required >
+                            </div>
+
+                            <div class="col-sm-4">
+                              <label for="admission-date" class="form-label">Date of Admission</label>
+                              <input type="date" class="form-control" id="admission-date" required >
+                            </div>
+
+                            <div class="col-sm-4">
+                              <label for="discharge-date" class="form-label">Date of Discharge</label>
+                              <input type="date" class="form-control" id="discharge-date" required >
+                            </div>
+
+
+                          </div>
+
+                          
+                          <div class="row mb-3">
+                            
+                            <div class="col-sm-4">
+                              <label for="case-diagnosis" class="form-label">Diagnosis</label>
+                              <input type="text" class="form-control" id="case-diagnosis" required >
+                            </div>
+
+                            <div class="col-sm-4">
+                              <label for="patient-complain" class="form-label">Patient complain</label>
+                              <input type="text" class="form-control" id="patient-complain" required >
+                            </div>
+
+                            <div class="col-sm-4">
+                              <label for="rejection-reason" class="form-label">Rejection Reason</label>
+                              <input type="text" class="form-control" id="rejection-reason" required >
+                            </div>
+
+
+                          </div>
+
+                          <div class="row mb-3">
+                            <div class="col-sm-4">
+                              <label for="rejection-date" class="form-label">Rejection date</label>
+                              <input type="date" class="form-control" id="rejection-date" required >
+                            </div>
+
+                            <div class="col-sm-4">
+                              <label for="case-comment" class="form-label">Comments</label>
+                              <input type="text" class="form-control" id="case-comment"  >
+                            </div>
+
+                            <div class="col-sm-4">
+                              <label for="case-emailid" class="form-label">Email ID</label>
+                              <input type="text" class="form-control" id="case-emailid"  >
+                            </div>
+
+                          </div>
+
+                          <div class="row mb-3">
+
+                            <div class="col-sm-4">
+                              <label for="case-emailpassword" class="form-label">Email Password</label>
+                              <input type="text" class="form-control" id="case-emailpassword"  >
+                            </div>
+
+                          </div>
+          
+                          <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                          </div>
+                        </form>
+                      </div>
+                      <a class="close" style=" color: white;" href="#close">&times;</a>
+                  </div>
+                </div>
+
+                <div id="popup18" class="overlay">
+                  <div class="popup">
+                      <div class="frame">
+                        <form id="consumerDraftForm">
+                          
+                        
+                          <div class="row mb-3">
+
+                            <label for="consumerDraft" class="form-label" style="
+                            font-size: x-large;
+                        ">Consumer Draft</label>
+                            <div id="consumerDraft"  style="
+                            background-color: white;
+                            color: black;
+                        ">
+                            
+                            </div>
+                            
+                            </div>
+          
+                          <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                          </div>
+                        </form>
+                      </div>
+                      <a class="close" style=" color: white;" href="#close">&times;</a>
+                  </div>
+                </div>
+
+
+                <div id="popup19" class="overlay">
+                  <div class="popup">
+                      <div class="frame">
+                        <form id="detailsForm">
+                          <div class="row mb-3">
+
+                            <div class="col-sm-4">
+                              <label for="courier-detail" class="form-label">Courier Details</label>
+                              <input type="text" class="form-control" id="courier-detail" required >
+                            </div>
+
+                            <div class="col-sm-4">
+                              <label for="registration-detail" class="form-label">Registration details</label>
+                              <input type="text" class="form-control" id="registration-detail" required >
+                            </div>
+                            
+                            <div class="col-sm-4">
+                              <label for="claim-amount" class="form-label">Hearing Date </label>
+                              <input type="text" class="form-control" id="claim-amount" required >
+                            </div>
+ 
+                          </div>
+                          <div class="row mb-3">
+
+
+                          
+
+
+                          </div>
+  
+                          <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                          </div>
+                        </form>
+                      </div>
+                      <a class="close" style=" color: white;" href="#close">&times;</a>
+                  </div>
+                </div>
+
+                <div id="popup3" class="overlay">
+                  <div class="popup" style="color:black; width: 70%; max-height: 90vh; overflow-y: auto;">
+                      <div style="display: flex; align-items: center; justify-content: start;">
+                          <img src="/images/logoround.png" width="130" height="130" style="margin-right: 20px;">
+                          <h2 style="margin: 0; flex-grow: 1; text-align: center;">Case Report</h2>
+                      </div>
+                      <div style="margin-top: 10px; margin-left:40px;">
+                        <div style="display: flex; justify-content: space-between;">
+                          <div style="flex: 1;">
+                              <label class="form-label"><strong>Case Number:</strong></label>
+                              <span data-info="reportcasenumber">[Case Number]</span>
+                          </div>
+                          <div style="flex: 1;">
+                            <label class="form-label"><strong>Case Handler:</strong></label>
+                            <span data-info="reportcasehandler">[Case Handler]</span>
+                          </div>
+                        </div>
+
+                          <div style="display: flex; justify-content: space-between;">
+                              <div style="flex: 1;">
+                                  <label class="form-label"><strong>Initial Case Date:</strong></label>
+                                  <span data-info="reportinitialcasedate">[Initial Case Date]</span>
+                              </div>
+                              <div style="flex: 1;">
+                                  <label class="form-label"><strong>Patient Name:</strong></label>
+                                  <span data-info="reportpatientname">[Case status]</span>
+                              </div>
+                          </div>
+                          <div style="display: flex; justify-content: space-between;">
+                              <div style="flex: 1;">
+                                  <label class="form-label"><strong>Patient Contact:</strong></label>
+                                  <span data-info="reportpatientcontact">[Remarks]</span>
+                              </div>
+                              <div style="flex: 1;">
+                                  <label class="form-label"><strong>Complainant Name:</strong></label>
+                                  <span data-info="reportcomplainantname">[Initial Case Date]</span>
+                              </div>
+                          </div>
+                          <div style="display: flex; justify-content: space-between;">
+                              <div style="flex: 1;">
+                                  <label class="form-label"><strong>Complainant Contact:</strong></label>
+                                  <span data-info="reportcomplainantcontact">[Case status]</span>
+                              </div>
+                              <div style="flex: 1;">
+                                  <label class="form-label"><strong>Manager:</strong></label>
+                                  <span data-info="reportmanager">[Remarks]</span>
+                              </div>
+                          </div>
+                          <div style="display: flex; justify-content: space-between;">
+                              <div style="flex: 1;">
+                                  <label class="form-label"><strong>Channel Partner:</strong></label>
+                                  <span data-info="reportcp">[Initial Case Date]</span>
+                              </div>
+                              <div style="flex: 1;">
+                                  <label class="form-label"><strong>Insurance company:</strong></label>
+                                  <span data-info="reportinsurancecompany">[Case status]</span>
+                              </div>
+                          </div>
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Claim Number:</strong></label>
+                              <span data-info="reportclaimnumber">[Remarks]</span>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Claim Amount:</strong></label>
+                              <span data-info="reportclaimamount">[Remarks]</span>
+                            </div>
+                          </div>
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                            <label class="form-label"><strong>Case Rejection Reason :</strong></label>
+                            <span data-info="reportcaserejectionreason">[Remarks]</span>
+                            </div>
+                          </div>
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                            <label class="form-label"><strong>Manual Gist :</strong></label>
+                            <span data-info="reportmanualgist">[Remarks]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                            <label class="form-label"><strong>Remarks :</strong></label>
+                            <span data-info="reportremarks">[Remarks]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Consultation Charge :</strong></label>
+                              <span data-info="reportconsultationcharge">[Remarks]</span>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Processing Fees : </strong></label>
+                              <span data-info="reportprocessingfees">[Remarks]</span>
+                            </div>
+                          </div>
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Cheque Amount :</strong></label>
+                              <span data-info="reportchequeamount">[Remarks]</span>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Cheque Number : </strong></label>
+                              <span data-info="reportchequenumber">[Remarks]</span>
+                            </div>
+                          </div>
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Bank Name  :</strong></label>
+                              <span data-info="reportbankname">[Remarks]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Operation Officer :</strong></label>
+                              <span data-info="reportoperationofficer">[None]</span>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Medical Officer : </strong></label>
+                              <span data-info="reportmedicalofficer">[None]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Claim Type :</strong></label>
+                              <span data-info="reportclaimtype">[None]</span>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Policy Number : </strong></label>
+                              <span data-info="reportpolicynumber">[None]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Policy Inception :</strong></label>
+                              <span data-info="reportpolicyinception">[None]</span>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Hospital Name : </strong></label>
+                              <span data-info="reporthospitalname">[None]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Admission Date :</strong></label>
+                              <span data-info="reportadmissiondate">[None]</span>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Discharge Date : </strong></label>
+                              <span data-info="reportdischargedate">[None]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Diagnosis :</strong></label>
+                              <span data-info="reportdiagnosis">[None]</span>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Patient Complain : </strong></label>
+                              <span data-info="reportpatientcomplain">[None]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Rejection Reason :</strong></label>
+                              <span data-info="reportrejectionreason">[None]</span>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Rejection Date : </strong></label>
+                              <span data-info="reportrejectiondate">[None]</span>
+                            </div>
+                          </div>
+
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Draft :</strong></label>
+                              <div id="reportdraft" style="height:350px">[None]</span></div>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Lokpal Draft : </strong></label>
+                              <div id="reportlokpaldraft" style="height:350px">[None]</span></div>
+                            </div>
+                          </div>
+
+                         
+
+                         
+
+                      </div>
+                      <a class="close" href="#close">&times;</a>
+                  </div>
+                </div>
+
+                
+                <div id="popup4"  class="overlay">
+                  <div class="popup" style="width:45%">
+                    <h2 >Upload document-</h2>
+
+                    <form id="DocUploadForm" enctype="multipart/form-data">
+                      <div class="col-sm-6">
+                        <label for="pdf-input" class="form-label">Documents</label>
+                          <input type="file" class="form-control" id="pdf-input"  multiple>
+                      </div>
+                      <br>        
+                      <br>
+                      <button type="submit" onclick="uploadDocsInDB()" class="btn btn-primary btn-sm">Upload</button>
+                    </form>
+                                   
+                     
+                    
+                    <a class="close" href="#close">&times;</a>
+                  </div>
+                </div>
+
+                <div id="popup5" class="overlay" >
+                  <div class="popup" style =" display: flex;
+                  justify-content: space-between;
+                  width: 100%;">
+                   
+                   <div>
+                    <h2 style="color: black;">Documents - </h2>
+                        <ul id="documentlist" style="margin-right: 100px; margin-top: 50px;"></ul>
+                   </div>
+                    
+
+
+                    <a class="close" href="#close">&times;</a>
+
+                    <div id="wrapper" style="flex: 2;">
+                       
+
+                        <iframe name="inlineFrameExample" 
+                          title="Inline Frame Example" 
+                          style="width: 90%; height: 80vh; border:2px dotted; border-color: black; flex-grow: 2;"
+                          src="">
+                        </iframe>
+
+                   </div>
+
+                  </div>
+
+
+                </div>
+   
+
+                <div id="popup6" class="overlay" >
+                  <div class="popup" style="color:black; width: 70%; max-height: 90vh; overflow-y: auto;">
+                    <div style="display: flex; align-items: center; justify-content: start;">
+                      <img src="/images/logoround.png" width="130" height="130" style="margin-right: 20px;">
+                      <h2 style="margin: 0; flex-grow: 1; text-align: center;">INITIAL CLAIM ASSESSMENT SHEET</h2>
+                    </div>
+                    <div style="margin-top: 10px; margin-left:40px;">
+                      <p><strong>NAME OF PATIENT:</strong>  <span data-info="patientName">[Patient Name]</span></p>
+                      <p><strong>NAME OF COMPLAINANT:</strong>  <span data-info="complainantName">[Complainant Name]</span></p>
+                      <p><strong>Type of Claim / Rejection / Deduction:</strong> <span data-info="claimType">[Type]</span></p>
+                      <p><strong>Claim Amount:</strong><span data-info="claimAmount">[Amount]</span> </p>
+                      <p><strong>POLICY NUMBER:</strong> <span data-info="policyNumber">[Policy Number]</span> </p>
+                      <p><strong>CLAIM NUMBER:</strong> <span data-info="claimNumber">[Claim Number]</span> </p>
+                      <p><strong>DATE OF INCEPTION OF FIRST POLICY:</strong> <span data-info="dateOfPolicy">[Date]</span> </p>
+                      <p><strong>COMPANY NAME:</strong> <span data-info="companyName">[Company Name]</span> </p>
+                      <p><strong>HOSPITAL NAME:</strong> <span data-info="hospitalName">[Hospital Name]</span> </p>
+                      <p><strong>DOA:</strong> <span data-info="dateOfAdmission">[Date of Admission]</span> <strong>DOD:</strong> <span data-info="dateOfDischarge">[Date of Discharge]</span></p>
+                      <p><strong>DIAGNOSIS:</strong> <span data-info="diagnosis">[Policy Number]</span></p>
+                      <p><strong>PATIENT COMPLAINS DURING ADMISSION:</strong> <span data-info="patientComplain">[Complaints]</span></p>
+                      <p><strong>REJECTION REASON DATED:</strong> <span data-info="rejectionDate">[Rejection Reason]</span>  <span data-info="rejectionReason"> [Reason]</span> </p>
+                      <p><strong>COMMENTS GIVEN BY:</strong> <span data-info="caseComment">[Comments]</span></p>
+                        <!-- Additional content here
+                          use the following code to fill json content
+                        document.querySelector('[data-info="patientName"]').textContent = responseData.patientName;
+
+                        document.querySelector('[data-info="patientName"]').textContent = responseData.patientName;
+
+                        -->
+                        
+                    </div>
+                    <a class="close" href="#close">&times;</a>
+                  </div>
+                  
+                </div>
+
+
+                <div id="popup7" class="overlay">
+                  <div class="popup" style="width:25%">
+                    <h2  id = "remarkcontent">Assign Case</h2>
+
+                      <select name="operationofficer" id="operationofficer"  style="margin-top: 5px;margin-bottom: 5px;">
+                      <option value="NONE">NONE</option>
+                      </select>
+
+                      <br>        
+                      <br>              
+                      <button type="submit" onclick="addOfficerToCase()" class="btn btn-primary btn-sm">Save Officer</button>
+                    
+                    <a class="close" href="#close">&times;</a>
+                  </div>
+                </div>
+
+                <div id="popup8" class="overlay">
+                  <div class="popup" style="width:30%">
+                    <h2  id = "remarkcontent">Assign Medical officer</h2>
+
+                      <select name="medicalofficer" id="medicalofficer"  style="margin-top: 5px;margin-bottom: 5px;">
+                      <option value="NONE">NONE</option>
+                      </select>
+
+                      <br> 
+                      <input type="text" placeholder="Add remark here" id="movetopendingdraftremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+    
+                      <br>              
+                      <button type="submit" onclick="addMedicalOfficerToCase()" class="btn btn-primary btn-sm">Save Officer</button>
+                    
+                    <a class="close" href="#close">&times;</a>
+                  </div>
+                </div>
+
+                <div id="popup10" class="overlay" >
+                  <div class="popup" style ="width:30%">
+                    <h2  id = "remarkcontent">Move to Hold-</h2>
+                    
+                    <input type="text" placeholder="Add hold remark here" id="holdremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                    <button type="submit" onclick="addholdremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
+                    
+                    <a class="close" href="#close">&times;</a>
+                  </div>
+                </div>
+
+                <div id="popup11" class="overlay" >
+                  <div class="popup" style ="width:30%">
+                    <h2  id = "remarkcontent">Move to Reimbursement-</h2>
+                    
+                    <input type="text" placeholder="Add hold reimbursement remark here" id="reimbursementremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                    <button type="submit" onclick="addreimbursementremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
+                    
+                    <a class="close" href="#close">&times;</a>
+                  </div>
+                </div>
+
+                <div id="popup12" class="overlay" >
+                  <div class="popup" style ="width:30%">
+                    <h2  id = "remarkcontent">Move to Pending Docs-</h2>
+                    
+                    <input type="text" placeholder="Add pending doc remark" id="pendingdocremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                    <button type="submit" onclick="addpendingdocremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
+                    
+                    <a class="close" href="#close">&times;</a>
+                  </div>
+                </div>
+                
+                <div id="popup9" class="overlay" >
+                  <div class="popup" style ="width:45%">
+                    <h2  id = "remarkcontent">Remarks-</h2>
+                    <ul id="remarkcontentlist"></ul>
+
+                    
+                    <input type="text" placeholder="Add new remark here" id="newremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
+                    <button type="submit" onclick="addremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
+                    
+                    <a class="close" href="#close">&times;</a>
+                  </div>
+                </div>
+
+                <div id="uploadingdiv" style="display: none;">
+                  <img src="/images/uploading3.webp">
+                </div>
+
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.4/dist/quill.js"></script>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+  <script src="https://cdn.datatables.net/2.1.3/js/dataTables.js"></script>
+  <script src="https://cdn.datatables.net/buttons/3.1.1/js/dataTables.buttons.js"></script>
+  <script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.dataTables.js"></script>
+
+  <!--
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+  <script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.html5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.print.min.js"></script>
+
+-->
+<script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.html5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+  <!-- FixedColumns -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedcolumns/4.0.1/css/fixedColumns.dataTables.min.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/fixedcolumns/4.0.1/js/dataTables.fixedColumns.min.js"></script>
+
+  <script>
+
+const toolbarOptions =['bold', 'italic', 'underline'];
+
+const quill = new Quill('#consumerDraft', {
+    theme: 'snow',
+    modules: {
+    toolbar: toolbarOptions
+  }
+  });
+
+  const quill1 = new Quill('#reportlokpaldraft', {
+    theme: 'snow',
+    modules: {
+    toolbar: toolbarOptions
+  }
+  });
+
+function addremark(referencenumber) {
+        // Code to generate card
+        localStorage['addRemarkForRefNumber'] =referencenumber; 
+  }
+
+  function uploadDocsInDB()
+{
+
+  $('#uploadingdiv').show();
+
+  var formData = new FormData();
+        formData.append('casereferenceNumber', localStorage['addRemarkForRefNumber']);
+       
+        $.each($('#pdf-input')[0].files, function(i, file) {
+          formData.append('pdfFile', file);
+      });
+
+      $.ajax({
+          url: '/api/uploadadditionaldocs',
+          type: 'POST',
+          contentType: false,
+          processData: false,
+          data: formData,
+          success: function (response) {
+            if(response.message == "success")
+              {
+                //window.location.href = "/dashboard.html"
+                $('#uploadingdiv').hide({done: function() { alert("Additional docs uploaded."); } });
+               // alert("Case added reference number- " + response.referencenumber);
+                document.getElementById('DocUploadForm').reset();
+              }
+              else{
+                $('#uploadingdiv').hide({done: function() { alert(response.error); } });
+               // alert(response.message);
+                document.getElementById('DocUploadForm').reset();
+                //document.getElementById('loginForm').reset();
+              }
+          },
+          error: function (error) {
+            $('#uploadingdiv').hide({done: function() { alert("Failed to upload docs!!!"); } });
+            document.getElementById('DocUploadForm').reset();
+           // alert("Failed to add case!!!");
+            // Display an error message to the user
+          }
+        });
+
+}
+
+
+function addholdremarkInDB() {
+
+  if( document.getElementById("holdremark").value == "")
+  {
+    alert("Empty remark not allowed!")
+    return;
+  }
+
+
+const today = new Date();
+const yyyy = today.getFullYear();
+let mm = today.getMonth() + 1; // Months start at 0!
+let dd = today.getDate();
+
+if (dd < 10) dd = '0' + dd;
+if (mm < 10) mm = '0' + mm;
+
+const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+    $.ajax({
+      url: '/api/movetohold',
+      type: 'POST',
+      contentType: "application/x-www-form-urlencoded",
+      data: {
+        referencenumber: localStorage['addRemarkForRefNumber'],
+        caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - [Hold Remark] "+ document.getElementById("holdremark").value,
+        holdbucketDate : new Date(),
+      },
+      success: function (response) {
+        if(response.message == "success")
+          {
+           // window.location.href = "/index.html"
+            //localStorage['userID'] = username;
+            alert("Case moved to hold phase!")
+            localStorage.removeItem("addRemarkForRefNumber");
+
+            document.getElementById("holdremark").value ="";
+            window.location.href = "/viewlivecases.html";
+            
+          }
+          else{
+            alert("Error saving remark!")
+            //document.getElementById('loginForm').reset();
+          }
+        //alert("login success");
+        // Redirect to the dashboard or perform any other actions
+      },
+      error: function (error) {
+        document.getElementById('loginForm').reset();
+        alert("login failed");
+        // Display an error message to the user
+      }
+    });
+
+}
+
+
+
+function addpendingdocremarkInDB() {
+
+if( document.getElementById("pendingdocremark").value == "")
+{
+  alert("Empty remark not allowed!")
+  return;
+}
+
+
+const today = new Date();
+const yyyy = today.getFullYear();
+let mm = today.getMonth() + 1; // Months start at 0!
+let dd = today.getDate();
+
+if (dd < 10) dd = '0' + dd;
+if (mm < 10) mm = '0' + mm;
+
+const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+  $.ajax({
+    url: '/api/movetopendingdoc',
+    type: 'POST',
+    contentType: "application/x-www-form-urlencoded",
+    data: {
+      referencenumber: localStorage['addRemarkForRefNumber'],
+      caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - [Pending Doc Remark] "+ document.getElementById("pendingdocremark").value
+    },
+    success: function (response) {
+      if(response.message == "success")
+        {
+         // window.location.href = "/index.html"
+          //localStorage['userID'] = username;
+          alert("Case moved to Pending Doc!")
+          localStorage.removeItem("addRemarkForRefNumber");
+
+          document.getElementById("pendingdocremark").value ="";
+          window.location.href = "/viewlivecases.html";
+          
+        }
+        else{
+          alert("Error saving remark!")
+          //document.getElementById('loginForm').reset();
+        }
+      //alert("login success");
+      // Redirect to the dashboard or perform any other actions
+    },
+    error: function (error) {
+      document.getElementById('loginForm').reset();
+      alert("login failed");
+      // Display an error message to the user
+    }
+  });
+
+}
+
+
+
+
+
+function addreimbursementremarkInDB() {
+
+if( document.getElementById("reimbursementremark").value == "")
+{
+  alert("Empty remark not allowed!")
+  return;
+}
+
+
+const today = new Date();
+const yyyy = today.getFullYear();
+let mm = today.getMonth() + 1; // Months start at 0!
+let dd = today.getDate();
+
+if (dd < 10) dd = '0' + dd;
+if (mm < 10) mm = '0' + mm;
+
+const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+  $.ajax({
+    url: '/api/movetoreimbursement',
+    type: 'POST',
+    contentType: "application/x-www-form-urlencoded",
+    data: {
+      referencenumber: localStorage['addRemarkForRefNumber'],
+      caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - [Reimbursement Remark] "+ document.getElementById("reimbursementremark").value
+    },
+    success: function (response) {
+      if(response.message == "success")
+        {
+         // window.location.href = "/index.html"
+          //localStorage['userID'] = username;
+          alert("Case moved to reimbursement phase!")
+          localStorage.removeItem("addRemarkForRefNumber");
+
+          document.getElementById("reimbursementremark").value ="";
+          window.location.href = "/viewlivecases.html";
+          
+        }
+        else{
+          alert("Error saving remark!")
+          //document.getElementById('loginForm').reset();
+        }
+      //alert("login success");
+      // Redirect to the dashboard or perform any other actions
+    },
+    error: function (error) {
+      document.getElementById('loginForm').reset();
+      alert("login failed");
+      // Display an error message to the user
+    }
+  });
+
+}
+
+
+
+
+  function addremarkInDB() {
+
+  if( document.getElementById("newremark").value == "")
+  {
+    alert("Empty remark not allowed!")
+    return;
+  }
+
+const today = new Date();
+const yyyy = today.getFullYear();
+let mm = today.getMonth() + 1; // Months start at 0!
+let dd = today.getDate();
+
+if (dd < 10) dd = '0' + dd;
+if (mm < 10) mm = '0' + mm;
+
+const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+    $.ajax({
+      url: '/api/addlivecaseremark',
+      type: 'POST',
+      contentType: "application/x-www-form-urlencoded",
+      data: {
+        referencenumber: localStorage['addRemarkForRefNumber'],
+        caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ document.getElementById("newremark").value
+      },
+      success: function (response) {
+        if(response.message == "success")
+          {
+           // window.location.href = "/index.html"
+            //localStorage['userID'] = username;
+            alert("Remark saved!")
+            localStorage.removeItem("addRemarkForRefNumber");
+
+            document.getElementById("newremark").value ="";
+           // window.location.href = "/viewlivecases.html";
+            
+          }
+          else{
+            alert("Error saving remark!")
+            //document.getElementById('loginForm').reset();
+          }
+        //alert("login success");
+        // Redirect to the dashboard or perform any other actions
+      },
+      error: function (error) {
+        document.getElementById('loginForm').reset();
+        alert("login failed");
+        // Display an error message to the user
+      }
+    });
+  
+
+
+}
+  
+
+  function viewremark(referencenumber) {
+        // Code to generate card
+
+        localStorage['addRemarkForRefNumber'] = referencenumber; 
+
+        let list = document.getElementById("remarkcontentlist");
+
+        // 👇️ Remove all list elements
+        list.innerHTML = '';
+
+        $.ajax({
+        url: '/api/getlivecaseRemarkbyref',
+        type: 'GET',
+        data: {
+          casereferenceNumber: referencenumber
+        },
+
+        success: function (response) {
+          // Populate the options in the select eleme    
+           
+           // let text =  response[0].caseRemarks;
+          //  const myArray = text.split(";");    
+
+            let list = document.getElementById("remarkcontentlist");
+              for (i = 0; i < response[0].caseRemarks.length ; i++) {
+                let li = document.createElement('li');
+                li.innerText = response[0].caseRemarks[i];
+                list.appendChild(li);
+               }
+
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+  }
+
+
+  
+function addMedicalOfficerToCase() {
+
+  if( document.getElementById("movetopendingdraftremark").value == "")
+  {
+  alert("Empty remark not allowed!!");
+  return;
+ }
+
+ const today = new Date();
+const yyyy = today.getFullYear();
+let mm = today.getMonth() + 1; // Months start at 0!
+let dd = today.getDate();
+
+if (dd < 10) dd = '0' + dd;
+if (mm < 10) mm = '0' + mm;
+
+const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+$.ajax({
+url: '/api/addmedicalofficertocaseandmovetopendingdraft',
+type: 'POST',
+contentType: "application/x-www-form-urlencoded",
+data: {
+  casereferenceNumber: localStorage['addRemarkForRefNumber'],
+  medicalOpinionOfficer: $("#medicalofficer option:selected").text(),
+  caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ document.getElementById("movetopendingdraftremark").value,
+},
+success: function (response) {
+  if(response.message == "success")
+    {
+    // window.location.href = "/index.html"
+      //localStorage['userID'] = username;
+      alert("Case moved to pending draft!")
+      localStorage.removeItem("addRemarkForRefNumber");
+
+      window.location.href = "/viewlivecases.html";
+    }
+    else{
+      alert("Error saving details!")
+      //document.getElementById('loginForm').reset();
+    }
+  //alert("login success");
+  // Redirect to the dashboard or perform any other actions
+},
+error: function (error) {
+  document.getElementById('loginForm').reset();
+  alert("login failed");
+  // Display an error message to the user
+}
+});
+
+}
+
+function addOfficerToCase() {
+
+$.ajax({
+url: '/api/addoperationofficertocase',
+type: 'POST',
+contentType: "application/x-www-form-urlencoded",
+data: {
+  casereferenceNumber: localStorage['addRemarkForRefNumber'],
+  operationOfficer: $("#operationofficer option:selected").text(),
+},
+success: function (response) {
+  if(response.message == "success")
+    {
+    // window.location.href = "/index.html"
+      //localStorage['userID'] = username;
+      alert("Operation Officer assigned!")
+      localStorage.removeItem("addRemarkForRefNumber");
+
+     // window.location.href = "/viewlivecases.html";
+    }
+    else{
+      alert("Error saving details!")
+      //document.getElementById('loginForm').reset();
+    }
+  //alert("login success");
+  // Redirect to the dashboard or perform any other actions
+},
+error: function (error) {
+  document.getElementById('loginForm').reset();
+  alert("login failed");
+  // Display an error message to the user
+}
+});
+
+}
+
+
+
+
+  function viewdocuments(referencenumber)
+{
+  let list = document.getElementById("documentlist");
+  
+  console.log("rajat....");
+
+
+  var wrapper = document.getElementById('wrapper');
+  wrapper.innerHTML= `"<iframe name="inlineFrameExample" 
+            title="Inline Frame Example" 
+            style="width: 90%; height: 80vh; border: 2px dotted;border-color: black; flex-grow: 2;"
+            src="">
+    </iframe>"`;
+  
+
+// 👇️ Remove all list elements
+list.innerHTML = '';
+
+
+$.ajax({
+url: '/api/getprospectcasedetailbyref',
+type: 'GET',
+data: {
+  casereferenceNumber: referencenumber
+},
+
+success: function (response) {
+  // Populate the options in the select eleme    
+   
+   // let text =  response[0].caseRemarks;
+  //  const myArray = text.split(";");    
+
+    let list = document.getElementById("documentlist");
+      for (i = 0; i < response[0].docUrl.length ; i++) {
+        let li = document.createElement('li');
+        let filename = response[0].docUrl[i].substring(response[0].docUrl[i].lastIndexOf('/')+1);
+        let smallfilename= filename.substring(0, filename.lastIndexOf('-'));
+        //li.innerHTML = `<a target='inlineFrameExample' href="${response[0].docUrl[i]}" >${filename}</a>`;
+        li.innerHTML = `<a target='inlineFrameExample' href="${response[0].docUrl[i]}" >${smallfilename}</a>`;
+
+        list.appendChild(li);
+       }
+
+},
+error: function (error) {
+  console.error('Error:', error);
+}
+});
+ 
+}
+
+
+function viewDraft(referencenumber)
+    {
+
+      localStorage['casereferencenumber'] = referencenumber; 
+
+      $.ajax({
+        url: '/api/getcasedetailbyref',
+        type: 'GET',
+        data: {
+          casereferenceNumber: referencenumber
+        },
+
+        success: function (response) {
+          // Populate the options in the select elemen
+       quill.root.innerHTML= response[0].consumerDraft ? response[0].consumerDraft : "";
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      }); 
+
+    }
+
+
+
+    function viewAgreement(referencenumber)
+    {
+
+      localStorage['casereferencenumber'] = referencenumber; 
+
+      $.ajax({
+        url: '/api/getcasedetailbyref',
+        type: 'GET',
+        data: {
+          casereferenceNumber: referencenumber
+        },
+
+        success: function (response) {
+          // Populate the options in the select elemen
+                
+            document.getElementById("patient-name").value = response[0].patientName ? response[0].patientName : "";
+            document.getElementById("complainant-name").value = response[0].complainantName ? response[0].complainantName: "";
+            document.getElementById("claim-type-dropdown").value = response[0].claimType ? response[0].claimType : "";
+            
+            document.getElementById("behalf-of-dropdown").value = response[0].behalfOf ? response[0].behalfOf : "";
+
+            
+            document.getElementById("claim-amount").value = response[0].claimAmount ? response[0].claimAmount : "";
+            document.getElementById("claim-number").value = response[0].claimNumber ? response[0].claimNumber : "";
+            document.getElementById("policy-number").value = response[0].policyNumber ?  response[0].policyNumber : "";
+            document.getElementById("company-name").value = response[0].insuranceCompanyName ? response[0].insuranceCompanyName : "";
+           
+
+
+
+            document.getElementById("policy-date").value = response[0].dateOfPolicy ? moment(new Date(response[0].dateOfPolicy)).utc().format('YYYY-MM-DD') : "";
+            document.getElementById("hospital-name").value = response[0].hospitalName ? response[0].hospitalName : "";
+            document.getElementById("admission-date").value = response[0].dateOfAdmission ? moment(new Date(response[0].dateOfAdmission)).utc().format('YYYY-MM-DD') : "";
+            document.getElementById("discharge-date").value = response[0].dateOfDischarge ? moment(new Date(response[0].dateOfDischarge)).utc().format('YYYY-MM-DD') : "";
+            document.getElementById("case-diagnosis").value = response[0].diagnosis ? response[0].diagnosis : "";
+            document.getElementById("patient-complain").value = response[0].patientComplainDuringAdmission ? response[0].patientComplainDuringAdmission : "";
+            document.getElementById("rejection-reason").value = response[0].rejectionReason ? response[0].rejectionReason : "";
+            document.getElementById("rejection-date").value = response[0].initialRejectionDate ? moment(new Date(response[0].initialRejectionDate)).utc().format('YYYY-MM-DD') : "";
+            document.getElementById("case-comment").value = response[0].gistComments ? response[0].gistComments : "";
+
+            document.getElementById("case-emailid").value = response[0].caseEmail ? response[0].caseEmail : "";
+            document.getElementById("case-emailpassword").value = response[0].caseEmailPassword ? response[0].caseEmailPassword : "";
+
+            document.querySelector('[data-info="patientName"]').textContent =response[0].patientName ? response[0].patientName : "";
+
+            document.querySelector('[data-info="complainantName"]').textContent =response[0].complainantName ? response[0].complainantName : "";
+            document.querySelector('[data-info="claimType"]').textContent = response[0].claimType ? response[0].claimType : "";
+            document.querySelector('[data-info="claimAmount"]').textContent = response[0].claimAmount ? response[0].claimAmount : "";
+            document.querySelector('[data-info="policyNumber"]').textContent =response[0].policyNumber ?  response[0].policyNumber : "";
+            document.querySelector('[data-info="claimNumber"]').textContent = response[0].claimNumber ? response[0].claimNumber : "";
+            document.querySelector('[data-info="dateOfPolicy"]').textContent =response[0].dateOfPolicy ? moment(new Date(response[0].dateOfPolicy)).utc().format('DD-MM-YYYY') : "";
+            document.querySelector('[data-info="companyName"]').textContent = response[0].insuranceCompanyName ? response[0].insuranceCompanyName : "";
+            document.querySelector('[data-info="hospitalName"]').textContent = response[0].hospitalName ? response[0].hospitalName : "";
+            document.querySelector('[data-info="dateOfAdmission"]').textContent =  response[0].dateOfAdmission ? moment(new Date(response[0].dateOfAdmission)).utc().format('DD-MM-YYYY') : "";
+            document.querySelector('[data-info="dateOfDischarge"]').textContent =  response[0].dateOfDischarge ? moment(new Date(response[0].dateOfDischarge)).utc().format('DD-MM-YYYY') : "";
+            
+            
+            document.querySelector('[data-info="diagnosis"]').textContent =response[0].diagnosis ? response[0].diagnosis : "";
+            document.querySelector('[data-info="patientComplain"]').textContent = response[0].patientComplainDuringAdmission ? response[0].patientComplainDuringAdmission : "";
+            document.querySelector('[data-info="rejectionDate"]').textContent = response[0].initialRejectionDate ? moment(new Date(response[0].initialRejectionDate)).utc().format('DD-MM-YYYY') : "";
+            document.querySelector('[data-info="rejectionReason"]').textContent = response[0].rejectionReason ? response[0].rejectionReason : "";
+            document.querySelector('[data-info="caseComment"]').textContent = response[0].gistComments ? response[0].gistComments : "";
+
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      }); 
+
+    }
+
+function addCasaddlegalgenerateddetailseVerdict(){
+
+    $.ajax({
+    url: '/api/addcaselegalgenerateddetails',
+    type: 'POST',
+    contentType: "application/x-www-form-urlencoded",
+    data: {
+      casereferenceNumber:  localStorage['casereferencenumber'],
+    },
+    success: function (response) {
+      if(response.message == "success")
+        {
+        
+          //alert("Medical Opinion saved!")
+        
+          //window.location.href = "/viewmedicalopinioncases.html";
+        }
+        else{
+         // alert("Error saving details!")
+          //document.getElementById('loginForm').reset();
+        }
+      //alert("login success");
+      // Redirect to the dashboard or perform any other actions
+    },
+    error: function (error) {
+      //document.getElementById('loginForm').reset();
+      //alert("Failed to save medical opinion");
+      // Display an error message to the user
+    }
+    });
+
+}
+
+
+
+
+function movetolive(referencenumber) {
+        // Code to generate card
+       //alert("Move to live reference number: " + referencenumber);
+       localStorage['casereferencenumber'] = referencenumber; 
+
+       window.location.replace("/movecasetolive.html");
+
+      }
+
+      function populatereport(refnumber)
+      {
+            $.ajax({
+            url: '/api/getcasedetailbyref',
+            type: 'GET',
+            data: {
+                //fill appropriate case number here. fasttodo
+              casereferenceNumber: refnumber,
+            },
+            success: function (response) {
+              // Populate the options in the select element
+              document.querySelector('[data-info="reportcasenumber"]').textContent =response[0].casereferenceNumber ? response[0].casereferenceNumber : "";
+              document.querySelector('[data-info="reportcasehandler"]').textContent =response[0].caseHandler ? response[0].caseHandler : "";
+              document.querySelector('[data-info="reportinitialcasedate"]').textContent =response[0].prospectDate ? moment(new Date(response[0].prospectDate)).utc().format('DD-MM-YYYY') : "";
+
+              document.querySelector('[data-info="reportpatientname"]').textContent =response[0].patientName ? response[0].patientName : "";
+
+              document.querySelector('[data-info="reportpatientcontact"]').textContent =response[0].patientMobile ? response[0].patientMobile : "";
+
+              document.querySelector('[data-info="reportcomplainantname"]').textContent =response[0].complainantName ? response[0].complainantName : "";
+
+              document.querySelector('[data-info="reportcomplainantcontact"]').textContent =response[0].complainantMobile ? response[0].complainantMobile : "";
+
+              document.querySelector('[data-info="reportmanager"]').textContent =response[0].managerName ? response[0].managerName : "";
+
+              document.querySelector('[data-info="reportcp"]').textContent =response[0].cpName ? response[0].cpName : "";
+
+              document.querySelector('[data-info="reportinsurancecompany"]').textContent =response[0].insuranceCompanyName ? response[0].insuranceCompanyName : "";
+
+              document.querySelector('[data-info="reportclaimnumber"]').textContent =response[0].claimNumber ? response[0].claimNumber : "";
+
+              document.querySelector('[data-info="reportclaimamount"]').textContent =response[0].claimAmount ? response[0].claimAmount : "";
+
+              document.querySelector('[data-info="reportcaserejectionreason"]').textContent =response[0].caseRejectionReason ? response[0].caseRejectionReason : "";
+
+              document.querySelector('[data-info="reportmanualgist"]').textContent =response[0].caseGist ? response[0].caseGist : "";
+              
+              document.querySelector('[data-info="reportconsultationcharge"]').textContent =response[0].cfPercentage ? response[0].cfPercentage : "";
+
+              document.querySelector('[data-info="reportprocessingfees"]').textContent =response[0].pfAmount ? response[0].pfAmount : "";
+
+              document.querySelector('[data-info="reportchequeamount"]').textContent =response[0].cfAmount ? response[0].cfAmount : "";
+
+              document.querySelector('[data-info="reportchequenumber"]').textContent =response[0].cfChequeNumber ? response[0].cfChequeNumber : "";
+
+              document.querySelector('[data-info="reportbankname"]').textContent =response[0].cfBankName ? response[0].cfBankName : "";
+
+              document.querySelector('[data-info="reportoperationofficer"]').textContent =response[0].operationOfficer ? response[0].operationOfficer : "";
+
+              document.querySelector('[data-info="reportmedicalofficer"]').textContent =response[0].medicalOpinionOfficer ? response[0].medicalOpinionOfficer : "";
+
+              document.querySelector('[data-info="reportclaimtype"]').textContent =response[0].claimType ? response[0].claimType : "";
+
+              document.querySelector('[data-info="reportpolicynumber"]').textContent =response[0].policyNumber ? response[0].policyNumber : "";
+
+
+              document.querySelector('[data-info="reportpolicyinception"]').textContent =response[0].dateOfPolicy ? moment(new Date(response[0].dateOfPolicy)).utc().format('DD-MM-YYYY') : "";
+
+              document.querySelector('[data-info="reporthospitalname"]').textContent =response[0].hospitalName ? response[0].hospitalName : "";
+              
+              document.querySelector('[data-info="reportadmissiondate"]').textContent =response[0].dateOfAdmission ? moment(new Date(response[0].dateOfAdmission)).utc().format('DD-MM-YYYY') : "";
+
+              document.querySelector('[data-info="reportdischargedate"]').textContent =response[0].dateOfDischarge ? moment(new Date(response[0].dateOfDischarge)).utc().format('DD-MM-YYYY') : "";
+
+              document.querySelector('[data-info="reportrejectiondate"]').textContent =response[0].initialRejectionDate ? moment(new Date(response[0].initialRejectionDate)).utc().format('DD-MM-YYYY') : "";
+
+              document.querySelector('[data-info="reportdiagnosis"]').textContent =response[0].diagnosis ? response[0].diagnosis : "";
+
+              document.querySelector('[data-info="reportpatientcomplain"]').textContent =response[0].patientComplainDuringAdmission ? response[0].patientComplainDuringAdmission : "";
+
+              document.querySelector('[data-info="reportrejectionreason"]').textContent =response[0].rejectionReason ? response[0].rejectionReason : "";
+
+                           
+              //document.querySelector('[data-info="reportdraft"]').textContent =response[0].rejectionReason ? response[0].rejectionReason : "";
+
+             // document.querySelector('[data-info="reportlokpaldraft"]').textContent =response[0].rejectionReason ? response[0].rejectionReason : "";
+
+
+              quill.root.innerHTML= response[0].caseDraft;
+              quill1.root.innerHTML= response[0].lokpalDraft;
+              
+             
+              // Assuming the JSON response object is 'response' and it contains 'caseRemarks' as a comma-separated string
+               
+                 var remarks = response[0].caseRemarks;
+                 //const remarksArray= remarks.split(',');
+
+                  // Select the element where you want to display the bullet points
+                  var textContentElement = document.querySelector('[data-info="reportremarks"]');
+
+                  //document.querySelector('[data-info="reportremarks"]').textContent = response[0].caseRemarks ? response[0].caseRemarks : "";
+
+                  // Clear previous content
+                  textContentElement.innerHTML = '';
+
+                  // Create a bullet point list
+                  var ulElement = document.createElement('ul');
+                  textContentElement.appendChild(ulElement);
+
+                  // Add each remark as a list item to the unordered list
+                  remarks.forEach(function(remark) {
+                    var liElement = document.createElement('li');
+                    liElement.textContent = remark.trim(); // Trim whitespace
+                    ulElement.appendChild(liElement);
+                  });
+                
+
+
+             // document.getElementById("popup2").style.visibility = "visible";
+             // document.getElementById("popup2").style.opacity = 1;
+
+             // document.getElementById("popup2").scrollIntoView(true);
+              window.location = localStorage['baseurl'] + "#popup3" 
+              
+              console.log("india...");
+            },
+            error: function (error) {
+              console.error('Error:', error);
+            }
+          });
+      }
+
+
+
+      
+    $(document).ready(function () {
+
+      fetch('navbar.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('navbar-placeholder').innerHTML = data;
+
+      
+      $.ajax({
+        url: '/api/getmedicalteamlist',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          const optionsSelect = $('#medicalofficer');
+          response.forEach(function (option) {
+            optionsSelect.append($('<option>', {
+              value: option.userID,
+              text: option.userName
+            }));
+          });
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+
+
+      
+      $.ajax({
+        url: '/api/getadvocateteamlist',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          const optionsSelect = $('#medicalofficer');
+          response.forEach(function (option) {
+            optionsSelect.append($('<option>', {
+              value: option.userID,
+              text: option.userName
+            }));
+          });
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+
+      $.ajax({
+        url: '/api/getoperationteamlist',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          const optionsSelect = $('#operationofficer');
+          response.forEach(function (option) {
+            optionsSelect.append($('<option>', {
+              value: option.userID,
+              text: option.userName
+            }));
+          });
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+
+
+
+      $('#loginForm').on('submit', function (event) {
+        event.preventDefault();
+
+        var clientname = $('#client-name').val();
+        var clientaddress = $('#client-address').val();
+
+        var clientphone = $('#client-phone').val();
+        var claimnumber = $('#claim-number').val();
+
+        var behalfof = $('#behalf-of-dropdown').val();;
+        var complainantname = $('#complainant-name').val();
+
+        var insurancecompanyname = $('#insurance-company-dropdown').val();
+        var processingfee = $('#processing-fee').val();
+
+        var consultationcharge = $('#consultation-charge').val();
+        var claimamount = $('#total-claim-amount').val();
+
+        var chequeamount = $('#cheque-amount').val();
+        var chequenumber = $('#cheque-number').val();
+
+        var bankname = $('#bank-name').val();
+        var witnessname = $('#witness-name').val();
+        var idnumber = $('#id-number').val();
+
+
+        $.ajax({
+          url: '/api/addpfdetailsduringlegalgeneration',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          data: {
+            casereferenceNumber: localStorage['casereferencenumber'], 
+            pfAmount: processingfee,
+            cfPercentage: consultationcharge,
+            cfAmount: chequeamount,
+            cfChequeNumber: chequenumber,
+            cfBankName: bankname,
+            patientAddress: clientaddress,
+            claimNumber : claimnumber,
+          },
+          success: function (response) {
+            if(response.message == "success")
+              {
+              
+                
+              }
+              else{
+                //alert("Error saving remark!")
+                //document.getElementById('loginForm').reset();
+              }
+            
+          },
+          error: function (error) {
+            //document.getElementById('loginForm').reset();
+            //alert("login failed");
+            // Display an error message to the user
+          }
+        });
+
+
+
+        //addcaselegalgenerateddetails
+
+        // Make an API call with the username and password
+        $.ajax({
+          url: '/api/getlegalpdf',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          xhrFields: {
+            responseType: 'blob'
+        },
+          data: {
+          clientName:clientname,
+          clientAddress: clientaddress,
+          clientPhone: clientphone,
+          claimNumber: claimnumber,
+          insuranceCompanyName: insurancecompanyname,
+          processingFee: processingfee,
+          consultationCharge: consultationcharge,
+          claimAmount:  claimamount,
+          chequeAmount: chequeamount,
+          chequeNumber: chequenumber,
+          bankName:  bankname,
+          witnessName: witnessname,
+          behalfOf: behalfof,
+          complainantName: complainantname,
+          idNumber: idnumber,
+          },
+          success: function (response) {
+            var a = document.createElement('a');
+            var url = window.URL.createObjectURL(response);
+            a.href = url;
+            a.download = `${localStorage['casereferencenumber']}_legal.pdf`;
+            document.body.append(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+
+            addCasaddlegalgenerateddetailseVerdict();
+
+              // call another ajax to save case status as legal generated
+
+
+          },
+          error: function (error) {
+            document.getElementById('loginForm').reset();
+            alert("PDF generation failed even after bug fix");
+            // Display an error message to the user
+          }
+        });
+      
+      
+      
+      });
+
+
+
+        // calculate cheque amount based on consulation charge percentage
+        $('#total-claim-amount').change(function () {
+
+        var claimamount = $('#total-claim-amount').val();
+        var consultationcharge = $('#consultation-charge').val();
+
+        document.getElementById("cheque-amount").value= Math.round((claimamount * consultationcharge ) / (100) );
+
+        });
+
+        // calculate cheque amount based on consulation charge percentage
+        $('#consultation-charge').change(function () {
+
+        var claimamount = $('#total-claim-amount').val();
+        var consultationcharge = $('#consultation-charge').val();
+
+        document.getElementById("cheque-amount").value=Math.round((claimamount * consultationcharge ) / (100));
+
+        });
+
+
+                // calculate cheque amount based on consulation charge percentage
+            $('#total-claim-amount-final').change(function () {
+
+            var claimamount = $('#total-claim-amount-final').val();
+            var consultationcharge = $('#consultation-charge-final').val();
+
+            document.getElementById("cf_or_cheque-amount-final").value= Math.round((claimamount * consultationcharge ) / (100) );
+
+            });
+
+            // calculate cheque amount based on consulation charge percentage
+            $('#consultation-charge-final').change(function () {
+
+            var claimamount = $('#total-claim-amount-final').val();
+            var consultationcharge = $('#consultation-charge-final').val();
+
+            document.getElementById("cf_or_cheque-amount-final").value=Math.round((claimamount * consultationcharge ) / (100));
+
+            });
+
+
+            
+            $('#consumerDraftForm').on('submit', function (event) {
+        event.preventDefault();
+
+          // call ajax to save these details--
+
+          $.ajax({
+          url: '/api/addconsumerDraft',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          data: {
+            casereferenceNumber: localStorage['casereferencenumber'], 
+            consumerDraft: quill.root.innerHTML,
+
+          },
+          success: function (response) {
+            if(response.message == "success")
+              {
+
+                alert("Consumer Draft Saved!");
+                
+              }
+              else{
+                alert("Error saving consumer draft!")
+                //document.getElementById('loginForm').reset();
+              }
+            //alert("login success");
+            // Redirect to the dashboard or perform any other actions
+          },
+          error: function (error) {
+            document.getElementById('loginForm').reset();
+            alert("login failed");
+            // Display an error message to the user
+          }
+        });
+
+
+      });
+
+
+
+        $('#gistForm').on('submit', function (event) {
+        event.preventDefault();
+
+        var policydate = $('#policy-date').val();
+        var hospitalname = $('#hospital-name').val();
+        var admissiondate = $('#admission-date').val();
+        var dischargedate = $('#discharge-date').val();
+        var casediagnosis = $('#case-diagnosis').val();
+        var patientcomplain = $('#patient-complain').val();
+        var rejectionreason = $('#rejection-reason').val();
+        var rejectiondate = $('#rejection-date').val();
+        var casecomment = $('#case-comment').val();
+        var caseemail = $('#case-emailid').val();
+        var caseemailpassword = $('#case-emailpassword').val();
+
+        var claimtype = $('#claim-type-dropdown').val();
+        var behalfOfValue = $('#behalf-of-dropdown').val();
+        var policynumber = $('#policy-number').val();
+
+        var  patientname  = $('#patient-name').val();
+        var  complainantname = $('#complainant-name').val();
+
+
+        var claimnumber = $('#claim-number').val();
+        var policynumber = $('#policy-number').val();
+        var claimamount = $('#claim-amount').val();
+
+          // call ajax to save these details--
+
+          $.ajax({
+          url: '/api/addlivegistdata',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          data: {
+            casereferenceNumber: localStorage['casereferencenumber'], 
+            dateOfPolicy: policydate ,
+            dateOfAdmission: admissiondate ,
+            dateOfDischarge: dischargedate,
+            diagnosis: casediagnosis,
+            patientComplainDuringAdmission: patientcomplain,
+            rejectionReason: rejectionreason,
+            initialRejectionDate: rejectiondate,
+            gistComments: casecomment,
+            caseEmail : caseemail,
+            caseEmailPassword:caseemailpassword,
+            hospitalName: hospitalname,
+            claimType: claimtype,
+            behalfOf: behalfOfValue,
+            policyNumber: policynumber,
+            patientName : patientname ,
+            complainantName: complainantname,
+            claimAmount: claimamount ,
+            claimNumber: claimnumber ,
+            policyNumber: policynumber,
+
+          },
+          success: function (response) {
+            if(response.message == "success")
+              {
+
+                alert("Gist data Saved!");
+               // window.location.href = "/viewlivecases.html";
+                //localStorage.removeItem("caseNumber");
+
+                
+              }
+              else{
+                alert("Error saving remark!")
+                //document.getElementById('loginForm').reset();
+              }
+            //alert("login success");
+            // Redirect to the dashboard or perform any other actions
+          },
+          error: function (error) {
+            document.getElementById('loginForm').reset();
+            alert("login failed");
+            // Display an error message to the user
+          }
+        });
+
+
+      });
+
+
+
+      
+      $.ajax({
+        url: '/api/whoami',
+        type: 'POST',
+        success: function (response) {
+          // Populate the options in the select element
+            //alert(response.message)
+            var table = new DataTable('#dataTable');
+             table.buttons(0).disable();
+            localStorage.setItem('userType',  response.message);
+           
+            if(response.message =='admin')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showonlogin").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+              table.buttons(0).enable();
+             
+            }
+            else if(response.message =='operation' )
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtooperation").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+            }
+            else if(response.message =='manager')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtomanager").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+            }
+            else if(response.message =='cp')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtocp").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+            }
+            else if(response.message =='medicalofficer')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtomedicalofficer").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+            }
+            else if(response.message =='advocate')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtoadvocate").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+            }
+            else if(response.message =='marketing')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtomarketing").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+             
+              $(':button').prop('disabled', true); // Disable all the buttons
+            }
+            else if(response.message =='marketingmanager')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html"; 
+              $("#showtomarketingmanager").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+            }
+            else
+            {
+              window.location.href = "/login.html"
+            }
+            
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+
+      const mobileScreen = window.matchMedia("(max-width: 990px)");
+
+      $(".dashboard-nav-dropdown-toggle").click(function () {
+        $(this).closest(".dashboard-nav-dropdown")
+            .toggleClass("show")
+            .find(".dashboard-nav-dropdown")
+            .removeClass("show");
+        $(this).parent()
+            .siblings()
+            .removeClass("show");
+      });
+
+      $(".menu-toggle").click(function () {
+        if (mobileScreen.matches) {
+            $(".dashboard-nav").toggleClass("mobile-show");
+        } else {
+            $(".dashboard").toggleClass("dashboard-compact");
+        }
+      });
+
+      $('#dataTable').DataTable({
+        "searching": true,
+        layout: {
+          topStart: {
+              buttons: ['excel', 'pageLength']
+          }
+        },
+      });
+
+
+      var table = $('#dataTable').DataTable();
+
+    //  new $.fn.dataTable.FixedColumns(table, {
+     //       leftColumns: 6 // Freeze the first 6 columns
+     //   });
+
+      localStorage['baseurl'] = window.location; 
+
+        $('#dataTable tbody').on('click', 'tr td:first-child', function () {
+      var data = table.row(this).data();
+      populatereport(data[0]);  // Assuming data[0] is the data in the first column
+      //alert( 'You clicked on ' + data[0] + '\'s row' );
+      });
+      
+       // AJAX call on page load get manager details
+       $.ajax({
+        url: '/api/getconsumercasedetail',
+        type: 'GET',
+        success: function (response) {
+          // Populate the options in the select element
+          populateDataTable(response);
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
+
+          // populate the data table with JSON data
+          function populateDataTable(data) {
+          console.log("populating data table...");
+          // clear the table before populating it with more data
+          $("#dataTable").DataTable().clear();
+
+          var table = $('#dataTable').DataTable();
+          var length = Object.keys(data).length;
+          for(var i = 0; i < length; i++) {
+            var rfno= data[i].casereferenceNumber
+            var todaysdate = moment(new Date());
+           // var prospectcasedate = moment(data[i].prospectDate);
+           var caseage  =  "Not Available"
+           if((data[i].prospectDate))
+           {
+            var livecasedate = moment(data[i].prospectDate);
+            caseage  =    todaysdate.diff(livecasedate, 'days');
+           }
+          
+           if( localStorage['userType'] === 'admin' || localStorage['userType'] === 'operation' )
+           {
+            var rowData = [data[i].casereferenceNumber,
+            moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),
+            `${caseage}`,
+            data[i].patientName,
+              data[i].patientMobile,
+              data[i].complainantName,
+              data[i].managerName,
+              data[i].cpName,
+              data[i].insuranceCompanyName,
+              data[i].claimNumber,
+              data[i].claimAmount,
+              data[i].operationOfficer,
+              data[i].medicalOpinionOfficer,
+              data[i].newCaseStatus,             
+              `<a href="#popup2"> <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Add Gist Data</button> </a>`,
+              `<a href="#popup18"> <button class="btn btn-primary btn-sm" onclick="viewDraft('${rfno}')">Add Draft</button> </a>`,
+              `<a href="#popup19"> <button class="btn btn-primary btn-sm" onclick="viewDraft('${rfno}')">Add Details</button> </a>`,
+              `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
+              `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
+              `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
+            ];
+            
+            table.row.add(rowData);
+           }
+          
+          }
+
+          table.draw(false);
+        }
+      
+// https://stackoverflow.com/questions/47528857/momentjs-date-string-adds-one-day
+// for moment js reduing one day from date
+
+      });
+
+    });
+
+
+
+    //for  filter buttons
+
+    $('ul').on('click', 'a', function() {
+      var nameFilter = $(this).text()
+      console.log(nameFilter)
+
+        switch (nameFilter)
+        {
+          case "Live":
+          case "Draft Query":
+          case "Gist Generated":
+          case "Pending Draft":
+          case "Reimbursement":
+          case "Pending Doc":
+          $("#dataTable").DataTable()
+          .columns(13)
+          .search($(this).text())
+          .draw();
+            break;
+
+        }
+
+      });
+
+      $('ul').on('click', 'a.all', function() {
+        $("#dataTable").DataTable()
+        .search('')
+        .columns(13)
+        .search('')
+        .draw();
+      });
+
+    // filter buttons end
+
+
+  </script>
+</body>
+
+</html>

@@ -1394,7 +1394,7 @@ function movetolive(referencenumber) {
                     localStorage['userName'] = response.username;
                     localStorage['userType'] = response.message;
                   }
-                  else if(response.message =='marketing')
+                  else if(response.message =='marketing' || response.message =='marketinghandler')
                   {
                     $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
                     document.getElementById("login-menu").href="/logout.html"; 
@@ -1508,13 +1508,12 @@ function movetolive(referencenumber) {
                 ];
                 console.log(localStorage['userName'])
 
-                if ( localStorage['userName'] == "GIRISH BHATNAGAR")
+                if ( localStorage['userType'] == "marketinghandler")
                 {
-                  if(data[i].caseHandler =="GIRISH BHATNAGAR")
+                  if(data[i].caseHandler ==  localStorage['userName'])
                   {
                     table.row.add(rowData);
                   }
-                  
                 }
                 else
                 {

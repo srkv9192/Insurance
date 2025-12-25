@@ -930,7 +930,7 @@ function populatereport(refnumber)
               localStorage['userName'] = response.username;
               localStorage['userType'] = response.message;
             }
-            else if(response.message =='marketing')
+            else if(response.message =='marketing' || response.message =='marketinghandler')
             {
               $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
               document.getElementById("login-menu").href="/logout.html"; 
@@ -1062,7 +1062,18 @@ function populatereport(refnumber)
               `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')">View Documents</button> </a>`,
               `<a href="#popup7"><button class="btn btn-primary btn-sm"   onclick="addremark('${rfno}')" >Move to Live</button> </a>`,];
 
-              table.row.add(rowData);
+               if ( localStorage['userType'] == "marketinghandler")
+                {
+                  if(data[i].caseHandler ==  localStorage['userName'])
+                  {
+                    table.row.add(rowData);
+                  }
+                }
+                else
+                {
+                    table.row.add(rowData);
+                }
+             // table.row.add(rowData);
           
           }
           table.draw(false);

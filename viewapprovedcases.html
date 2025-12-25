@@ -474,39 +474,39 @@ div.dataTables_filter {
                 <div id="popup11" class="overlay">
                   <div class="popup">
                       <div class="frame">
-                        <form id="paymentFormConsumer">
+                        <form id="paymentFormLegal">
                           <div class="row mb-3">
 
                             <div class="col-sm-4">
-                              <label for="total-claim-amount-final_consumer" class="form-label">Disputed amount</label>
-                              <input type="text" class="form-control" id="total-claim-amount-final_consumer" required >
+                              <label for="total-claim-amount-final_legal" class="form-label">Disputed amount</label>
+                              <input type="text" class="form-control" id="total-claim-amount-final_legal" required >
                             </div>
 
                             <div class="col-sm-4">
-                              <label for="pf-amount-final_consumer" class="form-label">PF amount</label>
-                              <input type="text" class="form-control" id="pf-amount-final_consumer" required >
+                              <label for="pf-amount-final_legal" class="form-label">PF amount</label>
+                              <input type="text" class="form-control" id="pf-amount-final_legal" required >
                             </div>
                             <div class="col-sm-4">
-                              <label for="consultation-charge-final_consumer" class="form-label">Consultation charge (%)</label>
-                              <input type="text" class="form-control" id="consultation-charge-final_consumer" required >
+                              <label for="consultation-charge-final_legal" class="form-label">Consultation charge (%)</label>
+                              <input type="text" class="form-control" id="consultation-charge-final_legal" required >
                             </div>
                             
                           </div>
                           <div class="row mb-3">
 
                             <div class="col-sm-4">
-                              <label for="cf_or_cheque-amount-final_consumer" class="form-label">Cheque Amount</label>
-                              <input type="text" class="form-control" id="cf_or_cheque-amount-final_consumer" required >
+                              <label for="cf_or_cheque-amount-final_legal" class="form-label">Cheque Amount</label>
+                              <input type="text" class="form-control" id="cf_or_cheque-amount-final_legal" required >
                             </div>
 
                             <div class="col-sm-4">
-                              <label for="cheque-number-final_consumer" class="form-label">Cheque Number</label>
-                              <input type="text" class="form-control" id="cheque-number-final_consumer">
+                              <label for="cheque-number-final_legal" class="form-label">Cheque Number</label>
+                              <input type="text" class="form-control" id="cheque-number-final_legal">
                             </div>
 
                             <div class="col-sm-4">
-                              <label for="bank-name-final_consumer" class="form-label">Bank Name</label>
-                              <input type="text" class="form-control" id="bank-name-final_consumer">
+                              <label for="bank-name-final_legal" class="form-label">Bank Name</label>
+                              <input type="text" class="form-control" id="bank-name-final_legal">
                             </div>
 
 
@@ -517,7 +517,7 @@ div.dataTables_filter {
                             <div class="col-sm-4">
                               <label for="payment-mode" class="form-label">Payment Mode</label>
                                 <div class="input-group">
-                                  <select class="form-control" id="payment-mode-dropdown_consumer" required>
+                                  <select class="form-control" id="payment-mode-dropdown_legal" required>
                                     <option value="">None</option>
                                     <option value="Cash">Cash</option>
                                     <option value="UPI">UPI</option>
@@ -528,13 +528,13 @@ div.dataTables_filter {
                             </div>
 
                             <div class="col-sm-4">
-                              <label for="pf-payment-date-final_consumer" class="form-label">Payment Date</label>
-                              <input type="date" class="form-control" id="pf-payment-date-final_consumer" required >
+                              <label for="pf-payment-date-final_legal" class="form-label">Payment Date</label>
+                              <input type="date" class="form-control" id="pf-payment-date-final_legal" required >
                             </div>
                       
                             <div class="col-sm-4">
-                              <label for="pf-payment-remark-final_consumer" class="form-label">Payment Remark</label>
-                              <input type="text" class="form-control" id="pf-payment-remark-final_consumer" required >
+                              <label for="pf-payment-remark-final_legal" class="form-label">Payment Remark</label>
+                              <input type="text" class="form-control" id="pf-payment-remark-final_legal" required >
                             </div>
 
 
@@ -545,19 +545,19 @@ div.dataTables_filter {
 
                            
                             <div class="col-sm-4">
-                              <label for="case-email-final_consumer" class="form-label">Case Email</label>
-                              <input type="text" class="form-control" id="case-email-final_consumer"  >
+                              <label for="case-email-final_legal" class="form-label">Case Email</label>
+                              <input type="text" class="form-control" id="case-email-final_legal"  >
                             </div>
                       
                             <div class="col-sm-4">
-                              <label for="case-email-password-final_consumer" class="form-label">Email Password</label>
-                              <input type="text" class="form-control" id="case-email-password-final_consumer"  >
+                              <label for="case-email-password-final_legal" class="form-label">Email Password</label>
+                              <input type="text" class="form-control" id="case-email-password-final_legal"  >
                             </div>
 
                             <div class="col-sm-4">
                               <label for="legal-required-dropdown" class="form-label">Legal Status</label>
                               <div class="input-group">
-                                <select class="form-control" id="legal-required-dropdown_consumer" required>
+                                <select class="form-control" id="legal-required-dropdown_legal" required>
                                   <option value="Required">Required</option>
                                   <option value="Not Required">Not Required</option>
                                 </select>
@@ -572,8 +572,8 @@ div.dataTables_filter {
 
 
                             <div class="col-sm-6">
-                              <label for="pdf-input_consumer" class="form-label">Documents</label>
-                                <input type="file" class="form-control" id="pdf-input_consumer"  multiple>
+                              <label for="pdf-input_legal" class="form-label">Documents</label>
+                                <input type="file" class="form-control" id="pdf-input_legal"  multiple>
                             </div>
                           </div>
 
@@ -1633,10 +1633,10 @@ function populatereport(refnumber)
 
 
 
-      $('#paymentFormConsumer').on('submit', function (event) {
+      $('#paymentFormLegal').on('submit', function (event) {
 
 
-                if($('#legal-required-dropdown_consumer').val() == "Required")
+                if($('#legal-required-dropdown_legal').val() == "Required")
                 {
                   if($('#pdf-input')[0].files.length == 0)
                   {
@@ -1647,19 +1647,19 @@ function populatereport(refnumber)
 
                 event.preventDefault();
 
-                var processingfeeFinal = $('#pf-amount-final_consumer').val();
-                var consultationchargeFinal = $('#consultation-charge-final_consumer').val();
-                var chequeamountFinal = $('#cf_or_cheque-amount-final_consumer').val();
-                var chequenumberFinal = $('#cheque-number-final_consumer').val();
-                var banknameFinal = $('#bank-name-final_consumer').val();
-                var paymentremarkFinal = $('#pf-payment-remark-final_consumer').val();
-                var paymentdateFinal = $('#pf-payment-date-final_consumer').val();
+                var processingfeeFinal = $('#pf-amount-final_legal').val();
+                var consultationchargeFinal = $('#consultation-charge-final_legal').val();
+                var chequeamountFinal = $('#cf_or_cheque-amount-final_legal').val();
+                var chequenumberFinal = $('#cheque-number-final_legal').val();
+                var banknameFinal = $('#bank-name-final_legal').val();
+                var paymentremarkFinal = $('#pf-payment-remark-final_legal').val();
+                var paymentdateFinal = $('#pf-payment-date-final_legal').val();
 
-                var caseemailFinal = $('#case-email-final_consumer').val();
-                var caseemailpasswordFinal = $('#case-email-password-final_consumer').val();
+                var caseemailFinal = $('#case-email-final_legal').val();
+                var caseemailpasswordFinal = $('#case-email-password-final_legal').val();
 
-                var paymentmodeFinal = $('#payment-mode-dropdown_consumer').val();
-                var claimamount = $('#total-claim-amount-final_consumer').val(); 
+                var paymentmodeFinal = $('#payment-mode-dropdown_legal').val();
+                var claimamount = $('#total-claim-amount-final_legal').val(); 
 
                 // call ajax to save these details--
 
@@ -1683,7 +1683,7 @@ function populatereport(refnumber)
                 formData.append('cfBankName', banknameFinal);
                 formData.append('claimAmount', claimamount);
 
-                formData.append('consumerliveDate', new Date());
+                formData.append('legalliveDate', new Date());
 
 
                 $.each($('#pdf-input')[0].files, function(i, file) {
@@ -1691,7 +1691,7 @@ function populatereport(refnumber)
                 });
 
                 $.ajax({
-                url: '/api/addpfremark_consumer',
+                url: '/api/addpfremark_legal',
                 type: 'POST',
                 contentType: false,
                 processData: false,
@@ -1701,7 +1701,7 @@ function populatereport(refnumber)
                   {
                   // window.location.href = "/index.html"
                     //localStorage['userID'] = username;
-                    alert("Case Moved to Consumer!");
+                    alert("Case Moved to Legal!");
                     window.location.href = "/viewapprovedcases.html";
                     //localStorage.removeItem("caseNumber");
 
@@ -1719,7 +1719,7 @@ function populatereport(refnumber)
                 // Redirect to the dashboard or perform any other actions
                 },
                 error: function (error) {
-                document.getElementById('paymentFormConsumer').reset();
+                document.getElementById('paymentFormLegal').reset();
                 alert("Error saving data");
                 // Display an error message to the user
                 }
@@ -1797,7 +1797,7 @@ function populatereport(refnumber)
               localStorage['userName'] = response.username;
               localStorage['userType'] = response.message;
             }
-            else if(response.message =='marketing')
+            else if(response.message =='marketing' || response.message =='marketinghandler' )
             {
               $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
               document.getElementById("login-menu").href="/logout.html"; 
@@ -1912,15 +1912,15 @@ function populatereport(refnumber)
             }
 
             var buttonsformovingcasetolive="";
-            var buttonsformovingcasetoconsumer="";
-            if(data[i].caseType == "Consumer") 
+            var buttonsformovingcasetolegal="";
+            if(data[i].caseType == "Legal") 
             {
               buttonsformovingcasetolive =  `<a href="#popup2" style="pointer-events: none"> <button disabled class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Move to Live</button> </a>`;
-             buttonsformovingcasetoconsumer=  `<a href="#popup11" > <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Move to Consumer</button> </a>`;
+             buttonsformovingcasetolegal=  `<a href="#popup11" > <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Move to Legal</button> </a>`;
             }
             else
             { buttonsformovingcasetolive =  `<a href="#popup2"> <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Move to Live</button> </a>`;
-            buttonsformovingcasetoconsumer = `<a href="#popup11"  style="pointer-events: none"> <button  disabled class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Move to Consumer</button> </a>`; 
+            buttonsformovingcasetolegal = `<a href="#popup11"  style="pointer-events: none"> <button  disabled class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Move to Legal</button> </a>`; 
             }
 
             var rowData = [data[i].casereferenceNumber,
@@ -1943,11 +1943,23 @@ function populatereport(refnumber)
               `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
               `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
               `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
-              buttonsformovingcasetolive, buttonsformovingcasetoconsumer];
+              buttonsformovingcasetolive, buttonsformovingcasetolegal];
              // `<a href="#popup2"> <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Move to Live</button> </a>`,
-              //`<a href="#popup11" > <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Move to Consumer</button> </a>`,];
+              //`<a href="#popup11" > <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Move to Legal</button> </a>`,];
 
-              table.row.add(rowData);
+
+                if ( localStorage['userType'] == "marketinghandler")
+                {
+                  if(data[i].caseHandler ==  localStorage['userName'])
+                  {
+                    table.row.add(rowData);
+                  }
+                }
+                else
+                {
+                    table.row.add(rowData);
+                }
+              //table.row.add(rowData);
 
           }
           table.draw(false);

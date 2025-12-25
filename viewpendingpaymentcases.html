@@ -1561,7 +1561,7 @@ function movetolive(referencenumber) {
               localStorage['userName'] = response.username;
               localStorage['userType'] = response.message;
             }
-            else if(response.message =='marketing')
+            else if(response.message =='marketing' || response.message =='marketinghandler')
             {
               $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
               document.getElementById("login-menu").href="/logout.html"; 
@@ -1750,7 +1750,18 @@ function movetolive(referencenumber) {
               "Not Available",
               ];
 
-              table.row.add(rowData);
+              if ( localStorage['userType'] == "marketinghandler")
+                {
+                  if(data[i].caseHandler ==  localStorage['userName'])
+                  {
+                    table.row.add(rowData);
+                  }
+                }
+                else
+                {
+                    table.row.add(rowData);
+                }
+              //table.row.add(rowData);
             }
 
           }
