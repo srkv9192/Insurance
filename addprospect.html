@@ -519,7 +519,7 @@ $.ajax({
               localStorage['userName'] = response.username;
               localStorage['userType'] = response.message;
             }
-            else if(response.message =='marketing')
+            else if(response.message =='marketing' ||  response.message =='marketinghandler' )
             {
               $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
               document.getElementById("login-menu").href="/logout.html"; 
