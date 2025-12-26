@@ -3561,7 +3561,7 @@ app.get("/api/getprospectcasedetail", async(req, res) => {
 app.get("/api/getcompletedcases", async(req, res) => {
   try {
     // Retrieve all tpa list from database
-    const users = await  dataSchemaObject.find({isCompleted: "true"}, {casereferenceNumber:1, prospectDate:1, patientName:1, patientMobile:1, complainantName:1, managerName:1, cpName:1, insuranceCompanyName:1, claimNumber:1,  claimAmount:1, caseCompletionType:1, completedDate:1, caseSettlementAmount:1, caseResult:1,  });
+    const users = await  dataSchemaObject.find({isCompleted: "true"}, {casereferenceNumber:1, prospectDate:1, patientName:1, patientMobile:1, complainantName:1, managerName:1, cpName:1, insuranceCompanyName:1, claimNumber:1,  claimAmount:1, caseCompletionType:1, completedDate:1, caseSettlementAmount:1, caseResult:1,  caseHandler:1});
     res.json(users);
   } catch (error) {
     console.error(error);
@@ -3573,7 +3573,7 @@ app.get("/api/getpendingpaymentcases", async(req, res) => {
   try {
     // Retrieve all tpa list from database
            
-    const users = await  dataSchemaObject.find({isPendingPayment: "true"},{completedDate:1, caseSettlementAmount:1, prospectDate:1, caseResult:1, casereferenceNumber:1, prospectDate:1, patientName:1,patientMobile:1, complainantName:1, managerName:1, cpName:1, insuranceCompanyName:1, claimNumber:1 , claimAmount:1, caseCompletionType:1, newCaseStatus:1, caseCustomerReceivedAmountDate:1, caseCustomerReceivedAmount:1, cfPercentage:1, partPaymentReceived:1});
+    const users = await  dataSchemaObject.find({isPendingPayment: "true"},{completedDate:1, caseSettlementAmount:1, prospectDate:1, caseResult:1, casereferenceNumber:1, prospectDate:1, patientName:1,patientMobile:1, complainantName:1, managerName:1, cpName:1, insuranceCompanyName:1, claimNumber:1 , claimAmount:1, caseCompletionType:1, newCaseStatus:1, caseCustomerReceivedAmountDate:1, caseCustomerReceivedAmount:1, cfPercentage:1, partPaymentReceived:1, caseHandler:1});
     res.json(users);
   } catch (error) {
     console.error(error);
@@ -3584,7 +3584,7 @@ app.get("/api/getpendingpaymentcases", async(req, res) => {
 app.get("/api/getfinishedcases", async(req, res) => {
   try {
     // Retrieve all tpa list from database             
-    const users = await  dataSchemaObject.find({isFinished: "true"},{caseSettlementAmount:1, caseResult:1, casereferenceNumber:1, completedDate:1,  prospectDate:1, patientName:1, patientMobile:1, complainantName:1, managerName:1, cpName:1, insuranceCompanyName:1, claimNumber:1, claimAmount:1, caseCompletionType:1, newCaseStatus:1, caseCustomerReceivedAmount:1, caseNidaanReceivedAmount:1, caseCPFinalAmount:1, cfPercentage:1  });
+    const users = await  dataSchemaObject.find({isFinished: "true"},{caseSettlementAmount:1, caseResult:1, casereferenceNumber:1, completedDate:1,  prospectDate:1, patientName:1, patientMobile:1, complainantName:1, managerName:1, cpName:1, insuranceCompanyName:1, claimNumber:1, claimAmount:1, caseCompletionType:1, newCaseStatus:1, caseCustomerReceivedAmount:1, caseNidaanReceivedAmount:1, caseCPFinalAmount:1, cfPercentage:1, caseHandler:1  });
     res.json(users);
   } catch (error) {
     console.error(error);
@@ -3596,7 +3596,7 @@ app.get("/api/getpendingcppaymentcases", async(req, res) => {
   try {
     // Retrieve all tpa list from database
 
-    const users = await  dataSchemaObject.find({isPendingCPPayment: "true"},{prospectDate:1, completedDate:1, caseResult:1, caseSettlementAmount:1, casereferenceNumber:1, prospectDate:1, patientName:1, patientMobile:1, complainantName:1, managerName:1, cpName:1, insuranceCompanyName:1, claimNumber:1, claimAmount:1, caseCompletionType:1, newCaseStatus:1, caseNidaanReceivedAmountDate:1, caseNidaanReceivedAmountDate:1, caseCustomerReceivedAmount:1, caseNidaanReceivedAmount:1,caseCPFinalAmount:1, cfPercentage:1 });
+    const users = await  dataSchemaObject.find({isPendingCPPayment: "true"},{prospectDate:1, completedDate:1, caseResult:1, caseSettlementAmount:1, casereferenceNumber:1, prospectDate:1, patientName:1, patientMobile:1, complainantName:1, managerName:1, cpName:1, insuranceCompanyName:1, claimNumber:1, claimAmount:1, caseCompletionType:1, newCaseStatus:1, caseNidaanReceivedAmountDate:1, caseNidaanReceivedAmountDate:1, caseCustomerReceivedAmount:1, caseNidaanReceivedAmount:1,caseCPFinalAmount:1, cfPercentage:1,caseHandler:1 });
     res.json(users);
   } catch (error) {
     console.error(error);
