@@ -275,6 +275,7 @@ div.dataTables_filter {
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
+                        <th>Action</th>
                       </tr>
                     </thead>
                   </table>
@@ -831,6 +832,28 @@ div.dataTables_filter {
                   </div>
                 </div>
 
+               <div id="popup8" class="overlay">
+                  <div class="popup" style ="width:35% ;">
+                      <h2 id="remarkcontent">Move to disputed payment</h2>
+                      <div class="frame">
+                      <form id="remarkForm">
+
+                        <div class="row mb-3">
+                          <div class="col-sm-6">
+                          <label for="movetodisputedpaymentremark" style="color: white;">Remark</label>
+                          <input type="text" class="form-control" id="movetodisputedpaymentremark" placeholder="Enter remark" required>
+                        </div>
+                        </div>
+
+                        <div class="text-center">
+                          <button type="button" class="btn btn-primary" style="margin-top: 10px;" onclick="movetoDisputedPayment()">Save Details</button>
+                         </div>
+                          <a class="close" href="#close">&times;</a>
+                      </form>
+                      </div>
+                  </div>
+                </div>
+
                 <div id="popup7" class="overlay" >
                   <div class="popup"  style="color:black; width: 40%; ">
                     <h2  id = "remarkcontent">Part Payment Details-</h2>
@@ -1365,6 +1388,47 @@ function viewremark(referencenumber) {
 
 
   
+  function movetoDisputedPayment() {
+      if( document.getElementById("movetodisputedpaymentremark").value == "")
+        {
+        alert("Empty remark not allowed!!");
+        return;
+      }
+
+        var remark = $('#movetodisputedpaymentremark').val();
+        
+        const today = new Date();
+      const yyyy = today.getFullYear();
+      let mm = today.getMonth() + 1; // Months start at 0!
+      let dd = today.getDate();
+
+      if (dd < 10) dd = '0' + dd;
+      if (mm < 10) mm = '0' + mm;
+
+      const formattedToday = dd + '/' + mm + '/' + yyyy;
+
+        $.ajax({
+            url: '/api/adddisputedpaymentremark', // Replace with your API endpoint
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+              casereferenceNumber:  localStorage['addRemarkForRefNumber'],
+              caseRemarks: formattedToday+ " - [ " +  localStorage['userName'] + " ] - "+ remark,              
+            }),
+            success: function(response) {
+                alert('Case moved to disputed payment');
+            },
+            error: function() {
+                alert('Failed to save details.');
+            }
+        });
+    }
+
+//rajat   
+
+
+
+  
   function movetoFinished() {
 
     if( document.getElementById("payment-mode-dropdown").value == "")
@@ -1717,6 +1781,7 @@ function movetolive(referencenumber) {
               `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
               `<a href="#popup7"><button class="btn btn-primary btn-sm" onclick="addremark('${rfno}')"  >Part Payment</button> </a>`,
               `<a href="#popup6"><button class="btn btn-primary btn-sm"  id="movetocppaymentbutton" onclick="addremark('${rfno}')" >Move to Pending CP Payment</button> </a>`,
+              `<a href="#popup8"><button class="btn btn-primary btn-sm"  id="movetodisputedpaymentbutton" onclick="addremark('${rfno}')" >Move to Disputed Payment</button> </a>`,
               ];
 
               table.row.add(rowData);
@@ -1748,6 +1813,7 @@ function movetolive(referencenumber) {
               `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
               `<button class="btn btn-primary btn-sm" disabled id="movetocppaymentbutton" onclick="addremark('${rfno}')" >Move to Pending CP Payment</button>`,
               "Not Available",
+              `<a href="#popup8"><button class="btn btn-primary btn-sm"  id="movetodisputedpaymentbutton" onclick="addremark('${rfno}')" >Move to Disputed Payment</button> </a>`,
               ];
 
               if ( localStorage['userType'] == "marketinghandler")
