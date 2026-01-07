@@ -244,6 +244,11 @@ div.dataTables_filter {
             <div class="row justify-content-center">
               <h2 class="text-center mb-4">Pending Payment Cases</h2>
 
+                           <ul>
+                <li class="btn_special"><a href="#" class="all">All</a></li>
+                <li class="btn_special"><a href="#" >Pending Payment</a></li>
+                <li class="btn_special" style ="width :auto"><a href="#">Disputed Payment</a></li>
+              </ul>
               <div class="col-lg-12">
                
                 <div class="table-responsive">
@@ -1813,7 +1818,7 @@ function movetolive(referencenumber) {
               `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
               `<button class="btn btn-primary btn-sm" disabled id="movetocppaymentbutton" onclick="addremark('${rfno}')" >Move to Pending CP Payment</button>`,
               "Not Available",
-              `<a href="#popup8"><button class="btn btn-primary btn-sm"  id="movetodisputedpaymentbutton" onclick="addremark('${rfno}')" >Move to Disputed Payment</button> </a>`,
+              "Not Available",
               ];
 
               if ( localStorage['userType'] == "marketinghandler")
@@ -1838,6 +1843,39 @@ function movetolive(referencenumber) {
       });
 
     });
+
+
+     //for  filter buttons
+
+    $('ul').on('click', 'a', function() {
+      var nameFilter = $(this).text()
+      console.log(nameFilter)
+
+        switch (nameFilter)
+        {
+          case "Pending Payment":
+          case "Disputed Payment":
+          $("#dataTable").DataTable()
+          .columns(14)
+          .search($(this).text())
+          .draw();
+            break;
+
+        }
+
+      });
+
+      $('ul').on('click', 'a.all', function() {
+        $("#dataTable").DataTable()
+        .search('')
+        .columns(14)
+        .search('')
+        .draw();
+      });
+
+    // filter buttons end
+
+
 
   </script>
 </body>
