@@ -66,8 +66,8 @@ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS
 });
 
 
-/*
 
+/*
 
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
   useNewUrlParser: true,
@@ -417,6 +417,7 @@ const counterSchema = new mongoose.Schema({
   caseReferenceNumberCount: Number,
   caseNumberCount: Number,
   employeeCount: Number,
+  securityCode: Number,
   // Add more fields as needed
 });
 
@@ -454,9 +455,18 @@ app.use(bodyParser.json());
 
 app.post('/api/login', async(req, res) => {
   try{
+        const record = await counterSchemaObject.findOne({ searchId: "keywordforsearch" });
+        if (!record) {
+           return res.status(500).json({ error: 'Error while login' });
+        }
+        if(req.body.securityCode != record.securityCode)
+        {
+          return res.status(500).json({ error: 'Incorrect security code' });
+        }
+
         const docs = await loginSchemaObject.findOne({userID: req.body.userID, userPassword: req.body.userPassword});
         if (!docs) {
-          res.json({message : 'Login not found, please try again with valid credentials'})
+          return res.json({message : 'Login not found, please try again with valid credentials'})
         }
         else
         {
@@ -465,13 +475,13 @@ app.post('/api/login', async(req, res) => {
             session.userType=docs.userType;
             session.userName = docs.userName;
             //res.sendFile(__dirname+'/index.html')
-            res.json({message : 'loginsuccess'})
+            return res.json({message : 'loginsuccess'})
         }
 
       }
     catch(err)
     {
-      res.status(500).json({ error: 'Error while login' });
+      return res.status(500).json({ error: 'Error while login' });
     }
   
 });
@@ -2827,6 +2837,22 @@ app.post('/api/setcountervalues', async(req, res) => {
     } 
 });
 
+
+app.post('/api/setsecuritycode', async(req, res) => {
+  try{
+        const newData = await counterSchemaObject.findOneAndUpdate({searchId: "keywordforsearch"}, {$set:{ securityCode: req.body.securityCode}});
+        const savedData = newData.save();
+        res.json({ message: 'Security code set successfully', data: savedData });
+      }
+    catch(err)
+    {
+      console.error(err);
+      res.status(500).json({ error: 'Error incrementing card count' });
+    } 
+});
+
+
+
 app.post('/api/incrementcardcount', async(req, res) => {
   try{
         const newData = await counterSchemaObject.findOneAndUpdate({searchId: "keywordforsearch"}, {$inc:{ cardNumberCount: 1}});
@@ -4550,7 +4576,14 @@ app.get('/navbar.html', (req, res) => res.sendFile(__dirname+'/navbar.html'))
 app.get('/login.html', (req, res) => res.sendFile(__dirname+'/login.html'))
 app.get('/logout.html', (req, res) => res.sendFile(__dirname+'/logout.html'))
 app.get('/newcase.html', (req, res) => res.sendFile(__dirname+'/newcase.html'))
-app.get('/editcase.html', (req, res) => res.sendFile(__dirname+'/editcase.html'))
+app.get('/editcase.html', (req, res) =>{
+
+     if (req.session.userId && (req.session.userType == 'admin')) {
+        res.sendFile(__dirname + '/editcase.html');
+    } else {
+        res.status(403).send("You do not have permission to view this page. Do not attempt it again or the account will be locked.");
+    } 
+} )
 
 
 app.get('/viewprospectcases.html', (req, res) => res.sendFile(__dirname+'/viewprospectcases.html'))
@@ -4564,9 +4597,22 @@ app.get('/viewlegalnotice.html', (req, res) => res.sendFile(__dirname+'/viewlega
 app.get('/viewcourtpetition.html', (req, res) => res.sendFile(__dirname+'/viewcourtpetition.html'))
 app.get('/viewlegalcompletedcases.html', (req, res) => res.sendFile(__dirname+'/viewlegalcompletedcases.html'))
 
-app.get('/deletecases.html', (req, res) => res.sendFile(__dirname+'/deletecases.html'))
+app.get('/deletecases.html', (req, res) =>{
 
-app.get('/deleteaccount.html', (req, res) => res.sendFile(__dirname+'/deleteaccount.html'))
+   if (req.session.userId && (req.session.userType == 'admin')) {
+        res.sendFile(__dirname + '/deletecases.html');
+    } else {
+        res.status(403).send("You do not have permission to view this page. Do not attempt it again or the account will be locked.");
+    } 
+})
+
+app.get('/deleteaccount.html', (req, res) =>{
+  if (req.session.userId && (req.session.userType == 'admin')) {
+        res.sendFile(__dirname + '/deleteaccount.html');
+    } else {
+        res.status(403).send("You do not have permission to view this page. Do not attempt it again or the account will be locked.");
+    } 
+})
 
 app.get('/viewpendingdraftcases.html', (req, res) => res.sendFile(__dirname+'/viewpendingdraftcases.html'))
 app.get('/viewfullcasedetails.html', (req, res) => res.sendFile(__dirname+'/viewfullcasedetails.html'))
@@ -4585,11 +4631,48 @@ app.get('/viewpendingcppaymentcases.html', (req, res) => res.sendFile(__dirname+
 
 app.get('/viewsearchcases.html', (req, res) => res.sendFile(__dirname+'/viewsearchcases.html'))
 
-app.get('/changepassword.html', (req, res) => res.sendFile(__dirname+'/changepassword.html'))
-app.get('/createaccount.html', (req, res) => res.sendFile(__dirname+'/createaccount.html'))
-app.get('/createcp.html', (req, res) => res.sendFile(__dirname+'/createcp.html'))
+app.get('/changepassword.html', (req, res) => 
+{
+      if (req.session.userId && (req.session.userType == 'admin')) {
+        res.sendFile(__dirname + '/changepassword.html');
+    } else {
+        res.status(403).send("You do not have permission to view this page. Do not attempt it again or the account will be locked.");
+    }
+})
+
+
+app.get('/createaccount.html', (req, res) => 
+  
+  {
+    
+     if (req.session.userId && (req.session.userType == 'admin')) {
+        res.sendFile(__dirname + '/createaccount.html');
+    } else {
+        res.status(403).send("You do not have permission to view this page. Do not attempt it again or the account will be locked.");
+    }
+  }
+
+)
+
+app.get('/createcp.html', (req, res) =>{
+    if (req.session.userId && (req.session.userType == 'admin')) {
+        res.sendFile(__dirname + '/createcp.html');
+    } else {
+        res.status(403).send("You do not have permission to view this page. Do not attempt it again or the account will be locked.");
+    }
+})
+
+
+
 app.get('/createmanager.html', (req, res) => res.sendFile(__dirname+'/createmanager.html'))
-app.get('/editcp.html', (req, res) => res.sendFile(__dirname+'/editcp.html'))
+app.get('/editcp.html', (req, res) =>{
+
+  if (req.session.userId && (req.session.userType == 'admin')) {
+        res.sendFile(__dirname + '/editcp.html');
+    } else {
+        res.status(403).send("You do not have permission to view this page. Do not attempt it again or the account will be locked.");
+    }
+})
 
 app.get('/viewmedicalopinioncases.html', (req, res) => res.sendFile(__dirname+'/viewmedicalopinioncases.html'))
 app.get('/viewescalationcases.html', (req, res) => res.sendFile(__dirname+'/viewescalationcases.html'))
@@ -4602,7 +4685,17 @@ app.get('/movecasetolive.html', (req, res) => res.sendFile(__dirname+'/movecaset
 
 app.get('/movecasetomedicalopinion.html', (req, res) => res.sendFile(__dirname+'/movecasetomedicalopinion.html'))
 
-app.get('/dashboard.html', (req, res) => res.sendFile(__dirname+'/dashboard.html'))
+app.get('/dashboard.html', (req, res) =>{
+
+   if (req.session.userId && (req.session.userType == 'admin')) {
+        res.sendFile(__dirname + '/dashboard.html');
+    } else {
+        res.status(403).send("You do not have permission to view this page. Do not attempt it again or the account will be locked.");
+    }
+
+})
+
+
 app.get('/newcard.html', (req, res) => res.sendFile(__dirname+'/newcard.html'))
 app.get('/newcarddirect.html', (req, res) => res.sendFile(__dirname+'/newcarddirect.html'))
 app.get('/paymentinfo.html', (req, res) => res.sendFile(__dirname+'/paymentinfo.html'))
@@ -4613,7 +4706,14 @@ app.get('/viewpendingcards.html', (req, res) => res.sendFile(__dirname+'/viewpen
 app.get('/generatelegalpdf.html', (req, res) => res.sendFile(__dirname+'/generatelegalpdf.html'))
 app.get('/generatelegalfromlive.html', (req, res) => res.sendFile(__dirname+'/generatelegalfromlive.html'))
 
-app.get('/editemail.html', (req, res) => res.sendFile(__dirname+'/editemail.html'))
+app.get('/editemail.html', (req, res) =>{
+
+  if (req.session.userId && (req.session.userType == 'admin')) {
+        res.sendFile(__dirname + '/editemail.html');
+    } else {
+        res.status(403).send("You do not have permission to view this page. Do not attempt it again or the account will be locked.");
+    }
+});
 
 app.get('/generatecardpdf.html', (req, res) => res.sendFile(__dirname+'/generatecardpdf.html'))
 app.get('/addprospect.html', (req, res) => res.sendFile(__dirname+'/addprospect.html'))

@@ -90,6 +90,11 @@
                       <label for="password" class="form-label">Password</label>
                       <input type="password" class="form-control" id="password" placeholder="Enter your password">
                     </div>
+                    <div class="mb-3">
+                      <label for="securitycode" class="form-label">Security Code</label>
+                      <input type="password" class="form-control" id="securitycode" placeholder="Enter securitycode">
+                    </div>
+
                     <button type="submit" class="btn btn-primary">Login</button>
                   </form>
                 </div>
@@ -139,6 +144,7 @@
 
         var username = $('#username').val();
         var password = $('#password').val();
+        var securitycode=  $('#securitycode').val();
 
         // Make an API call with the username and password
         $.ajax({
@@ -147,7 +153,8 @@
           contentType: "application/x-www-form-urlencoded",
           data: {
             userID: username,
-            userPassword: password
+            userPassword: password,
+            securityCode:securitycode
           },
           success: function (response) {
             if(response.message == "loginsuccess")
@@ -169,6 +176,7 @@
             // Display an error message to the user
           }
         });
+      
       });
 
     });

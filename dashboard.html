@@ -339,11 +339,22 @@
 
              </select>
     </div>
+
+
+    <div style="margin-top: 10px;">
+      <label>Set Security Code:</label>
+      <input type="text" class="form-control" id="securitycode" style="height: 50px; width: 200px;" placeholder="Enter security code">
+    </div>
+
+
   </div>
 
   <!-- Second row: buttons -->
   <div style="margin-top: 20px; display: flex; flex-wrap: wrap; gap: 15px;">
     <button class="btn btn-primary btn-sm" style="height: 50px; width: 200px;" onclick="downloadexcelmedicalofficer()">Download Excel by Medical Officer</button>
+
+
+    <button class="btn btn-primary btn-sm" style="height: 50px; width: 200px;" onclick="saveSecurityCode()">Save security code</button>
   </div>
 
 </div>
@@ -685,6 +696,31 @@ fetch(url, {
 }
 
 
+
+function saveSecurityCode()
+{
+
+        var securityCode = $('#securitycode').val();
+
+        // Make an API call with the username and password
+        $.ajax({
+          url: '/api/setsecuritycode',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          data: {
+            securityCode: securityCode,
+          },
+          success: function (response) {
+              alert(response.message)
+          },
+          error: function (error) {
+            alert("Failed to set security code");
+            // Display an error message to the user
+          }
+        });
+
+
+}
 
 function downloadexcelmedicalofficer(caseStatus)
 {
