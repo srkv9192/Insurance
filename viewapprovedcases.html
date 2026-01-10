@@ -474,114 +474,124 @@ div.dataTables_filter {
                 <div id="popup11" class="overlay">
                   <div class="popup">
                       <div class="frame">
-                        <form id="paymentFormLegal">
-                          <div class="row mb-3">
+                        <!--
+                            <form id="paymentFormLegal">
+                              <div class="row mb-3">
 
-                            <div class="col-sm-4">
-                              <label for="total-claim-amount-final_legal" class="form-label">Disputed amount</label>
-                              <input type="text" class="form-control" id="total-claim-amount-final_legal" required >
-                            </div>
-
-                            <div class="col-sm-4">
-                              <label for="pf-amount-final_legal" class="form-label">PF amount</label>
-                              <input type="text" class="form-control" id="pf-amount-final_legal" required >
-                            </div>
-                            <div class="col-sm-4">
-                              <label for="consultation-charge-final_legal" class="form-label">Consultation charge (%)</label>
-                              <input type="text" class="form-control" id="consultation-charge-final_legal" required >
-                            </div>
-                            
-                          </div>
-                          <div class="row mb-3">
-
-                            <div class="col-sm-4">
-                              <label for="cf_or_cheque-amount-final_legal" class="form-label">Cheque Amount</label>
-                              <input type="text" class="form-control" id="cf_or_cheque-amount-final_legal" required >
-                            </div>
-
-                            <div class="col-sm-4">
-                              <label for="cheque-number-final_legal" class="form-label">Cheque Number</label>
-                              <input type="text" class="form-control" id="cheque-number-final_legal">
-                            </div>
-
-                            <div class="col-sm-4">
-                              <label for="bank-name-final_legal" class="form-label">Bank Name</label>
-                              <input type="text" class="form-control" id="bank-name-final_legal">
-                            </div>
-
-
-                          </div>
-
-                          <div class="row mb-3">
-
-                            <div class="col-sm-4">
-                              <label for="payment-mode" class="form-label">Payment Mode</label>
-                                <div class="input-group">
-                                  <select class="form-control" id="payment-mode-dropdown_legal" required>
-                                    <option value="">None</option>
-                                    <option value="Cash">Cash</option>
-                                    <option value="UPI">UPI</option>
-                                    <option value="Bank Transfer">Bank Transfer</option>
-                                    <option value="FOC">FOC</option>
-                                  </select>
+                                <div class="col-sm-4">
+                                  <label for="total-claim-amount-final_legal" class="form-label">Disputed amount</label>
+                                  <input type="text" class="form-control" id="total-claim-amount-final_legal" required >
                                 </div>
-                            </div>
 
-                            <div class="col-sm-4">
-                              <label for="pf-payment-date-final_legal" class="form-label">Payment Date</label>
-                              <input type="date" class="form-control" id="pf-payment-date-final_legal" required >
-                            </div>
-                      
-                            <div class="col-sm-4">
-                              <label for="pf-payment-remark-final_legal" class="form-label">Payment Remark</label>
-                              <input type="text" class="form-control" id="pf-payment-remark-final_legal" required >
-                            </div>
-
-
-                          </div>
-
-
-                          <div class="row mb-3">
-
-                           
-                            <div class="col-sm-4">
-                              <label for="case-email-final_legal" class="form-label">Case Email</label>
-                              <input type="text" class="form-control" id="case-email-final_legal"  >
-                            </div>
-                      
-                            <div class="col-sm-4">
-                              <label for="case-email-password-final_legal" class="form-label">Email Password</label>
-                              <input type="text" class="form-control" id="case-email-password-final_legal"  >
-                            </div>
-
-                            <div class="col-sm-4">
-                              <label for="legal-required-dropdown" class="form-label">Legal Status</label>
-                              <div class="input-group">
-                                <select class="form-control" id="legal-required-dropdown_legal" required>
-                                  <option value="Required">Required</option>
-                                  <option value="Not Required">Not Required</option>
-                                </select>
-                              
+                                <div class="col-sm-4">
+                                  <label for="pf-amount-final_legal" class="form-label">PF amount</label>
+                                  <input type="text" class="form-control" id="pf-amount-final_legal" required >
+                                </div>
+                                <div class="col-sm-4">
+                                  <label for="consultation-charge-final_legal" class="form-label">Consultation charge (%)</label>
+                                  <input type="text" class="form-control" id="consultation-charge-final_legal" required >
+                                </div>
+                                
                               </div>
-                            </div>
+                              <div class="row mb-3">
 
-                          </div>
+                                <div class="col-sm-4">
+                                  <label for="cf_or_cheque-amount-final_legal" class="form-label">Cheque Amount</label>
+                                  <input type="text" class="form-control" id="cf_or_cheque-amount-final_legal" required >
+                                </div>
+
+                                <div class="col-sm-4">
+                                  <label for="cheque-number-final_legal" class="form-label">Cheque Number</label>
+                                  <input type="text" class="form-control" id="cheque-number-final_legal">
+                                </div>
+
+                                <div class="col-sm-4">
+                                  <label for="bank-name-final_legal" class="form-label">Bank Name</label>
+                                  <input type="text" class="form-control" id="bank-name-final_legal">
+                                </div>
 
 
-                          <div class="row mb-3">
+                              </div>
+
+                              <div class="row mb-3">
+
+                                <div class="col-sm-4">
+                                  <label for="payment-mode" class="form-label">Payment Mode</label>
+                                    <div class="input-group">
+                                      <select class="form-control" id="payment-mode-dropdown_legal" required>
+                                        <option value="">None</option>
+                                        <option value="Cash">Cash</option>
+                                        <option value="UPI">UPI</option>
+                                        <option value="Bank Transfer">Bank Transfer</option>
+                                        <option value="FOC">FOC</option>
+                                      </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                  <label for="pf-payment-date-final_legal" class="form-label">Payment Date</label>
+                                  <input type="date" class="form-control" id="pf-payment-date-final_legal" required >
+                                </div>
+                          
+                                <div class="col-sm-4">
+                                  <label for="pf-payment-remark-final_legal" class="form-label">Payment Remark</label>
+                                  <input type="text" class="form-control" id="pf-payment-remark-final_legal" required >
+                                </div>
 
 
-                            <div class="col-sm-6">
-                              <label for="pdf-input_legal" class="form-label">Documents</label>
-                                <input type="file" class="form-control" id="pdf-input_legal"  multiple>
-                            </div>
-                          </div>
+                              </div>
 
-          
-                          <div class="text-center">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                          </div>
-                        </form>
+
+                              <div class="row mb-3">
+
+                              
+                                <div class="col-sm-4">
+                                  <label for="case-email-final_legal" class="form-label">Case Email</label>
+                                  <input type="text" class="form-control" id="case-email-final_legal"  >
+                                </div>
+                          
+                                <div class="col-sm-4">
+                                  <label for="case-email-password-final_legal" class="form-label">Email Password</label>
+                                  <input type="text" class="form-control" id="case-email-password-final_legal"  >
+                                </div>
+
+                                <div class="col-sm-4">
+                                  <label for="legal-required-dropdown" class="form-label">Legal Status</label>
+                                  <div class="input-group">
+                                    <select class="form-control" id="legal-required-dropdown_legal" required>
+                                      <option value="Required">Required</option>
+                                      <option value="Not Required">Not Required</option>
+                                    </select>
+                                  
+                                  </div>
+                                </div>
+
+                              </div>
+
+
+                              <div class="row mb-3">
+
+
+                                <div class="col-sm-6">
+                                  <label for="pdf-input_legal" class="form-label">Documents</label>
+                                    <input type="file" class="form-control" id="pdf-input_legal"  multiple>
+                                </div>
+                              </div>
+
+              
+                              <div class="text-center">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                              </div>
+                            </form>
+                        -->
+                            <form id="paymentFormLegal">
+
+                              <label for="" class="form-label">WHAT ARE THE DETAILS NEEDED TO MOVE CASE TO LEGAL LIVE?? (NEEDS TO BE DISCUSSED AND ADDED HERE)  </label>
+                              <div class="text-center">
+                                <button type="submit" class="btn btn-primary">Move case to Legal live</button>
+                              </div>
+
+                            </form>
                       </div>
                       <a class="close" style=" color: white;" href="#close">&times;</a>
                   </div>
@@ -1631,10 +1641,35 @@ function populatereport(refnumber)
       });
 
 
-
-
       $('#paymentFormLegal').on('submit', function (event) {
 
+                var formData = new FormData();
+                formData.append('legalliveDate', new Date());
+                formData.append('casereferenceNumber', localStorage['casereferencenumber']);
+
+                $.ajax({
+                url: '/api/addpfremark_legal',
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (response) {
+                if(response.message == "success")
+                  {
+                    alert("Case Moved to Legal!");
+                    window.location.href = "/viewapprovedcases.html";       
+                    
+                  }
+                  else{
+                    alert("Error saving remark!")
+                  }
+                },
+                error: function (error) {
+                document.getElementById('paymentFormLegal').reset();
+                alert("Error saving data");
+                }
+                });
+/* comment till all details to be submitted while moving to legal live are available
 
                 if($('#legal-required-dropdown_legal').val() == "Required")
                 {
@@ -1664,7 +1699,7 @@ function populatereport(refnumber)
                 // call ajax to save these details--
 
                 var formData = new FormData();
-
+                formData.append('legalliveDate', new Date());
                 formData.append('casereferenceNumber', localStorage['casereferencenumber']);
                 formData.append('pfAmount', processingfeeFinal);
                 formData.append('pfpaymentRemarks', paymentremarkFinal);
@@ -1724,7 +1759,7 @@ function populatereport(refnumber)
                 // Display an error message to the user
                 }
                 });
-
+*/
 
           });
 

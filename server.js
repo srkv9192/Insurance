@@ -65,8 +65,6 @@ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS
   useUnifiedTopology: true,
 });
 
-
-
 /*
 
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
@@ -341,6 +339,17 @@ const tpaSchema = new mongoose.Schema({
 const managerSchema = new mongoose.Schema({
   managerID: String,
   managerName: String,
+  phone: String,
+  email: String,
+  location: String,
+  // Add more fields as needed
+});
+
+
+//advocate schema 
+const advocateSchema = new mongoose.Schema({
+  advocateID: String,
+  advocateName: String,
   phone: String,
   email: String,
   location: String,
@@ -2377,7 +2386,7 @@ app.post('/api/addpfremark', upload.array('pdfFile', 10), async(req, res) => {
 app.post('/api/addpfremark_legal', upload.array('pdfFile', 10), async(req, res) => {
   try{
 
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfpaymentRemarks:req.body.pfpaymentRemarks,  pfpaymentDate:req.body.pfpaymentDate, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,   caseEmail: req.body.caseEmail, caseEmailPassword: req.body.caseEmailPassword, cfBankName: req.body.cfBankName, isLegal: "true", newCaseStatus : "Legal", legalliveDate : req.body.legalliveDate,  claimAmount:req.body.claimAmount }});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{  isLegal: "true", newCaseStatus : "Legal", legalliveDate : req.body.legalliveDate, }});
 
       if(newData == null)
       {
@@ -2385,6 +2394,7 @@ app.post('/api/addpfremark_legal', upload.array('pdfFile', 10), async(req, res) 
       }
       else
       {
+        /*
         const savedData = newData.save();
          const uploadPromises = req.files.map(file => {
           const randomString = require('crypto').randomBytes(16).toString('hex');
@@ -2395,6 +2405,7 @@ app.post('/api/addpfremark_legal', upload.array('pdfFile', 10), async(req, res) 
           return uploadFileToGCS(file.path, destination, req.body.casereferenceNumber);
         });
         await Promise.all(uploadPromises);
+        */
         res.json({ message: 'success'});
       }
     }
@@ -3064,6 +3075,7 @@ app.get("/api/getmanagerdetail", async(req, res) => {
     res.status(500).json({ error: 'Failed to get manager details' });
   }
 });
+
 
 
 app.post('/api/addcpdetail', async(req, res) => {
@@ -4163,11 +4175,11 @@ app.get("/api/getlivecasedetail", async(req, res) => {
 });
 
 // add logic later to differentiate live from completed
-app.get("/api/getconsumercasedetail", async(req, res) => {
+app.get("/api/getlegalcasedetail", async(req, res) => {
   try {
     // Retrieve all tpa list from database
    
-    const users = await  dataSchemaObject.find({isLegal : {"$exists" : true, "$eq" : "true"}}, {casereferenceNumber:1, prospectDate:1, patientName:1, patientMobile:1, complainantName:1, managerName:1, cpName:1, insuranceCompanyName:1, claimNumber:1,  claimAmount:1, operationOfficer:1, medicalOpinionOfficer:1, newCaseStatus:1, consumerliveDate:1 });
+    const users = await  dataSchemaObject.find({isLegal : {"$exists" : true, "$eq" : "true"}}, {casereferenceNumber:1, prospectDate:1, patientName:1, patientMobile:1, complainantName:1, managerName:1, cpName:1, insuranceCompanyName:1, claimNumber:1,  claimAmount:1, operationOfficer:1, medicalOpinionOfficer:1, newCaseStatus:1, legalliveDate:1 });
     res.json(users);
   } catch (error) {
     console.error(error);
@@ -4707,16 +4719,13 @@ app.get('/generatelegalpdf.html', (req, res) => res.sendFile(__dirname+'/generat
 app.get('/generatelegalfromlive.html', (req, res) => res.sendFile(__dirname+'/generatelegalfromlive.html'))
 
 app.get('/editemail.html', (req, res) =>{
-
-  if (req.session.userId && (req.session.userType == 'admin')) {
-        res.sendFile(__dirname + '/editemail.html');
-    } else {
-        res.status(403).send("You do not have permission to view this page. Do not attempt it again or the account will be locked.");
-    }
+    res.sendFile(__dirname + '/editemail.html');
 });
 
 app.get('/generatecardpdf.html', (req, res) => res.sendFile(__dirname+'/generatecardpdf.html'))
 app.get('/addprospect.html', (req, res) => res.sendFile(__dirname+'/addprospect.html'))
+
+app.get('/addlegalcase.html', (req, res) => res.sendFile(__dirname+'/addlegalcase.html'))
 
 app.get('/menubar.html', (req, res) => res.sendFile(__dirname+'/menubar.html'))
 
