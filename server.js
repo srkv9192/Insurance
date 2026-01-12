@@ -4667,11 +4667,7 @@ app.get('/createaccount.html', (req, res) =>
 )
 
 app.get('/createcp.html', (req, res) =>{
-    if (req.session.userId && (req.session.userType == 'admin')) {
-        res.sendFile(__dirname + '/createcp.html');
-    } else {
-        res.status(403).send("You do not have permission to view this page. Do not attempt it again or the account will be locked.");
-    }
+    res.sendFile(__dirname + '/createcp.html');
 })
 
 
