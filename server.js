@@ -353,6 +353,7 @@ const advocateSchema = new mongoose.Schema({
   phone: String,
   email: String,
   location: String,
+  advocateType: String,
   // Add more fields as needed
 });
 
@@ -427,6 +428,7 @@ const counterSchema = new mongoose.Schema({
   caseNumberCount: Number,
   employeeCount: Number,
   securityCode: Number,
+  advocateCount: Number,
   // Add more fields as needed
 });
 
@@ -450,6 +452,9 @@ const tpaSchemaObject = mongoose.model('tpadetails', tpaSchema);
 
 //table to hold manager details
 const managerSchemaObject = mongoose.model('managerdetails', managerSchema);
+
+//table to hold manager details
+const advocateSchemaObject = mongoose.model('advocatedetails', advocateSchema);
 
 //table to hold manager details
 const employeeSchemaObject = mongoose.model('employeedetails', employeeSchema);
@@ -551,6 +556,68 @@ app.post('/api/deletecase', async(req, res) => {
   
 });
 
+
+// Define the API endpoint to save data
+app.post('/api/addprospectlegal', upload.array('pdfFile', 10), async (req, res) => {
+  try{
+        const refNumber= await getCaseReferenceCount();
+        if(refNumber == -1)
+        {
+          res.status(500).json({ error: 'Error saving prospect data' });
+          return;
+        }
+
+        const newData = new dataSchemaObject({
+                        patientName : req.body.patientName,
+                        patientMobile: req.body.patientMobile,
+                        complainantName : req.body.complainantName,
+                        complainantMobile: req.body.complainantMobile,
+                        insuranceCompanyName: req.body.insuranceCompanyName,
+                        claimNumber: req.body.claimNumber,
+                        claimAmount: req.body.claimAmount,
+                        cpName: req.body.cpName,
+                        cpID: req.body.cpID,
+                        caseHandler: req.body.caseHandler,
+                        managerName: req.body.managerName,
+                        managerID: req.body.managerID,
+                        directCase: req.body.directCase,
+                        prospectZone: req.body.prospectZone,
+                        casereferenceNumber : refNumber,
+                        prospectDate: req.body.prospectDate,
+                        caseNumber: "",
+                        isProspect:"true",
+                        newCaseStatus: "New Case",
+                        pfReceived: "NO",
+                        isEmailGenerated: "NO",
+                        isGistGenerated: "NO",
+                        medicalOpinionOfficer: "NONE",
+                        operationOfficer: "NONE",
+                        caseType: req.body.caseType,
+                        legalCaseSubType: req.body.legalCaseSubType,
+                        legalCaseDetails: req.body.legalCaseDetails,
+                      });
+        const savedData = await newData.save();
+        incrementCaseReferenceCount();
+
+        const uploadPromises = req.files.map(file => {
+          const randomString = require('crypto').randomBytes(16).toString('hex');
+          const fileNameExceptExtension =file.originalname.split('.')[0];
+          const extension = path.extname(file.originalname);
+
+          const destination = `uploads/${refNumber}-${fileNameExceptExtension}-${randomString}${extension}`;
+          return uploadFileToGCS(file.path, destination, refNumber);
+        });
+
+      await Promise.all(uploadPromises);
+        res.json({ message: 'success', referencenumber:refNumber,data: savedData });
+      }
+    catch(err)
+    {
+      console.error(err);
+      res.status(500).json({ error: 'Error saving data' });
+    }
+  
+});
 
 // Define the API endpoint to save data
 app.post('/api/addprospect', upload.array('pdfFile', 10), async (req, res) => {
@@ -2987,6 +3054,45 @@ app.get("/api/gettpadetail", async(req, res) => {
 });
 
 
+app.post('/api/addadvocatedetail', async(req, res) => {
+  try{
+
+    const docs1 = await advocateSchemaObject.findOne({advocateName: req.body.advocateName});
+    if (docs1) {
+      res.json({message : 'duplicatename'});
+      return;
+    }
+        const docs = await advocateSchemaObject.findOne({advocateID: req.body.advocateID});
+        if (docs) {
+          res.json({message : 'duplicate'});
+          return;
+        }
+
+        const refNumber= await getAdvocateCount();
+        if(refNumber == -1)
+        {
+          res.status(500).json({ error: 'Error saving manager data' });
+          return;
+        }
+        const newData = new advocateSchemaObject({
+                        'advocateID' : req.body.advocateID,
+                        'advocateName' : req.body.advocateName,
+                        'phone' : req.body.phone,
+                        'email' : req.body.email,
+                        'location' : req.body.location,
+                        'advocateType':req.body.advocateType,
+                        });
+        const savedData = newData.save();
+        await incrementAdvocateCount();
+        res.json({ message: 'success', data: savedData });
+      }
+    catch(err)
+    {
+      console.error(err);
+      res.status(500).json({ error: 'Error saving cp data' });
+    } 
+});
+
 
 app.post('/api/addmanagerdetail', async(req, res) => {
   try{
@@ -3073,6 +3179,17 @@ app.get("/api/getmanagerdetail", async(req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to get manager details' });
+  }
+});
+
+app.get("/api/getadvocatedetail", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    const users = await  advocateSchemaObject.find({});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get advocate details' });
   }
 });
 
@@ -4402,6 +4519,16 @@ app.post("/api/downloadcard", async(req, res) => {
   }
 };
 
+ async function getAdvocateCount () {
+  try {
+    const data = await counterSchemaObject.find();
+    return data[0].advocateCount;
+  } catch (error) {
+    console.error(error);
+    return -1;
+  }
+};
+
 async function getEmployeeCount () {
   try {
     const data = await counterSchemaObject.find();
@@ -4416,6 +4543,18 @@ async function getEmployeeCount () {
   try{
     const newData = await counterSchemaObject.findOneAndUpdate({searchId: "keywordforsearch"}, {$inc:{ managerCount: 1}});
     return newData.managerCount;
+  }
+  catch(err)
+  {
+    console.error(err);
+    return -1;
+  } 
+};
+
+  async function incrementAdvocateCount ()  {
+  try{
+    const newData = await counterSchemaObject.findOneAndUpdate({searchId: "keywordforsearch"}, {$inc:{ advocateCount: 1}});
+    return newData.advocateCount;
   }
   catch(err)
   {
@@ -4671,8 +4810,28 @@ app.get('/createcp.html', (req, res) =>{
 })
 
 
+app.get('/createmanager.html', (req, res) => 
+  {
+      if (req.session.userId && (req.session.userType == 'admin')) {
+         res.sendFile(__dirname+'/createmanager.html')
+    } else {
+        res.status(403).send("You do not have permission to view this page. Do not attempt it again or the account will be locked.");
+    }
+   
+  })
+  
+app.get('/createadvocate.html', (req, res) =>
+  {
 
-app.get('/createmanager.html', (req, res) => res.sendFile(__dirname+'/createmanager.html'))
+    if (req.session.userId && (req.session.userType == 'admin')) {
+         res.sendFile(__dirname+'/createadvocate.html')
+    } else {
+        res.status(403).send("You do not have permission to view this page. Do not attempt it again or the account will be locked.");
+    }
+
+  })
+
+
 app.get('/editcp.html', (req, res) =>{
 
   if (req.session.userId && (req.session.userType == 'admin')) {

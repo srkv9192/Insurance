@@ -297,7 +297,7 @@
                 </div>
 
                 <div class="text-center">
-                  <button type="submit" class="btn btn-primary">Submit</button>
+                  <button type="submit" disabled class="btn btn-primary">Submit</button>
                 </div>
               </form>
             </div>
@@ -365,12 +365,10 @@
               value: option.advocateID,
               text: option.advocateName
             }));
-
-              secondoptionsSelect.append($('<option>', {
+                secondoptionsSelect.append($('<option>', {
               value: option.advocateID,
               text: option.advocateName
             }));
-            
           });
         },
         error: function (error) {
@@ -722,7 +720,7 @@ $.ajax({
 
         // Make an API call with the username and password
         $.ajax({
-          url: '/api/addprospect',
+          url: '/api/addprospectlegal',
           type: 'POST',
           contentType: false,
           processData: false,
