@@ -358,8 +358,8 @@
         type: 'GET',
         success: function (response) {
           // Populate the options in the select element
-          const optionsSelect = $('#first-advocate-name');
-           const secondoptionsSelect = $('#second-advocate-name');
+          const optionsSelect = $('#first-advocate-name-dropdown');
+           const secondoptionsSelect = $('#second-advocate-name-dropdown');
           response.forEach(function (option) {
             optionsSelect.append($('<option>', {
               value: option.advocateID,
