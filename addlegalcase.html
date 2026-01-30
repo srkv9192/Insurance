@@ -167,12 +167,12 @@
 
                 <div class="row mb-3">
                   <div class="col-sm-6">
-                    <label for="respondent-name" class="form-label">Respondent Name</label>
-                    <input type="text" class="form-control" id="complainant-name" required>
+                    <label for="respondant-name" class="form-label">Respondent Name</label>
+                    <input type="text" class="form-control" id="respondant-name" required>
                   </div>
                   <div class="col-sm-6">
-                    <label for="respondent-phone" class="form-label">Respondent Phone</label>
-                    <input type="text" class="form-control" id="respondent-phone" required pattern="[0-9]{10}" required maxlength="10">
+                    <label for="respondant-phone" class="form-label">Respondent Phone</label>
+                    <input type="text" class="form-control" id="respondant-phone" required pattern="[0-9]{10}" required maxlength="10">
                   </div>
                 </div>
 
@@ -231,7 +231,7 @@
                   <div class="col-sm-6">
                     <label for="insurance-company" class="form-label">Insurance Company Name</label>
                     <div class="input-group">
-                      <select class="form-control" id="insurance-company-dropdown" required>
+                      <select class="form-control" id="insurance-company-dropdown" >
                         <option value="">None</option>
                         <option value="Other">Other</option>
                       </select>
@@ -263,18 +263,18 @@
                 <div class="row mb-3">
 
                   <div class="col-sm-6">
-                    <label for="first-advocate-name" class="form-label">First Advocate</label>
+                    <label for="first-advocate-name-dropdown" class="form-label">First Advocate</label>
                     <div class="input-group">
-                      <select class="form-control" id="first-advocate-name" >
+                      <select class="form-control" id="first-advocate-name-dropdown" >
                         <option value="">None</option>
                       </select>
                     </div>
                   </div>
 
                     <div class="col-sm-6">
-                    <label for="second-advocate-name" class="form-label">Second Advocate</label>
+                    <label for="second-advocate-name-dropdown" class="form-label">Second Advocate</label>
                     <div class="input-group">
-                      <select class="form-control" id="second-advocate-name" >
+                      <select class="form-control" id="second-advocate-name-dropdown" >
                         <option value="">None</option>
                       </select>
                     </div>
@@ -297,7 +297,7 @@
                 </div>
 
                 <div class="text-center">
-                  <button type="submit" disabled class="btn btn-primary">Submit</button>
+                  <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
               </form>
             </div>
@@ -619,17 +619,10 @@ $.ajax({
 
         $('#uploadingdiv').show();
 
-
-        var patientname = $('#patient-name').val();
-        var patientphone = $('#patient-phone').val();
-
         var complainantname = $('#complainant-name').val();
         var complainantphone = $('#complainant-phone').val();
-        
-        var clientaddress = $('#client-address').val();
-
-        var clientphone = $('#client-phone').val();
-        var claimnumber = $('#claim-number').val();
+        var respondantname = $('#respondant-name').val();
+        var respondantphone = $('#respondant-phone').val();
 
         var insurancecompany=""
         if( $('#insurance-company-dropdown').val() ==="Other")
@@ -640,25 +633,7 @@ $.ajax({
           insurancecompany =  $('#insurance-company-dropdown').val()
         }
 
-        var tpaname=""
-        if( $('#tpa-name-dropdown').val() ==="Other")
-        {
-          tpaname =  $('#tpa-name-other').val()
-        }
-        else{
-          tpaname =  $('#tpa-name-dropdown').val()
-        }
-
-        var processingfee = $('#processing-fee').val();
-
-        var consultationcharge = $('#consultation-charge').val();
-        var claimamount = $('#total-claim-amount').val();
-
-        var chequeamount = $('#cheque-amount').val();
-        var chequenumber = $('#cheque-number').val();
-
-        var bankname = $('#bank-name').val();
-        var witnessname = $('#witness-name').val();
+        var disputedamount = $('#disputed-amount').val();
 
         var directcase = $('#direct-case-dropdown').val()
         var prospectzone = $('#prospectZone-dropdown').val()
@@ -670,50 +645,52 @@ $.ajax({
         var managername = $("#manager-name-dropdown option:selected").text();
         var managerid =  $('#manager-name-dropdown').val()
 
-        var clientemail = $('#client-email').val();
-        var policynumber = $('#policy-number').val();
+        var firstadvocatename = $("#first-advocate-name-dropdown option:selected").text();
+        var firstadvocateid =  $('#first-advocate-name-dropdown').val()
+
+        var secondadvocatename = $("#second-advocate-name-dropdown option:selected").text();
+        var secondadvocateid =  $('#second-advocate-name-dropdown').val()
 
         var casetype = $("#case-type-dropdown option:selected").text();
 
-        //rajat
         var legalsubcasetype = $("#legal-case-subtype-dropdown option:selected").text();
         var legalcasedetails = document.getElementById('legal-case-details').value;
 
-        //rajat
-
-
     
         var formData = new FormData();
-        formData.append('casereferenceNumber', localStorage['casereferencenumber']);
-        formData.append('cpName', cpname);
-        formData.append('cpID', cpid);
-        formData.append('caseHandler', casehandler);
+        //formData.append('legalcasereferenceNumber', localStorage['casereferencenumber']);
+
+        formData.append('directCase', directcase);
+        formData.append('prospectZone', prospectzone);
 
         formData.append('managerName', managername);
         formData.append('managerID', managerid);
-        formData.append('directCase', directcase);
 
-
-        formData.append('prospectZone', prospectzone);
-        formData.append('patientName', patientname);
-        formData.append('patientMobile', patientphone);
-
+        formData.append('cpName', cpname);
+        formData.append('cpID', cpid);
 
         formData.append('complainantName', complainantname);
-        formData.append('complainantMobile', complainantphone);
+        formData.append('complainantPhone', complainantphone);
 
-        formData.append('claimAmount', claimamount);
-        formData.append('insuranceCompanyName', insurancecompany);
-        formData.append('claimNumber', claimnumber);
+        formData.append('respondantName', respondantname);
+        formData.append('respondantPhone', respondantphone);
 
-
-        formData.append('prospectDate', new Date());
+        formData.append('caseHandler', casehandler);
 
         formData.append('caseType', casetype);
         formData.append('legalCaseSubType', legalsubcasetype);
         formData.append('legalCaseDetails', legalcasedetails);
 
-        
+        formData.append('disputedAmount', disputedamount);
+        formData.append('insuranceCompanyName', insurancecompany);
+
+        formData.append('firstAdvocateName', firstadvocatename);
+        formData.append('firstAdvocateID',firstadvocateid );
+        formData.append('secondAdvocateName', secondadvocatename);
+        formData.append('secondAdvocateID', secondadvocateid);
+
+        formData.append('legalliveDate', new Date());
+
         $.each($('#pdf-input')[0].files, function(i, file) {
           formData.append('pdfFile', file);
          });

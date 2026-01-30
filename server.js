@@ -143,6 +143,21 @@ async function uploadFileToGCS(filePath, destination , referencenumber) {
   await fs.promises.unlink(filePath);
 }
 
+async function uploadFileToGCSLegal(filePath, destination , referencenumber) {
+  await storagegcp.bucket(String(bucketName)).upload(filePath, {
+      destination: destination,
+  });
+  console.log(`${filePath} uploaded to ${bucketName} as ${destination}`);
+  // After upload, delete the file locally to clean up
+
+  const url = `https://storage.googleapis.com/rspowerimages/${destination}`; 
+
+  console.log(url);
+  await addDocURLInDBbyrefLegal(referencenumber , url)
+
+  await fs.promises.unlink(filePath);
+}
+
 //
 
 
@@ -306,6 +321,36 @@ const dataSchema = new mongoose.Schema({
   // Add more fields as needed
 });
 
+// Create a legal schema
+const dataLegalSchema = new mongoose.Schema({
+
+directCase: String,
+prospectZone: String,
+managerName: String,
+managerID: String,
+cpName: String,
+cpID: String,                      
+complainantName :String,
+complainantPhone: Number,
+respondantName : String,
+respondantPhone: Number,
+caseHandler: String,
+caseType: String,
+legalCaseSubType: String,
+insuranceCompanyName:String,
+disputedAmount: Number,
+firstAdvocateName: String,
+firstAdvocateID: String,
+secondAdvocateName: String,
+secondAdvocateID: String,                         
+legalcasereferenceNumber : String,
+legalliveDate: Date,
+isLegalLive: String,
+newCaseStatus: String,
+docUrl: Array,
+
+});
+
 const loginSchema = new mongoose.Schema({
   userName: String,
   userPassword: String,
@@ -425,6 +470,7 @@ const counterSchema = new mongoose.Schema({
   managerCount: Number,
   cpCount: Number,
   caseReferenceNumberCount: Number,
+  caseLegalReferenceNumberCount: Number,
   caseNumberCount: Number,
   employeeCount: Number,
   securityCode: Number,
@@ -438,6 +484,9 @@ const counterSchemaObject = mongoose.model('counter', counterSchema);
 
 // Create a model based on the schema
 const dataSchemaObject = mongoose.model('Data', dataSchema);
+
+const dataLegalSchemaObject = mongoose.model('DataLegal', dataLegalSchema);
+
 //login table
 const loginSchemaObject = mongoose.model('login', loginSchema);
 
@@ -560,44 +609,52 @@ app.post('/api/deletecase', async(req, res) => {
 // Define the API endpoint to save data
 app.post('/api/addprospectlegal', upload.array('pdfFile', 10), async (req, res) => {
   try{
-        const refNumber= await getCaseReferenceCount();
+        const refNumber= await getLegalCaseReferenceCount();
         if(refNumber == -1)
         {
           res.status(500).json({ error: 'Error saving prospect data' });
           return;
         }
 
-        const newData = new dataSchemaObject({
-                        patientName : req.body.patientName,
-                        patientMobile: req.body.patientMobile,
-                        complainantName : req.body.complainantName,
-                        complainantMobile: req.body.complainantMobile,
-                        insuranceCompanyName: req.body.insuranceCompanyName,
-                        claimNumber: req.body.claimNumber,
-                        claimAmount: req.body.claimAmount,
-                        cpName: req.body.cpName,
-                        cpID: req.body.cpID,
-                        caseHandler: req.body.caseHandler,
-                        managerName: req.body.managerName,
-                        managerID: req.body.managerID,
+        const newData = new dataLegalSchemaObject({
+
                         directCase: req.body.directCase,
                         prospectZone: req.body.prospectZone,
-                        casereferenceNumber : refNumber,
-                        prospectDate: req.body.prospectDate,
-                        caseNumber: "",
-                        isProspect:"true",
-                        newCaseStatus: "New Case",
-                        pfReceived: "NO",
-                        isEmailGenerated: "NO",
-                        isGistGenerated: "NO",
-                        medicalOpinionOfficer: "NONE",
-                        operationOfficer: "NONE",
+                        managerName: req.body.managerName,
+                        managerID: req.body.managerID,
+                        cpName: req.body.cpName,
+                        cpID: req.body.cpID,
+                      
+                      
+                        complainantName : req.body.complainantName,
+                        complainantPhone: req.body.complainantPhone,
+
+                        respondantName : req.body.respondantName,
+                        respondantPhone: req.body.respondantPhone,
+
+                        caseHandler: req.body.caseHandler,
+
                         caseType: req.body.caseType,
                         legalCaseSubType: req.body.legalCaseSubType,
-                        legalCaseDetails: req.body.legalCaseDetails,
+
+                        insuranceCompanyName: req.body.insuranceCompanyName,
+
+                        disputedAmount: req.body.disputedAmount,
+
+                        firstAdvocateName: req.body.firstAdvocateName,
+                        firstAdvocateID: req.body.firstAdvocateID,
+
+                        secondAdvocateName: req.body.secondadvocateName,
+                        secondAdvocateID: req.body.secondAdvocateID,
+                         
+                        legalcasereferenceNumber : refNumber,
+                        legalliveDate: req.body.legalliveDate,
+                        isLegalLive:"true",
+                        newCaseStatus: "New Case",
+
                       });
         const savedData = await newData.save();
-        incrementCaseReferenceCount();
+        incrementLegalCaseReferenceCount();
 
         const uploadPromises = req.files.map(file => {
           const randomString = require('crypto').randomBytes(16).toString('hex');
@@ -605,7 +662,7 @@ app.post('/api/addprospectlegal', upload.array('pdfFile', 10), async (req, res) 
           const extension = path.extname(file.originalname);
 
           const destination = `uploads/${refNumber}-${fileNameExceptExtension}-${randomString}${extension}`;
-          return uploadFileToGCS(file.path, destination, refNumber);
+          return uploadFileToGCSLegal(file.path, destination, refNumber);
         });
 
       await Promise.all(uploadPromises);
@@ -2394,6 +2451,28 @@ async function addDocURLInDBbyref(referencenumber , url)
 }
 
 
+async function addDocURLInDBbyrefLegal(referencenumber , url)
+{
+  console.log(referencenumber);
+  console.log(url);
+  try{
+      const newData = await  dataLegalSchemaObject.findOneAndUpdate({legalcasereferenceNumber: referencenumber}, {$push:{ docUrl : url}});
+      if(newData == null)
+      {
+       console.error("Could not save doc url in db");
+      }
+      else
+      {
+        const savedData = newData.save();
+        console.error("Saved doc url in db");
+      }
+  }
+  catch(err)
+  {
+    console.error(err);
+  } 
+}
+
 
 async function addDocURLInDBbycasenum(casenumber , url)
 {
@@ -3876,6 +3955,19 @@ app.get("/api/getprospectcasedetailbyref", async(req, res) => {
 });
 
 
+app.get("/api/getlegalcasedetailbyref", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+    console.log(req.query.casereferenceNumber)
+
+    const users = await  dataLegalSchemaObject.find({legalcasereferenceNumber: req.query.legalcasereferenceNumber});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get pending case details by ref' });
+  }
+});
+
 //
 app.get("/api/deletedocsbyref", async(req, res) => {
   try {
@@ -4296,7 +4388,21 @@ app.get("/api/getlegalcasedetail", async(req, res) => {
   try {
     // Retrieve all tpa list from database
    
-    const users = await  dataSchemaObject.find({isLegal : {"$exists" : true, "$eq" : "true"}}, {casereferenceNumber:1, prospectDate:1, patientName:1, patientMobile:1, complainantName:1, managerName:1, cpName:1, insuranceCompanyName:1, claimNumber:1,  claimAmount:1, operationOfficer:1, medicalOpinionOfficer:1, newCaseStatus:1, legalliveDate:1 });
+    const users = await  dataSchemaObject.find({isLegal : {"$exists" : true, "$eq" : "true"}}, {casereferenceNumber:1, prospectDate:1, patientName:1, patientMobile:1, complainantName:1, managerName:1, cpName:1, insuranceCompanyName:1, claimNumber:1,  claimAmount:1, operationOfficer:1, medicalOpinionOfficer:1, newCaseStatus:1, legalliveDate:1 , docUrl:1});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get consumer case details' });
+  }
+
+});
+
+// add logic later to differentiate live from completed
+app.get("/api/getlegallivecasedetail", async(req, res) => {
+  try {
+    // Retrieve all tpa list from database
+   
+    const users = await  dataLegalSchemaObject.find({isLegalLive : {"$exists" : true, "$eq" : "true"}}, {legalcasereferenceNumber:1, prospectDate:1, complainantName:1, complainantPhone:1, respondantName:1, managerName:1, cpName:1, insuranceCompanyName:1,  disputedAmount:1, operationOfficer:1, medicalOpinionOfficer:1, newCaseStatus:1, legalliveDate:1 });
     res.json(users);
   } catch (error) {
     console.error(error);
@@ -4608,10 +4714,32 @@ async function incrementEmployeeCount ()  {
   }
 };
 
+ async function getLegalCaseReferenceCount () {
+  try {
+    const data = await counterSchemaObject.find();
+    return data[0].caseLegalReferenceNumberCount;
+  } catch (error) {
+    console.error(error);
+    return -1;
+  }
+};
+
   async function incrementCaseReferenceCount ()  {
   try{
     const newData = await counterSchemaObject.findOneAndUpdate({searchId: "keywordforsearch"}, {$inc:{ caseReferenceNumberCount: 1}});
     return newData.caseReferenceNumberCount;
+  }
+  catch(err)
+  {
+    console.error(err);
+    return -1;
+  } 
+};
+
+  async function incrementLegalCaseReferenceCount ()  {
+  try{
+    const newData = await counterSchemaObject.findOneAndUpdate({searchId: "keywordforsearch"}, {$inc:{ caseLegalReferenceNumberCount: 1}});
+    return newData.caseLegalReferenceNumberCount;
   }
   catch(err)
   {

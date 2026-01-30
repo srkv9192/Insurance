@@ -257,19 +257,14 @@ div.dataTables_filter {
                         <th>Reference Number</th>
                         <th>Case Live Date</th>
                         <th>Case Age</th>
-                        <th>Patient Name</th>
-                        <th>Patient Phone</th>
                         <th>Complainant Name</th>
+                        <th>Complainant Phone</th>
+                        <th>Respondant Name</th>
                         <th>Manager Name</th>
                         <th>CP Name</th>
                         <th>Company</th>
-                        <th>Claim Number</th>
-                        <th>Claim Amount</th>
-                        <th>Operation Officer</th>
-                        <th>Medical Officer</th>
+                        <th>Disputed Amount</th>
                         <th>Case Status</th>
-                        <th>Action</th>
-                        <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
@@ -452,13 +447,26 @@ div.dataTables_filter {
                       <div class="frame">
                         <form id="consumerDraftForm">
                           
-                        
+                      <div class="row mb-3">
+
+                            <label for="legalNoticeDraft" class="form-label" style="
+                            font-size: x-large;
+                        ">Legal Notice Draft</label>
+                            <div id="legalNoticeDraft"  style="
+                            background-color: white;
+                            color: black;
+                        ">
+                            
+                            </div>
+                            
+                            </div>
+
                           <div class="row mb-3">
 
-                            <label for="consumerDraft" class="form-label" style="
+                            <label for="CourtPetitionDraft" class="form-label" style="
                             font-size: x-large;
-                        ">Consumer Draft</label>
-                            <div id="consumerDraft"  style="
+                        ">Court Petition Draft</label>
+                            <div id="CourtPetitionDraft"  style="
                             background-color: white;
                             color: black;
                         ">
@@ -468,7 +476,7 @@ div.dataTables_filter {
                             </div>
           
                           <div class="text-center">
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="submit" disabled class="btn btn-primary">Submit</button>
                           </div>
                         </form>
                       </div>
@@ -729,7 +737,7 @@ div.dataTables_filter {
                       </div>
                       <br>        
                       <br>
-                      <button type="submit" onclick="uploadDocsInDB()" class="btn btn-primary btn-sm">Upload</button>
+                      <button type="submit" disabled onclick="uploadDocsInDB()" class="btn btn-primary btn-sm">Upload</button>
                     </form>
                                    
                      
@@ -879,7 +887,7 @@ div.dataTables_filter {
 
                     
                     <input type="text" placeholder="Add new remark here" id="newremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
-                    <button type="submit" onclick="addremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
+                    <button type="submit" disabled onclick="addremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
                     
                     <a class="close" href="#close">&times;</a>
                   </div>
@@ -926,14 +934,14 @@ div.dataTables_filter {
 
 const toolbarOptions =['bold', 'italic', 'underline'];
 
-const quill = new Quill('#consumerDraft', {
+const quill = new Quill('#legalNoticeDraft', {
     theme: 'snow',
     modules: {
     toolbar: toolbarOptions
   }
   });
 
-  const quill1 = new Quill('#reportlokpaldraft', {
+  const quill1 = new Quill('#CourtPetitionDraft', {
     theme: 'snow',
     modules: {
     toolbar: toolbarOptions
@@ -1357,8 +1365,6 @@ error: function (error) {
 {
   let list = document.getElementById("documentlist");
   
-  console.log("rajat....");
-
 
   var wrapper = document.getElementById('wrapper');
   wrapper.innerHTML= `"<iframe name="inlineFrameExample" 
@@ -1373,10 +1379,10 @@ list.innerHTML = '';
 
 
 $.ajax({
-url: '/api/getprospectcasedetailbyref',
+url: '/api/getlegalcasedetailbyref',
 type: 'GET',
 data: {
-  casereferenceNumber: referencenumber
+  legalcasereferenceNumber: referencenumber
 },
 
 success: function (response) {
@@ -2170,7 +2176,7 @@ function movetolive(referencenumber) {
       
        // AJAX call on page load get manager details
        $.ajax({
-        url: '/api/getlegalcasedetail',
+        url: '/api/getlegallivecasedetail',
         type: 'GET',
         success: function (response) {
           // Populate the options in the select element
@@ -2196,29 +2202,24 @@ function movetolive(referencenumber) {
            var caseage  =  "Not Available"
            if((data[i].prospectDate))
            {
-            var livecasedate = moment(data[i].prospectDate);
+            var livecasedate = moment(data[i].legalLiveDate);
             caseage  =    todaysdate.diff(livecasedate, 'days');
            }
           
            if( localStorage['userType'] === 'admin' || localStorage['userType'] === 'operation' )
            {
-            var rowData = [data[i].casereferenceNumber,
-            moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),
+            var rowData = [data[i].legalcasereferenceNumber,
+            moment(new Date(data[i].legalLiveDate)).utc().format('DD-MM-YYYY'),
             `${caseage}`,
-            data[i].patientName,
-              data[i].patientMobile,
-              data[i].complainantName,
+            data[i].complainantName,
+              data[i].complainantPhone,
+              data[i].respondantName,
               data[i].managerName,
               data[i].cpName,
               data[i].insuranceCompanyName,
-              data[i].claimNumber,
-              data[i].claimAmount,
-              data[i].operationOfficer,
-              data[i].medicalOpinionOfficer,
+              data[i].disputedAmount,
               data[i].newCaseStatus,             
-              `<a href="#popup2"> <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Add Gist Data</button> </a>`,
               `<a href="#popup18"> <button class="btn btn-primary btn-sm" onclick="viewDraft('${rfno}')">Add Draft</button> </a>`,
-              `<a href="#popup19"> <button class="btn btn-primary btn-sm" onclick="viewDraft('${rfno}')">Add Details</button> </a>`,
               `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
               `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
               `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
