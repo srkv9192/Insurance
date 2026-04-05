@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="css/menubar.css" />
+<link rel="stylesheet" href="css/nidaan.css">
+  <style>
+    body {
+      background-color: #343a40;
+      background-image: url('/images/background20.jpg');
+      color: #fff;
+    }
+
+    .navbar-light .navbar-brand,
+    .navbar-light .navbar-nav .nav-link {
+      color: #fff;
+    }
+
+    .navbar-light .navbar-nav .nav-link:hover,
+    .navbar-light .navbar-nav .nav-link:focus {
+      color: #e9ecef;
+    }
+
+    .form-control {
+      background-color: #495057;
+      color: #fff;
+    }
+
+    .form-control:focus {
+      background-color: #343a40;
+      color: #fff;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      border-color: #007bff;
+    }
+
+    .btn-primary:hover,
+    .btn-primary:focus {
+      background-color: #0062cc;
+      border-color: #005cbf;
+    }
+  </style>
+  <title>Create Employee</title></head>
+<body>
+
+  <div class='dashboard'>
+    <div id="navbar-placeholder"></div>
+    <div class='dashboard-app'>
+      <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
+      <div class='dashboard-content' style="background-image: url('/images/background20.jpg'); background-repeat: repeat; background-size: cover;">
+        <div class="container mt-5" style="max-width: unset;">
+          <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-6 col-sm-8">
+              <h2 class="text-center mb-4">Create Employee Account</h2>
+              <div class="frame" style="color:black; display:flex; background-image: url('/images/background18.jpg'); font-family: monospace; font-size: large; background-size: cover;">
+                <form id="loginForm">
+                  <div class="mb-4" style="width: 250px;">
+                    <label for="case-bucket" class="form-label">Case Bucket</label>
+                    <select class="form-control" id="case-bucket-dropdown" required>
+                      <option value="">Select Case Bucket</option>
+                    </select>
+                  </div>
+                  <div class="mb-4" style="width: 250px;">
+                    <label for="case-status" class="form-label">Case Status</label>
+                    <select class="form-control" id="case-status-dropdown" required>
+                      <option value="">Select Case Status</option>
+                    </select>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      fetch('navbar.html')
+        .then(response => response.text())
+        .then(data => {
+          $('#navbar-placeholder').html(data);
+        });
+
+      // Submit handler
+      $('#loginForm').on('submit', function (event) {
+        event.preventDefault();
+        var caseBucket = $('#case-bucket-dropdown').val();
+        var caseStatus = $('#case-status-dropdown').val();
+
+        $.ajax({
+          url: '/api/addlogin',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          data: {
+            bucket: caseBucket,
+            status: caseStatus
+          },
+          success: function (response) {
+            if (response.message == "success") {
+              alert("New account added successfully!!");
+              $('#loginForm')[0].reset();
+            } else if (response.message == "duplicate") {
+              alert("Account with same username exists. Use a different one!");
+              $('#loginForm')[0].reset();
+            }
+          },
+          error: function () {
+            alert("Failed to add account");
+            $('#loginForm')[0].reset();
+          }
+        });
+      });
+    });
+  </script>  <script src="js/nidaan-table.js"></script>
+</body>
+</html>

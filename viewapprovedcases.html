@@ -1772,7 +1772,7 @@ function populatereport(refnumber)
           // Populate the options in the select element
             //alert(response.message)
 
-            var table = new DataTable('#dataTable');
+            var table = $('#dataTable').DataTable();
             table.buttons(0).disable();
            
             if(response.message =='admin')

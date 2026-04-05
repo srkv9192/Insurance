@@ -269,6 +269,7 @@ div.dataTables_filter {
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
+                        <th>Action</th>
                       </tr>
                     </thead>
                   </table>
@@ -445,7 +446,7 @@ div.dataTables_filter {
                 <div id="popup18" class="overlay">
                   <div class="popup">
                       <div class="frame">
-                        <form id="consumerDraftForm">
+                        <form id="legalDraftForm">
                           
                       <div class="row mb-3">
 
@@ -476,11 +477,36 @@ div.dataTables_filter {
                             </div>
           
                           <div class="text-center">
-                            <button type="submit" disabled class="btn btn-primary">Submit</button>
+                            <button type="submit"  class="btn btn-primary">Submit Draft</button>
+                            &nbsp;
+                            <a href="#popup20"><button type="button" id="referToSeniorBtn" class="btn btn-warning" onclick="loadSeniorAdvocates()">Refer to Senior Advocate</button></a>
                           </div>
                         </form>
                       </div>
                       <a class="close" style=" color: white;" href="#close">&times;</a>
+                  </div>
+                </div>
+
+                <!-- Popup 20: Refer to Senior Advocate -->
+                <div id="popup20" class="overlay">
+                  <div class="popup">
+                    <div class="frame">
+                      <h4 style="color:white; margin-bottom:15px;">Refer to Senior Advocate</h4>
+                      <div class="row mb-3">
+                        <label class="form-label">Select Senior Advocate</label>
+                        <select id="seniorAdvocateSelect" class="form-control">
+                          <option value="">-- Select Senior Advocate --</option>
+                        </select>
+                      </div>
+                      <div class="row mb-3">
+                        <label class="form-label">Referral Remark</label>
+                        <textarea id="referralRemark" class="form-control" rows="3" placeholder="Enter reason for referral..."></textarea>
+                      </div>
+                      <div class="text-center">
+                        <button type="button" class="btn btn-warning" onclick="referToSeniorAdvocate()">Submit Referral</button>
+                      </div>
+                    </div>
+                    <a class="close" style="color: white;" href="#close">&times;</a>
                   </div>
                 </div>
 
@@ -737,7 +763,7 @@ div.dataTables_filter {
                       </div>
                       <br>        
                       <br>
-                      <button type="submit" disabled onclick="uploadDocsInDB()" class="btn btn-primary btn-sm">Upload</button>
+                      <button type="submit" onclick="uploadDocsInDB()" class="btn btn-primary btn-sm">Upload</button>
                     </form>
                                    
                      
@@ -887,9 +913,29 @@ div.dataTables_filter {
 
                     
                     <input type="text" placeholder="Add new remark here" id="newremark" required  style="margin-top: 5px;margin-bottom: 5px;"><br>
-                    <button type="submit" disabled onclick="addremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
+                    <button type="submit" onclick="addremarkInDB()" class="btn btn-primary btn-sm">Save Remark</button>
                     
                     <a class="close" href="#close">&times;</a>
+                  </div>
+                </div>
+
+                <div id="popup22" class="overlay">
+                  <div class="popup" style="width:45%">
+                    <div class="frame">
+                      <form id="moveToLegalNoticeForm">
+                        <h5 style="color: black; text-align: center; margin-bottom: 16px;">Move to Legal Notice Bucket</h5>
+                        <div class="row mb-3">
+                          <div class="col-sm-12">
+                            <label for="move-to-notice-remark" class="form-label">Remark</label>
+                            <input type="text" class="form-control" id="move-to-notice-remark" placeholder="Enter reason for moving to Legal Notice" required>
+                          </div>
+                        </div>
+                        <div class="text-center">
+                          <button type="submit" class="btn btn-primary">Move to Legal Notice</button>
+                        </div>
+                      </form>
+                    </div>
+                    <a class="close" style="color: white;" href="#close">&times;</a>
                   </div>
                 </div>
 
@@ -950,8 +996,38 @@ const quill = new Quill('#legalNoticeDraft', {
 
 function addremark(referencenumber) {
         // Code to generate card
-        localStorage['addRemarkForRefNumber'] =referencenumber; 
+        localStorage['addRemarkForRefNumber'] =referencenumber;
   }
+
+  function openMoveToLegalNotice(referencenumber) {
+    localStorage['casereferencenumber'] = referencenumber;
+  }
+
+  $('#moveToLegalNoticeForm').on('submit', function(event) {
+    event.preventDefault();
+    const today = new Date();
+    const formattedToday = String(today.getDate()).padStart(2,'0') + '/' + String(today.getMonth()+1).padStart(2,'0') + '/' + today.getFullYear();
+    $.ajax({
+      url: '/api/movelegalcasetolegalnotice',
+      type: 'POST',
+      contentType: 'application/x-www-form-urlencoded',
+      data: {
+        legalcasereferenceNumber: localStorage['casereferencenumber'],
+        caseRemarks: formattedToday + ' - [' + localStorage['userName'] + '] - [Moved to Legal Notice] ' + $('#move-to-notice-remark').val(),
+      },
+      success: function(response) {
+        if (response.message === 'success') {
+          alert('Case moved to Legal Notice bucket!');
+          window.location.reload();
+        } else {
+          alert('Error moving case!');
+        }
+      },
+      error: function() {
+        alert('Failed to move case to Legal Notice!');
+      }
+    });
+  });
 
   function uploadDocsInDB()
 {
@@ -959,14 +1035,14 @@ function addremark(referencenumber) {
   $('#uploadingdiv').show();
 
   var formData = new FormData();
-        formData.append('casereferenceNumber', localStorage['addRemarkForRefNumber']);
+        formData.append('legalcasereferenceNumber', localStorage['addRemarkForRefNumber']);
        
         $.each($('#pdf-input')[0].files, function(i, file) {
           formData.append('pdfFile', file);
       });
 
       $.ajax({
-          url: '/api/uploadadditionaldocs',
+          url: '/api/uploadadditionaldocslegal',
           type: 'POST',
           contentType: false,
           processData: false,
@@ -1191,11 +1267,11 @@ if (mm < 10) mm = '0' + mm;
 const formattedToday = dd + '/' + mm + '/' + yyyy;
 
     $.ajax({
-      url: '/api/addlivecaseremark',
+      url: '/api/addlegalcaseremark',
       type: 'POST',
       contentType: "application/x-www-form-urlencoded",
       data: {
-        referencenumber: localStorage['addRemarkForRefNumber'],
+        legalcasereferenceNumber: localStorage['addRemarkForRefNumber'],
         caseRemarks: formattedToday + " - [ " +  localStorage['userName'] + " ] - "+ document.getElementById("newremark").value
       },
       success: function (response) {
@@ -1240,10 +1316,10 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
         list.innerHTML = '';
 
         $.ajax({
-        url: '/api/getlivecaseRemarkbyref',
+        url: '/api/getlegalcaseremarkbyref',
         type: 'GET',
         data: {
-          casereferenceNumber: referencenumber
+          legalcasereferenceNumber: referencenumber
         },
 
         success: function (response) {
@@ -1414,18 +1490,19 @@ error: function (error) {
 function viewDraft(referencenumber)
     {
 
-      localStorage['casereferencenumber'] = referencenumber; 
+      localStorage['legalcasereferencenumber'] = referencenumber; 
 
       $.ajax({
-        url: '/api/getcasedetailbyref',
+        url: '/api/getlegalcasedraftbyref',
         type: 'GET',
         data: {
-          casereferenceNumber: referencenumber
+          legalcasereferenceNumber: referencenumber
         },
 
         success: function (response) {
-          // Populate the options in the select elemen
-       quill.root.innerHTML= response[0].consumerDraft ? response[0].consumerDraft : "";
+       quill.root.innerHTML= response[0].legalNoticeDraft ? response[0].legalNoticeDraft : "";
+       quill1.root.innerHTML= response[0].courtPetitionDraft ? response[0].courtPetitionDraft : "";
+
         },
         error: function (error) {
           console.error('Error:', error);
@@ -1906,42 +1983,39 @@ function movetolive(referencenumber) {
 
 
             
-            $('#consumerDraftForm').on('submit', function (event) {
+            $('#legalDraftForm').on('submit', function (event) {
         event.preventDefault();
 
           // call ajax to save these details--
 
-          $.ajax({
-          url: '/api/addconsumerDraft',
-          type: 'POST',
-          contentType: "application/x-www-form-urlencoded",
-          data: {
-            casereferenceNumber: localStorage['casereferencenumber'], 
-            consumerDraft: quill.root.innerHTML,
-
-          },
-          success: function (response) {
-            if(response.message == "success")
-              {
-
-                alert("Consumer Draft Saved!");
-                
-              }
-              else{
-                alert("Error saving consumer draft!")
-                //document.getElementById('loginForm').reset();
-              }
-            //alert("login success");
-            // Redirect to the dashboard or perform any other actions
-          },
-          error: function (error) {
-            document.getElementById('loginForm').reset();
-            alert("login failed");
-            // Display an error message to the user
+           $.ajax({
+      url: '/api/savenoticeandpetitionforlegalcase',
+      type: 'POST',
+      contentType: "application/x-www-form-urlencoded",
+      data: {
+        legalcasereferenceNumber: localStorage['legalcasereferencenumber'],
+        legalNoticeDraft:  quill.root.innerHTML,
+        courtPetitionDraft:  quill1.root.innerHTML,
+      },
+      success: function (response) {
+        if(response.message == "success")
+          {
+            alert("Case Draft saved successfully!")
           }
-        });
+          else{
+            alert("Error saving remark!")
+          }
+       
+      },
+      error: function (error) {
+        //document.getElementById('loginForm').reset();
+        alert("Error while trying to save Draft!");
+        // Display an error message to the user
+      }
+    });
 
-
+    
+         
       });
 
 
@@ -2038,7 +2112,7 @@ function movetolive(referencenumber) {
         success: function (response) {
           // Populate the options in the select element
             //alert(response.message)
-            var table = new DataTable('#dataTable');
+            var table = $('#dataTable').DataTable();
              table.buttons(0).disable();
             localStorage.setItem('userType',  response.message);
            
@@ -2097,6 +2171,12 @@ function movetolive(referencenumber) {
               $("#hideonlogin").hide();
               localStorage['userName'] = response.username;
               localStorage['userType'] = response.message;
+              localStorage['advocateID'] = response.userid;
+              localStorage['advocateType'] = response.advocateType || 'junior';
+              // Show Refer to Senior button only for junior advocates
+              if(response.advocateType === 'senior') {
+                $('#referToSeniorBtn').parent().hide();
+              }
             }
             else if(response.message =='marketing')
             {
@@ -2196,20 +2276,21 @@ function movetolive(referencenumber) {
           var table = $('#dataTable').DataTable();
           var length = Object.keys(data).length;
           for(var i = 0; i < length; i++) {
-            var rfno= data[i].casereferenceNumber
+            var rfno= data[i].legalcasereferenceNumber
             var todaysdate = moment(new Date());
            // var prospectcasedate = moment(data[i].prospectDate);
            var caseage  =  "Not Available"
-           if((data[i].prospectDate))
+           if((data[i].legalliveDate))
            {
-            var livecasedate = moment(data[i].legalLiveDate);
+            var livecasedate = moment(data[i].legalliveDate);
             caseage  =    todaysdate.diff(livecasedate, 'days');
            }
-          
-           if( localStorage['userType'] === 'admin' || localStorage['userType'] === 'operation' )
+
+           if( localStorage['userType'] === 'admin' || localStorage['userType'] === 'operation' || localStorage['userType'] === 'advocate' )
            {
+            var canMoveToNotice = localStorage['userType'] === 'admin' || localStorage['userType'] === 'advocate';
             var rowData = [data[i].legalcasereferenceNumber,
-            moment(new Date(data[i].legalLiveDate)).utc().format('DD-MM-YYYY'),
+            data[i].legalliveDate ? moment(new Date(data[i].legalliveDate)).utc().format('DD-MM-YYYY') : "",
             `${caseage}`,
             data[i].complainantName,
               data[i].complainantPhone,
@@ -2223,6 +2304,7 @@ function movetolive(referencenumber) {
               `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
               `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
               `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
+              canMoveToNotice ? `<a href="#popup22"><button class="btn btn-secondary btn-sm" onclick="openMoveToLegalNotice('${rfno}')">Move to Legal Notice</button></a>` : ``,
             ];
             
             table.row.add(rowData);
@@ -2276,6 +2358,70 @@ function movetolive(referencenumber) {
 
     // filter buttons end
 
+
+  // ============================================================
+  // SENIOR ADVOCATE REFERRAL FUNCTIONS
+  // ============================================================
+
+  function loadSeniorAdvocates() {
+    var select = document.getElementById('seniorAdvocateSelect');
+    select.innerHTML = '<option value="">-- Select Senior Advocate --</option>';
+    $.ajax({
+      url: '/api/getsenioradvocatelist',
+      type: 'GET',
+      success: function(response) {
+        response.forEach(function(adv) {
+          var opt = document.createElement('option');
+          opt.value = adv.advocateID;
+          opt.setAttribute('data-name', adv.advocateName);
+          opt.text = adv.advocateName + ' (' + adv.location + ')';
+          select.appendChild(opt);
+        });
+      },
+      error: function(err) {
+        console.error('Error loading senior advocates', err);
+      }
+    });
+  }
+
+  function referToSeniorAdvocate() {
+    var select = document.getElementById('seniorAdvocateSelect');
+    var selectedOption = select.options[select.selectedIndex];
+    var advocateID = select.value;
+    var advocateName = selectedOption ? selectedOption.getAttribute('data-name') : '';
+    var referralRemark = document.getElementById('referralRemark').value;
+
+    if(!advocateID) { alert('Please select a senior advocate.'); return; }
+    if(!referralRemark) { alert('Please enter a referral remark.'); return; }
+
+    var refNum = localStorage['legalcasereferencenumber'];
+    if(!refNum) { alert('No case selected for referral.'); return; }
+
+    $.ajax({
+      url: '/api/refertosenioradvocate',
+      type: 'POST',
+      contentType: 'application/x-www-form-urlencoded',
+      data: {
+        legalcasereferenceNumber: refNum,
+        approvalAdvocateID: advocateID,
+        approvalAdvocateName: advocateName,
+        referralRemark: referralRemark
+      },
+      success: function(response) {
+        if(response.message == 'success') {
+          alert('Case referred to ' + advocateName + ' for approval!');
+          document.getElementById('referralRemark').value = '';
+          window.location.href = '#close';
+          window.location.reload();
+        } else {
+          alert('Error: Could not refer case.');
+        }
+      },
+      error: function(err) {
+        alert('Error referring case to senior advocate.');
+      }
+    });
+  }
 
   </script>
 </body>

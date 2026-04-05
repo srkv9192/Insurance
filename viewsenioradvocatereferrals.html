@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/menubar.css">
+  <style>
+    body { background-color: #343a40; color: #fff; }
+    .form-control { background-color: #495057; color: #fff; }
+    .form-control:focus { background-color: #343a40; color: #fff; }
+    .table-dark { background-color: #343a40; }
+    .table-dark th { color: #fff; }
+    .table-dark td { color: #fff; background-color: cadetblue; }
+    div.dataTables_info { color: white !important; }
+    div.dataTables_paginate { color: white !important; }
+    div.dataTables_length { color: white !important; }
+    div.dataTables_filter { color: white !important; }
+
+    /*pop up box*/
+    .overlay {
+      position: fixed; top: 0; bottom: 0; left: 0; right: 0;
+      background: rgba(0, 0, 0, 0.7);
+      transition: opacity 500ms;
+      visibility: hidden; opacity: 0;
+      z-index: 9999;
+      overflow-y: auto;
+    }
+    .overlay:target { visibility: visible; opacity: 1; }
+    .popup {
+      margin: 70px auto; padding: 20px;
+      background: #343a40; border-radius: 5px;
+      width: 60%; position: relative;
+      max-height: 85vh; overflow-y: auto;
+    }
+    .popup h2 { margin-top: 0; color: #fff; }
+    .popup .close {
+      position: absolute; top: 20px; right: 30px;
+      transition: all 200ms; font-size: 30px;
+      font-weight: bold; text-decoration: none; color: #fff;
+    }
+    .popup .close:hover { color: #06D85F; }
+  </style>
+  <title>Senior Advocate Approval</title>
+</head>
+
+<body>
+  <div class='dashboard'>
+    <div id="navbar-placeholder"></div>
+
+    <div class='dashboard-app'>
+      <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
+      <div class='dashboard-content' style="background-image: url('/images/background20.jpg'); background-repeat: repeat; background-size: cover;">
+        <div class="container mt-5" style="max-width: unset;">
+          <div class="row justify-content-center">
+            <h2 class="text-center mb-4">Cases Pending Senior Advocate Approval</h2>
+
+            <div class="col-lg-12">
+              <div class="table-responsive">
+                <table id="dataTable" class="table table-dark table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Reference Number</th>
+                      <th>Complainant Name</th>
+                      <th>Complainant Phone</th>
+                      <th>Respondant Name</th>
+                      <th>Company</th>
+                      <th>Disputed Amount</th>
+                      <th>Case Status</th>
+                      <th>Referred By (Remark)</th>
+                      <th>Referral Date</th>
+                      <th>Review Draft</th>
+                      <th>Approve</th>
+                      <th>Reject</th>
+                    </tr>
+                  </thead>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup: View Draft -->
+  <div id="popupDraft" class="overlay">
+    <div class="popup" style="width:75%;">
+      <div class="frame">
+        <h4 style="color:white; margin-bottom:15px;">Legal Notice &amp; Court Petition Draft</h4>
+        <label class="form-label"><strong>Legal Notice Draft:</strong></label>
+        <div id="viewLegalNoticeDraft" style="background:white; color:black; padding:10px; min-height:100px; margin-bottom:15px;"></div>
+        <label class="form-label"><strong>Court Petition Draft:</strong></label>
+        <div id="viewCourtPetitionDraft" style="background:white; color:black; padding:10px; min-height:100px;"></div>
+        <hr>
+        <label class="form-label"><strong>Case Remarks:</strong></label>
+        <ul id="approvalRemarkList" style="background:#495057; padding:10px; border-radius:4px;"></ul>
+      </div>
+      <a class="close" href="#close">&times;</a>
+    </div>
+  </div>
+
+  <!-- Popup: Approve Case -->
+  <div id="popupApprove" class="overlay">
+    <div class="popup">
+      <div class="frame">
+        <h4 style="color:white; margin-bottom:15px;">Approve Case → Legal Notice</h4>
+        <p style="color:#ccc;">Reference: <strong id="approveRefNum"></strong></p>
+        <div class="row mb-3">
+          <label class="form-label">Approval Remark</label>
+          <textarea id="approvalRemark" class="form-control" rows="3" placeholder="Enter approval remark..."></textarea>
+        </div>
+        <div class="text-center">
+          <button type="button" class="btn btn-success" onclick="submitApproval()">Approve &amp; Move to Legal Notice</button>
+        </div>
+      </div>
+      <a class="close" href="#close">&times;</a>
+    </div>
+  </div>
+
+  <!-- Popup: Reject Referral -->
+  <div id="popupReject" class="overlay">
+    <div class="popup">
+      <div class="frame">
+        <h4 style="color:white; margin-bottom:15px;">Reject Referral</h4>
+        <p style="color:#ccc;">Reference: <strong id="rejectRefNum"></strong></p>
+        <div class="row mb-3">
+          <label class="form-label">Rejection Remark</label>
+          <textarea id="rejectionRemark" class="form-control" rows="3" placeholder="Enter reason for rejection..."></textarea>
+        </div>
+        <div class="text-center">
+          <button type="button" class="btn btn-danger" onclick="submitRejection()">Reject &amp; Return to Draft</button>
+        </div>
+      </div>
+      <a class="close" href="#close">&times;</a>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+  <script src="https://cdn.datatables.net/2.1.3/js/dataTables.js"></script>
+  <script src="https://cdn.datatables.net/buttons/3.1.1/js/dataTables.buttons.js"></script>
+  <script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.dataTables.js"></script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.1.3/css/dataTables.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.1.1/css/buttons.dataTables.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.html5.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>
+
+  <script>
+  $(function() {
+    $.ajax({
+      url: '/navbar.html',
+      success: function(data) { $('#navbar-placeholder').html(data); }
+    });
+
+    // Initialize DataTable
+    $('#dataTable').DataTable({
+      searching: true,
+      layout: { topStart: { buttons: ['pageLength'] } }
+    });
+
+    // whoami check
+    $.ajax({
+      url: '/api/whoami',
+      type: 'POST',
+      success: function(response) {
+        if(response.message === 'advocate') {
+          localStorage['userName'] = response.username;
+          localStorage['userType'] = response.message;
+          localStorage['advocateID'] = response.userid;
+          localStorage['advocateType'] = response.advocateType || 'junior';
+          $('#showtoadvocate').show();
+          $('#hideonlogin').hide();
+          $('#login-menu').html('<i class="fas fa-sign-out"></i> Logout');
+          document.getElementById('login-menu').href = '/logout.html';
+
+          if(response.advocateType !== 'senior') {
+            // Redirect juniors away - they can't approve
+            alert('This page is only for senior advocates.');
+            window.location.href = '/viewlegallive.html';
+            return;
+          }
+
+          // Load pending approvals for this senior advocate
+          loadPendingApprovals(response.userid);
+
+        } else if(response.message === 'admin') {
+          localStorage['userName'] = response.username;
+          localStorage['userType'] = response.message;
+          $('#showonlogin').show();
+          $('#hideonlogin').hide();
+          $('#login-menu').html('<i class="fas fa-sign-out"></i> Logout');
+          document.getElementById('login-menu').href = '/logout.html';
+          loadPendingApprovals(null); // admin sees all
+        } else {
+          window.location.href = '/login.html';
+        }
+      },
+      error: function() { window.location.href = '/login.html'; }
+    });
+
+    const mobileScreen = window.matchMedia("(max-width: 990px)");
+    $(".dashboard-nav-dropdown-toggle").click(function() {
+      $(this).closest(".dashboard-nav-dropdown").toggleClass("show")
+        .find(".dashboard-nav-dropdown").removeClass("show");
+      $(this).parent().siblings().removeClass("show");
+    });
+    $(".menu-toggle").click(function() {
+      if(mobileScreen.matches) { $(".dashboard-nav").toggleClass("mobile-show"); }
+      else { $(".dashboard").toggleClass("dashboard-compact"); }
+    });
+  });
+
+  function loadPendingApprovals(advocateID) {
+    var params = advocateID ? { advocateID: advocateID } : {};
+    $.ajax({
+      url: '/api/getpendingsenioradvocateapprovals',
+      type: 'GET',
+      data: params,
+      success: function(response) {
+        populateTable(response);
+      },
+      error: function(err) {
+        console.error('Error loading pending approvals', err);
+      }
+    });
+  }
+
+  function populateTable(data) {
+    var table = $('#dataTable').DataTable();
+    table.clear();
+    for(var i = 0; i < data.length; i++) {
+      var rfno = data[i].legalcasereferenceNumber;
+      var referralDate = data[i].referralDate ? moment(data[i].referralDate).format('DD-MM-YYYY') : 'N/A';
+      var referralRemark = data[i].referralRemark || 'No remark';
+
+      var viewDraftBtn = `<a href="#popupDraft"><button class="btn btn-info btn-sm" onclick="viewDraft('${rfno}')">View Draft</button></a>`;
+      var approveBtn = `<a href="#popupApprove"><button class="btn btn-success btn-sm" onclick="prepareApproval('${rfno}')">Approve</button></a>`;
+      var rejectBtn = `<a href="#popupReject"><button class="btn btn-danger btn-sm" onclick="prepareRejection('${rfno}')">Reject</button></a>`;
+
+      table.row.add([
+        rfno,
+        data[i].complainantName || '',
+        data[i].complainantPhone || '',
+        data[i].respondantName || '',
+        data[i].insuranceCompanyName || '',
+        data[i].disputedAmount || '',
+        data[i].newCaseStatus || '',
+        referralRemark,
+        referralDate,
+        viewDraftBtn,
+        approveBtn,
+        rejectBtn
+      ]);
+    }
+    table.draw();
+  }
+
+  function viewDraft(refnum) {
+    localStorage['currentApprovalRef'] = refnum;
+    document.getElementById('viewLegalNoticeDraft').innerHTML = '';
+    document.getElementById('viewCourtPetitionDraft').innerHTML = '';
+    document.getElementById('approvalRemarkList').innerHTML = '';
+
+    // Load draft
+    $.ajax({
+      url: '/api/getlegalcasedraftbyref',
+      type: 'GET',
+      data: { legalcasereferenceNumber: refnum },
+      success: function(response) {
+        if(response && response.length > 0) {
+          document.getElementById('viewLegalNoticeDraft').innerHTML = response[0].legalNoticeDraft || '<em>No draft</em>';
+          document.getElementById('viewCourtPetitionDraft').innerHTML = response[0].courtPetitionDraft || '<em>No draft</em>';
+        }
+      },
+      error: function(err) { console.error('Error loading draft', err); }
+    });
+
+    // Load remarks
+    $.ajax({
+      url: '/api/getlegalcaseremarkbyref',
+      type: 'GET',
+      data: { legalcasereferenceNumber: refnum },
+      success: function(response) {
+        var list = document.getElementById('approvalRemarkList');
+        list.innerHTML = '';
+        if(response && response.length > 0 && response[0].caseRemarks) {
+          response[0].caseRemarks.forEach(function(remark) {
+            var li = document.createElement('li');
+            li.innerText = remark;
+            list.appendChild(li);
+          });
+        } else {
+          list.innerHTML = '<li>No remarks yet.</li>';
+        }
+      },
+      error: function(err) { console.error('Error loading remarks', err); }
+    });
+  }
+
+  function prepareApproval(refnum) {
+    localStorage['currentApprovalRef'] = refnum;
+    document.getElementById('approveRefNum').innerText = refnum;
+    document.getElementById('approvalRemark').value = '';
+  }
+
+  function submitApproval() {
+    var refnum = localStorage['currentApprovalRef'];
+    var remark = document.getElementById('approvalRemark').value;
+    if(!remark) { alert('Please enter an approval remark.'); return; }
+
+    $.ajax({
+      url: '/api/approvelegalcasetolegalnotice',
+      type: 'POST',
+      contentType: 'application/x-www-form-urlencoded',
+      data: {
+        legalcasereferenceNumber: refnum,
+        approvalRemark: remark,
+        approvalAdvocateName: localStorage['userName']
+      },
+      success: function(response) {
+        if(response.message === 'success') {
+          alert('Case ' + refnum + ' approved and moved to Legal Notice!');
+          window.location.href = '#close';
+          window.location.reload();
+        } else {
+          alert('Error: Could not approve case.');
+        }
+      },
+      error: function(err) { alert('Error approving case.'); }
+    });
+  }
+
+  function prepareRejection(refnum) {
+    localStorage['currentApprovalRef'] = refnum;
+    document.getElementById('rejectRefNum').innerText = refnum;
+    document.getElementById('rejectionRemark').value = '';
+  }
+
+  function submitRejection() {
+    var refnum = localStorage['currentApprovalRef'];
+    var remark = document.getElementById('rejectionRemark').value;
+    if(!remark) { alert('Please enter a rejection remark.'); return; }
+
+    $.ajax({
+      url: '/api/rejectlegalcasereferral',
+      type: 'POST',
+      contentType: 'application/x-www-form-urlencoded',
+      data: {
+        legalcasereferenceNumber: refnum,
+        approvalRemark: remark,
+        approvalAdvocateName: localStorage['userName']
+      },
+      success: function(response) {
+        if(response.message === 'success') {
+          alert('Case ' + refnum + ' rejected and returned to Draft Generated.');
+          window.location.href = '#close';
+          window.location.reload();
+        } else {
+          alert('Error: Could not reject referral.');
+        }
+      },
+      error: function(err) { alert('Error rejecting case.'); }
+    });
+  }
+  </script>
+</body>
+</html>

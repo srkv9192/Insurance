@@ -1,801 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.0/dist/chart.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
-  
   <link rel="stylesheet" href="css/menubar.css">
   <link rel="stylesheet" href="css/pricing.css">
-
+  <link rel="stylesheet" href="css/nidaan.css">
   <style>
-    /* Custom styles */
-    
-    .card {
-      border-radius: 10px;
-    }
-    .card-header {
-      background-color: black;
-      border-bottom: none;
-    }
-    .card-body {
-      padding: 20px;
-      text-align: center;
-      animation: blinker 1.5s linear infinite;
-      color: ivory;
-      
-    }
-    @keyframes blinker {
-            50% {
-                opacity: 0;
-            }
-        }
-    .chart-container {
-      height: 400px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .prospects {
-      background-color: darkslateblue;
-      color: #fff;
-    }
-    .pendingauth {
-      background-color: lightgrey;
-      color: #fff;
-    }
-    .active-cases {
-      background-color: #36A2EB;
-      color: #fff;
-    }
-    .completed-cases {
-      background-color: #4BC0C0;
-      color: #fff;
-    }
-    .manager-chart {
-      color: #fff;
-    }
-    body {
-      background-color: #343a40;
-      color: #fff;
-    }
-
-    .navbar-light .navbar-brand {
-      color: #fff;
-    }
-
-    .navbar-light .navbar-nav .nav-link {
-      color: #fff;
-    }
-
-    .navbar-light .navbar-nav .nav-link:hover,
-    .navbar-light .navbar-nav .nav-link:focus {
-      color: #e9ecef;
-    }
-
-    .navbar-dark .navbar-brand {
-      color: #343a40;
-    }
-
-    .navbar-dark .navbar-nav .nav-link {
-      color: #343a40;
-    }
-
-    .navbar-dark .navbar-nav .nav-link:hover,
-    .navbar-dark .navbar-nav .nav-link:focus {
-      color: #343a40;
-    }
-    
-
-    .form-control {
-      background-color: #495057;
-      color: #fff;
-    }
-
-    .form-control:focus {
-      background-color: #343a40;
-      color: #fff;
-    }
-
-    .btn-primary {
-      background-color: #007bff;
-      border-color: #007bff;
-    }
-
-    .btn-primary:hover,
-    .btn-primary:focus {
-      background-color: #0062cc;
-      border-color: #005cbf;
-    }
+    .card { border-radius: 10px; }
+    .card-header { background-color: black; border-bottom: none; }
+    .card-body { padding: 20px; text-align: center; color: ivory; animation: fadeInUp 0.4s ease both; }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .chart-container { height: 400px; display: flex; justify-content: center; align-items: center; }
+    .prospects       { background: linear-gradient(135deg, #3730a3, #5b52e8); color: #fff; }
+    .pendingauth     { background: linear-gradient(135deg, #c2410c, #fb923c); color: #fff; }
+    .active-cases    { background: linear-gradient(135deg, #0369a1, #38bdf8); color: #fff; }
+    .completed-cases { background: linear-gradient(135deg, #065f46, #34d399); color: #fff; }
+    .approved-cases  { background: linear-gradient(135deg, #6d28d9, #c084fc); color: #fff; }
+    .rejected-cases  { background: linear-gradient(135deg, #9f1239, #fb7185); color: #fff; }
+    .manager-chart   { color: #fff; }
+    body { background-color: #343a40; color: #fff; }
+    .form-control { background-color: #495057; color: #fff; }
+    .form-control:focus { background-color: #343a40; color: #fff; }
+    .btn-primary { background-color: #007bff; border-color: #007bff; }
+    .btn-primary:hover, .btn-primary:focus { background-color: #0062cc; border-color: #005cbf; }
+    .chart-panel { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin: 10px; }
+    .chart-panel h6 { color: #adb5bd; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
   </style>
   <title>Dashboard</title>
 </head>
-
 <body>
   <div class='dashboard'>
     <div id="navbar-placeholder"></div>
     <div class='dashboard-app'>
-        <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
-        <div class='dashboard-content' style="background-image: url('/images/background20.jpg');  background-repeat: repeat;  background-size: cover;">
-            <div  style=" font-size: 20px; padding-top: 50px; padding-right: 20px; padding-left: 20px;">  
+      <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
+      <div class='dashboard-content' style="background-image: url('/images/background20.jpg'); background-repeat: repeat; background-size: cover;">
+        <div style="font-size: 20px; padding-top: 50px; padding-right: 20px; padding-left: 20px;">
 
-             
-              <div style="border: 2px solid #007bff; border-radius: 10px; padding: 20px; margin: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1); ">
-
-                <h2 class="text-center mb-4">Case Data</h2>
-
-                  <div class="row">
-
-                    <div class="col-lg-2 col-md-2" style="margin-left:50px; margin-top: 5px;">
-                      <a href="/viewprospectcases.html">
-                          <div class="card prospects">
-                            <div class="card-header">
-                              <h5 class="card-title">New</h5>
-                            </div>
-                            <div class="card-body">
-                              <h3 id="newcasecount" class="card-text"></h3>
-                            </div>
-                          </div>
-                      </a>
-                    </div>
-
-                    <div class="col-lg-2 col-md-2" style="margin-top: 5px;">
-                      <a href="/viewprospectcases.html">
-                          <div class="card prospects">
-                            <div class="card-header">
-                              <h5 class="card-title">Medical</h5>
-                            </div>
-                            <div class="card-body">
-                              <h3 id="inmedicalcount" class="card-text"></h3>
-                            </div>
-                          </div>
-                      </a>
-                    </div>
-
-                    <div class="col-lg-2 col-md-2"style="margin-top: 5px;" >
-                      <a href="/viewprospectcases.html">
-                          <div class="card prospects">
-                            <div class="card-header">
-                              <h5 class="card-title">Query</h5>
-                            </div>
-                            <div class="card-body">
-                              <h3 id="inmedicalquerycount" class="card-text"></h3>
-                            </div>
-                          </div>
-                      </a>
-                    </div>
-
-                    <div class="col-lg-2 col-md-2"style="margin-top: 5px;" >
-                      <a href="/viewapprovedcases.html">
-                          <div class="card prospects">
-                            <div class="card-header">
-                              <h5 class="card-title">Approved</h5>
-                            </div>
-                            <div class="card-body">
-                              <h3 id="approvedcount" class="card-text"></h3>
-                            </div>
-                          </div>
-                      </a>
-                    </div>
-
-
-                    <div class="col-lg-2 col-md-2"style="margin-top: 5px;" >
-                      <a href="/viewrejectedcases.html">
-                          <div class="card prospects">
-                            <div class="card-header">
-                              <h5 class="card-title">Rejected</h5>
-                            </div>
-                            <div class="card-body">
-                              <h3 id="rejectedcount" class="card-text"></h3>
-                            </div>
-                          </div>
-                      </a>
-                    </div>
-
-
-<!--                         
-                    <div class="col-lg-2 col-md-2" style="margin-top: 5px;">
-                      <a href="/viewprospectcases.html">
-                          <div class="card prospects">
-                            <div class="card-header">
-                              <h5 class="card-title">Prospect</h5>
-                            </div>
-                            <div class="card-body">
-                              <h3 id="prospectcount" class="card-text"></h3>
-                            </div>
-                          </div>
-                      </a>
-                    </div>
-
-
-                    <div class="col-lg-2 col-md-2"  style="margin-top: 5px;">
-                      <a href="/viewcases.html">
-                        <div class="card active-cases">
-                          <div class="card-header">
-                            <h5 class="card-title">Live</h5>
-                          </div>
-                          <div class="card-body">
-                            <h3 id="livecount" class="card-text"></h3>
-                          </div>
-                        </div>
-                      </a>
-
-                    </div>
-
-   -->               
-                  
-                  </div>
-             </div>
-
-<!--  Hiding claim shield data as it is not being used
-             <div class="frame"   style=" color:black;background-image: url('/images/background18.jpg');  font-family: monospace;font-size: large; background-size: cover; margin-top: 60px;">
-              <h2 class="text-center mb-4">Claim Shield Data</h2>
-                <div class="row">
-                  <div class="col-lg-4 col-md-6" style="margin-left: 150px;">
-                    <a href="/viewpendingcards.html">
-                          <div class="card prospects">
-                            <div class="card-header">
-                              <h5 class="card-title">Pending Cards</h5>
-                            </div>
-                            <div class="card-body">
-                              <h3 id="prospectcardcount" class="card-text"></h3>
-                            </div>
-                          </div>
-                    </a>
-                  </div>
-                  <div class="col-lg-4 col-md-6">
-
-                    <a href="/viewcards.html">
-                        <div class="card active-cases">
-                          <div class="card-header">
-                            <h5 class="card-title">Live Cards</h5>
-                          </div>
-                          <div class="card-body">
-                            <h3 id="livecardcount" class="card-text"></h3>
-                          </div>
-                        </div>
-                    </a>
-                  </div>
-
-                </div>
+          <!-- CASE DATA CARDS -->
+          <div style="border: 2px solid #007bff; border-radius: 10px; padding: 20px; margin: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+            <h2 class="text-center mb-4">Case Data</h2>
+            <div class="row g-3">
+              <div class="col-lg-2 col-md-4 col-6"><a href="/viewprospectcases.html" style="text-decoration:none;"><div class="card prospects"><div class="card-header"><h5 class="card-title">New</h5></div><div class="card-body"><h3 id="newcasecount" class="card-text">—</h3></div></div></a></div>
+              <div class="col-lg-2 col-md-4 col-6"><a href="/viewmedicalopinioncases.html" style="text-decoration:none;"><div class="card prospects"><div class="card-header"><h5 class="card-title">Medical</h5></div><div class="card-body"><h3 id="inmedicalcount" class="card-text">—</h3></div></div></a></div>
+              <div class="col-lg-2 col-md-4 col-6"><a href="/viewmedicalopinioncases.html" style="text-decoration:none;"><div class="card prospects"><div class="card-header"><h5 class="card-title">Query</h5></div><div class="card-body"><h3 id="inmedicalquerycount" class="card-text">—</h3></div></div></a></div>
+              <div class="col-lg-2 col-md-4 col-6"><a href="/viewapprovedcases.html" style="text-decoration:none;"><div class="card approved-cases"><div class="card-header"><h5 class="card-title">Approved</h5></div><div class="card-body"><h3 id="approvedcount" class="card-text">—</h3></div></div></a></div>
+              <div class="col-lg-2 col-md-4 col-6"><a href="/viewrejectedcases.html" style="text-decoration:none;"><div class="card rejected-cases"><div class="card-header"><h5 class="card-title">Rejected</h5></div><div class="card-body"><h3 id="rejectedcount" class="card-text">—</h3></div></div></a></div>
+              <div class="col-lg-2 col-md-4 col-6"><a href="/viewlivecases.html" style="text-decoration:none;"><div class="card active-cases"><div class="card-header"><h5 class="card-title">Live</h5></div><div class="card-body"><h3 id="livecasecount" class="card-text">—</h3></div></div></a></div>
+              <div class="col-lg-2 col-md-4 col-6"><a href="/viewescalationcases.html" style="text-decoration:none;"><div class="card pendingauth"><div class="card-header"><h5 class="card-title">Escalation</h5></div><div class="card-body"><h3 id="pendingauthcountcount" class="card-text">—</h3></div></div></a></div>
+              <div class="col-lg-2 col-md-4 col-6"><a href="/viewcompletedcases.html" style="text-decoration:none;"><div class="card completed-cases"><div class="card-header"><h5 class="card-title">Completed</h5></div><div class="card-body"><h3 id="completedcasecount" class="card-text">—</h3></div></div></a></div>
             </div>
--->
-<div style="border: 2px solid #007bff; border-radius: 10px; padding: 20px; margin: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1); ">
-  <div style="display: flex; flex-wrap: wrap;">
-    <div style="margin-top: 10px;">
-      <label>Select Case Status:</label>
-      <select class="form-control" id="casefinalstatus" style="height: 50px; width: 200px;">
-        <option value="" disabled selected>Select status</option>
-        <option value="New Case">New Case</option>
-        <option value="In Medical">In Medical</option>
-        <option value="Medical Query">Medical Query</option>
-        <option value="Approved">Approved</option>
-        <option value="Rejected">Rejected</option>
-        <option value="Live">Live</option>
-        <option value="Draft Query">Draft Query</option>
-        <option value="Gist Generated">Gist Generated</option>
-        <option value="Pending Draft">Pending Draft</option>
-        <option value="Reimbursement">Reimbursement</option>
-        <option value="Pending Doc">Pending Doc</option>
-        <option value="Escalation Pending">Escalation Pending</option>
-        <option value="Escalation Query">Escalation Query</option>
-        <option value="Escalated">Escalated</option>
-        <option value="Lokpal Pending">Lokpal Pending</option>
-        <option value="Lokpal Registered">Lokpal Registered</option>
-        <option value="Annexure5 Pending">Annexure5 Pending</option>
-        <option value="Annexure5 Replied">Annexure5 Replied</option>
-        <option value="Annexure 6 Pending">Annexure 6 Pending</option>
-        <option value="Annexure 6 Replied">Annexure 6 Replied</option>
-        <option value="Completed">Completed</option>
-        <option value="Hearing">Hearing</option>
-        <option value="Escalation Settlement">Escalation Settlement</option>
-        <option value="Consent">Consent</option>
-        <option value="Pending Payment">Pending Payment</option>
-        <option value="CP Payment Pending">CP Payment Pending</option>
-        <option value="Case Closed">Case Closed</option>
-      </select>
-    </div>
+          </div>
 
-    <div style="margin-top: 10px; margin-left:15px;">
-      <label>Live Start Date:</label>
-      <input type="date" id="livestartDate" class="form-control" style="height: 50px; width: 200px;"/>
-    </div>
+          <!-- ANALYTICS CHARTS -->
+          <div style="border: 2px solid #007bff; border-radius: 10px; padding: 20px; margin: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+            <h2 class="text-center mb-4">Analytics</h2>
+            <div class="row">
+              <div class="col-md-8"><div class="chart-panel"><h6>Case Pipeline</h6><canvas id="barChart" height="120"></canvas></div></div>
+              <div class="col-md-4"><div class="chart-panel"><h6>Outcome Breakdown</h6><canvas id="donutChart" height="200"></canvas></div></div>
+              <div class="col-md-6"><div class="chart-panel"><h6>Stage Funnel</h6><canvas id="funnelChart" height="160"></canvas></div></div>
+              <div class="col-md-6"><div class="chart-panel"><h6>Active vs Resolved</h6><canvas id="polarChart" height="160"></canvas></div></div>
+            </div>
+          </div>
 
-    <div style="margin-top: 10px; margin-left:15px;">
-      <label>Live End Date:</label>
-      <input type="date" id="liveendDate" class="form-control" style="height: 50px; width: 200px;"/>
-    </div>
+          <!-- EXCEL DOWNLOAD -->
+          <div style="border: 2px solid #007bff; border-radius: 10px; padding: 20px; margin: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+            <div style="display: flex; flex-wrap: wrap;">
+              <div style="margin-top: 10px;">
+                <label>Select Case Status:</label>
+                <select class="form-control" id="casefinalstatus" style="height: 50px; width: 200px;">
+                  <option value="" disabled selected>Select status</option>
+                  <option>New Case</option><option>In Medical</option><option>Medical Query</option>
+                  <option>Approved</option><option>Rejected</option><option>Live</option>
+                  <option>Draft Query</option><option>Gist Generated</option><option>Pending Draft</option>
+                  <option>Reimbursement</option><option>Pending Doc</option>
+                  <option>Escalation Pending</option><option>Escalation Query</option><option>Escalated</option>
+                  <option>Lokpal Pending</option><option>Lokpal Registered</option>
+                  <option>Annexure5 Pending</option><option>Annexure5 Replied</option>
+                  <option>Annexure 6 Pending</option><option>Annexure 6 Replied</option>
+                  <option>Completed</option><option>Hearing</option>
+                  <option>Escalation Settlement</option><option>Consent</option>
+                  <option>Pending Payment</option><option>CP Payment Pending</option><option>Case Closed</option>
+                </select>
+              </div>
+              <div style="margin-top: 10px; margin-left:15px;"><label>Live Start Date:</label><input type="date" id="livestartDate" class="form-control" style="height: 50px; width: 200px;"/></div>
+              <div style="margin-top: 10px; margin-left:15px;"><label>Live End Date:</label><input type="date" id="liveendDate" class="form-control" style="height: 50px; width: 200px;"/></div>
+              <div style="margin-top: 10px; margin-left:15px;"><label>Nidaan Payment Start Date:</label><input type="date" id="nidaanstartDate" class="form-control" style="height: 50px; width: 200px;"/></div>
+              <div style="margin-top: 10px; margin-left:15px;"><label>Nidaan Payment End Date:</label><input type="date" id="nidaanendDate" class="form-control" style="height: 50px; width: 200px;"/></div>
+            </div>
+            <div style="margin-top: 20px; display: flex; flex-wrap: wrap; gap: 15px;">
+              <button class="btn btn-primary btn-sm" style="height: 50px; width: 200px;" onclick="downloadexcelfilebystatus()">Download Excel by Status</button>
+              <button class="btn btn-primary btn-sm" style="height: 50px; width: 200px;" onclick="downloadexcelfilebylivedate()">Download Excel by Live Date</button>
+              <button class="btn btn-primary btn-sm" style="height: 50px; width: 200px;" onclick="downloadexcelfilebynidaandate()">Download Excel by Nidaan Date</button>
+              <button class="btn btn-primary btn-sm" style="height: 50px; width: 200px;" onclick="downloadexcelfile()">Download Excel</button>
+            </div>
+          </div>
 
-    <div style="margin-top: 10px; margin-left:15px;">
-      <label>Nidaan Payment Start Date:</label>
-      <input type="date" id="nidaanstartDate" class="form-control" style="height: 50px; width: 200px;"/>
-    </div>
+          <!-- MEDICAL OFFICER + SECURITY -->
+          <div style="border: 2px solid #007bff; border-radius: 10px; padding: 20px; margin: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+            <div style="display: flex; flex-wrap: wrap; gap: 15px;">
+              <div style="margin-top: 10px;"><label>Select Medical Officer:</label><select class="form-control" id="medicalofficerdropdown" style="height: 50px; width: 200px;"><option value="" disabled selected>Select officer</option></select></div>
+              <div style="margin-top: 10px;"><label>Set Security Code:</label><input type="text" class="form-control" id="securitycode" style="height: 50px; width: 200px;" placeholder="Enter security code"></div>
+            </div>
+            <div style="margin-top: 20px; display: flex; flex-wrap: wrap; gap: 15px;">
+              <button class="btn btn-primary btn-sm" style="height: 50px; width: 200px;" onclick="downloadexcelmedicalofficer()">Download Excel by Medical Officer</button>
+              <button class="btn btn-primary btn-sm" style="height: 50px; width: 200px;" onclick="saveSecurityCode()">Save Security Code</button>
+            </div>
+          </div>
 
-    <div style="margin-top: 10px; margin-left:15px;">
-      <label>Nidaan Payment End Date:</label>
-      <input type="date" id="nidaanendDate" class="form-control" style="height: 50px; width: 200px;"/>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div style="margin-top: 20px; display: flex; flex-wrap: wrap; gap: 15px;">
-    <button class="btn btn-primary btn-sm" style="height: 50px; width: 200px;" onclick="downloadexcelfilebystatus()">Download Excel by Status</button>
-    <button class="btn btn-primary btn-sm" style="height: 50px; width: 200px;" onclick="downloadexcelfilebylivedate()">Download Excel by Live Date</button>
-    <button class="btn btn-primary btn-sm" style="height: 50px; width: 200px;" onclick="downloadexcelfilebynidaandate()">Download Excel by Nidaan Date</button>
-    <button class="btn btn-primary btn-sm" style="height: 50px; width: 200px;" onclick="downloadexcelfile()">Download Excel</button>
-  </div>
-</div>
-
-
-<div style="border: 2px solid #007bff; border-radius: 10px; padding: 20px; margin: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-  
-  <!-- First row: form controls -->
-  <div style="display: flex; flex-wrap: wrap; gap: 15px;">
-    <div style="margin-top: 10px;">
-      <label>Select Medical Officer:</label>
-      <select class="form-control" id="medicalofficerdropdown" style="height: 50px; width: 200px;">
-        <option value="" disabled selected>Select officer</option>
-
-             </select>
-    </div>
-
-
-    <div style="margin-top: 10px;">
-      <label>Set Security Code:</label>
-      <input type="text" class="form-control" id="securitycode" style="height: 50px; width: 200px;" placeholder="Enter security code">
-    </div>
-
-
-  </div>
-
-  <!-- Second row: buttons -->
-  <div style="margin-top: 20px; display: flex; flex-wrap: wrap; gap: 15px;">
-    <button class="btn btn-primary btn-sm" style="height: 50px; width: 200px;" onclick="downloadexcelmedicalofficer()">Download Excel by Medical Officer</button>
-
-
-    <button class="btn btn-primary btn-sm" style="height: 50px; width: 200px;" onclick="saveSecurityCode()">Save security code</button>
-  </div>
-
-</div>
-
-  
-  
-   </div>
-
-   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="js/nidaan-table.js"></script>
   <script>
     const mobileScreen = window.matchMedia("(max-width: 990px)");
-$(document).ready(function () {
+    const _cd = {};
 
-  fetch('navbar.html')
-      .then(response => response.text())
-      .then(data => {
+    $(document).ready(function () {
+      fetch('navbar.html').then(r => r.text()).then(data => {
         document.getElementById('navbar-placeholder').innerHTML = data;
-
-  $.ajax({
-        url: '/api/whoami',
-        type: 'POST',
-        success: function (response) {
-          // Populate the options in the select element
-            //alert(response.message)
-           
-            if(response.message =='admin')
-            {
-              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
-              document.getElementById("login-menu").href="/logout.html"; 
-              $("#showonlogin").show();
-              $("#hideonlogin").hide();
-              localStorage['userName'] = response.username;
-              localStorage['userType'] = response.message;
-             
-            }
-            else if(response.message =='operation' )
-            {
-              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
-              document.getElementById("login-menu").href="/logout.html"; 
-              $("#showtooperation").show();
-              $("#hideonlogin").hide();
-              localStorage['userName'] = response.username;
-              localStorage['userType'] = response.message;
-            }
-            else if(response.message =='manager')
-            {
-              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
-              document.getElementById("login-menu").href="/logout.html"; 
-              $("#showtomanager").show();
-              $("#hideonlogin").hide();
-              localStorage['userName'] = response.username;
-              localStorage['userType'] = response.message;
-            }
-            else if(response.message =='cp')
-            {
-              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
-              document.getElementById("login-menu").href="/logout.html"; 
-              $("#showtocp").show();
-              $("#hideonlogin").hide();
-              localStorage['userName'] = response.username;
-              localStorage['userType'] = response.message;
-            }
-            else if(response.message =='medicalofficer')
-            {
-              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
-              document.getElementById("login-menu").href="/logout.html"; 
-              $("#showtomedicalofficer").show();
-              $("#hideonlogin").hide();
-              localStorage['userName'] = response.username;
-              localStorage['userType'] = response.message;
-            }
-            else if(response.message =='advocate')
-            {
-              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
-              document.getElementById("login-menu").href="/logout.html"; 
-              $("#showtoadvocate").show();
-              $("#hideonlogin").hide();
-              localStorage['userName'] = response.username;
-              localStorage['userType'] = response.message;
-            }
-            else
-            {
-              window.location.href = "/login.html"
-            }
-            
-        },
-        error: function (error) {
-          console.error('Error:', error);
-        }
-      });
-
-
-       // AJAX call on page load get manager details
-      $.ajax({
-        url: '/api/getmedicalteamlist',
-        type: 'GET',
-        success: function (response) {
-          // Populate the options in the select element
-          const optionsSelect = $('#medicalofficerdropdown');
-          response.forEach(function (option) {
-            optionsSelect.append($('<option>', {
-              value: option.userID,
-              text: option.userName
-            }));
-          });
-        },
-        error: function (error) {
-          console.error('Error:', error);
-        }
-      });
-
-
-
-
-
-      $.ajax({
-        url: '/api/getlivepolicyCount',
-        type: 'GET',
-        success: function (response) {
-          // Populate the options in the select element
-          document.getElementById("livecardcount").textContent=response;
-         
-        },
-        error: function (error) {
-          console.error('Error:', error);
-        }
-      });
-
-
-      $.ajax({
-        url: '/api/getpendingpolicyCount',
-        type: 'GET',
-        success: function (response) {
-          // Populate the options in the select element
-          //populateDataTable(response);
-          document.getElementById("prospectcardcount").textContent=response;
-        },
-        error: function (error) {
-          console.error('Error:', error);
-        }
-      });
-
-
-        
-
-      $.ajax({
-        url: '/api/getlivecaseCount',
-        type: 'GET',
-        success: function (response) {
-          // Populate the options in the select element
-          document.getElementById("livecount").textContent=response;
-         
-        },
-        error: function (error) {
-          console.error('Error:', error);
-        }
-      });
-
-
-      $.ajax({
-        url: '/api/getprospectcaseCount',
-        type: 'GET',
-        success: function (response) {
-          // Populate the options in the select element
-          //populateDataTable(response);
-          document.getElementById("prospectcount").textContent=response;
-        },
-        error: function (error) {
-          console.error('Error:', error);
-        }
-      });
-
-
-      $.ajax({
-        url: '/api/getrejectedcaseCount',
-        type: 'GET',
-        success: function (response) {
-          // Populate the options in the select element
-          //populateDataTable(response);
-          document.getElementById("rejectedcount").textContent=response;
-        },
-        error: function (error) {
-          console.error('Error:', error);
-        }
-      });
-
-      $.ajax({
-        url: '/api/getapprovedcaseCount',
-        type: 'GET',
-        success: function (response) {
-          // Populate the options in the select element
-          //populateDataTable(response);
-          document.getElementById("approvedcount").textContent=response;
-        },
-        error: function (error) {
-          console.error('Error:', error);
-        }
-      });
-
-      
-
-      
-  
-
-      $.ajax({
-        url: '/api/getmedicalqueryCount',
-        type: 'GET',
-        success: function (response) {
-          // Populate the options in the select element
-          //populateDataTable(response);
-          document.getElementById("inmedicalquerycount").textContent=response;
-        },
-        error: function (error) {
-          console.error('Error:', error);
-        }
-      });
-
-      $.ajax({
-        url: '/api/getmedicalCount',
-        type: 'GET',
-        success: function (response) {
-          // Populate the options in the select element
-          //populateDataTable(response);
-          document.getElementById("inmedicalcount").textContent=response;
-        },
-        error: function (error) {
-          console.error('Error:', error);
-        }
-      });
-
-      $.ajax({
-        url: '/api/getnewcaseCount',
-        type: 'GET',
-        success: function (response) {
-          // Populate the options in the select element
-          //populateDataTable(response);
-          document.getElementById("newcasecount").textContent=response;
-        },
-        error: function (error) {
-          console.error('Error:', error);
-        }
-      });
-
-
-      $.ajax({
-        url: '/api/getpendingauthcaseCount',
-        type: 'GET',
-        success: function (response) {
-          // Populate the options in the select element
-          //populateDataTable(response);
-          document.getElementById("pendingauthcountcount").textContent=response;
-        },
-        error: function (error) {
-          console.error('Error:', error);
-        }
-      });
-
-
-    $(".dashboard-nav-dropdown-toggle").click(function () {
-        $(this).closest(".dashboard-nav-dropdown")
-            .toggleClass("show")
-            .find(".dashboard-nav-dropdown")
-            .removeClass("show");
-        $(this).parent()
-            .siblings()
-            .removeClass("show");
-    });
-    $(".menu-toggle").click(function () {
-        if (mobileScreen.matches) {
-            $(".dashboard-nav").toggleClass("mobile-show");
-        } else {
-            $(".dashboard").toggleClass("dashboard-compact");
-        }
-    });
-
-  });
-});
-
-function downloadexcelfilebynidaandate()
-{
-  var nidaanstartdate = $('#nidaanstartDate').val();
-  var nidaanenddate = $('#nidaanendDate').val();
-  const url = '/api/downloadExcelbynidaandate'; // Replace with your actual API endpoint
-  const data = {
-    nidaanstartdate: nidaanstartdate,
-    nidaanenddate:nidaanenddate,
-  };
-
-fetch(url, {
-    method: 'POST', // Set the method to POST
-    headers: {
-        'Content-Type': 'application/json' // Specify that you're sending JSON
-    },
-    body: JSON.stringify(data) // Convert the JavaScript object to a JSON string
-})
-.then(response => response.blob())
-.then(blob => {
-    const downloadUrl = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = downloadUrl;
-    a.download = 'Case_Data.xlsx'; // Specify the file name to download
-    document.body.appendChild(a);
-    a.click();
-    a.remove(); // Clean up after download
-}).catch(e => console.error('Error downloading the file: ', e));
-}
-
-
-
-function downloadexcelfilebylivedate()
-{
-  var livestartdate = $('#livestartDate').val();
-  var liveenddate = $('#liveendDate').val();
-  const url = '/api/downloadExcelbylivedate'; // Replace with your actual API endpoint
-  const data = {
-    livestartdate: livestartdate,
-    liveenddate:liveenddate,
-  };
-
-fetch(url, {
-    method: 'POST', // Set the method to POST
-    headers: {
-        'Content-Type': 'application/json' // Specify that you're sending JSON
-    },
-    body: JSON.stringify(data) // Convert the JavaScript object to a JSON string
-})
-.then(response => response.blob())
-.then(blob => {
-    const downloadUrl = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = downloadUrl;
-    a.download = 'Case_Data.xlsx'; // Specify the file name to download
-    document.body.appendChild(a);
-    a.click();
-    a.remove(); // Clean up after download
-}).catch(e => console.error('Error downloading the file: ', e));
-}
-
-
-
-function saveSecurityCode()
-{
-
-        var securityCode = $('#securitycode').val();
-
-        // Make an API call with the username and password
-        $.ajax({
-          url: '/api/setsecuritycode',
-          type: 'POST',
-          contentType: "application/x-www-form-urlencoded",
-          data: {
-            securityCode: securityCode,
+        const roleMap = { admin:'#showonlogin', operation:'#showtooperation', manager:'#showtomanager', cp:'#showtocp', medicalofficer:'#showtomedicalofficer', advocate:'#showtoadvocate', marketing:'#showtomarketing', marketingmanager:'#showtomarketingmanager', coordinator:'#showtocoordinator' };
+        $.ajax({ url: '/api/whoami', type: 'POST',
+          success: function(r) {
+            const sel = roleMap[r.message];
+            if (sel) { $('#login-menu').html('<i class="fas fa-sign-out"></i> Logout'); document.getElementById('login-menu').href='/logout.html'; $(sel).show(); $('#hideonlogin').hide(); localStorage['userName']=r.username; localStorage['userType']=r.message; }
+            else { window.location.href='/login.html'; }
           },
-          success: function (response) {
-              alert(response.message)
-          },
-          error: function (error) {
-            alert("Failed to set security code");
-            // Display an error message to the user
-          }
+          error: function() { window.location.href='/login.html'; }
         });
+        $(".dashboard-nav-dropdown-toggle").click(function() { $(this).closest(".dashboard-nav-dropdown").toggleClass("show").find(".dashboard-nav-dropdown").removeClass("show"); $(this).parent().siblings().removeClass("show"); });
+        $(".menu-toggle").click(function() { if(mobileScreen.matches) $(".dashboard-nav").toggleClass("mobile-show"); else $(".dashboard").toggleClass("dashboard-compact"); });
+      });
 
+      $.ajax({ url:'/api/getmedicalteamlist', type:'GET', success: function(r) { var s=$('#medicalofficerdropdown'); r.forEach(function(o){ s.append($('<option>',{value:o.userID,text:o.userName})); }); } });
 
-}
+      const kpis = [
+        {id:'newcasecount',url:'/api/getnewcaseCount',k:'new'},
+        {id:'inmedicalcount',url:'/api/getmedicalCount',k:'medical'},
+        {id:'inmedicalquerycount',url:'/api/getmedicalqueryCount',k:'query'},
+        {id:'approvedcount',url:'/api/getapprovedcaseCount',k:'approved'},
+        {id:'rejectedcount',url:'/api/getrejectedcaseCount',k:'rejected'},
+        {id:'livecasecount',url:'/api/getlivecaseCount',k:'live'},
+        {id:'pendingauthcountcount',url:'/api/getpendingauthcaseCount',k:'esc'},
+        {id:'completedcasecount',url:'/api/getcompletedcaseCount',k:'done'},
+      ];
+      var done=0;
+      kpis.forEach(function(k) {
+        $.ajax({ url:k.url, type:'GET',
+          success:function(r){ var n=parseInt(r)||0; _cd[k.k]=n; animNum(k.id,n); if(++done===kpis.length) renderCharts(); },
+          error:function(){ _cd[k.k]=0; document.getElementById(k.id).textContent='0'; if(++done===kpis.length) renderCharts(); }
+        });
+      });
+    });
 
-function downloadexcelmedicalofficer(caseStatus)
-{
-  const url = '/api/downloadExcelbymedicalofficer'; // Replace with your actual API endpoint
-  const data = {
-  medicalOpinionOfficer: $("#medicalofficerdropdown option:selected").text(),
-  };
+    function animNum(id,t) { var el=document.getElementById(id); if(!el)return; var v=0,s=Math.ceil(t/40)||1; var i=setInterval(function(){ v=Math.min(v+s,t); el.textContent=v; if(v>=t)clearInterval(i); },25); }
 
-fetch(url, {
-    method: 'POST', // Set the method to POST
-    headers: {
-        'Content-Type': 'application/json' // Specify that you're sending JSON
-    },
-    body: JSON.stringify(data) // Convert the JavaScript object to a JSON string
-})
-.then(response => response.blob())
-.then(blob => {
-    const downloadUrl = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = downloadUrl;
-    a.download = 'Case_Data_Medical_Officer.xlsx'; // Specify the file name to download
-    document.body.appendChild(a);
-    a.click();
-    a.remove(); // Clean up after download
-}).catch(e => console.error('Error downloading the file: ', e));
-}
+    function renderCharts() {
+      Chart.defaults.color='#adb5bd'; Chart.defaults.font.family='Inter,sans-serif';
+      var g='rgba(255,255,255,0.06)';
+      var c=_cd;
+      new Chart(document.getElementById('barChart'),{type:'bar',data:{labels:['New','Medical','Query','Approved','Rejected','Live','Escalation','Completed'],datasets:[{label:'Cases',data:[c.new,c.medical,c.query,c.approved,c.rejected,c.live,c.esc,c.done],backgroundColor:['#6366f1','#0ea5e9','#f59e0b','#a78bfa','#ef4444','#10b981','#fb923c','#14b8a6'],borderRadius:8,borderSkipped:false}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{color:g}},y:{grid:{color:g},beginAtZero:true,ticks:{precision:0}}}}});
+      new Chart(document.getElementById('donutChart'),{type:'doughnut',data:{labels:['Approved','Rejected','Live','Completed'],datasets:[{data:[c.approved,c.rejected,c.live,c.done],backgroundColor:['#a78bfa','#ef4444','#10b981','#14b8a6'],borderColor:'#343a40',borderWidth:3}]},options:{responsive:true,cutout:'62%',plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:12}}}}});
+      new Chart(document.getElementById('funnelChart'),{type:'bar',data:{labels:['New','Medical','Approved','Live','Esc','Completed'],datasets:[{label:'Cases',data:[c.new,c.medical,c.approved,c.live,c.esc,c.done],backgroundColor:'rgba(99,102,241,0.75)',borderRadius:6,borderSkipped:false}]},options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{color:g},beginAtZero:true,ticks:{precision:0}},y:{grid:{color:'transparent'}}}}});
+      new Chart(document.getElementById('polarChart'),{type:'polarArea',data:{labels:['New','Medical','Live','Escalation'],datasets:[{data:[c.new,c.medical,c.live,c.esc],backgroundColor:['rgba(99,102,241,0.7)','rgba(14,165,233,0.7)','rgba(16,185,129,0.7)','rgba(251,146,60,0.7)']}]},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:10}}},scales:{r:{grid:{color:g},ticks:{display:false}}}}});
+    }
 
-function downloadexcelfilebystatus(caseStatus)
-{
-  var caseStatus = $('#casefinalstatus').val();
-  const url = '/api/downloadExcelbystatus'; // Replace with your actual API endpoint
-  const data = {
-  casestatus: caseStatus,
-  };
-
-fetch(url, {
-    method: 'POST', // Set the method to POST
-    headers: {
-        'Content-Type': 'application/json' // Specify that you're sending JSON
-    },
-    body: JSON.stringify(data) // Convert the JavaScript object to a JSON string
-})
-.then(response => response.blob())
-.then(blob => {
-    const downloadUrl = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = downloadUrl;
-    a.download = 'Case_Data.xlsx'; // Specify the file name to download
-    document.body.appendChild(a);
-    a.click();
-    a.remove(); // Clean up after download
-}).catch(e => console.error('Error downloading the file: ', e));
-}
-
-function downloadexcelfile()
-      {
-
-    const url = '/api/downloadExcel'; // Change this to your API's URL
-    fetch(url)
-        .then(response => response.blob())
-        .then(blob => {
-            // Create a new URL for the blob object
-            const downloadUrl = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = downloadUrl;
-            a.download = 'Case_Data.xlsx'; // Specify the file name to download
-            document.body.appendChild(a);
-            a.click();
-            a.remove(); // Clean up after download
-        })
-        .catch(e => console.error('Error downloading the file: ', e));
-    
-      }
+    function downloadexcelfilebynidaandate(){ fetch('/api/downloadExcelbynidaandate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nidaanstartdate:$('#nidaanstartDate').val(),nidaanenddate:$('#nidaanendDate').val()})}).then(r=>r.blob()).then(b=>{var a=Object.assign(document.createElement('a'),{href:URL.createObjectURL(b),download:'Case_Data.xlsx'});document.body.appendChild(a);a.click();a.remove();}).catch(console.error); }
+    function downloadexcelfilebylivedate(){ fetch('/api/downloadExcelbylivedate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({livestartdate:$('#livestartDate').val(),liveenddate:$('#liveendDate').val()})}).then(r=>r.blob()).then(b=>{var a=Object.assign(document.createElement('a'),{href:URL.createObjectURL(b),download:'Case_Data.xlsx'});document.body.appendChild(a);a.click();a.remove();}).catch(console.error); }
+    function saveSecurityCode(){ $.ajax({url:'/api/setsecuritycode',type:'POST',contentType:'application/x-www-form-urlencoded',data:{securityCode:$('#securitycode').val()},success:function(r){alert(r.message);},error:function(){alert('Failed');}}); }
+    function downloadexcelmedicalofficer(){ fetch('/api/downloadExcelbymedicalofficer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({medicalOpinionOfficer:$("#medicalofficerdropdown option:selected").text()})}).then(r=>r.blob()).then(b=>{var a=Object.assign(document.createElement('a'),{href:URL.createObjectURL(b),download:'Case_Data_Medical_Officer.xlsx'});document.body.appendChild(a);a.click();a.remove();}).catch(console.error); }
+    function downloadexcelfilebystatus(){ fetch('/api/downloadExcelbystatus',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({casestatus:$('#casefinalstatus').val()})}).then(r=>r.blob()).then(b=>{var a=Object.assign(document.createElement('a'),{href:URL.createObjectURL(b),download:'Case_Data.xlsx'});document.body.appendChild(a);a.click();a.remove();}).catch(console.error); }
+    function downloadexcelfile(){ fetch('/api/downloadExcel').then(r=>r.blob()).then(b=>{var a=Object.assign(document.createElement('a'),{href:URL.createObjectURL(b),download:'Case_Data.xlsx'});document.body.appendChild(a);a.click();a.remove();}).catch(console.error); }
   </script>
-
 </body>
-
 </html>

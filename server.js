@@ -58,21 +58,19 @@ const port = process.env.PORT || 80
 //  useUnifiedTopology: true,
 //});
 
-
-
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
 /*
-
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
 */
+
+
 
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
@@ -348,6 +346,51 @@ legalliveDate: Date,
 isLegalLive: String,
 newCaseStatus: String,
 docUrl: Array,
+
+
+legalNoticeDraft: String,
+courtPetitionDraft:String,
+
+// Legal notice gist / case progress details
+legalNoticeDate: Date,
+noticeSentTo: String,
+responseDeadlineDate: Date,
+responseReceived: String,
+responseDate: Date,
+responseSummary: String,
+courtForum: String,
+caseFilingDate: Date,
+courtRegistrationNumber: String,
+opposingCounsel: String,
+reliefSoughtAmount: Number,
+nextHearingDate: Date,
+legalGistComments: String,
+courierDetails: String,
+registrationDetails: String,
+
+// Settlement details
+settlementDate: Date,
+settlementAmount: Number,
+settlementParty: String,
+settlementTerms: String,
+
+// Court petition details
+petitionCourtForum: String,
+petitionFilingDate: Date,
+petitionCourtCaseNumber: String,
+petitionAdvocate: String,
+petitionFirstHearingDate: Date,
+courtFeesPaid: Number,
+
+caseRemarks: Array,
+pendingApproval: String,
+approvalAdvocateID: String,
+approvalAdvocateName: String,
+referralRemark: String,
+referralDate: Date,
+approvalRemark: String,
+approvalDate: Date,
+legalNoticeBucketDate: Date,
 
 });
 
@@ -2474,6 +2517,29 @@ async function addDocURLInDBbyrefLegal(referencenumber , url)
 }
 
 
+app.post('/api/savenoticeandpetitionforlegalcase', async(req, res) => {
+  try{
+      const newData = await dataLegalSchemaObject.findOneAndUpdate({legalcasereferenceNumber: req.body.legalcasereferenceNumber}, {$set:{  legalNoticeDraft: req.body.legalNoticeDraft, courtPetitionDraft:  req.body.courtPetitionDraft, newCaseStatus: "Draft Generated", }});
+
+      if(newData == null)
+      {
+        res.json({ message: 'Could not save Draft data', refnum:req.body.legalcasereferenceNumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding Draft data' });
+  } 
+
+});
+
+
 async function addDocURLInDBbycasenum(casenumber , url)
 {
   try{
@@ -2565,7 +2631,7 @@ app.post('/api/addpfremark_legal', upload.array('pdfFile', 10), async(req, res) 
 
 app.post('/api/addlivegistdata', async(req, res) => {
   try{
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ dateOfPolicy:req.body.dateOfPolicy, dateOfAdmission:req.body.dateOfAdmission, dateOfDischarge:req.body.dateOfDischarge, diagnosis: req.body.diagnosis, patientComplainDuringAdmission: req.body.patientComplainDuringAdmission,  rejectionReason: req.body.rejectionReason,  initialRejectionDate: req.body.initialRejectionDate, gistComments: req.body.gistComments, hospitalName: req.body.hospitalName, claimType:  req.body.claimType, policyNumber:  req.body.policyNumber, caseDraft: req.body.caseDraft, lokpalDraft:  req.body.lokpalDraft, behalfOf : req.body.behalfOf,  newCaseStatus: "Gist Generated",  patientName : req.body.patientName , complainantName: req.body.complainantName, claimAmount: req.body.claimAmount, cfAmount: req.body.cfAmount, cfPercentage: req.body.cfPercentage, claimNumber:req.body.claimNumber, policyNumber: req.body.policyNumber, caseEmail : req.body.caseEmail, caseEmailPassword: req.body.caseEmailPassword, insuranceCompanyName: req.body.insuranceCompanyName}});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ dateOfPolicy:req.body.dateOfPolicy, dateOfAdmission:req.body.dateOfAdmission, dateOfDischarge:req.body.dateOfDischarge, diagnosis: req.body.diagnosis, patientComplainDuringAdmission: req.body.patientComplainDuringAdmission,  rejectionReason: req.body.rejectionReason,  initialRejectionDate: req.body.initialRejectionDate, gistComments: req.body.gistComments, hospitalName: req.body.hospitalName, claimType:  req.body.claimType, policyNumber:  req.body.policyNumber, caseDraft: req.body.caseDraft, lokpalDraft:  req.body.lokpalDraft, behalfOf : req.body.behalfOf,  patientName : req.body.patientName , complainantName: req.body.complainantName, claimAmount: req.body.claimAmount, cfAmount: req.body.cfAmount, cfPercentage: req.body.cfPercentage, claimNumber:req.body.claimNumber, policyNumber: req.body.policyNumber, caseEmail : req.body.caseEmail, caseEmailPassword: req.body.caseEmailPassword, insuranceCompanyName: req.body.insuranceCompanyName}});
 
       if(newData == null)
       {
@@ -2586,9 +2652,93 @@ app.post('/api/addlivegistdata', async(req, res) => {
 });
 
 
+app.post('/api/addlegalgistdata', async(req, res) => {
+  try{
+    const newData = await dataLegalSchemaObject.findOneAndUpdate(
+      {legalcasereferenceNumber: req.body.legalcasereferenceNumber},
+      {$set:{
+        legalNoticeDate: req.body.legalNoticeDate || null,
+        noticeSentTo: req.body.noticeSentTo,
+        responseDeadlineDate: req.body.responseDeadlineDate || null,
+        responseReceived: req.body.responseReceived,
+        responseDate: req.body.responseDate || null,
+        responseSummary: req.body.responseSummary,
+        reliefSoughtAmount: req.body.reliefSoughtAmount,
+        legalGistComments: req.body.legalGistComments,
+        courierDetails: req.body.courierDetails,
+        registrationDetails: req.body.registrationDetails,
+      }}
+    );
+    if(newData == null) {
+      res.json({ message: 'Could not save legal gist data', refnum: req.body.legalcasereferenceNumber });
+    } else {
+      res.json({ message: 'success' });
+    }
+  } catch(err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error saving legal gist data' });
+  }
+});
+
+app.post('/api/settlelegalnoticelegal', async(req, res) => {
+  try{
+    const newData = await dataLegalSchemaObject.findOneAndUpdate(
+      {legalcasereferenceNumber: req.body.legalcasereferenceNumber},
+      {
+        $set:{
+          settlementDate: req.body.settlementDate || null,
+          settlementAmount: req.body.settlementAmount,
+          settlementParty: req.body.settlementParty,
+          settlementTerms: req.body.settlementTerms,
+          newCaseStatus: 'Settlement Completed',
+        },
+        $push:{ caseRemarks: req.body.caseRemarks }
+      }
+    );
+    if(newData == null) {
+      res.json({ message: 'Could not save settlement data', refnum: req.body.legalcasereferenceNumber });
+    } else {
+      res.json({ message: 'success' });
+    }
+  } catch(err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error saving settlement data' });
+  }
+});
+
+app.post('/api/movelegalcasetocourtpetition', async(req, res) => {
+  try{
+    const newData = await dataLegalSchemaObject.findOneAndUpdate(
+      {legalcasereferenceNumber: req.body.legalcasereferenceNumber},
+      {
+        $set:{
+          petitionCourtForum: req.body.petitionCourtForum,
+          petitionFilingDate: req.body.petitionFilingDate || null,
+          petitionCourtCaseNumber: req.body.petitionCourtCaseNumber,
+          petitionAdvocate: req.body.petitionAdvocate,
+          petitionFirstHearingDate: req.body.petitionFirstHearingDate || null,
+          courtFeesPaid: req.body.courtFeesPaid,
+          opposingCounsel: req.body.opposingCounsel,
+          courtRegistrationNumber: req.body.courtRegistrationNumber,
+          newCaseStatus: 'Court Petition',
+        },
+        $push:{ caseRemarks: req.body.caseRemarks }
+      }
+    );
+    if(newData == null) {
+      res.json({ message: 'Could not move case to Court Petition', refnum: req.body.legalcasereferenceNumber });
+    } else {
+      res.json({ message: 'success' });
+    }
+  } catch(err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error moving case to Court Petition' });
+  }
+});
+
 app.post('/api/addlokpaldata', async(req, res) => {
   try{
-    
+
       const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{ caseRemarks:req.body.caseRemarks}, $set:{ LokpalBHPComplaintNumber:req.body.LokpalBHPComplaintNumber, lokpalBHPComplaintDate:req.body.lokpalBHPComplaintDate, annexure5ComplaintDate:req.body.annexure5ComplaintDate, annexure5ComplaintNumber: req.body.annexure5ComplaintNumber, lokpalComplaintNumber: req.body.lokpalComplaintNumber,  lokpalComplaintDate: req.body.lokpalComplaintDate,  dateOfLokpalHearing: req.body.dateOfLokpalHearing, newCaseStatus: req.body.newCaseStatus, annexure5ComplaintReceivedDate: req.body.annexure5ComplaintReceivedDate, lokpalComplaintReceivedDate:req.body.lokpalComplaintReceivedDate }});
 
       if(newData == null)
@@ -4383,16 +4533,17 @@ app.get("/api/getlivecasedetail", async(req, res) => {
 
 });
 
-// add logic later to differentiate live from completed
+// Returns legal notice bucket cases (approved, awaiting settlement or court petition)
 app.get("/api/getlegalcasedetail", async(req, res) => {
   try {
-    // Retrieve all tpa list from database
-   
-    const users = await  dataSchemaObject.find({isLegal : {"$exists" : true, "$eq" : "true"}}, {casereferenceNumber:1, prospectDate:1, patientName:1, patientMobile:1, complainantName:1, managerName:1, cpName:1, insuranceCompanyName:1, claimNumber:1,  claimAmount:1, operationOfficer:1, medicalOpinionOfficer:1, newCaseStatus:1, legalliveDate:1 , docUrl:1});
+    const users = await dataLegalSchemaObject.find(
+      { newCaseStatus: 'Legal Notice' },
+      { legalcasereferenceNumber:1, legalliveDate:1, legalNoticeBucketDate:1, complainantName:1, complainantPhone:1, respondantName:1, managerName:1, cpName:1, insuranceCompanyName:1, disputedAmount:1, newCaseStatus:1 }
+    );
     res.json(users);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Failed to get consumer case details' });
+    res.status(500).json({ error: 'Failed to get legal notice case details' });
   }
 
 });
@@ -4409,6 +4560,17 @@ app.get("/api/getlegallivecasedetail", async(req, res) => {
     res.status(500).json({ error: 'Failed to get consumer case details' });
   }
 
+});
+
+app.get("/api/getlegalcasedraftbyref", async(req, res) => {
+  try {
+
+    const users = await  dataLegalSchemaObject.find({legalcasereferenceNumber: req.query.legalcasereferenceNumber},{legalNoticeDraft:1, courtPetitionDraft:1});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get case details by ref' });
+  }
 });
 
 // 
@@ -4838,7 +5000,13 @@ app.post('/api/whoami', async(req,res) => {
     res.json({message : 'operation', username : req.session.userName, userid:req.session.userId})
   }
   else if(req.session.userId && (req.session.userType == 'advocate')){
-    res.json({message : 'advocate', username : req.session.userName, userid:req.session.userId})
+    try {
+      const advocateDetail = await advocateSchemaObject.findOne({advocateID: req.session.userId});
+      const advocateType = advocateDetail ? advocateDetail.advocateType : 'junior';
+      res.json({message : 'advocate', username : req.session.userName, userid:req.session.userId, advocateType: advocateType})
+    } catch(err) {
+      res.json({message : 'advocate', username : req.session.userName, userid:req.session.userId, advocateType: 'junior'})
+    }
   }
   else
      res.json({message : 'invalid'})
@@ -5011,6 +5179,209 @@ app.get('/addprospect.html', (req, res) => res.sendFile(__dirname+'/addprospect.
 app.get('/addlegalcase.html', (req, res) => res.sendFile(__dirname+'/addlegalcase.html'))
 
 app.get('/menubar.html', (req, res) => res.sendFile(__dirname+'/menubar.html'))
+
+// ============================================================
+// NEW LEGAL CASE WORKFLOW APIS
+// ============================================================
+
+// Add remark to legal case
+app.post('/api/addlegalcaseremark', async(req, res) => {
+  try{
+      const newData = await dataLegalSchemaObject.findOneAndUpdate(
+        {legalcasereferenceNumber: req.body.legalcasereferenceNumber},
+        {$push:{ caseRemarks: req.body.caseRemarks }}
+      );
+      if(newData == null) {
+        res.json({ message: 'Could not save remark', refnum: req.body.legalcasereferenceNumber });
+      } else {
+        newData.save();
+        res.json({ message: 'success' });
+      }
+  } catch(err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding legal remark' });
+  }
+});
+
+// Get remarks for legal case
+app.get('/api/getlegalcaseremarkbyref', async(req, res) => {
+  try {
+    const users = await dataLegalSchemaObject.find(
+      {legalcasereferenceNumber: req.query.legalcasereferenceNumber},
+      {caseRemarks:1}
+    );
+    res.json(users);
+  } catch(error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get legal case remarks' });
+  }
+});
+
+// Upload additional docs for legal case
+app.post('/api/uploadadditionaldocslegal', upload.array('pdfFile', 10), async (req, res) => {
+  try{
+    const refNumber = req.body.legalcasereferenceNumber;
+    const uploadPromises = req.files.map(file => {
+      const randomString = require('crypto').randomBytes(16).toString('hex');
+      const fileNameExceptExtension = file.originalname.split('.')[0];
+      const extension = path.extname(file.originalname);
+      const destination = `legaluploads/${refNumber}-${fileNameExceptExtension}-${randomString}${extension}`;
+      return uploadFileToGCSLegal(file.path, destination, refNumber);
+    });
+    await Promise.all(uploadPromises);
+    res.json({ message: 'success', referencenumber: refNumber });
+  } catch(err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error saving legal docs' });
+  }
+});
+
+// Get senior advocate list
+app.get('/api/getsenioradvocatelist', async(req, res) => {
+  try {
+    const advocates = await advocateSchemaObject.find({advocateType: 'senior'});
+    res.json(advocates);
+  } catch(error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get senior advocate list' });
+  }
+});
+
+// Get advocate detail by ID (to check type)
+app.get('/api/getadvocatedetailbyid', async(req, res) => {
+  try {
+    const advocate = await advocateSchemaObject.find({advocateID: req.query.advocateID});
+    res.json(advocate);
+  } catch(error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get advocate detail' });
+  }
+});
+
+// Junior advocate refers case to senior advocate for approval
+app.post('/api/refertosenioradvocate', async(req, res) => {
+  try{
+    const today = new Date();
+    const newData = await dataLegalSchemaObject.findOneAndUpdate(
+      {legalcasereferenceNumber: req.body.legalcasereferenceNumber},
+      {$set:{
+        pendingApproval: 'true',
+        approvalAdvocateID: req.body.approvalAdvocateID,
+        approvalAdvocateName: req.body.approvalAdvocateName,
+        referralRemark: req.body.referralRemark,
+        referralDate: today,
+        newCaseStatus: 'Pending Approval'
+      },
+      $push:{ caseRemarks: today.toLocaleDateString('en-GB') + ' - [Referred to Senior: ' + req.body.approvalAdvocateName + '] - ' + req.body.referralRemark }
+      }
+    );
+    if(newData == null) {
+      res.json({ message: 'Could not refer case' });
+    } else {
+      newData.save();
+      res.json({ message: 'success' });
+    }
+  } catch(err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error referring case to senior advocate' });
+  }
+});
+
+// Get cases pending senior advocate approval (for specific senior advocate)
+app.get('/api/getpendingsenioradvocateapprovals', async(req, res) => {
+  try {
+    const users = await dataLegalSchemaObject.find({
+      pendingApproval: 'true',
+      approvalAdvocateID: req.query.advocateID
+    });
+    res.json(users);
+  } catch(error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get pending approvals' });
+  }
+});
+
+// Senior advocate approves case -> moves to Legal Notice
+app.post('/api/approvelegalcasetolegalnotice', async(req, res) => {
+  try{
+    const today = new Date();
+    const newData = await dataLegalSchemaObject.findOneAndUpdate(
+      {legalcasereferenceNumber: req.body.legalcasereferenceNumber},
+      {$set:{
+        pendingApproval: 'false',
+        newCaseStatus: 'Legal Notice',
+        approvalRemark: req.body.approvalRemark,
+        approvalDate: today,
+        legalNoticeBucketDate: today
+      },
+      $push:{ caseRemarks: today.toLocaleDateString('en-GB') + ' - [Approved by Senior: ' + req.body.approvalAdvocateName + '] - ' + req.body.approvalRemark }
+      }
+    );
+    if(newData == null) {
+      res.json({ message: 'Could not approve case' });
+    } else {
+      newData.save();
+      res.json({ message: 'success' });
+    }
+  } catch(err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error approving legal case' });
+  }
+});
+
+// Senior advocate rejects referral -> case returns to Draft Generated
+app.post('/api/rejectlegalcasereferral', async(req, res) => {
+  try{
+    const today = new Date();
+    const newData = await dataLegalSchemaObject.findOneAndUpdate(
+      {legalcasereferenceNumber: req.body.legalcasereferenceNumber},
+      {$set:{
+        pendingApproval: 'false',
+        newCaseStatus: 'Draft Generated',
+        approvalRemark: req.body.approvalRemark,
+        approvalDate: today
+      },
+      $push:{ caseRemarks: today.toLocaleDateString('en-GB') + ' - [Rejected by Senior: ' + req.body.approvalAdvocateName + '] - ' + req.body.approvalRemark }
+      }
+    );
+    if(newData == null) {
+      res.json({ message: 'Could not reject referral' });
+    } else {
+      newData.save();
+      res.json({ message: 'success' });
+    }
+  } catch(err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error rejecting legal case referral' });
+  }
+});
+
+app.post('/api/movelegalcasetolegalnotice', async(req, res) => {
+  try{
+    const today = new Date();
+    const newData = await dataLegalSchemaObject.findOneAndUpdate(
+      {legalcasereferenceNumber: req.body.legalcasereferenceNumber},
+      {
+        $set:{
+          newCaseStatus: 'Legal Notice',
+          legalNoticeBucketDate: today,
+        },
+        $push:{ caseRemarks: req.body.caseRemarks }
+      }
+    );
+    if(newData == null) {
+      res.json({ message: 'Could not move case to Legal Notice', refnum: req.body.legalcasereferenceNumber });
+    } else {
+      res.json({ message: 'success' });
+    }
+  } catch(err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error moving case to Legal Notice' });
+  }
+});
+
+// Serve senior advocate referrals page
+app.get('/viewsenioradvocatereferrals.html', (req, res) => res.sendFile(__dirname+'/viewsenioradvocatereferrals.html'))
 
 app.listen(port, () => console.log(`Insurance app listening on port ${port}!`))
 

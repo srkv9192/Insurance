@@ -4,10 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
   
   <link rel="stylesheet" href="css/menubar.css">
+<link rel="stylesheet" href="css/nidaan.css">
   <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.4/dist/quill.snow.css" rel="stylesheet" />
   <style>
 
@@ -222,10 +222,10 @@ div.dataTables_filter {
 
 
   </style>
-  <title>Live Cases</title>
-</head>
+  <title>Live Cases</title></head>
 
 <body>
+
 
   <div class='dashboard'>
 
@@ -240,13 +240,12 @@ div.dataTables_filter {
               <ul>
                 <li class="btn_special"><a href="#" class="all">All</a></li>
                 <li class="btn_special"><a href="#" >Live</a></li>
-                <li class="btn_special"><a href="#">Draft Query</a></li>
-                <li class="btn_special"><a href="#">Gist Generated</a></li>
-                <li class="btn_special"><a href="#">Pending Draft</a></li>
-                <li class="btn_special"><a href="#">Reimbursement</a></li>
                 <li class="btn_special"><a href="#">Pending Doc</a></li>
-                <li class="btn_special" style="width: 9%;"><a href="#">Reimbursement Query</a></li>
+                <li class="btn_special"><a href="#">Draft Query</a></li>
                 <li class="btn_special" style="width: 9%;"><a href="#">Reimbursement Pending</a></li>
+                <li class="btn_special"><a href="#">Reimbursement</a></li>
+                <li class="btn_special" style="width: 9%;"><a href="#">Reimbursement Query</a></li>
+                <li class="btn_special"><a href="#">Pending Draft</a></li>
                 <!--
                     <li class="btn_special"><a href="#">Approved</a></li>
                     <li class="btn_special"><a href="#">Rejected</a></li>
@@ -274,7 +273,6 @@ div.dataTables_filter {
                         <th>Operation Officer</th>
                         <th>Medical Officer</th>
                         <th>Case Status</th>
-                        <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
@@ -764,21 +762,6 @@ div.dataTables_filter {
                 </div>
 
 
-                <div id="popup7" class="overlay">
-                  <div class="popup" style="width:25%">
-                    <h2  id = "remarkcontent">Assign Case</h2>
-
-                      <select name="operationofficer" id="operationofficer"  style="margin-top: 5px;margin-bottom: 5px;">
-                      <option value="NONE">NONE</option>
-                      </select>
-
-                      <br>        
-                      <br>              
-                      <button type="submit" onclick="addOfficerToCase()" class="btn btn-primary btn-sm">Save Officer</button>
-                    
-                    <a class="close" href="#close">&times;</a>
-                  </div>
-                </div>
 
                 <div id="popup8" class="overlay">
                   <div class="popup" style="width:30%">
@@ -2382,21 +2365,20 @@ function movetolive(referencenumber) {
               data[i].claimAmount,
               data[i].operationOfficer,
               data[i].medicalOpinionOfficer,
-              data[i].newCaseStatus,             
-              `<a href="#popup7"> <button class="btn btn-primary btn-sm" onclick="addremark('${rfno}')">Assign Case</button> </a>`,
+              data[i].newCaseStatus,
               `<a href="#popup2"> <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Add Gist Data</button> </a>`,
+              `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
+              `<a href="#popup12"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to PendingDocs</button> </a>`,
+              `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
               `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
               `<a href="#popup8"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Pending draft</button> </a>`,
-              `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
-              `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
-              `<a href="#popup10"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Hold</button> </a>`,
-              `<a href="#popup11"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Reimbursement</button> </a>`,
               `<a href="#popup14"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Reimbursement Pending</button> </a>`,
-              `<a href="#popup12"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to PendingDocs</button> </a>`,
+              `<a href="#popup11"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Reimbursement</button> </a>`,
               `<a href="#popup13"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Reimbursement Query</button> </a>`,
+              `<a href="#popup10"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Hold</button> </a>`,
               `${movetocompletedbutton}`,
             ];
-            
+
             table.row.add(rowData);
            }
            else{
@@ -2421,18 +2403,17 @@ function movetolive(referencenumber) {
               data[i].claimAmount,
               data[i].operationOfficer,
               data[i].medicalOpinionOfficer,
-              data[i].newCaseStatus,             
-              ` <button class="btn btn-primary btn-sm" disabled onclick="addremark('${rfno}')">Assign Case</button>`,
+              data[i].newCaseStatus,
               `<a href="#popup2"> <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Add Gist Data</button> </a>`,
+              `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
+              `<a href="#popup12"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to PendingDocs</button> </a>`,
+              `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
               `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
               `<a href="#popup8"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Pending draft</button> </a>`,
-              `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
-              `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
-              `<a href="#popup10"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Hold</button> </a>`,
+              `<a href="#popup14"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Reimbursement Pending</button> </a>`,
               `<a href="#popup11"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Reimbursement</button> </a>`,
-             `<a href="#popup14"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Reimbursement Pending</button> </a>`,
-              `<a href="#popup12"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to PendingDocs</button> </a>`,
               `<a href="#popup13"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Reimbursement Query</button> </a>`,
+              `<a href="#popup10"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Hold</button> </a>`,
               `${movetocompletedbutton}`,
             ];
 
@@ -2451,7 +2432,7 @@ function movetolive(referencenumber) {
               data[i].claimAmount,
               data[i].operationOfficer,
               data[i].medicalOpinionOfficer,
-              data[i].newCaseStatus,             
+              data[i].newCaseStatus,
              "Not Available",
               "Not Available",
               "Not Available",
@@ -2461,6 +2442,8 @@ function movetolive(referencenumber) {
               "Not Available",
               "Not Available",
               "Not Available",
+              "Not Available",
+              `${movetocompletedbutton}`,
             ];
 
             if(localStorage['userType'] =="marketingmanager")
@@ -2499,7 +2482,6 @@ function movetolive(referencenumber) {
         {
           case "Live":
           case "Draft Query":
-          case "Gist Generated":
           case "Pending Draft":
           case "Reimbursement":
           case "Pending Doc":
@@ -2526,7 +2508,7 @@ function movetolive(referencenumber) {
     // filter buttons end
 
 
-  </script>
+  </script>  <script src="js/nidaan-table.js"></script>
 </body>
 
 </html>
