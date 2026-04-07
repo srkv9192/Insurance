@@ -575,6 +575,15 @@ $.ajax({
               localStorage['userName'] = response.username;
               localStorage['userType'] = response.message;
             }
+            else if(response.message =='tracking')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html";
+              $("#showtotracking").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+            }
             else
             {
               window.location.href = "/login.html"

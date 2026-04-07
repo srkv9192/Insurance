@@ -312,6 +312,15 @@
               localStorage['userName'] = response.username;
               localStorage['userType'] = response.message;
             }
+            else if(response.message =='tracking')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html";
+              $("#showtotracking").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+            }
             else
             {
               window.location.href = "/login.html"
@@ -443,9 +452,9 @@
               alert("CP ID already present, use a different one.")
               window.location.href = "/createcp.html"
             }
-            else if(response.message == "duplicatename")
+            else if(response.message == "duplicatecombo")
             {
-              alert("CP Name already present, use a different one.")
+              alert("A CP with the same Name, Father's Name and Mobile number already exists.")
               window.location.href = "/createcp.html"
             }
               else{

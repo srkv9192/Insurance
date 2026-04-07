@@ -3427,9 +3427,9 @@ app.get("/api/getadvocatedetail", async(req, res) => {
 app.post('/api/addcpdetail', async(req, res) => {
   try{
 
-    const docs1 = await cpSchemaObject.findOne({cpName: req.body.cpName});
-    if (docs1) {
-      res.json({message : 'duplicatename'});
+    const docsCombo = await cpSchemaObject.findOne({cpName: req.body.cpName, cpFatherName: req.body.cpFatherName, phone: req.body.phone});
+    if (docsCombo) {
+      res.json({message : 'duplicatecombo'});
       return;
     }
         const docs = await cpSchemaObject.findOne({cpID: req.body.cpID});
@@ -4133,6 +4133,21 @@ app.get("/api/deletedocsbyref", async(req, res) => {
 });
 //
 
+app.post("/api/deletesingledoc", async(req, res) => {
+  try {
+    const refNumber = req.body.casereferenceNumber;
+    const docUrlToDelete = req.body.docUrl;
+    const result = await dataSchemaObject.updateOne(
+      { casereferenceNumber: refNumber },
+      { $pull: { docUrl: docUrlToDelete } }
+    );
+    res.json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to delete single document' });
+  }
+});
+
 app.get("/api/getlivecaseRemarkbyref", async(req, res) => {
   try {
     // Retrieve all tpa list from database
@@ -4677,12 +4692,77 @@ app.get("/api/getpendingauthcaseCount", async(req, res) => {
 
 app.get("/api/getlivecaseCount", async(req, res) => {
   try {
-    // Retrieve all tpa list from database
-    const users = await  dataSchemaObject.find({caseNumber : {"$exists" : true, "$ne" : ""}}).count();
-    res.json(users);
+    const count = await dataSchemaObject.find({newCaseStatus: {$in: ["Live", "Draft Query", "Pending Draft", "Pending Doc", "Reimbursement", "Reimbursement Query", "Reimbursement Pending"]}}).count();
+    res.json(count);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Failed to get tpa details' });
+    res.status(500).json({ error: 'Failed to get live case count' });
+  }
+});
+
+app.get("/api/getcompletedcaseCount", async(req, res) => {
+  try {
+    const count = await dataSchemaObject.find({newCaseStatus: "Reimbursement Settlement"}).count();
+    res.json(count);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get completed case count' });
+  }
+});
+
+app.get("/api/getcasehandlerdata", async(req, res) => {
+  try {
+    const data = await dataSchemaObject.aggregate([
+      { $match: { operationOfficer: { $exists: true, $nin: ["NONE", "", null] } } },
+      { $group: { _id: "$operationOfficer", count: { $sum: 1 } } },
+      { $sort: { count: -1 } }
+    ]);
+    res.json(data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get case handler data' });
+  }
+});
+
+app.get("/api/getcasebycpdata", async(req, res) => {
+  try {
+    const data = await dataSchemaObject.aggregate([
+      { $match: { cpName: { $exists: true, $nin: ["", null, "NONE", "None"] } } },
+      { $group: { _id: "$cpName", count: { $sum: 1 } } },
+      { $sort: { count: -1 } }
+    ]);
+    res.json(data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get case by CP data' });
+  }
+});
+
+app.get("/api/getcasebyinsurancecompany", async(req, res) => {
+  try {
+    const data = await dataSchemaObject.aggregate([
+      { $match: { insuranceCompanyName: { $exists: true, $nin: ["", null] } } },
+      { $group: { _id: "$insuranceCompanyName", count: { $sum: 1 } } },
+      { $sort: { count: -1 } }
+    ]);
+    res.json(data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get case by insurance company data' });
+  }
+});
+
+app.get("/api/getcasebyzone", async(req, res) => {
+  try {
+    const data = await dataSchemaObject.aggregate([
+      { $match: { prospectZone: { $exists: true, $nin: ["", null] } } },
+      { $group: { _id: "$prospectZone", count: { $sum: 1 } } },
+      { $sort: { count: -1 } }
+    ]);
+    res.json(data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get case by zone data' });
   }
 });
 
@@ -4998,6 +5078,9 @@ app.post('/api/whoami', async(req,res) => {
   }
   else if(req.session.userId && (req.session.userType == 'operation')){
     res.json({message : 'operation', username : req.session.userName, userid:req.session.userId})
+  }
+  else if(req.session.userId && (req.session.userType == 'tracking')){
+    res.json({message : 'tracking', username : req.session.userName, userid:req.session.userId})
   }
   else if(req.session.userId && (req.session.userType == 'advocate')){
     try {

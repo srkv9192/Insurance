@@ -1202,8 +1202,13 @@ success: function (response) {
         let li = document.createElement('li');
         let filename = response[0].docUrl[i].substring(response[0].docUrl[i].lastIndexOf('/')+1);
         let smallfilename= filename.substring(0, filename.lastIndexOf('-'));
-        //li.innerHTML = `<a target='inlineFrameExample' href="${response[0].docUrl[i]}" >${filename}</a>`;
-        li.innerHTML = `<a target='inlineFrameExample' href="${response[0].docUrl[i]}" >${smallfilename}</a>`;
+        let docUrl = response[0].docUrl[i];
+        li.style.display = "flex";
+        li.style.alignItems = "center";
+        li.style.marginBottom = "5px";
+        li.innerHTML = `<a target='inlineFrameExample' href="${docUrl}" >${smallfilename}</a>
+          <span onclick="deleteDocument('${referencenumber}', '${docUrl}', this)" style="color:#fff; background:#dc3545; border:none; border-radius:50%; width:22px; height:22px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; margin-left:10px; font-weight:bold; font-size:14px; line-height:1; box-shadow:0 2px 4px rgba(220,53,69,0.4); transition:transform 0.15s, box-shadow 0.15s;" onmouseover="this.style.transform='scale(1.2)';this.style.boxShadow='0 4px 8px rgba(220,53,69,0.6)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 2px 4px rgba(220,53,69,0.4)'" title="Delete document">&times;</span>`;
+
         list.appendChild(li);
        }
 
@@ -1212,9 +1217,31 @@ error: function (error) {
   console.error('Error:', error);
 }
 });
- 
+
 }
 
+function deleteDocument(refNumber, docUrl, element) {
+  var filename = docUrl.substring(docUrl.lastIndexOf('/') + 1);
+  var shortname = filename.substring(0, filename.lastIndexOf('-')) || filename;
+  if (!confirm('Are you sure you want to delete "' + shortname + '"?')) return;
+  $.ajax({
+    url: '/api/deletesingledoc',
+    type: 'POST',
+    contentType: 'application/x-www-form-urlencoded',
+    data: {
+      casereferenceNumber: refNumber,
+      docUrl: docUrl
+    },
+    success: function (response) {
+      element.parentElement.remove();
+      alert('Document deleted successfully');
+    },
+    error: function (error) {
+      console.error('Error:', error);
+      alert('Failed to delete document');
+    }
+  });
+}
 
 
 function viewremark(referencenumber) {
@@ -1455,6 +1482,15 @@ function movetolive(referencenumber) {
               localStorage['userName'] = response.username;
               localStorage['userType'] = response.message;
             }
+            else if(response.message =='tracking')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html";
+              $("#showtotracking").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+            }
             else
             {
               window.location.href = "/login.html"
@@ -1582,10 +1618,10 @@ function movetolive(referencenumber) {
               `${caseResult}`,
               `${caseSettlementamount}`,
               `<a href="#popup10"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >Add Details</button> </a>`,
+              `<a href="#popup6"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Pending Payment</button> </a>`,
               `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
               `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')">View Documents</button> </a>`,
               `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
-              `<a href="#popup6"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Move to Pending Payment</button> </a>`,
               ];
 
               if ( localStorage['userType'] == "marketinghandler")
