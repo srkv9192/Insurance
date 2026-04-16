@@ -46,6 +46,84 @@ const storage = multer.diskStorage({
 
 var nodemailer = require('nodemailer');
 
+// Base URL for generating customer-facing links (set in env for production)
+const BASE_URL = 'https://claimshield.in';
+
+// ===================== TWILIO SMS / WHATSAPP NOTIFICATION CONFIG =====================
+// Set NOTIFICATION_MODE to "sms", "whatsapp", or "both" to control notification type
+// Set ENABLE_NOTIFICATIONS to true/false to enable/disable notifications globally
+const ENABLE_NOTIFICATIONS = process.env.ENABLE_NOTIFICATIONS === 'true' || false;
+const NOTIFICATION_MODE = process.env.NOTIFICATION_MODE || 'sms'; // 'sms' | 'whatsapp' | 'both'
+
+const twilioClient = require('twilio')(
+  process.env.TWILIO_ACCOUNT_SID,
+  process.env.TWILIO_AUTH_TOKEN
+);
+const TWILIO_PHONE_NUMBER = process.env.TWILIO_PHONE_NUMBER; // e.g. +1234567890
+const TWILIO_WHATSAPP_NUMBER = process.env.TWILIO_WHATSAPP_NUMBER; // e.g. +14155238886
+
+// Customer-friendly messages for each bucket/status change
+const bucketNotificationMessages = {
+  "Completed": "Your case has been completed. Thank you for choosing Nidaan. For any queries, please contact us.",
+  "Lokpal Pending": "Your case has been escalated to Lokpal. We will keep you updated on further proceedings.",
+  "Escalation Pending": "Your case has been moved to escalation. Our team is working on it and will update you shortly.",
+  "Hold": "Your case has been put on hold. We will notify you once it is resumed.",
+  "Hold Return": "Your case has been resumed from hold. Our team is actively working on it.",
+  "Escalation Query": "There is a query on your escalation case. Our team will reach out to you if any information is needed.",
+  "Reimbursement Query": "There is a query regarding your reimbursement. Our team may reach out for additional details.",
+  "Reimbursement": "Your case has been moved to the reimbursement stage. We are processing it.",
+  "Reimbursement Pending": "Your reimbursement is pending. We will update you once it is processed.",
+  "Pending Doc": "Your case requires additional documents. Please submit the required documents at the earliest.",
+  "Pending Draft": "Your case is now in the draft preparation stage. We will update you once the draft is ready.",
+  "Reject Reconsideration": "Your case is being reconsidered. We will keep you informed of the outcome.",
+  "Disputed Payment": "A payment dispute has been raised on your case. Our team will contact you for resolution.",
+  "Draft Query": "There is a query on your case draft. Our team is reviewing it."
+};
+
+// Send SMS and/or WhatsApp notification to customer
+async function sendBucketNotification(phoneNumber, patientName, caseRefNumber, newStatus, uploadLink) {
+  if (!ENABLE_NOTIFICATIONS || !phoneNumber) return;
+
+  let messageBody;
+  if (newStatus === '__UPLOAD_LINK__' && uploadLink) {
+    messageBody = `Dear ${patientName || 'Customer'},\n\nYour case (Ref: ${caseRefNumber}) has been registered with Nidaan.\n\nPlease upload your documents using this link:\n${uploadLink}\n\n- Team Nidaan`;
+  } else {
+    const messageTemplate = bucketNotificationMessages[newStatus];
+    if (!messageTemplate) return;
+    messageBody = `Dear ${patientName || 'Customer'},\n\nUpdate on your case (Ref: ${caseRefNumber}):\n${messageTemplate}\n\n- Team Nidaan`;
+  }
+
+  // Format phone number to E.164 (assume Indian numbers if no country code)
+  let formattedPhone = String(phoneNumber).trim();
+  if (!formattedPhone.startsWith('+')) {
+    formattedPhone = '+91' + formattedPhone;
+  }
+
+  try {
+    if (NOTIFICATION_MODE === 'sms' || NOTIFICATION_MODE === 'both') {
+      await twilioClient.messages.create({
+        body: messageBody,
+        from: TWILIO_PHONE_NUMBER,
+        to: formattedPhone
+      });
+      console.log(`SMS sent to ${formattedPhone} for case ${caseRefNumber} - Status: ${newStatus}`);
+    }
+
+    if (NOTIFICATION_MODE === 'whatsapp' || NOTIFICATION_MODE === 'both') {
+      await twilioClient.messages.create({
+        body: messageBody,
+        from: 'whatsapp:' + TWILIO_WHATSAPP_NUMBER,
+        to: 'whatsapp:' + formattedPhone
+      });
+      console.log(`WhatsApp sent to ${formattedPhone} for case ${caseRefNumber} - Status: ${newStatus}`);
+    }
+  } catch (notifErr) {
+    // Log error but do NOT fail the bucket transition
+    console.error(`Notification failed for case ${caseRefNumber}:`, notifErr.message);
+  }
+}
+// ===================== END TWILIO NOTIFICATION CONFIG =====================
+
 const upload = multer({ storage: storage });
 const app = express()
 const port = process.env.PORT || 80
@@ -58,10 +136,12 @@ const port = process.env.PORT || 80
 //  useUnifiedTopology: true,
 //});
 
+
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
 
 /*
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
@@ -346,6 +426,14 @@ legalliveDate: Date,
 isLegalLive: String,
 newCaseStatus: String,
 docUrl: Array,
+caseRemarks: Array,
+referredToSenior: String,
+seniorAdvocateReferralDate: Date,
+seniorAdvocateRemarks: String,
+seniorAdvocateName: String,
+seniorAdvocateID: String,
+legalNoticeDraft: String,
+courtPetitionDraft: String,
 
 
 legalNoticeDraft: String,
@@ -521,6 +609,15 @@ const counterSchema = new mongoose.Schema({
   // Add more fields as needed
 });
 
+// Schema for customer document upload tokens (public upload links)
+const uploadTokenSchema = new mongoose.Schema({
+  token: { type: String, unique: true, required: true },
+  casereferenceNumber: { type: String, required: true },
+  patientName: String,
+  isExpired: { type: Boolean, default: false },
+  createdAt: { type: Date, default: Date.now },
+});
+
 const policyCardSchemaObject = mongoose.model('policycard', policyCardSchema);
 
 const counterSchemaObject = mongoose.model('counter', counterSchema);
@@ -553,6 +650,9 @@ const employeeSchemaObject = mongoose.model('employeedetails', employeeSchema);
 
 //table to hold channel partner details
 const cpSchemaObject = mongoose.model('cpdetails', cpSchema);
+
+//table to hold customer upload tokens
+const uploadTokenSchemaObject = mongoose.model('uploadtoken', uploadTokenSchema);
 
 
 // Parse JSON bodies for POST requests
@@ -771,14 +871,34 @@ app.post('/api/addprospect', upload.array('pdfFile', 10), async (req, res) => {
         });
 
       await Promise.all(uploadPromises);
-        res.json({ message: 'success', referencenumber:refNumber,data: savedData });
+
+        // Generate customer upload link and send via SMS/WhatsApp
+        try {
+          const token = require('crypto').randomBytes(32).toString('hex');
+          const newToken = new uploadTokenSchemaObject({
+            token: token,
+            casereferenceNumber: refNumber,
+            patientName: req.body.patientName,
+          });
+          await newToken.save();
+
+          const uploadLink = `${BASE_URL}/customerupload.html?token=${token}`;
+          const customerPhone = req.body.complainantMobile || req.body.patientMobile;
+          if (customerPhone) {
+            sendBucketNotification(customerPhone, req.body.patientName, refNumber, '__UPLOAD_LINK__', uploadLink);
+          }
+          res.json({ message: 'success', referencenumber: refNumber, data: savedData, uploadLink: uploadLink });
+        } catch (tokenErr) {
+          console.error('Error generating upload token:', tokenErr.message);
+          res.json({ message: 'success', referencenumber: refNumber, data: savedData });
+        }
       }
     catch(err)
     {
       console.error(err);
       res.status(500).json({ error: 'Error saving data' });
     }
-  
+
 });
 
 // Define the API endpoint to save data
@@ -1793,6 +1913,7 @@ app.post('/api/addtcaseremarkandmovetoprospect', async(req, res) => {
       else
       {
         const savedData = newData.save();
+        sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.referencenumber, "Reject Reconsideration");
         res.json({ message: 'success'});
       }
     }
@@ -1800,7 +1921,7 @@ app.post('/api/addtcaseremarkandmovetoprospect', async(req, res) => {
   {
     console.error(err);
     res.status(500).json({ error: 'Error adding remark' });
-  } 
+  }
 
 });
 
@@ -1816,6 +1937,7 @@ app.post('/api/addcaseremarkandmovetolivefromhold', async(req, res) => {
       else
       {
         const savedData = newData.save();
+        sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.referencenumber, "Hold Return");
         res.json({ message: 'success'});
       }
     }
@@ -1823,7 +1945,7 @@ app.post('/api/addcaseremarkandmovetolivefromhold', async(req, res) => {
   {
     console.error(err);
     res.status(500).json({ error: 'Error adding remark' });
-  } 
+  }
 
 });
 
@@ -1862,6 +1984,7 @@ app.post('/api/adddisputedpaymentremark', async(req, res) => {
       else
       {
         const savedData = newData.save();
+        sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.casereferenceNumber, "Disputed Payment");
         res.json({ message: 'success'});
       }
     }
@@ -1869,7 +1992,7 @@ app.post('/api/adddisputedpaymentremark', async(req, res) => {
   {
     console.error(err);
     res.status(500).json({ error: 'Error adding remark' });
-  } 
+  }
 
 });
 
@@ -1906,6 +2029,7 @@ app.post('/api/addlivecasequeryremark', async(req, res) => {
       else
       {
         const savedData = newData.save();
+        sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.referencenumber, "Draft Query");
         res.json({ message: 'success'});
       }
     }
@@ -1913,7 +2037,7 @@ app.post('/api/addlivecasequeryremark', async(req, res) => {
   {
     console.error(err);
     res.status(500).json({ error: 'Error adding remark' });
-  } 
+  }
 
 });
 
@@ -1928,6 +2052,7 @@ app.post('/api/movetocompleted', async(req, res) => {
       else
       {
         const savedData = newData.save();
+        sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.casereferenceNumber, "Completed");
         res.json({ message: 'success'});
       }
     }
@@ -1935,7 +2060,7 @@ app.post('/api/movetocompleted', async(req, res) => {
   {
     console.error(err);
     res.status(500).json({ error: 'Error adding completion remark' });
-  } 
+  }
 
 });
 
@@ -1951,6 +2076,7 @@ app.post('/api/movetolokpal', async(req, res) => {
       else
       {
         const savedData = newData.save();
+        sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.casereferenceNumber, "Lokpal Pending");
         res.json({ message: 'success'});
       }
     }
@@ -1958,7 +2084,7 @@ app.post('/api/movetolokpal', async(req, res) => {
   {
     console.error(err);
     res.status(500).json({ error: 'Error adding remark' });
-  } 
+  }
 
 });
 
@@ -1973,6 +2099,7 @@ app.post('/api/movetoescalation', async(req, res) => {
       else
       {
         const savedData = newData.save();
+        sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.referencenumber, "Escalation Pending");
         res.json({ message: 'success'});
       }
     }
@@ -1980,7 +2107,7 @@ app.post('/api/movetoescalation', async(req, res) => {
   {
     console.error(err);
     res.status(500).json({ error: 'Error adding remark' });
-  } 
+  }
 
 });
 
@@ -1996,6 +2123,7 @@ app.post('/api/movetohold', async(req, res) => {
       else
       {
         const savedData = newData.save();
+        sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.referencenumber, "Hold");
         res.json({ message: 'success'});
       }
     }
@@ -2003,7 +2131,7 @@ app.post('/api/movetohold', async(req, res) => {
   {
     console.error(err);
     res.status(500).json({ error: 'Error adding remark' });
-  } 
+  }
 
 });
 
@@ -2020,6 +2148,7 @@ app.post('/api/movetoescalationquery', async(req, res) => {
       else
       {
         const savedData = newData.save();
+        sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.referencenumber, "Escalation Query");
         res.json({ message: 'success'});
       }
     }
@@ -2027,7 +2156,7 @@ app.post('/api/movetoescalationquery', async(req, res) => {
   {
     console.error(err);
     res.status(500).json({ error: 'Error adding remark' });
-  } 
+  }
 
 });
 
@@ -2045,6 +2174,7 @@ app.post('/api/movetoreimbursementquery', async(req, res) => {
       else
       {
         const savedData = newData.save();
+        sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.referencenumber, "Reimbursement Query");
         res.json({ message: 'success'});
       }
     }
@@ -2052,7 +2182,7 @@ app.post('/api/movetoreimbursementquery', async(req, res) => {
   {
     console.error(err);
     res.status(500).json({ error: 'Error adding remark' });
-  } 
+  }
 
 });
 
@@ -2067,6 +2197,7 @@ app.post('/api/movetoreimbursement', async(req, res) => {
       else
       {
         const savedData = newData.save();
+        sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.referencenumber, "Reimbursement");
         res.json({ message: 'success'});
       }
     }
@@ -2074,7 +2205,7 @@ app.post('/api/movetoreimbursement', async(req, res) => {
   {
     console.error(err);
     res.status(500).json({ error: 'Error adding remark' });
-  } 
+  }
 
 });
 
@@ -2089,6 +2220,7 @@ app.post('/api/movetoreimbursementpending', async(req, res) => {
       else
       {
         const savedData = newData.save();
+        sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.referencenumber, "Reimbursement Pending");
         res.json({ message: 'success'});
       }
     }
@@ -2096,7 +2228,7 @@ app.post('/api/movetoreimbursementpending', async(req, res) => {
   {
     console.error(err);
     res.status(500).json({ error: 'Error adding remark' });
-  } 
+  }
 
 });
 
@@ -2111,6 +2243,7 @@ app.post('/api/movetopendingdoc', async(req, res) => {
       else
       {
         const savedData = newData.save();
+        sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.referencenumber, "Pending Doc");
         res.json({ message: 'success'});
       }
     }
@@ -2118,7 +2251,7 @@ app.post('/api/movetopendingdoc', async(req, res) => {
   {
     console.error(err);
     res.status(500).json({ error: 'Error adding remark' });
-  } 
+  }
 
 });
 
@@ -2931,6 +3064,7 @@ app.post('/api/addmedicalofficertocaseandmovetopendingdraft', async(req, res) =>
       else
       {
         const savedData = newData.save();
+        sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.casereferenceNumber, "Pending Draft");
         res.json({ message: 'success'});
       }
     }
@@ -2938,7 +3072,7 @@ app.post('/api/addmedicalofficertocaseandmovetopendingdraft', async(req, res) =>
   {
     console.error(err);
     res.status(500).json({ error: 'Error adding medical officer details' });
-  } 
+  }
 
 });
 
@@ -4563,6 +4697,80 @@ app.get("/api/getlegalcasedetail", async(req, res) => {
 
 });
 
+// Get legal cases that have been moved to Legal Notice bucket
+app.get("/api/getlegalnoticecasedetail", async(req, res) => {
+  try {
+    const cases = await dataLegalSchemaObject.find(
+      {newCaseStatus: "Legal Notice"},
+      {legalcasereferenceNumber:1, prospectDate:1, complainantName:1, complainantPhone:1, respondantName:1, managerName:1, cpName:1, insuranceCompanyName:1, disputedAmount:1, newCaseStatus:1, legalliveDate:1, docUrl:1, firstAdvocateName:1, seniorAdvocateName:1, seniorAdvocateRemarks:1}
+    );
+    res.json(cases);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get legal notice case details' });
+  }
+});
+
+// Add remark to a legal case
+app.post('/api/addlegalcaseremark', async(req, res) => {
+  try{
+      const newData = await dataLegalSchemaObject.findOneAndUpdate({legalcasereferenceNumber: req.body.referencenumber}, {$push:{ caseRemarks: req.body.caseRemarks}});
+      if(newData == null)
+      {
+        res.json({ message: 'Could not save remark', refnum: req.body.referencenumber});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error adding remark' });
+  }
+});
+
+// Get remarks for a legal case by reference number
+app.get("/api/getlegalcaseRemarkbyref", async(req, res) => {
+  try {
+    const cases = await dataLegalSchemaObject.find({legalcasereferenceNumber: req.query.legalcasereferenceNumber}, {caseRemarks:1});
+    res.json(cases);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get legal case remarks by ref' });
+  }
+});
+
+// Save legal notice and court petition drafts for a legal case
+app.post('/api/addlegalcaseDraft', async(req, res) => {
+  try{
+      const newData = await dataLegalSchemaObject.findOneAndUpdate(
+        {legalcasereferenceNumber: req.body.legalcasereferenceNumber},
+        {$set:{
+          legalNoticeDraft: req.body.legalNoticeDraft,
+          courtPetitionDraft: req.body.courtPetitionDraft,
+          newCaseStatus: "Draft Generated"
+        }}
+      );
+      if(newData == null)
+      {
+        res.json({ message: 'Could not save draft data'});
+      }
+      else
+      {
+        const savedData = newData.save();
+        res.json({ message: 'success'});
+      }
+    }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({ error: 'Error saving legal case draft' });
+  }
+});
+
 // add logic later to differentiate live from completed
 app.get("/api/getlegallivecasedetail", async(req, res) => {
   try {
@@ -4589,6 +4797,80 @@ app.get("/api/getlegalcasedraftbyref", async(req, res) => {
 });
 
 // 
+// Get all senior advocates
+app.get("/api/getsenioradvocates", async(req, res) => {
+  try {
+    const advocates = await advocateSchemaObject.find({advocateType: "senior"});
+    res.json(advocates);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get senior advocates' });
+  }
+});
+
+// Refer a legal case draft to senior advocate
+app.post("/api/refertosenioeadvocate", async(req, res) => {
+  try {
+    const newData = await dataLegalSchemaObject.findOneAndUpdate(
+      {legalcasereferenceNumber: req.body.legalcasereferenceNumber},
+      {$set: {
+        referredToSenior: "true",
+        seniorAdvocateReferralDate: new Date(),
+        seniorAdvocateName: req.body.seniorAdvocateName,
+        seniorAdvocateID: req.body.seniorAdvocateID,
+        legalNoticeDraft: req.body.legalNoticeDraft,
+        courtPetitionDraft: req.body.courtPetitionDraft,
+        newCaseStatus: "Referred to Senior"
+      }}
+    );
+    res.json({message: "success"});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to refer to senior advocate' });
+  }
+});
+
+// Get all legal cases referred to senior advocate
+app.get("/api/getsenioradvocatereferrals", async(req, res) => {
+  try {
+    var query = {referredToSenior: "true"};
+    // If advocateName is passed, filter by the specific senior advocate
+    if(req.query.advocateName) {
+      query.seniorAdvocateName = req.query.advocateName;
+    }
+    const cases = await dataLegalSchemaObject.find(
+      query,
+      {legalcasereferenceNumber:1, prospectDate:1, complainantName:1, complainantPhone:1, respondantName:1, managerName:1, cpName:1, insuranceCompanyName:1, disputedAmount:1, newCaseStatus:1, seniorAdvocateReferralDate:1, legalNoticeDraft:1, courtPetitionDraft:1, firstAdvocateName:1, seniorAdvocateName:1, legalliveDate:1, docUrl:1}
+    );
+    res.json(cases);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get senior advocate referrals' });
+  }
+});
+
+// Approve senior advocate referral and move to legal notice
+app.post("/api/approvesenioradvocatereferral", async(req, res) => {
+  try {
+    const newData = await dataLegalSchemaObject.findOneAndUpdate(
+      {legalcasereferenceNumber: req.body.legalcasereferenceNumber},
+      {$set: {
+        referredToSenior: "approved",
+        seniorAdvocateRemarks: req.body.seniorAdvocateRemarks,
+        legalNoticeDraft: req.body.legalNoticeDraft,
+        courtPetitionDraft: req.body.courtPetitionDraft,
+        newCaseStatus: "Legal Notice",
+        isLegalLive: "false"
+      }}
+    );
+    res.json({message: "success"});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to approve senior advocate referral' });
+  }
+});
+
+//
 app.get("/api/getpendingauthcasedetail", async(req, res) => {
   try {
     // Retrieve all tpa list from database
@@ -5096,6 +5378,133 @@ app.post('/api/whoami', async(req,res) => {
 })
 
 
+// ===================== CUSTOMER DOCUMENT UPLOAD LINK ENDPOINTS =====================
+
+// Validate upload token (called by customer upload page)
+app.get('/api/validateuploadtoken', async (req, res) => {
+  try {
+    const tokenData = await uploadTokenSchemaObject.findOne({ token: req.query.token, isExpired: false });
+    if (!tokenData) {
+      return res.json({ valid: false, message: 'This upload link is invalid or has expired.' });
+    }
+
+    // Fetch full case details to show on the customer upload page
+    const caseData = await dataSchemaObject.findOne({ casereferenceNumber: tokenData.casereferenceNumber });
+    const caseDetails = caseData ? {
+      patientName: caseData.patientName || '',
+      patientMobile: caseData.patientMobile || '',
+      complainantName: caseData.complainantName || '',
+      complainantMobile: caseData.complainantMobile || '',
+      insuranceCompanyName: caseData.insuranceCompanyName || '',
+      claimType: caseData.claimType || '',
+      claimNumber: caseData.claimNumber || '',
+      policyNumber: caseData.policyNumber || '',
+      bucket: caseData.bucket || '',
+      prospectDate: caseData.prospectDate || '',
+    } : {};
+
+    res.json({
+      valid: true,
+      patientName: tokenData.patientName,
+      casereferenceNumber: tokenData.casereferenceNumber,
+      ...caseDetails
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ valid: false, message: 'Error validating token' });
+  }
+});
+
+// Customer uploads documents using their token (no login required)
+app.post('/api/customerupload', upload.array('pdfFile', 10), async (req, res) => {
+  try {
+    const tokenData = await uploadTokenSchemaObject.findOne({ token: req.body.token, isExpired: false });
+    if (!tokenData) {
+      return res.status(403).json({ error: 'Invalid or expired upload link.' });
+    }
+
+    const refNumber = tokenData.casereferenceNumber;
+
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ error: 'No files uploaded.' });
+    }
+
+    const uploadPromises = req.files.map(file => {
+      const randomString = require('crypto').randomBytes(16).toString('hex');
+      const fileNameExceptExtension = file.originalname.split('.')[0];
+      const extension = path.extname(file.originalname);
+      const destination = `uploads/${refNumber}-customer-${fileNameExceptExtension}-${randomString}${extension}`;
+      return uploadFileToGCS(file.path, destination, refNumber);
+    });
+
+    await Promise.all(uploadPromises);
+    res.json({ message: 'success', filesUploaded: req.files.length });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error uploading documents' });
+  }
+});
+
+// Get active upload link for a case (used in case report)
+app.get('/api/getuploadlink', async (req, res) => {
+  try {
+    const tokenData = await uploadTokenSchemaObject.findOne({ casereferenceNumber: req.query.casereferenceNumber, isExpired: false }).sort({ createdAt: -1 });
+    if (tokenData) {
+      res.json({ uploadLink: `${BASE_URL}/customerupload.html?token=${tokenData.token}` });
+    } else {
+      res.json({ uploadLink: '' });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error fetching upload link' });
+  }
+});
+
+// Expire/revoke an upload token (admin use)
+app.post('/api/expireuploadtoken', async (req, res) => {
+  try {
+    await uploadTokenSchemaObject.findOneAndUpdate({ token: req.body.token }, { $set: { isExpired: true } });
+    res.json({ message: 'success' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error expiring token' });
+  }
+});
+
+// Resend upload link for an existing case
+app.post('/api/resenduploadlink', async (req, res) => {
+  try {
+    const caseData = await dataSchemaObject.findOne({ casereferenceNumber: req.body.casereferenceNumber });
+    if (!caseData) {
+      return res.status(404).json({ error: 'Case not found' });
+    }
+
+    // Create a new token (expire old ones for this case)
+    await uploadTokenSchemaObject.updateMany({ casereferenceNumber: req.body.casereferenceNumber }, { $set: { isExpired: true } });
+
+    const token = require('crypto').randomBytes(32).toString('hex');
+    const newToken = new uploadTokenSchemaObject({
+      token: token,
+      casereferenceNumber: req.body.casereferenceNumber,
+      patientName: caseData.patientName,
+    });
+    await newToken.save();
+
+    const uploadLink = `${BASE_URL}/customerupload.html?token=${token}`;
+    const phone = caseData.complainantMobile || caseData.patientMobile;
+
+    if (phone) {
+      await sendBucketNotification(phone, caseData.patientName, req.body.casereferenceNumber, '__UPLOAD_LINK__', uploadLink);
+    }
+
+    res.json({ message: 'success', uploadLink: uploadLink });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error resending upload link' });
+  }
+});
+// ===================== END CUSTOMER UPLOAD ENDPOINTS =====================
+
 app.use(express.static('public'));
 
 app.get('/', (req, res) => res.sendFile(__dirname+'/index.html'))
@@ -5126,6 +5535,7 @@ app.get('/viewlegallive.html', (req, res) => res.sendFile(__dirname+'/viewlegall
 app.get('/viewlegalnotice.html', (req, res) => res.sendFile(__dirname+'/viewlegalnotice.html'))
 app.get('/viewcourtpetition.html', (req, res) => res.sendFile(__dirname+'/viewcourtpetition.html'))
 app.get('/viewlegalcompletedcases.html', (req, res) => res.sendFile(__dirname+'/viewlegalcompletedcases.html'))
+app.get('/viewsenioradvocatereferrals.html', (req, res) => res.sendFile(__dirname+'/viewsenioradvocatereferrals.html'))
 
 app.get('/deletecases.html', (req, res) =>{
 
@@ -5465,6 +5875,8 @@ app.post('/api/movelegalcasetolegalnotice', async(req, res) => {
 
 // Serve senior advocate referrals page
 app.get('/viewsenioradvocatereferrals.html', (req, res) => res.sendFile(__dirname+'/viewsenioradvocatereferrals.html'))
+// Customer upload page (public - no login required)
+app.get('/customerupload.html', (req, res) => res.sendFile(__dirname+'/customerupload.html'))
 
 app.listen(port, () => console.log(`Insurance app listening on port ${port}!`))
 

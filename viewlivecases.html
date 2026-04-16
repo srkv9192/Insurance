@@ -491,6 +491,15 @@ div.dataTables_filter {
                           </div>
                         </div>
 
+                        <div style="display: flex; justify-content: space-between; background-color: #e8f5e9; padding: 8px; border-radius: 6px; margin: 5px 0;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Customer Upload Link:</strong></label>
+                              <a data-info="reportcustomeruploadlink" href="#" target="_blank" style="word-break: break-all; display:none;"></a>
+                              <span data-info="reportuploadlinkstatus" style="color:#888;">Not Available</span>
+                              <button class="btn btn-sm btn-outline-secondary ms-2" id="copyUploadLinkBtn" onclick="copyUploadLink()" title="Copy Link" style="display:none;">Copy</button>
+                            </div>
+                        </div>
+
                           <div style="display: flex; justify-content: space-between;">
                               <div style="flex: 1;">
                                   <label class="form-label"><strong>Initial Case Date:</strong></label>
@@ -1745,6 +1754,22 @@ function movetolive(referencenumber) {
               // Populate the options in the select element
               document.querySelector('[data-info="reportcasenumber"]').textContent =response[0].casereferenceNumber ? response[0].casereferenceNumber : "";
               document.querySelector('[data-info="reportcasehandler"]').textContent =response[0].caseHandler ? response[0].caseHandler : "";
+
+              // Fetch and display customer upload link
+              fetch('/api/getuploadlink?casereferenceNumber=' + response[0].casereferenceNumber)
+                .then(r => r.json())
+                .then(data => {
+                  const linkEl = document.querySelector('[data-info="reportcustomeruploadlink"]');
+                  const statusEl = document.querySelector('[data-info="reportuploadlinkstatus"]');
+                  const copyBtn = document.getElementById('copyUploadLinkBtn');
+                  if (data.uploadLink) {
+                    linkEl.href = data.uploadLink; linkEl.textContent = data.uploadLink;
+                    linkEl.style.display = 'inline'; statusEl.style.display = 'none'; copyBtn.style.display = 'inline-block';
+                  } else {
+                    linkEl.style.display = 'none'; statusEl.style.display = 'inline'; statusEl.textContent = 'Not Available'; copyBtn.style.display = 'none';
+                  }
+                }).catch(() => {});
+
               document.querySelector('[data-info="reportinitialcasedate"]').textContent =response[0].prospectDate ? moment(new Date(response[0].prospectDate)).utc().format('DD-MM-YYYY') : "";
 
               document.querySelector('[data-info="reportpatientname"]').textContent =response[0].patientName ? response[0].patientName : "";
@@ -2545,6 +2570,13 @@ function movetolive(referencenumber) {
 
 
   </script>  <script src="js/nidaan-table.js"></script>
+    function copyUploadLink() {
+      const linkEl = document.querySelector('[data-info="reportcustomeruploadlink"]');
+      if (linkEl && linkEl.href && linkEl.href !== '#') {
+        navigator.clipboard.writeText(linkEl.href).then(() => { alert('Upload link copied!'); });
+      }
+    }
+  </script>
 </body>
 
 </html>
