@@ -275,6 +275,15 @@ $(document).ready(function () {
               localStorage['userName'] = response.username;
               localStorage['userType'] = response.message;
             }
+            else if(response.message =='accountant')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html";
+              $("#showtoaccountant").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+            }
             else
             {
 

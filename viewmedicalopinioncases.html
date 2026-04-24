@@ -1235,7 +1235,7 @@ function populatereport(refnumber)
               data[i].patientMobile,
               data[i].complainantName,
               data[i].managerName,
-              data[i].cpName,
+              data[i].cpID ? `${data[i].cpName} (${data[i].cpID})` : data[i].cpName,
               data[i].claimNumber,
               data[i].claimAmount,
               data[i].caseHandler ? data[i].caseHandler: " ",

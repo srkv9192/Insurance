@@ -2116,7 +2116,7 @@ function movetolive(referencenumber) {
               data[i].complainantPhone,
               data[i].respondantName,
               data[i].managerName,
-              data[i].cpName,
+              data[i].cpID ? `${data[i].cpName} (${data[i].cpID})` : data[i].cpName,
               data[i].insuranceCompanyName,
               data[i].disputedAmount,
               data[i].newCaseStatus,

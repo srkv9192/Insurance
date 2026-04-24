@@ -58,19 +58,20 @@ const port = process.env.PORT || 80
 //  useUnifiedTopology: true,
 //});
 
+
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
 /*
+
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
 */
-
-
 
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
@@ -5081,6 +5082,9 @@ app.post('/api/whoami', async(req,res) => {
   }
   else if(req.session.userId && (req.session.userType == 'tracking')){
     res.json({message : 'tracking', username : req.session.userName, userid:req.session.userId})
+  }
+  else if(req.session.userId && (req.session.userType == 'accountant')){
+    res.json({message : 'accountant', username : req.session.userName, userid:req.session.userId})
   }
   else if(req.session.userId && (req.session.userType == 'advocate')){
     try {

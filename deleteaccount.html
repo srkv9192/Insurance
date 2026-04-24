@@ -973,10 +973,13 @@ fetch('navbar.html')
           userTypeMap.set('advocate', 'ADVOCATE');
           userTypeMap.set('admin' ,'ADMIN');
           userTypeMap.set('marketing' ,'MARKETING');
+          userTypeMap.set('marketinghandler' ,'MARKETING HANDLER');
           userTypeMap.set('marketingmanager' ,'MARKETING MANAGER');
           userTypeMap.set('operation' ,'OPERATION');
           userTypeMap.set('manager' ,'MANAGER');
           userTypeMap.set('medicalofficer' ,'MEDICAL OFFICER');
+          userTypeMap.set('tracking' ,'TRACKING');
+          userTypeMap.set('accountant' ,'ACCOUNTANT');
 
           var length = Object.keys(data).length;
           for(var i = 0; i < length; i++) {
@@ -986,7 +989,7 @@ fetch('navbar.html')
             // You could also use an ajax property on the data table initialization
             var rowData = [ data[i].userName ? data[i].userName : "",
               data[i].userID ? data[i].userID : "",
-              data[i].userType ? userTypeMap.get(data[i].userType) : "",
+              data[i].userType ? (userTypeMap.get(data[i].userType) || data[i].userType.toUpperCase()) : "",
               `<button type="button" class="btn btn-primary btn-sm"  onclick="deleteaccount('${rfno}', '${usertype}')" >Delete Account</button>`,];
  
             table.row.add(rowData);

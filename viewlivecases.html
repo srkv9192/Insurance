@@ -657,11 +657,11 @@ div.dataTables_filter {
                           <div style="display: flex; justify-content: space-between;">
                             <div style="flex: 1;">
                               <label class="form-label"><strong>Draft :</strong></label>
-                              <div id="reportdraft" style="height:350px">[None]</span></div>
+                              <div id="reportdraft" style="height:350px">[None]</div>
                             </div>
                             <div style="flex: 1;">
                               <label class="form-label"><strong>Lokpal Draft : </strong></label>
-                              <div id="reportlokpaldraft" style="height:350px">[None]</span></div>
+                              <div id="reportlokpaldraft" style="height:350px">[None]</div>
                             </div>
                           </div>
 
@@ -2395,7 +2395,7 @@ function movetolive(referencenumber) {
               data[i].patientMobile,
               data[i].complainantName,
               data[i].managerName,
-              data[i].cpName,
+              data[i].cpID ? `${data[i].cpName} (${data[i].cpID})` : data[i].cpName,
               data[i].insuranceCompanyName,
               data[i].claimNumber,
               data[i].claimAmount,
@@ -2433,7 +2433,7 @@ function movetolive(referencenumber) {
               data[i].patientMobile,
               data[i].complainantName,
               data[i].managerName,
-              data[i].cpName,
+              data[i].cpID ? `${data[i].cpName} (${data[i].cpID})` : data[i].cpName,
               data[i].insuranceCompanyName,
               data[i].claimNumber,
               data[i].claimAmount,
@@ -2462,7 +2462,7 @@ function movetolive(referencenumber) {
               data[i].patientMobile,
               data[i].complainantName,
               data[i].managerName,
-              data[i].cpName,
+              data[i].cpID ? `${data[i].cpName} (${data[i].cpID})` : data[i].cpName,
               data[i].insuranceCompanyName,
               data[i].claimNumber,
               data[i].claimAmount,
@@ -2544,7 +2544,9 @@ function movetolive(referencenumber) {
     // filter buttons end
 
 
-  </script>  <script src="js/nidaan-table.js"></script>
+  </script>
+
+  <script src="/js/nidaan-table.js"></script>
 </body>
 
 </html>

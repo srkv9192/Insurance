@@ -1685,6 +1685,15 @@ function movetolive(referencenumber) {
               localStorage['userName'] = response.username;
               localStorage['userType'] = response.message;
             }
+            else if(response.message =='accountant')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html";
+              $("#showtoaccountant").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+            }
             else
             {
               window.location.href = "/login.html"
@@ -1795,9 +1804,9 @@ function movetolive(referencenumber) {
 
             // You could also use an ajax property on the data table initialization
 
-            if( localStorage['userType'] === 'admin')
+            if( localStorage['userType'] === 'admin' || localStorage['userType'] === 'accountant')
             {
-                
+
             var rowData = [data[i].casereferenceNumber,
             moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),
             `${caseage}`,
@@ -1807,7 +1816,7 @@ function movetolive(referencenumber) {
               data[i].patientMobile,
               data[i].complainantName,
               data[i].managerName,
-              data[i].cpName,
+              data[i].cpID ? `${data[i].cpName} (${data[i].cpID})` : data[i].cpName,
               data[i].insuranceCompanyName,
               data[i].claimNumber,
               data[i].claimAmount,
@@ -1839,7 +1848,7 @@ function movetolive(referencenumber) {
               data[i].patientMobile,
               data[i].complainantName,
               data[i].managerName,
-              data[i].cpName,
+              data[i].cpID ? `${data[i].cpName} (${data[i].cpID})` : data[i].cpName,
               data[i].insuranceCompanyName,
               data[i].claimNumber,
               data[i].claimAmount,
@@ -1871,7 +1880,7 @@ function movetolive(referencenumber) {
               data[i].patientMobile,
               data[i].complainantName,
               data[i].managerName,
-              data[i].cpName,
+              data[i].cpID ? `${data[i].cpName} (${data[i].cpID})` : data[i].cpName,
               data[i].insuranceCompanyName,
               data[i].claimNumber,
               data[i].claimAmount,

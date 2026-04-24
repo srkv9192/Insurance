@@ -1611,6 +1611,15 @@ function movetolive(referencenumber) {
               localStorage['userName'] = response.username;
               localStorage['userType'] = response.message;
             }
+            else if(response.message =='accountant')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html";
+              $("#showtoaccountant").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+            }
             else
             {
               window.location.href = "/login.html"
@@ -1732,7 +1741,7 @@ function movetolive(referencenumber) {
               data[i].patientMobile,
               data[i].complainantName,
               data[i].managerName,
-              data[i].cpName,
+              data[i].cpID ? `${data[i].cpName} (${data[i].cpID})` : data[i].cpName,
               data[i].insuranceCompanyName,
               data[i].claimNumber,
               data[i].claimAmount,
@@ -1766,7 +1775,7 @@ function movetolive(referencenumber) {
               data[i].patientMobile,
               data[i].complainantName,
               data[i].managerName,
-              data[i].cpName,
+              data[i].cpID ? `${data[i].cpName} (${data[i].cpID})` : data[i].cpName,
               data[i].insuranceCompanyName,
               data[i].claimNumber,
               data[i].claimAmount,
