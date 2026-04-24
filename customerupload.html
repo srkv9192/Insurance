@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+  <title>Upload Documents - Nidaan</title>
+  <style>
+    body {
+      background-color: #343a40;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .upload-card {
+      background-color: #23272b;
+      border-radius: 12px;
+      padding: 30px;
+      max-width: 550px;
+      width: 100%;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .upload-card h3 {
+      color: #17a2b8;
+      margin-bottom: 5px;
+    }
+
+    .file-list {
+      max-height: 200px;
+      overflow-y: auto;
+      margin-top: 10px;
+    }
+
+    .file-list .file-item {
+      background-color: #343a40;
+      border-radius: 6px;
+      padding: 8px 12px;
+      margin-bottom: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+    }
+
+    .file-item .remove-btn {
+      cursor: pointer;
+      color: #dc3545;
+      font-weight: bold;
+    }
+
+    #statusMessage {
+      margin-top: 15px;
+    }
+
+    .case-details {
+      background-color: #1a1e22;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 10px;
+      border: 1px solid #444;
+    }
+
+    .detail-row {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 10px;
+    }
+
+    .detail-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .detail-item {
+      flex: 1;
+      background-color: #2c3034;
+      border-radius: 6px;
+      padding: 10px 12px;
+      border: 1px solid #3a3f44;
+    }
+
+    .detail-item label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #8ecae6 !important;
+    }
+
+    .detail-item p {
+      font-size: 15px;
+      color: #ffffff !important;
+    }
+
+    .expired-message {
+      text-align: center;
+      padding: 40px;
+    }
+
+    .expired-message h4 {
+      color: #dc3545;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="upload-card mx-auto" id="uploadSection" style="display:none;">
+      <h3>Nidaan</h3>
+      <p class="text-muted mb-3">Document Upload Portal</p>
+      <hr style="border-color: #444;">
+
+      <div class="case-details">
+        <h6 style="color: #17a2b8; margin-bottom: 12px;">Case Details</h6>
+        <div class="detail-row">
+          <div class="detail-item">
+            <label class="form-label text-muted mb-0">Case Reference</label>
+            <p class="fw-bold mb-0" id="caseRefDisplay">-</p>
+          </div>
+          <div class="detail-item">
+            <label class="form-label text-muted mb-0">Current Status</label>
+            <p class="fw-bold mb-0" id="caseStatusDisplay">-</p>
+          </div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-item">
+            <label class="form-label text-muted mb-0">Patient Name</label>
+            <p class="fw-bold mb-0" id="patientNameDisplay">-</p>
+          </div>
+          <div class="detail-item">
+            <label class="form-label text-muted mb-0">Patient Phone</label>
+            <p class="fw-bold mb-0" id="patientPhoneDisplay">-</p>
+          </div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-item">
+            <label class="form-label text-muted mb-0">Complainant Name</label>
+            <p class="fw-bold mb-0" id="complainantNameDisplay">-</p>
+          </div>
+          <div class="detail-item">
+            <label class="form-label text-muted mb-0">Complainant Phone</label>
+            <p class="fw-bold mb-0" id="complainantPhoneDisplay">-</p>
+          </div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-item">
+            <label class="form-label text-muted mb-0">Insurance Company</label>
+            <p class="fw-bold mb-0" id="insuranceCompanyDisplay">-</p>
+          </div>
+          <div class="detail-item">
+            <label class="form-label text-muted mb-0">Claim Type</label>
+            <p class="fw-bold mb-0" id="claimTypeDisplay">-</p>
+          </div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-item">
+            <label class="form-label text-muted mb-0">Policy Number</label>
+            <p class="fw-bold mb-0" id="policyNumberDisplay">-</p>
+          </div>
+          <div class="detail-item">
+            <label class="form-label text-muted mb-0">Claim Number</label>
+            <p class="fw-bold mb-0" id="claimNumberDisplay">-</p>
+          </div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-item">
+            <label class="form-label text-muted mb-0">Case Filed On</label>
+            <p class="fw-bold mb-0" id="caseFiledDateDisplay">-</p>
+          </div>
+        </div>
+      </div>
+
+      <hr style="border-color: #444;">
+
+      <div class="mb-3">
+        <label for="fileInput" class="form-label">Select Documents to Upload</label>
+        <input class="form-control bg-dark text-white border-secondary" type="file" id="fileInput" multiple
+          accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+        <small class="text-muted">Supported: PDF, JPG, PNG, DOC (max 10 files)</small>
+      </div>
+
+      <div class="file-list" id="fileList"></div>
+
+      <button class="btn btn-info w-100 mt-3" id="uploadBtn" onclick="uploadFiles()" disabled>
+        Upload Documents
+      </button>
+
+      <div id="statusMessage"></div>
+    </div>
+
+    <div class="upload-card mx-auto expired-message" id="expiredSection" style="display:none;">
+      <h4>Link Invalid or Expired</h4>
+      <p class="text-muted">This document upload link is no longer valid. Please contact Nidaan for a new link.</p>
+    </div>
+
+    <div class="upload-card mx-auto" id="successSection" style="display:none;">
+      <div style="text-align:center; padding:30px;">
+        <h4 style="color:#28a745;">Documents Uploaded Successfully!</h4>
+        <p class="text-muted mt-3">Your documents have been received. Our team will review them shortly.</p>
+        <p class="text-muted">You may close this page now.</p>
+      </div>
+    </div>
+
+    <div class="upload-card mx-auto" id="loadingSection">
+      <div style="text-align:center; padding:30px;">
+        <div class="spinner-border text-info" role="status"></div>
+        <p class="text-muted mt-3">Validating your link...</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let uploadToken = '';
+    let selectedFiles = [];
+
+    window.onload = async function () {
+      const params = new URLSearchParams(window.location.search);
+      uploadToken = params.get('token');
+
+      if (!uploadToken) {
+        showExpired();
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/validateuploadtoken?token=${uploadToken}`);
+        const data = await response.json();
+
+        if (data.valid) {
+          document.getElementById('patientNameDisplay').textContent = data.patientName || '-';
+          document.getElementById('caseRefDisplay').textContent = data.casereferenceNumber || '-';
+          document.getElementById('patientPhoneDisplay').textContent = data.patientMobile || '-';
+          document.getElementById('complainantNameDisplay').textContent = data.complainantName || '-';
+          document.getElementById('complainantPhoneDisplay').textContent = data.complainantMobile || '-';
+          document.getElementById('insuranceCompanyDisplay').textContent = data.insuranceCompanyName || '-';
+          document.getElementById('claimTypeDisplay').textContent = data.claimType || '-';
+          document.getElementById('policyNumberDisplay').textContent = data.policyNumber || '-';
+          document.getElementById('claimNumberDisplay').textContent = data.claimNumber || '-';
+          document.getElementById('caseStatusDisplay').textContent = data.bucket || '-';
+          document.getElementById('caseFiledDateDisplay').textContent = data.prospectDate ? new Date(data.prospectDate).toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '-';
+          document.getElementById('loadingSection').style.display = 'none';
+          document.getElementById('uploadSection').style.display = 'block';
+        } else {
+          showExpired();
+        }
+      } catch (err) {
+        showExpired();
+      }
+    };
+
+    function showExpired() {
+      document.getElementById('loadingSection').style.display = 'none';
+      document.getElementById('expiredSection').style.display = 'block';
+    }
+
+    document.getElementById('fileInput').addEventListener('change', function (e) {
+      const files = Array.from(e.target.files);
+      if (selectedFiles.length + files.length > 10) {
+        showStatus('You can upload a maximum of 10 files.', 'warning');
+        return;
+      }
+      selectedFiles = selectedFiles.concat(files);
+      renderFileList();
+    });
+
+    function renderFileList() {
+      const listEl = document.getElementById('fileList');
+      listEl.innerHTML = '';
+      selectedFiles.forEach((file, index) => {
+        const item = document.createElement('div');
+        item.className = 'file-item';
+        item.innerHTML = `
+          <span>${file.name} (${(file.size / 1024).toFixed(1)} KB)</span>
+          <span class="remove-btn" onclick="removeFile(${index})">X</span>
+        `;
+        listEl.appendChild(item);
+      });
+      document.getElementById('uploadBtn').disabled = selectedFiles.length === 0;
+    }
+
+    function removeFile(index) {
+      selectedFiles.splice(index, 1);
+      renderFileList();
+    }
+
+    async function uploadFiles() {
+      if (selectedFiles.length === 0) return;
+
+      const btn = document.getElementById('uploadBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Uploading...';
+
+      const formData = new FormData();
+      formData.append('token', uploadToken);
+      selectedFiles.forEach(file => {
+        formData.append('pdfFile', file);
+      });
+
+      try {
+        const response = await fetch('/api/customerupload', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await response.json();
+
+        if (data.message === 'success') {
+          document.getElementById('uploadSection').style.display = 'none';
+          document.getElementById('successSection').style.display = 'block';
+        } else {
+          showStatus(data.error || 'Upload failed. Please try again.', 'danger');
+          btn.disabled = false;
+          btn.innerHTML = 'Upload Documents';
+        }
+      } catch (err) {
+        showStatus('Upload failed. Please check your connection and try again.', 'danger');
+        btn.disabled = false;
+        btn.innerHTML = 'Upload Documents';
+      }
+    }
+
+    function showStatus(msg, type) {
+      document.getElementById('statusMessage').innerHTML =
+        `<div class="alert alert-${type} mt-3" role="alert">${msg}</div>`;
+    }
+  </script>
+</body>
+
+</html>

@@ -236,7 +236,7 @@ div.dataTables_filter {
         <div class='dashboard-content' style="background-image: url('/images/background20.jpg');  background-repeat: repeat;  background-size: cover;">
           <div class="container mt-5" style="max-width: unset;">
             <div class="row justify-content-center">
-              <h2 class="text-center mb-4">Legal Live Cases(Under Development)</h2>
+              <h2 class="text-center mb-4">Legal Live Cases</h2>
               <!--
               <ul>
                 <li class="btn_special"><a href="#" class="all">All</a></li>
@@ -480,6 +480,8 @@ div.dataTables_filter {
                             <button type="submit"  class="btn btn-primary">Submit Draft</button>
                             &nbsp;
                             <a href="#popup20"><button type="button" id="referToSeniorBtn" class="btn btn-warning" onclick="loadSeniorAdvocates()">Refer to Senior Advocate</button></a>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <a href="#popup20"><button type="button" class="btn btn-warning">Refer to Senior Advocate</button></a>
                           </div>
                         </form>
                       </div>
@@ -510,6 +512,18 @@ div.dataTables_filter {
                   </div>
                 </div>
 
+                <div id="popup20" class="overlay">
+                  <div class="popup" style="width:35%">
+                    <h2 style="color:#333;">Refer Draft to Senior Advocate</h2>
+                    <label class="form-label" style="color:#333;">Select Senior Advocate</label>
+                    <select name="senioradvocatedropdown" id="senioradvocatedropdown" class="form-control" style="margin-top: 5px;margin-bottom: 15px; color:black;">
+                      <option value="">-- Select --</option>
+                    </select>
+                    <br>
+                    <button type="button" onclick="referToSeniorAdvocate()" class="btn btn-warning">Confirm Referral</button>
+                    <a class="close" href="#close">&times;</a>
+                  </div>
+                </div>
 
                 <div id="popup19" class="overlay">
                   <div class="popup">
@@ -566,6 +580,15 @@ div.dataTables_filter {
                             <label class="form-label"><strong>Case Handler:</strong></label>
                             <span data-info="reportcasehandler">[Case Handler]</span>
                           </div>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; background-color: #e8f5e9; padding: 8px; border-radius: 6px; margin: 5px 0;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>Customer Upload Link:</strong></label>
+                              <a data-info="reportcustomeruploadlink" href="#" target="_blank" style="word-break: break-all; display:none;"></a>
+                              <span data-info="reportuploadlinkstatus" style="color:#888;">Not Available</span>
+                              <button class="btn btn-sm btn-outline-secondary ms-2" id="copyUploadLinkBtn" onclick="copyUploadLink()" title="Copy Link" style="display:none;">Copy</button>
+                            </div>
                         </div>
 
                           <div style="display: flex; justify-content: space-between;">
@@ -994,6 +1017,50 @@ const quill = new Quill('#legalNoticeDraft', {
   }
   });
 
+function referToSeniorAdvocate() {
+  if(!localStorage['casereferencenumber']) {
+    alert("No case selected!");
+    return;
+  }
+
+  var selectedAdvocate = document.getElementById("senioradvocatedropdown");
+  if(!selectedAdvocate.value) {
+    alert("Please select a Senior Advocate!");
+    return;
+  }
+
+  var seniorAdvocateName = selectedAdvocate.options[selectedAdvocate.selectedIndex].text;
+  var seniorAdvocateID = selectedAdvocate.value;
+
+  if(!confirm("Are you sure you want to refer this draft to " + seniorAdvocateName + " for review?")) {
+    return;
+  }
+
+  $.ajax({
+    url: '/api/refertosenioeadvocate',
+    type: 'POST',
+    contentType: "application/x-www-form-urlencoded",
+    data: {
+      legalcasereferenceNumber: localStorage['casereferencenumber'],
+      legalNoticeDraft: quill.root.innerHTML,
+      courtPetitionDraft: quill1.root.innerHTML,
+      seniorAdvocateName: seniorAdvocateName,
+      seniorAdvocateID: seniorAdvocateID,
+    },
+    success: function (response) {
+      if(response.message == "success") {
+        alert("Draft referred to " + seniorAdvocateName + " successfully!");
+        window.location.reload();
+      } else {
+        alert("Error referring draft to Senior Advocate!");
+      }
+    },
+    error: function (error) {
+      alert("Failed to refer draft to Senior Advocate!");
+    }
+  });
+}
+
 function addremark(referencenumber) {
         // Code to generate card
         localStorage['addRemarkForRefNumber'] =referencenumber;
@@ -1317,24 +1384,21 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
 
         $.ajax({
         url: '/api/getlegalcaseremarkbyref',
+        url: '/api/getlegalcaseRemarkbyref',
         type: 'GET',
         data: {
           legalcasereferenceNumber: referencenumber
         },
 
         success: function (response) {
-          // Populate the options in the select eleme    
-           
-           // let text =  response[0].caseRemarks;
-          //  const myArray = text.split(";");    
-
-            let list = document.getElementById("remarkcontentlist");
+            if(response[0] && response[0].caseRemarks) {
+              let list = document.getElementById("remarkcontentlist");
               for (i = 0; i < response[0].caseRemarks.length ; i++) {
                 let li = document.createElement('li');
                 li.innerText = response[0].caseRemarks[i];
                 list.appendChild(li);
                }
-
+            }
         },
         error: function (error) {
           console.error('Error:', error);
@@ -1521,6 +1585,10 @@ function viewDraft(referencenumber)
 
       $.ajax({
         url: '/api/getlegalcasedraftbyref',
+      localStorage['casereferencenumber'] = referencenumber;
+
+      $.ajax({
+        url: '/api/getlegalcasedetailbyref',
         type: 'GET',
         data: {
           legalcasereferenceNumber: referencenumber
@@ -1530,11 +1598,13 @@ function viewDraft(referencenumber)
        quill.root.innerHTML= response[0].legalNoticeDraft ? response[0].legalNoticeDraft : "";
        quill1.root.innerHTML= response[0].courtPetitionDraft ? response[0].courtPetitionDraft : "";
 
+          quill.root.innerHTML= response[0].legalNoticeDraft ? response[0].legalNoticeDraft : "";
+          quill1.root.innerHTML= response[0].courtPetitionDraft ? response[0].courtPetitionDraft : "";
         },
         error: function (error) {
           console.error('Error:', error);
         }
-      }); 
+      });
 
     }
 
@@ -1669,6 +1739,22 @@ function movetolive(referencenumber) {
               // Populate the options in the select element
               document.querySelector('[data-info="reportcasenumber"]').textContent =response[0].casereferenceNumber ? response[0].casereferenceNumber : "";
               document.querySelector('[data-info="reportcasehandler"]').textContent =response[0].caseHandler ? response[0].caseHandler : "";
+
+              // Fetch and display customer upload link
+              fetch('/api/getuploadlink?casereferenceNumber=' + response[0].casereferenceNumber)
+                .then(r => r.json())
+                .then(data => {
+                  const linkEl = document.querySelector('[data-info="reportcustomeruploadlink"]');
+                  const statusEl = document.querySelector('[data-info="reportuploadlinkstatus"]');
+                  const copyBtn = document.getElementById('copyUploadLinkBtn');
+                  if (data.uploadLink) {
+                    linkEl.href = data.uploadLink; linkEl.textContent = data.uploadLink;
+                    linkEl.style.display = 'inline'; statusEl.style.display = 'none'; copyBtn.style.display = 'inline-block';
+                  } else {
+                    linkEl.style.display = 'none'; statusEl.style.display = 'inline'; statusEl.textContent = 'Not Available'; copyBtn.style.display = 'none';
+                  }
+                }).catch(() => {});
+
               document.querySelector('[data-info="reportinitialcasedate"]').textContent =response[0].prospectDate ? moment(new Date(response[0].prospectDate)).utc().format('DD-MM-YYYY') : "";
 
               document.querySelector('[data-info="reportpatientname"]').textContent =response[0].patientName ? response[0].patientName : "";
@@ -1828,6 +1914,23 @@ function movetolive(referencenumber) {
         }
       });
 
+
+      $.ajax({
+        url: '/api/getsenioradvocates',
+        type: 'GET',
+        success: function (response) {
+          const optionsSelect = $('#senioradvocatedropdown');
+          response.forEach(function (option) {
+            optionsSelect.append($('<option>', {
+              value: option.advocateID,
+              text: option.advocateName
+            }));
+          });
+        },
+        error: function (error) {
+          console.error('Error:', error);
+        }
+      });
 
       $.ajax({
         url: '/api/getoperationteamlist',
@@ -2028,6 +2131,26 @@ function movetolive(referencenumber) {
         if(response.message == "success")
           {
             alert("Case Draft saved successfully!")
+          $.ajax({
+          url: '/api/addlegalcaseDraft',
+          type: 'POST',
+          contentType: "application/x-www-form-urlencoded",
+          data: {
+            legalcasereferenceNumber: localStorage['casereferencenumber'],
+            legalNoticeDraft: quill.root.innerHTML,
+            courtPetitionDraft: quill1.root.innerHTML,
+          },
+          success: function (response) {
+            if(response.message == "success")
+              {
+                alert("Legal Draft Saved!");
+              }
+              else{
+                alert("Error saving legal draft!")
+              }
+          },
+          error: function (error) {
+            alert("Failed to save legal draft!");
           }
           else{
             alert("Error saving remark!")
@@ -2459,6 +2582,12 @@ function movetolive(referencenumber) {
     });
   }
 
+    function copyUploadLink() {
+      const linkEl = document.querySelector('[data-info="reportcustomeruploadlink"]');
+      if (linkEl && linkEl.href && linkEl.href !== '#') {
+        navigator.clipboard.writeText(linkEl.href).then(() => { alert('Upload link copied!'); });
+      }
+    }
   </script>
 </body>
 
