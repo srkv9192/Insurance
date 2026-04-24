@@ -64,6 +64,7 @@ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS
   useUnifiedTopology: true,
 });
 
+
 /*
 
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
@@ -4136,6 +4137,9 @@ app.get("/api/deletedocsbyref", async(req, res) => {
 
 app.post("/api/deletesingledoc", async(req, res) => {
   try {
+    if (!(req.session.userId && req.session.userType === 'admin')) {
+      return res.status(403).json({ error: 'Only admin can delete documents' });
+    }
     const refNumber = req.body.casereferenceNumber;
     const docUrlToDelete = req.body.docUrl;
     const result = await dataSchemaObject.updateOne(
