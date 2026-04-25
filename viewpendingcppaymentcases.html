@@ -1755,7 +1755,7 @@ function movetolive(referencenumber) {
 
             // You could also use an ajax property on the data table initialization
 
-            if( localStorage['userType'] === 'admin')
+            if( localStorage['userType'] === 'admin' || localStorage['userType'] === 'accountant')
             {
               var rowData = [data[i].casereferenceNumber,
             moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY'),
