@@ -226,12 +226,30 @@
       new Chart(document.getElementById('zoneChart'),{type:'doughnut',data:{labels:zoneLabels,datasets:[{data:zoneCounts,backgroundColor:genColors(zoneLabels.length),borderColor:'#343a40',borderWidth:3}]},options:{responsive:true,cutout:'50%',plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:12}}}}});
     }
 
-    function downloadexcelfilebynidaandate(){ fetch('/api/downloadExcelbynidaandate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nidaanstartdate:$('#nidaanstartDate').val(),nidaanenddate:$('#nidaanendDate').val()})}).then(r=>r.blob()).then(b=>{var a=Object.assign(document.createElement('a'),{href:URL.createObjectURL(b),download:'Case_Data.xlsx'});document.body.appendChild(a);a.click();a.remove();}).catch(console.error); }
-    function downloadexcelfilebylivedate(){ fetch('/api/downloadExcelbylivedate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({livestartdate:$('#livestartDate').val(),liveenddate:$('#liveendDate').val()})}).then(r=>r.blob()).then(b=>{var a=Object.assign(document.createElement('a'),{href:URL.createObjectURL(b),download:'Case_Data.xlsx'});document.body.appendChild(a);a.click();a.remove();}).catch(console.error); }
+    // Downloads an Excel export, verifying the response is actually a file.
+    // A failed request (e.g. a Render 502 page) is reported instead of being
+    // saved as a corrupt .xlsx.
+    function dlExcel(url, opts, filename){
+      fetch(url, opts).then(function(r){
+        var ct = r.headers.get('Content-Type') || '';
+        if(!r.ok || ct.indexOf('html') !== -1){
+          throw new Error('The server returned ' + r.status + '. The export service may be busy — please try again in a minute.');
+        }
+        return r.blob();
+      }).then(function(b){
+        var a = Object.assign(document.createElement('a'), {href:URL.createObjectURL(b), download:filename});
+        document.body.appendChild(a); a.click(); a.remove();
+      }).catch(function(e){
+        alert('Excel download failed. ' + (e && e.message ? e.message : 'Please try again.'));
+        console.error(e);
+      });
+    }
+    function downloadexcelfilebynidaandate(){ dlExcel('/api/downloadExcelbynidaandate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nidaanstartdate:$('#nidaanstartDate').val(),nidaanenddate:$('#nidaanendDate').val()})},'Case_Data.xlsx'); }
+    function downloadexcelfilebylivedate(){ dlExcel('/api/downloadExcelbylivedate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({livestartdate:$('#livestartDate').val(),liveenddate:$('#liveendDate').val()})},'Case_Data.xlsx'); }
     function saveSecurityCode(){ $.ajax({url:'/api/setsecuritycode',type:'POST',contentType:'application/x-www-form-urlencoded',data:{securityCode:$('#securitycode').val()},success:function(r){alert(r.message);},error:function(){alert('Failed');}}); }
-    function downloadexcelmedicalofficer(){ fetch('/api/downloadExcelbymedicalofficer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({medicalOpinionOfficer:$("#medicalofficerdropdown option:selected").text()})}).then(r=>r.blob()).then(b=>{var a=Object.assign(document.createElement('a'),{href:URL.createObjectURL(b),download:'Case_Data_Medical_Officer.xlsx'});document.body.appendChild(a);a.click();a.remove();}).catch(console.error); }
-    function downloadexcelfilebystatus(){ fetch('/api/downloadExcelbystatus',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({casestatus:$('#casefinalstatus').val()})}).then(r=>r.blob()).then(b=>{var a=Object.assign(document.createElement('a'),{href:URL.createObjectURL(b),download:'Case_Data.xlsx'});document.body.appendChild(a);a.click();a.remove();}).catch(console.error); }
-    function downloadexcelfile(){ fetch('/api/downloadExcel').then(r=>r.blob()).then(b=>{var a=Object.assign(document.createElement('a'),{href:URL.createObjectURL(b),download:'Case_Data.xlsx'});document.body.appendChild(a);a.click();a.remove();}).catch(console.error); }
+    function downloadexcelmedicalofficer(){ dlExcel('/api/downloadExcelbymedicalofficer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({medicalOpinionOfficer:$("#medicalofficerdropdown option:selected").text()})},'Case_Data_Medical_Officer.xlsx'); }
+    function downloadexcelfilebystatus(){ dlExcel('/api/downloadExcelbystatus',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({casestatus:$('#casefinalstatus').val()})},'Case_Data.xlsx'); }
+    function downloadexcelfile(){ dlExcel('/api/downloadExcel',{},'Case_Data.xlsx'); }
   </script>
 </body>
 </html>

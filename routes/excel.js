@@ -137,71 +137,61 @@ function recordToRow(record) {
   };
 }
 
-async function sendExcel(res, records) {
-  const workbook = new ExcelJS.Workbook();
-  const worksheet = workbook.addWorksheet('Sheet1');
-  worksheet.columns = EXCEL_COLUMNS;
-  records.forEach(record => worksheet.addRow(recordToRow(record)));
-  const buffer = await workbook.xlsx.writeBuffer();
+// Streams the workbook straight to the response instead of building the whole
+// file in memory. A Mongoose cursor + .lean() keeps memory bounded so large
+// exports don't OOM the process (which Render surfaces as a 502 Bad Gateway).
+async function streamExcel(res, query) {
   res.setHeader('Content-Disposition', 'attachment; filename=records.xlsx');
   res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-  res.send(buffer);
+
+  const workbook = new ExcelJS.stream.xlsx.WorkbookWriter({ stream: res, useStyles: false });
+  const worksheet = workbook.addWorksheet('Sheet1');
+  worksheet.columns = EXCEL_COLUMNS;
+
+  const cursor = query.lean().cursor();
+  for await (const record of cursor) {
+    worksheet.addRow(recordToRow(record)).commit();
+  }
+  worksheet.commit();
+  await workbook.commit();
+}
+
+function handleExcel(buildQuery) {
+  return async (req, res) => {
+    try {
+      await streamExcel(res, buildQuery(req));
+    } catch (err) {
+      console.error(err);
+      if (!res.headersSent) {
+        res.status(500).json({ message: 'Internal Server Error' });
+      } else {
+        // Streaming already started; abort so the client sees a failed
+        // download rather than a truncated/corrupt .xlsx file.
+        res.destroy();
+      }
+    }
+  };
 }
 
 module.exports = function(dataSchemaObject) {
-  router.get('/api/downloadExcel', async (req, res) => {
-    try {
-      const records = await dataSchemaObject.find({}).exec();
-      await sendExcel(res, records);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: 'Internal Server Error' });
-    }
-  });
+  router.get('/api/downloadExcel', handleExcel(() =>
+    dataSchemaObject.find({})));
 
-  router.post('/api/downloadExcelbymedicalofficer', async (req, res) => {
-    try {
-      const records = await dataSchemaObject.find({ medicalOpinionOfficer: req.body.medicalOpinionOfficer }).exec();
-      await sendExcel(res, records);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: 'Internal Server Error' });
-    }
-  });
+  router.post('/api/downloadExcelbymedicalofficer', handleExcel(req =>
+    dataSchemaObject.find({ medicalOpinionOfficer: req.body.medicalOpinionOfficer })));
 
-  router.post('/api/downloadExcelbystatus', async (req, res) => {
-    try {
-      const records = await dataSchemaObject.find({ newCaseStatus: req.body.casestatus }).exec();
-      await sendExcel(res, records);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: 'Internal Server Error' });
-    }
-  });
+  router.post('/api/downloadExcelbystatus', handleExcel(req =>
+    dataSchemaObject.find({ newCaseStatus: req.body.casestatus })));
 
-  router.post('/api/downloadExcelbylivedate', async (req, res) => {
-    try {
-      const records = await dataSchemaObject.find({
-        liveDate: { $gte: req.body.livestartdate, $lte: req.body.liveenddate }
-      }).exec();
-      await sendExcel(res, records);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: 'Internal Server Error' });
-    }
-  });
+  router.post('/api/downloadExcelbylivedate', handleExcel(req =>
+    dataSchemaObject.find({
+      liveDate: { $gte: req.body.livestartdate, $lte: req.body.liveenddate }
+    })));
 
-  router.post('/api/downloadExcelbynidaandate', async (req, res) => {
-    try {
-      const records = await dataSchemaObject.find({
-        caseNidaanReceivedAmountDate: { $gte: req.body.nidaanstartdate, $lte: req.body.nidaanenddate }
-      }).exec();
-      await sendExcel(res, records);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: 'Internal Server Error' });
-    }
-  });
+  router.post('/api/downloadExcelbynidaandate', handleExcel(req =>
+    dataSchemaObject.find({
+      caseNidaanReceivedAmountDate: { $gte: req.body.nidaanstartdate, $lte: req.body.nidaanenddate }
+    })));
 
   return router;
 };
