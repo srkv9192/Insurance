@@ -2219,7 +2219,7 @@ function movetolive(referencenumber) {
           case "Pending Doc":
           $("#dataTable").DataTable()
           .columns(13)
-          .search($(this).text())
+          .search('^' + $(this).text().replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$', true, false)
           .draw();
             break;
 

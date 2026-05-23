@@ -322,8 +322,10 @@ const dataSchema = new mongoose.Schema({
 
 
   policyNumber: String,
-  policyUpload: String, 
-  casereferenceNumber : String,
+  policyUpload: String,
+  // Unique + sparse so MongoDB refuses to insert two cases with the same
+  // reference number. Sparse allows legacy rows that pre-date this field.
+  casereferenceNumber : { type: String, unique: true, sparse: true },
   caseNumber: String,
   directCase: String,
   isProspect: String,
@@ -415,8 +417,9 @@ disputedAmount: Number,
 firstAdvocateName: String,
 firstAdvocateID: String,
 secondAdvocateName: String,
-secondAdvocateID: String,                         
-legalcasereferenceNumber : String,
+secondAdvocateID: String,
+// Unique + sparse: prevent two legal cases sharing a reference number.
+legalcasereferenceNumber : { type: String, unique: true, sparse: true },
 legalliveDate: Date,
 isLegalLive: String,
 newCaseStatus: String,
@@ -750,12 +753,17 @@ app.post('/api/deletecase', async(req, res) => {
 // Define the API endpoint to save data
 app.post('/api/addprospectlegal', upload.array('pdfFile', 10), async (req, res) => {
   try{
-        const refNumber= await getLegalCaseReferenceCount();
-        if(refNumber == -1)
-        {
+        // Same race-free reservation as /api/addprospect — atomic $inc returns
+        // the pre-increment value so two concurrent requests get distinct numbers.
+        const counterDoc = await counterSchemaObject.findOneAndUpdate(
+          { searchId: "keywordforsearch" },
+          { $inc: { caseLegalReferenceNumberCount: 1 } }
+        );
+        if (!counterDoc) {
           res.status(500).json({ error: 'Error saving prospect data' });
           return;
         }
+        const refNumber = counterDoc.caseLegalReferenceNumberCount;
 
         const newData = new dataLegalSchemaObject({
 
@@ -795,7 +803,7 @@ app.post('/api/addprospectlegal', upload.array('pdfFile', 10), async (req, res) 
 
                       });
         const savedData = await newData.save();
-        incrementLegalCaseReferenceCount();
+        // Counter was already incremented atomically when we reserved refNumber above.
 
         const uploadPromises = req.files.map(file => {
           const randomString = require('crypto').randomBytes(16).toString('hex');
@@ -811,21 +819,34 @@ app.post('/api/addprospectlegal', upload.array('pdfFile', 10), async (req, res) 
       }
     catch(err)
     {
+      if (err && err.code === 11000) {
+        console.error('Duplicate legal case reference number prevented by unique index:', err);
+        res.status(409).json({ error: 'Duplicate legal case reference number — please retry' });
+        return;
+      }
       console.error(err);
       res.status(500).json({ error: 'Error saving data' });
     }
-  
+
 });
 
 // Define the API endpoint to save data
 app.post('/api/addprospect', upload.array('pdfFile', 10), async (req, res) => {
   try{
-        const refNumber= await getCaseReferenceCount();
-        if(refNumber == -1)
-        {
+        // Atomically reserve a unique reference number. findOneAndUpdate with
+        // $inc is atomic in MongoDB, so two concurrent requests can never get
+        // the same value (which is how we previously ended up with duplicate
+        // cases). Without {new:true} the returned doc holds the pre-increment
+        // value — same numbering as before, just race-free.
+        const counterDoc = await counterSchemaObject.findOneAndUpdate(
+          { searchId: "keywordforsearch" },
+          { $inc: { caseReferenceNumberCount: 1 } }
+        );
+        if (!counterDoc) {
           res.status(500).json({ error: 'Error saving prospect data' });
           return;
         }
+        const refNumber = counterDoc.caseReferenceNumberCount;
 
         const newData = new dataSchemaObject({
                         patientName : req.body.patientName,
@@ -857,7 +878,7 @@ app.post('/api/addprospect', upload.array('pdfFile', 10), async (req, res) => {
                         legalCaseDetails: req.body.legalCaseDetails,
                       });
         const savedData = await newData.save();
-        incrementCaseReferenceCount();
+        // Counter was already incremented atomically when we reserved refNumber above.
 
         const uploadPromises = req.files.map(file => {
           const randomString = require('crypto').randomBytes(16).toString('hex');
@@ -893,6 +914,14 @@ app.post('/api/addprospect', upload.array('pdfFile', 10), async (req, res) => {
       }
     catch(err)
     {
+      // Belt-and-suspenders: the unique index on casereferenceNumber would
+      // surface here if the counter ever desynced. Return a clean error so
+      // the user can retry instead of silently double-saving.
+      if (err && err.code === 11000) {
+        console.error('Duplicate case reference number prevented by unique index:', err);
+        res.status(409).json({ error: 'Duplicate case reference number — please retry' });
+        return;
+      }
       console.error(err);
       res.status(500).json({ error: 'Error saving data' });
     }

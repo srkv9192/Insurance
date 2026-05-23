@@ -1643,7 +1643,7 @@ function movetolive(referencenumber) {
           case "Consent":
           $("#dataTable").DataTable()
           .columns(11)
-          .search($(this).text())
+          .search('^' + $(this).text().replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$', true, false)
           .draw();
             break;
 

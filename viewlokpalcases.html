@@ -2156,7 +2156,7 @@ $('ul').on('click', 'a', function() {
           case "Hearing":
           $("#dataTable").DataTable()
           .columns(20)
-          .search($(this).text())
+          .search('^' + $(this).text().replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$', true, false)
           .draw();
             break;
 

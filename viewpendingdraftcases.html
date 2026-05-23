@@ -2056,7 +2056,7 @@ function movetolive(referencenumber) {
           case "Pending Draft":
           $("#dataTable").DataTable()
           .columns(15)
-          .search($(this).text())
+          .search('^' + $(this).text().replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$', true, false)
           .draw();
             break;
 

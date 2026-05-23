@@ -1959,7 +1959,7 @@ function movetolive(referencenumber) {
           case "Disputed Payment":
           $("#dataTable").DataTable()
           .columns(14)
-          .search($(this).text())
+          .search('^' + $(this).text().replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$', true, false)
           .draw();
             break;
 

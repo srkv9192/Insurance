@@ -996,7 +996,7 @@ function addremarkInDB() {
           case "Referred to Senior":
           $("#dataTable").DataTable()
           .columns(8)
-          .search($(this).text())
+          .search('^' + $(this).text().replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$', true, false)
           .draw();
             break;
         }

@@ -1749,7 +1749,7 @@ function deleteDocument(refNumber, docUrl, element) {
           case "Escalation Query":
           $("#dataTable").DataTable()
           .columns(14)
-          .search($(this).text())
+          .search('^' + $(this).text().replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$', true, false)
           .draw();
             break;
 

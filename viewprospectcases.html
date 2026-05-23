@@ -1869,7 +1869,7 @@ function populatereport(refnumber)
           case "Rejected":
           $("#dataTable").DataTable()
           .columns(12)
-          .search($(this).text())
+          .search('^' + $(this).text().replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$', true, false)
           .draw();
             break;
 
