@@ -186,7 +186,19 @@
                         </div>
 
                       </div>
- 
+
+                      <div class="row mb-3">
+                        <div class="col-sm-12">
+                          <label class="form-label">Bank Documents (Cheque book, PAN card, etc.)</label>
+                          <div>
+                            <input type="file" id="bankDocs" accept="image/png,image/jpeg,application/pdf" multiple style="display:none;">
+                            <button type="button" class="btn btn-primary" id="uploadDocBtn">Upload Documents</button>
+                            <span id="bankDocsList" style="margin-left:10px;"></span>
+                          </div>
+                          <small>Selected images and PDFs are merged into a single PDF and saved.</small>
+                        </div>
+                      </div>
+
                       <button type="submit" class="btn btn-primary" style="width: 300px; margin-left: 150px ;">Submit</button>
                       
                     </form
@@ -371,6 +383,30 @@
         }
     });
 
+      // Trigger the hidden file input from the "Upload Documents" button and list chosen files.
+      $('#uploadDocBtn').on('click', function () {
+        $('#bankDocs').click();
+      });
+      $('#bankDocs').on('change', function () {
+        var names = [];
+        for (var i = 0; i < this.files.length; i++) {
+          names.push(this.files[i].name);
+        }
+        $('#bankDocsList').text(names.length ? names.join(', ') : '');
+      });
+
+      // Enable document upload only when bank details are "Available"; grey it out otherwise.
+      function toggleBankDocUpload() {
+        var available = $('#cpBankDetails').val() === 'Available';
+        $('#uploadDocBtn').prop('disabled', !available);
+        if (!available) {
+          $('#bankDocs').val('');
+          $('#bankDocsList').text('');
+        }
+      }
+      $('#cpBankDetails').on('change', toggleBankDocUpload);
+      toggleBankDocUpload();
+
       $('#loginForm').on('submit', function (event) {
         event.preventDefault();
 
@@ -392,31 +428,44 @@
         var email = $('#email').val();
         var cpCommission = $('#cpCommission').val();
         var cpBankDetails = $('#cpBankDetails').val();
-      
+
+        var bankDocsInput = document.getElementById('bankDocs');
+        // When bank details are "Available", uploading at least one document is mandatory.
+        if (cpBankDetails === 'Available' && bankDocsInput.files.length === 0) {
+          alert("Please upload bank documents (cheque book, PAN card, etc.) when Bank Details is set to Available.");
+          return;
+        }
+
+        // Build multipart form data so the uploaded bank documents are sent along with the fields.
+        var formData = new FormData();
+        formData.append('cpName', username);
+        formData.append('cpID', userid);
+        formData.append('cpAge', cpAge);
+        formData.append('cpGender', cpGender);
+        formData.append('cpFatherName', cpFatherName);
+        formData.append('cpAddress', cpAddress);
+        formData.append('cpCity', cpCity);
+        formData.append('cpState', cpState);
+        formData.append('cpQualification', cpQualification);
+        formData.append('cpProfession', cpProfession);
+        formData.append('cpCurrentCompany', cpCurrentCompany);
+        formData.append('managerID', managerid);
+        formData.append('phone', phone);
+        formData.append('alternatePhone', alternatePhone);
+        formData.append('email', email);
+        formData.append('cpCommission', cpCommission);
+        formData.append('cpBankDetails', cpBankDetails);
+        for (var i = 0; i < bankDocsInput.files.length; i++) {
+          formData.append('bankDocs', bankDocsInput.files[i]);
+        }
+
         // Make an API call with the username and password
         $.ajax({
           url: '/api/addcpdetail',
           type: 'POST',
-          contentType: "application/x-www-form-urlencoded",
-          data: {    
-            cpName: username,
-            cpID: userid,
-            cpAge: cpAge,
-            cpGender: cpGender,
-            cpFatherName: cpFatherName,
-            cpAddress: cpAddress,
-            cpCity: cpCity,
-            cpState: cpState,
-            cpQualification: cpQualification,
-            cpProfession: cpProfession,
-            cpCurrentCompany: cpCurrentCompany,
-            managerID: managerid,
-            phone: phone,
-            alternatePhone: alternatePhone,
-            email: email,
-            cpCommission: cpCommission,
-            cpBankDetails: cpBankDetails,
-          },
+          data: formData,
+          processData: false,
+          contentType: false,
           success: function (response) {
             if(response.message == "success")
               {

@@ -354,8 +354,32 @@ div.dataTables_filter {
                             </select>
                           </div>
 
+                          <div class="col-sm-4">
+                            <label class="form-label">Bank Documents</label>
+                            <div>
+                              <a id="currentBankDoc" href="#" target="_blank" style="display:none;">Open in new tab</a>
+                              <button type="button" class="btn btn-primary btn-sm" id="previewDocBtn" style="display:none; margin-right:10px;">Preview Document</button>
+                              <span id="noBankDoc" style="margin-right:10px;">No document uploaded</span>
+                            </div>
+                            <div style="margin-top:5px;">
+                              <input type="file" id="bankDocs" accept="image/png,image/jpeg,application/pdf" multiple style="display:none;">
+                              <button type="button" class="btn btn-primary btn-sm" id="uploadDocBtn">Upload Documents</button>
+                              <span id="bankDocsList" style="margin-left:10px;"></span>
+                            </div>
+                            <small>Uploading new files replaces the existing document.</small>
+                          </div>
+
                         </div>
-  
+
+                        <!-- Inline document preview. Loaded only when "Preview Document" is clicked so the
+                             cloud file is fetched on demand (not on every popup open) to keep egress costs down.
+                             Right-click / the PDF viewer's own controls let the user save the file locally. -->
+                        <div id="bankDocPreviewWrap" class="row mb-3" style="display:none;">
+                          <div class="col-sm-12">
+                            <iframe id="bankDocPreview" title="Bank Document Preview" src="" style="width:100%; height:60vh; border:2px dotted black; background:#fff;"></iframe>
+                          </div>
+                        </div>
+
                         <button type="submit" class="btn btn-primary" style="width: 300px; margin-left: 300px ;">Submit</button>
                         
                       </form>
@@ -526,6 +550,49 @@ const formattedToday = dd + '/' + mm + '/' + yyyy;
 }
   
 
+// Trigger the hidden file input from the "Upload Documents" button and list chosen files.
+$('#uploadDocBtn').on('click', function () {
+  $('#bankDocs').click();
+});
+$('#bankDocs').on('change', function () {
+  var names = [];
+  for (var i = 0; i < this.files.length; i++) {
+    names.push(this.files[i].name);
+  }
+  $('#bankDocsList').text(names.length ? names.join(', ') : '');
+});
+
+// Enable document upload only when bank details are "Available"; grey it out otherwise.
+function toggleBankDocUpload() {
+  var available = $('#cpBankDetails').val() === 'Available';
+  $('#uploadDocBtn').prop('disabled', !available);
+  if (!available) {
+    $('#bankDocs').val('');
+    $('#bankDocsList').text('');
+  }
+}
+$('#cpBankDetails').on('change', toggleBankDocUpload);
+
+// Inline preview, loaded on demand. The cloud file is fetched only when the user clicks
+// "Preview Document" (and only once per URL), so opening the edit popup never triggers a
+// cloud read by itself. Toggling the preview off/on reuses the already-loaded iframe.
+$('#previewDocBtn').on('click', function () {
+  var url = $('#currentBankDoc').attr('href');
+  if (!url || url === '#') return;
+  var iframe = document.getElementById('bankDocPreview');
+  var wrap = $('#bankDocPreviewWrap');
+  if (wrap.is(':visible')) {
+    wrap.hide();
+    $(this).text('Preview Document');
+  } else {
+    if (iframe.getAttribute('src') !== url) {
+      iframe.setAttribute('src', url); // first load (or after switching CP) — single fetch
+    }
+    wrap.show();
+    $(this).text('Hide Preview');
+  }
+});
+
 $('#loginForm').on('submit', function (event) {
         event.preventDefault();
 
@@ -548,31 +615,44 @@ $('#loginForm').on('submit', function (event) {
         var cpCommission = $('#cpCommission').val();
         var cpBankDetails = $('#cpBankDetails').val();
 
+        var bankDocsInput = document.getElementById('bankDocs');
+        // When bank details are "Available", a document is mandatory — either an existing one or a newly uploaded one.
+        var hasExistingDoc = $('#currentBankDoc').is(':visible');
+        if (cpBankDetails === 'Available' && bankDocsInput.files.length === 0 && !hasExistingDoc) {
+          alert("Please upload bank documents (cheque book, PAN card, etc.) when Bank Details is set to Available.");
+          return;
+        }
+
+        // Build multipart form data so any newly uploaded bank documents are sent along with the fields.
+        var formData = new FormData();
+        formData.append('cpName', username);
+        formData.append('cpID', userid);
+        formData.append('cpAge', cpAge);
+        formData.append('cpGender', cpGender);
+        formData.append('cpFatherName', cpFatherName);
+        formData.append('cpAddress', cpAddress);
+        formData.append('cpCity', cpCity);
+        formData.append('cpState', cpState);
+        formData.append('cpQualification', cpQualification);
+        formData.append('cpProfession', cpProfession);
+        formData.append('cpCurrentCompany', cpCurrentCompany);
+        formData.append('managerID', managerid);
+        formData.append('phone', phone);
+        formData.append('alternatePhone', alternatePhone);
+        formData.append('email', email);
+        formData.append('cpCommission', cpCommission);
+        formData.append('cpBankDetails', cpBankDetails);
+        for (var i = 0; i < bankDocsInput.files.length; i++) {
+          formData.append('bankDocs', bankDocsInput.files[i]);
+        }
 
         // Make an API call with the username and password
         $.ajax({
           url: '/api/editcpdetail',
           type: 'POST',
-          contentType: "application/x-www-form-urlencoded",
-          data: {    
-            cpName: username,
-            cpID: userid,
-            cpAge: cpAge,
-            cpGender: cpGender,
-            cpFatherName: cpFatherName,
-            cpAddress: cpAddress,
-            cpCity: cpCity,
-            cpState: cpState,
-            cpQualification: cpQualification,
-            cpProfession: cpProfession,
-            cpCurrentCompany: cpCurrentCompany,
-            managerID: managerid,
-            phone: phone,
-            alternatePhone: alternatePhone,
-            email: email,
-            cpCommission: cpCommission,
-            cpBankDetails: cpBankDetails,
-          },
+          data: formData,
+          processData: false,
+          contentType: false,
           success: function (response) {
             if(response.message == "success")
               {
@@ -737,7 +817,25 @@ function viewremark(referencenumber) {
         $('#email').val(response[0].email);
         $('#cpCommission').val(response[0].cpCommission);
         $('#cpBankDetails').val(response[0].cpBankDetails);
-        
+
+        // Reset the file picker and show the current bank document link (if any).
+        $('#bankDocs').val('');
+        $('#bankDocsList').text('');
+        // Reset the inline preview so switching between CPs never auto-fetches the previous doc.
+        $('#bankDocPreviewWrap').hide();
+        document.getElementById('bankDocPreview').setAttribute('src', '');
+        $('#previewDocBtn').text('Preview Document');
+        if (response[0].cpBankDetailsDoc) {
+          $('#currentBankDoc').attr('href', response[0].cpBankDetailsDoc).show();
+          $('#previewDocBtn').show();
+          $('#noBankDoc').hide();
+        } else {
+          $('#currentBankDoc').attr('href', '#').hide();
+          $('#previewDocBtn').hide();
+          $('#noBankDoc').show();
+        }
+        toggleBankDocUpload();
+
         },
         error: function (error) {
           console.error('Error:', error);
@@ -841,8 +939,17 @@ function movetolive(referencenumber) {
             else if(response.message =='advocate')
             {
               $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
-              document.getElementById("login-menu").href="/logout.html"; 
+              document.getElementById("login-menu").href="/logout.html";
               $("#showtoadvocate").show();
+              $("#hideonlogin").hide();
+              localStorage['userName'] = response.username;
+              localStorage['userType'] = response.message;
+            }
+            else if(response.message =='accountant')
+            {
+              $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+              document.getElementById("login-menu").href="/logout.html";
+              $("#showtoaccountant").show();
               $("#hideonlogin").hide();
               localStorage['userName'] = response.username;
               localStorage['userType'] = response.message;

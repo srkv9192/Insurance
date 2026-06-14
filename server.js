@@ -47,18 +47,22 @@ var nodemailer = require('nodemailer');
 // Base URL for generating customer-facing links (set in env for production)
 const BASE_URL = 'https://claimshield.in';
 
-// ===================== TWILIO SMS / WHATSAPP NOTIFICATION CONFIG =====================
-// Set NOTIFICATION_MODE to "sms", "whatsapp", or "both" to control notification type
-// Set ENABLE_NOTIFICATIONS to true/false to enable/disable notifications globally
-const ENABLE_NOTIFICATIONS = process.env.ENABLE_NOTIFICATIONS === 'true' || false;
-const NOTIFICATION_MODE = process.env.NOTIFICATION_MODE || 'sms'; // 'sms' | 'whatsapp' | 'both'
+// ===================== FAST2SMS (DLT) SMS NOTIFICATION CONFIG =====================
+// All customer SMS go out via Fast2SMS on the DLT route, so every message must map to a
+// DLT template that has been approved and added on the Fast2SMS dashboard. The code only
+// supplies the template's Message ID and the ordered variable values.
+const https = require('https');
 
-const twilioClient = require('twilio')(
-  process.env.TWILIO_ACCOUNT_SID,
-  process.env.TWILIO_AUTH_TOKEN
-);
-const TWILIO_PHONE_NUMBER = process.env.TWILIO_PHONE_NUMBER; // e.g. +1234567890
-const TWILIO_WHATSAPP_NUMBER = process.env.TWILIO_WHATSAPP_NUMBER; // e.g. +14155238886
+// Set ENABLE_NOTIFICATIONS to 'true' to actually send SMS.
+const ENABLE_NOTIFICATIONS = process.env.ENABLE_NOTIFICATIONS === 'true' || false;
+
+const FAST2SMS_API_KEY = process.env.FAST2SMS_API_KEY; // Fast2SMS "Dev API" key
+const FAST2SMS_SENDER_ID = process.env.FAST2SMS_SENDER_ID; // DLT-approved header, e.g. NIDAAN
+const FAST2SMS_ENTITY_ID = process.env.FAST2SMS_ENTITY_ID; // DLT Principal Entity (PE) ID
+
+// Numeric Message IDs that Fast2SMS assigns to each approved DLT template.
+const FAST2SMS_TEMPLATE_STATUS = process.env.FAST2SMS_TEMPLATE_STATUS; // case-status update
+const FAST2SMS_TEMPLATE_UPLOAD = process.env.FAST2SMS_TEMPLATE_UPLOAD; // document upload link
 
 // Customer-friendly messages for each bucket/status change
 const bucketNotificationMessages = {
@@ -78,49 +82,96 @@ const bucketNotificationMessages = {
   "Draft Query": "There is a query on your case draft. Our team is reviewing it."
 };
 
-// Send SMS and/or WhatsApp notification to customer
+// Low-level Fast2SMS DLT request. Resolves with the parsed response on success,
+// rejects with the API error message otherwise.
+function sendFast2SmsDlt({ messageId, variablesValues, numbers }) {
+  return new Promise((resolve, reject) => {
+    const params = new URLSearchParams({
+      route: 'dlt',
+      sender_id: FAST2SMS_SENDER_ID,
+      message: String(messageId),
+      variables_values: variablesValues,
+      flash: '0',
+      numbers: numbers,
+    });
+    if (FAST2SMS_ENTITY_ID) params.append('entity_id', FAST2SMS_ENTITY_ID);
+
+    const body = params.toString();
+    const req = https.request({
+      hostname: 'www.fast2sms.com',
+      path: '/dev/bulkV2',
+      method: 'POST',
+      headers: {
+        authorization: FAST2SMS_API_KEY,
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': Buffer.byteLength(body),
+      },
+    }, (res) => {
+      let data = '';
+      res.on('data', (chunk) => { data += chunk; });
+      res.on('end', () => {
+        let json;
+        try {
+          json = JSON.parse(data);
+        } catch (e) {
+          return reject(new Error(data || 'Invalid Fast2SMS response'));
+        }
+        if (json.return === true) return resolve(json);
+        const msg = Array.isArray(json.message) ? json.message.join('; ') : (json.message || data);
+        reject(new Error(msg));
+      });
+    });
+    req.on('error', reject);
+    req.write(body);
+    req.end();
+  });
+}
+
+// Send an SMS notification to the customer via Fast2SMS (DLT route).
 async function sendBucketNotification(phoneNumber, patientName, caseRefNumber, newStatus, uploadLink) {
   if (!ENABLE_NOTIFICATIONS || !phoneNumber) return;
-
-  let messageBody;
-  if (newStatus === '__UPLOAD_LINK__' && uploadLink) {
-    messageBody = `Dear ${patientName || 'Customer'},\n\nYour case (Ref: ${caseRefNumber}) has been registered with Nidaan.\n\nPlease upload your documents using this link:\n${uploadLink}\n\n- Team Nidaan`;
-  } else {
-    const messageTemplate = bucketNotificationMessages[newStatus];
-    if (!messageTemplate) return;
-    messageBody = `Dear ${patientName || 'Customer'},\n\nUpdate on your case (Ref: ${caseRefNumber}):\n${messageTemplate}\n\n- Team Nidaan`;
+  if (!FAST2SMS_API_KEY || !FAST2SMS_SENDER_ID) {
+    console.error('Fast2SMS not configured (FAST2SMS_API_KEY / FAST2SMS_SENDER_ID missing) - skipping SMS');
+    return;
   }
 
-  // Format phone number to E.164 (assume Indian numbers if no country code)
-  let formattedPhone = String(phoneNumber).trim();
-  if (!formattedPhone.startsWith('+')) {
-    formattedPhone = '+91' + formattedPhone;
+  // Fast2SMS expects a 10-digit Indian mobile number with no country code.
+  const digits = String(phoneNumber).replace(/\D/g, '');
+  const mobile = digits.length > 10 ? digits.slice(-10) : digits;
+  if (mobile.length !== 10) {
+    console.error(`Invalid phone number for SMS (${phoneNumber}) - skipping`);
+    return;
+  }
+
+  const name = patientName || 'Customer';
+  let messageId, variablesValues;
+
+  if (newStatus === '__UPLOAD_LINK__' && uploadLink) {
+    // Template vars (in order): name | reference number | upload link
+    messageId = FAST2SMS_TEMPLATE_UPLOAD;
+    variablesValues = [name, caseRefNumber, uploadLink].join('|');
+  } else {
+    const statusText = bucketNotificationMessages[newStatus];
+    if (!statusText) return;
+    // Template vars (in order): name | reference number | status text
+    messageId = FAST2SMS_TEMPLATE_STATUS;
+    variablesValues = [name, caseRefNumber, statusText].join('|');
+  }
+
+  if (!messageId) {
+    console.error(`No Fast2SMS template Message ID configured for "${newStatus}" - skipping SMS`);
+    return;
   }
 
   try {
-    if (NOTIFICATION_MODE === 'sms' || NOTIFICATION_MODE === 'both') {
-      await twilioClient.messages.create({
-        body: messageBody,
-        from: TWILIO_PHONE_NUMBER,
-        to: formattedPhone
-      });
-      console.log(`SMS sent to ${formattedPhone} for case ${caseRefNumber} - Status: ${newStatus}`);
-    }
-
-    if (NOTIFICATION_MODE === 'whatsapp' || NOTIFICATION_MODE === 'both') {
-      await twilioClient.messages.create({
-        body: messageBody,
-        from: 'whatsapp:' + TWILIO_WHATSAPP_NUMBER,
-        to: 'whatsapp:' + formattedPhone
-      });
-      console.log(`WhatsApp sent to ${formattedPhone} for case ${caseRefNumber} - Status: ${newStatus}`);
-    }
+    const resp = await sendFast2SmsDlt({ messageId, variablesValues, numbers: mobile });
+    console.log(`SMS sent to ${mobile} for case ${caseRefNumber} - Status: ${newStatus} - request_id: ${resp.request_id || 'n/a'}`);
   } catch (notifErr) {
     // Log error but do NOT fail the bucket transition
     console.error(`Notification failed for case ${caseRefNumber}:`, notifErr.message);
   }
 }
-// ===================== END TWILIO NOTIFICATION CONFIG =====================
+// ===================== END FAST2SMS NOTIFICATION CONFIG =====================
 
 const upload = multer({ storage: storage });
 const app = express()
@@ -135,16 +186,19 @@ const port = process.env.PORT || 80
 //});
 
 
+
 mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@cluster0.rldiof1.mongodb.net/nidaandatabase?retryWrites=true&w=majority`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
 /*
+
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
 */
 
 const cookieParser = require("cookie-parser");
@@ -229,6 +283,48 @@ async function uploadFileToGCSLegal(filePath, destination , referencenumber) {
   await addDocURLInDBbyrefLegal(referencenumber , url)
 
   await fs.promises.unlink(filePath);
+}
+
+// Merge a set of uploaded files (images and/or PDFs) into a single PDF buffer.
+// Images (jpg/jpeg/png) each become a full page; PDF pages are copied through as-is.
+async function mergeFilesToPdfBuffer(files) {
+  const { PDFDocument } = require('pdf-lib');
+  const mergedPdf = await PDFDocument.create();
+  for (const file of files) {
+    const ext = path.extname(file.originalname).toLowerCase();
+    const bytes = await fs.promises.readFile(file.path);
+    if (ext === '.pdf') {
+      const src = await PDFDocument.load(bytes);
+      const copiedPages = await mergedPdf.copyPages(src, src.getPageIndices());
+      copiedPages.forEach(p => mergedPdf.addPage(p));
+    } else if (ext === '.jpg' || ext === '.jpeg' || ext === '.png') {
+      const img = ext === '.png' ? await mergedPdf.embedPng(bytes) : await mergedPdf.embedJpg(bytes);
+      const page = mergedPdf.addPage([img.width, img.height]);
+      page.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });
+    }
+    // unsupported types are skipped silently
+  }
+  const mergedBytes = await mergedPdf.save();
+  return Buffer.from(mergedBytes);
+}
+
+// Upload an in-memory buffer to Google Cloud Storage and return its public URL.
+async function uploadBufferToGCS(buffer, destination) {
+  await storagegcp.bucket(String(bucketName)).file(destination).save(buffer, { resumable: false });
+  const url = `https://storage.googleapis.com/rspowerimages/${destination}`;
+  console.log(`buffer uploaded to ${bucketName} as ${destination}`);
+  return url;
+}
+
+// Merge a CP's uploaded bank documents into one PDF, upload it, and return the URL.
+// Temp files left on disk by multer are cleaned up afterwards.
+async function buildCpBankDetailsDoc(cpID, files) {
+  const mergedBuffer = await mergeFilesToPdfBuffer(files);
+  const randomString = crypto.randomBytes(8).toString('hex');
+  const destination = `cpbankdetails/${cpID}-bankdetails-${randomString}.pdf`;
+  const url = await uploadBufferToGCS(mergedBuffer, destination);
+  await Promise.all(files.map(f => fs.promises.unlink(f.path).catch(() => {})));
+  return url;
 }
 
 //
@@ -561,6 +657,7 @@ const cpSchema = new mongoose.Schema({
   email: String,
   cpCommission: Number,
   cpBankDetails: String,
+  cpBankDetailsDoc: String, // URL of merged PDF of uploaded bank documents (cheque book, PAN card, etc.)
   // Add more fields as needed
 });
 
@@ -891,7 +988,7 @@ app.post('/api/addprospect', upload.array('pdfFile', 10), async (req, res) => {
 
       await Promise.all(uploadPromises);
 
-        // Generate customer upload link and send via SMS/WhatsApp
+        // Generate customer upload link and send via SMS
         try {
           const token = require('crypto').randomBytes(32).toString('hex');
           const newToken = new uploadTokenSchemaObject({
@@ -2739,16 +2836,18 @@ app.get("/api/getadvocatedetail", async(req, res) => {
 
 
 
-app.post('/api/addcpdetail', async(req, res) => {
+app.post('/api/addcpdetail', upload.array('bankDocs', 10), async(req, res) => {
   try{
 
     const docsCombo = await cpSchemaObject.findOne({cpName: req.body.cpName, cpFatherName: req.body.cpFatherName, phone: req.body.phone});
     if (docsCombo) {
+      if (req.files) await Promise.all(req.files.map(f => fs.promises.unlink(f.path).catch(() => {})));
       res.json({message : 'duplicatecombo'});
       return;
     }
         const docs = await cpSchemaObject.findOne({cpID: req.body.cpID});
         if (docs) {
+          if (req.files) await Promise.all(req.files.map(f => fs.promises.unlink(f.path).catch(() => {})));
           res.json({message : 'duplicate'});
           return;
         }
@@ -2759,6 +2858,13 @@ app.post('/api/addcpdetail', async(req, res) => {
           res.status(500).json({ error: 'Error saving manager data' });
           return;
         }
+
+        // If bank documents were uploaded, merge them into a single PDF and store its URL.
+        let cpBankDetailsDoc = "";
+        if (req.files && req.files.length > 0) {
+          cpBankDetailsDoc = await buildCpBankDetailsDoc(req.body.cpID, req.files);
+        }
+
         const newData = new cpSchemaObject({
                         'cpID' : req.body.cpID,
                         'cpName' : req.body.cpName,
@@ -2777,6 +2883,7 @@ app.post('/api/addcpdetail', async(req, res) => {
                         'email' : req.body.email,
                         'cpCommission': req.body.cpCommission,
                         'cpBankDetails': req.body.cpBankDetails,
+                        'cpBankDetailsDoc': cpBankDetailsDoc,
                         });
         const savedData = newData.save();
         await incrementcpCount();
@@ -2786,13 +2893,20 @@ app.post('/api/addcpdetail', async(req, res) => {
     {
       console.error(err);
       res.status(500).json({ error: 'Error saving cp data' });
-    } 
+    }
 });
 
-app.post('/api/editcpdetail', async(req, res) => {
+app.post('/api/editcpdetail', upload.array('bankDocs', 10), async(req, res) => {
   try{
 
-        const newData = await cpSchemaObject.findOneAndUpdate({cpID : req.body.cpID}, {$set:{ 'cpName' : req.body.cpName, 'cpAge' : req.body.cpAge, 'cpGender' : req.body.cpGender, 'cpFatherName' : req.body.cpFatherName,  'cpAddress' : req.body.cpAddress,'cpCity' : req.body.cpCity, 'cpState' : req.body.cpState,'cpQualification' : req.body.cpQualification,  'cpProfession' : req.body.cpProfession, 'cpCurrentCompany' : req.body.cpCurrentCompany,'managerID': req.body.managerID, 'phone' : req.body.phone, 'alternatePhone' : req.body.alternatePhone, 'email' : req.body.email,'cpCommission': req.body.cpCommission, 'cpBankDetails': req.body.cpBankDetails,}});
+        const updateFields = { 'cpName' : req.body.cpName, 'cpAge' : req.body.cpAge, 'cpGender' : req.body.cpGender, 'cpFatherName' : req.body.cpFatherName,  'cpAddress' : req.body.cpAddress,'cpCity' : req.body.cpCity, 'cpState' : req.body.cpState,'cpQualification' : req.body.cpQualification,  'cpProfession' : req.body.cpProfession, 'cpCurrentCompany' : req.body.cpCurrentCompany,'managerID': req.body.managerID, 'phone' : req.body.phone, 'alternatePhone' : req.body.alternatePhone, 'email' : req.body.email,'cpCommission': req.body.cpCommission, 'cpBankDetails': req.body.cpBankDetails };
+
+        // If new bank documents were uploaded, merge them into a single PDF and replace the stored URL.
+        if (req.files && req.files.length > 0) {
+          updateFields.cpBankDetailsDoc = await buildCpBankDetailsDoc(req.body.cpID, req.files);
+        }
+
+        const newData = await cpSchemaObject.findOneAndUpdate({cpID : req.body.cpID}, {$set: updateFields});
 
         if(newData == null)
         {
@@ -4810,7 +4924,7 @@ app.get('/createadvocate.html', (req, res) =>
 
 app.get('/editcp.html', (req, res) =>{
 
-  if (req.session.userId && (req.session.userType == 'admin')) {
+  if (req.session.userId && (req.session.userType == 'admin' || req.session.userType == 'accountant')) {
         res.sendFile(__dirname + '/editcp.html');
     } else {
         res.status(403).send("You do not have permission to view this page. Do not attempt it again or the account will be locked.");
