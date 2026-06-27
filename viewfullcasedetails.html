@@ -152,10 +152,12 @@ div.dataTables_filter {
   transition: opacity 500ms;
   visibility: hidden;
   opacity: 0;
+  pointer-events: none;
 }
 .overlay:target {
   visibility: visible;
   opacity: 1;
+  pointer-events: auto;
 }
 
 .popup {

@@ -163,10 +163,12 @@ div.dataTables_filter {
   transition: opacity 500ms;
   visibility: hidden;
   opacity: 0;
+  pointer-events: none;
 }
 .overlay:target {
   visibility: visible;
   opacity: 1;
+  pointer-events: auto;
 }
 
 .popup {
@@ -1047,8 +1049,7 @@ function populatereport(refnumber)
              // document.getElementById("popup2").style.opacity = 1;
 
              // document.getElementById("popup2").scrollIntoView(true);
-              window.location = localStorage['baseurl'] + "#popup2" 
-              
+              location.hash = "#popup2"
               console.log("india...");
             },
             error: function (error) {
