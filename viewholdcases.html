@@ -461,7 +461,17 @@ div.dataTables_filter {
                               <label class="form-label"><strong>Bank Name  :</strong></label>
                               <span data-info="reportbankname">[Remarks]</span>
                             </div>
-                            
+
+                          </div>
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>PF Transaction Number :</strong></label>
+                              <span data-info="reportpftransactionnumber">-</span>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>CF Transaction Number :</strong></label>
+                              <span data-info="reportcftransactionnumber">-</span>
+                            </div>
                           </div>
 
                       </div>
@@ -869,8 +879,12 @@ function populatereport(refnumber)
 
               document.querySelector('[data-info="reportbankname"]').textContent =response[0].cfBankName ? response[0].cfBankName : "";
 
-                   
-             
+              document.querySelector('[data-info="reportpftransactionnumber"]').textContent =response[0].pfTransactionNumber ? response[0].pfTransactionNumber : "";
+
+              document.querySelector('[data-info="reportcftransactionnumber"]').textContent =response[0].cfTransactionNumber ? response[0].cfTransactionNumber : "";
+
+
+
               // Assuming the JSON response object is 'response' and it contains 'caseRemarks' as a comma-separated string
                
                  var remarks = response[0].caseRemarks;

@@ -192,6 +192,7 @@ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS
   useUnifiedTopology: true,
 });
 
+
 /*
 
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
@@ -369,6 +370,8 @@ const dataSchema = new mongoose.Schema({
   extraRemarks: String,
   pfpayeeName: String,
   pfAmount: String,
+  pfTransactionNumber: String,
+  cfTransactionNumber: String,
   pfReceived: String,
   pfpaymentRemarks: String,
   pfpaymentMode: String,
@@ -1973,10 +1976,10 @@ async function addDocURLInDBbycasenum(casenumber , url)
 }
 
 
-app.post('/api/addpfremark', upload.array('pdfFile', 10), async(req, res) => {
+app.post('/api/addpfremark', upload.fields([{name: 'pdfFile', maxCount: 10}, {name: 'pfScreenshot', maxCount: 1}]), async(req, res) => {
   try{
 
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfpaymentRemarks:req.body.pfpaymentRemarks,  pfpaymentDate:req.body.pfpaymentDate, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,   caseEmail: req.body.caseEmail, caseEmailPassword: req.body.caseEmailPassword, cfBankName: req.body.cfBankName, isLive: "true", newCaseStatus : "Live", liveDate : req.body.liveDate , claimAmount:req.body.claimAmount}});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfTransactionNumber:req.body.pfTransactionNumber, cfTransactionNumber:req.body.cfTransactionNumber, pfpaymentRemarks:req.body.pfpaymentRemarks,  pfpaymentDate:req.body.pfpaymentDate, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,   caseEmail: req.body.caseEmail, caseEmailPassword: req.body.caseEmailPassword, cfBankName: req.body.cfBankName, isLive: "true", newCaseStatus : "Live", liveDate : req.body.liveDate , claimAmount:req.body.claimAmount}});
 
       if(newData == null)
       {
@@ -1985,15 +1988,25 @@ app.post('/api/addpfremark', upload.array('pdfFile', 10), async(req, res) => {
       else
       {
         const savedData = newData.save();
-         const uploadPromises = req.files.map(file => {
+        const regularFiles = req.files['pdfFile'] || [];
+        const uploadPromises = regularFiles.map(file => {
           const randomString = require('crypto').randomBytes(16).toString('hex');
-          const fileNameExceptExtension =file.originalname.split('.')[0];
+          const fileNameExceptExtension = file.originalname.split('.')[0];
           const extension = path.extname(file.originalname);
-
           const destination = `uploads/${req.body.casereferenceNumber}-${fileNameExceptExtension}-${randomString}${extension}`;
           return uploadFileToGCS(file.path, destination, req.body.casereferenceNumber);
         });
         await Promise.all(uploadPromises);
+
+        const screenshotFiles = req.files['pfScreenshot'] || [];
+        if (screenshotFiles.length > 0) {
+          const screenshotFile = screenshotFiles[0];
+          const randomString = require('crypto').randomBytes(16).toString('hex');
+          const extension = path.extname(screenshotFile.originalname);
+          const destination = `uploads/${req.body.casereferenceNumber}-PF_Screenshot-${randomString}${extension}`;
+          await uploadFileToGCS(screenshotFile.path, destination, req.body.casereferenceNumber);
+        }
+
         res.json({ message: 'success'});
       }
     }
@@ -2001,7 +2014,7 @@ app.post('/api/addpfremark', upload.array('pdfFile', 10), async(req, res) => {
   {
     console.error(err);
     res.status(500).json({ error: 'Error adding pf remark' });
-  } 
+  }
 
 });
 

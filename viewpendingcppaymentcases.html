@@ -522,6 +522,16 @@ div.dataTables_filter {
                               <span data-info="reportbankname">[Remarks]</span>
                             </div>
                           </div>
+                          <div style="display: flex; justify-content: space-between;">
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>PF Transaction Number :</strong></label>
+                              <span data-info="reportpftransactionnumber">-</span>
+                            </div>
+                            <div style="flex: 1;">
+                              <label class="form-label"><strong>CF Transaction Number :</strong></label>
+                              <span data-info="reportcftransactionnumber">-</span>
+                            </div>
+                          </div>
 
                           <div style="display: flex; justify-content: space-between;">
                             <div style="flex: 1;">
@@ -1073,6 +1083,10 @@ function populatereport(refnumber)
               document.querySelector('[data-info="reportchequenumber"]').textContent =response[0].cfChequeNumber ? response[0].cfChequeNumber : "";
 
               document.querySelector('[data-info="reportbankname"]').textContent =response[0].cfBankName ? response[0].cfBankName : "";
+
+              document.querySelector('[data-info="reportpftransactionnumber"]').textContent =response[0].pfTransactionNumber ? response[0].pfTransactionNumber : "";
+
+              document.querySelector('[data-info="reportcftransactionnumber"]').textContent =response[0].cfTransactionNumber ? response[0].cfTransactionNumber : "";
 
               document.querySelector('[data-info="reportoperationofficer"]').textContent =response[0].operationOfficer ? response[0].operationOfficer : "";
 
