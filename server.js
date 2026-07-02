@@ -85,6 +85,17 @@ const bucketNotificationMessages = {
 
 // Low-level Fast2SMS DLT request. Resolves with the parsed response on success,
 // rejects with the API error message otherwise.
+function getISTScheduleTime() {
+  const now = new Date();
+  const ist = new Date(now.getTime() + 5.5 * 60 * 60 * 1000);
+  const dd = String(ist.getUTCDate()).padStart(2, '0');
+  const mm = String(ist.getUTCMonth() + 1).padStart(2, '0');
+  const yyyy = ist.getUTCFullYear();
+  const hh = String(ist.getUTCHours()).padStart(2, '0');
+  const min = String(ist.getUTCMinutes()).padStart(2, '0');
+  return `${dd}-${mm}-${yyyy} ${hh}:${min}`;
+}
+
 function sendFast2SmsDlt({ messageId, variablesValues, numbers }) {
   return new Promise((resolve, reject) => {
     const params = new URLSearchParams({
@@ -94,6 +105,7 @@ function sendFast2SmsDlt({ messageId, variablesValues, numbers }) {
       variables_values: variablesValues,
       flash: '0',
       numbers: numbers,
+      schedule_time: getISTScheduleTime(),
     });
     if (FAST2SMS_ENTITY_ID) params.append('entity_id', FAST2SMS_ENTITY_ID);
 
