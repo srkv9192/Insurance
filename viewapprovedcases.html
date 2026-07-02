@@ -457,10 +457,6 @@ div.dataTables_filter {
                               <label for="pf-transaction-number-final" class="form-label">PF Transaction Number</label>
                               <input type="text" class="form-control" id="pf-transaction-number-final">
                             </div>
-                            <div class="col-sm-6">
-                              <label for="cf-transaction-number-final" class="form-label">CF Transaction Number <span style="color:red;">*</span></label>
-                              <input type="text" class="form-control" id="cf-transaction-number-final" required>
-                            </div>
                           </div>
 
                           <div class="row mb-3">
@@ -1626,23 +1622,13 @@ function populatereport(refnumber)
 
 
         $('#paymentForm').on('submit', function (event) {
+        event.preventDefault();
 
-            if($('#cf-transaction-number-final').val().trim() == '')
+            if($('#pdf-input')[0].files.length == 0)
             {
-              alert("CF Transaction Number is mandatory to move case to live.");
+              alert("Please upload signed legal document.");
               return;
             }
-
-            if($('#legal-required-dropdown').val() == "Required")
-            {
-              if($('#pdf-input')[0].files.length == 0)
-              {
-                alert("Please upload signed legal.");
-                return;
-              }
-            }
-
-        event.preventDefault();
 
         var processingfeeFinal = $('#pf-amount-final').val();
         var consultationchargeFinal = $('#consultation-charge-final').val();
@@ -1684,7 +1670,6 @@ function populatereport(refnumber)
 
           formData.append('liveDate', new Date());
           formData.append('pfTransactionNumber', $('#pf-transaction-number-final').val());
-          formData.append('cfTransactionNumber', $('#cf-transaction-number-final').val());
 
           $.each($('#pdf-input')[0].files, function(i, file) {
             formData.append('pdfFile', file);

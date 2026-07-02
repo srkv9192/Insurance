@@ -1002,10 +1002,10 @@ app.post('/api/addprospect', upload.array('pdfFile', 10), async (req, res) => {
           await newToken.save();
 
           const uploadLink = `${BASE_URL}/customerupload.html?token=${token}`;
-          const customerPhone = req.body.complainantMobile || req.body.patientMobile;
-          if (customerPhone) {
-            sendBucketNotification(customerPhone, req.body.patientName, refNumber, '__UPLOAD_LINK__', uploadLink);
-          }
+          // const customerPhone = req.body.complainantMobile || req.body.patientMobile;
+          // if (customerPhone) {
+          //   sendBucketNotification(customerPhone, req.body.patientName, refNumber, '__UPLOAD_LINK__', uploadLink);
+          // }
           res.json({ message: 'success', referencenumber: refNumber, data: savedData, uploadLink: uploadLink });
         } catch (tokenErr) {
           console.error('Error generating upload token:', tokenErr.message);
@@ -1768,7 +1768,7 @@ app.post('/api/addcasenidaanpaymentdetails', async(req, res) => {
       newstatus = "Bank Details Missing"
     }
 
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{caseRemarks:req.body.caseRemarks}, $set:{ caseNidaanReceivedAmountDate:req.body.caseNidaanReceivedAmountDate, caseNidaanReceivedAmount: req.body.caseNidaanReceivedAmount , caseNidaanReceivedAmountMode: req.body.caseNidaanReceivedAmountMode, caseCPFinalAmount: req.body.caseCPFinalAmount, isPendingPayment: "false", isPendingCPPayment: "true", newCaseStatus: newstatus, cpBankDetails: req.body.cpBankDetails, cppaymentbucketDate : req.body.cppaymentbucketDate }});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$push:{caseRemarks:req.body.caseRemarks}, $set:{ caseNidaanReceivedAmountDate:req.body.caseNidaanReceivedAmountDate, caseNidaanReceivedAmount: req.body.caseNidaanReceivedAmount , caseNidaanReceivedAmountMode: req.body.caseNidaanReceivedAmountMode, caseCPFinalAmount: req.body.caseCPFinalAmount, isPendingPayment: "false", isPendingCPPayment: "true", newCaseStatus: newstatus, cpBankDetails: req.body.cpBankDetails, cppaymentbucketDate : req.body.cppaymentbucketDate, cfTransactionNumber: req.body.cfTransactionNumber }});
 
       if(newData == null)
       {
@@ -1979,7 +1979,7 @@ async function addDocURLInDBbycasenum(casenumber , url)
 app.post('/api/addpfremark', upload.fields([{name: 'pdfFile', maxCount: 10}, {name: 'pfScreenshot', maxCount: 1}]), async(req, res) => {
   try{
 
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfTransactionNumber:req.body.pfTransactionNumber, cfTransactionNumber:req.body.cfTransactionNumber, pfpaymentRemarks:req.body.pfpaymentRemarks,  pfpaymentDate:req.body.pfpaymentDate, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,   caseEmail: req.body.caseEmail, caseEmailPassword: req.body.caseEmailPassword, cfBankName: req.body.cfBankName, isLive: "true", newCaseStatus : "Live", liveDate : req.body.liveDate , claimAmount:req.body.claimAmount}});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfTransactionNumber:req.body.pfTransactionNumber, pfpaymentRemarks:req.body.pfpaymentRemarks,  pfpaymentDate:req.body.pfpaymentDate, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,   caseEmail: req.body.caseEmail, caseEmailPassword: req.body.caseEmailPassword, cfBankName: req.body.cfBankName, isLive: "true", newCaseStatus : "Live", liveDate : req.body.liveDate , claimAmount:req.body.claimAmount}});
 
       if(newData == null)
       {
@@ -4807,9 +4807,9 @@ app.post('/api/resenduploadlink', async (req, res) => {
     const uploadLink = `${BASE_URL}/customerupload.html?token=${token}`;
     const phone = caseData.complainantMobile || caseData.patientMobile;
 
-    if (phone) {
-      await sendBucketNotification(phone, caseData.patientName, req.body.casereferenceNumber, '__UPLOAD_LINK__', uploadLink);
-    }
+    // if (phone) {
+    //   await sendBucketNotification(phone, caseData.patientName, req.body.casereferenceNumber, '__UPLOAD_LINK__', uploadLink);
+    // }
 
     res.json({ message: 'success', uploadLink: uploadLink });
   } catch (err) {

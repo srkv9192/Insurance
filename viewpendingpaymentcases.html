@@ -846,6 +846,10 @@ div.dataTables_filter {
                           <label for="movetofinishedremark" style="color: white;">Remark</label>
                           <input type="text" class="form-control" id="movetofinishedremark" placeholder="Enter remark" required>
                         </div>
+                          <div class="col-sm-6">
+                            <label for="cfTransactionNumber" style="color: white;">CF Transaction Number <span style="color:red;">*</span></label>
+                            <input type="text" class="form-control" id="cfTransactionNumber" placeholder="Enter CF transaction number" required>
+                          </div>
                         </div>
 
 
@@ -1527,6 +1531,12 @@ function viewremark(referencenumber) {
         return;
       }
 
+      if( document.getElementById("cfTransactionNumber").value.trim() == "")
+        {
+        alert("CF Transaction Number is mandatory!");
+        return;
+      }
+
         var paymentdate = $('#nidaanAmountDate').val();
         var remark = $('#movetofinishedremark').val();
         var nidaanAmount = $('#nidaanAmount').val();
@@ -1536,6 +1546,7 @@ function viewremark(referencenumber) {
 
         var modeofpaymentAmount = $('#payment-mode-dropdown').val();
         var cpBankDetails = $('#cpBankDetails').val();
+        var cfTransactionNumber = $('#cfTransactionNumber').val();
 
         const today = new Date();
       const yyyy = today.getFullYear();
@@ -1560,6 +1571,7 @@ function viewremark(referencenumber) {
               caseCPFinalAmount : cpAmount,
               cpBankDetails : cpBankDetails,
               cppaymentbucketDate : new Date(),
+              cfTransactionNumber : cfTransactionNumber,
               
             }),
             success: function(response) {
