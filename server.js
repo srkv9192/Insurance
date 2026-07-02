@@ -79,7 +79,8 @@ const bucketNotificationMessages = {
   "Pending Draft": "Your case is now in the draft preparation stage. We will update you once the draft is ready.",
   "Reject Reconsideration": "Your case is being reconsidered. We will keep you informed of the outcome.",
   "Disputed Payment": "A payment dispute has been raised on your case. Our team will contact you for resolution.",
-  "Draft Query": "There is a query on your case draft. Our team is reviewing it."
+  "Draft Query": "There is a query on your case draft. Our team is reviewing it.",
+  "New Case": "New Case Registered. Our team will contact you shortly."
 };
 
 // Low-level Fast2SMS DLT request. Resolves with the parsed response on success,
@@ -990,6 +991,8 @@ app.post('/api/addprospect', upload.array('pdfFile', 10), async (req, res) => {
         });
 
       await Promise.all(uploadPromises);
+
+        sendBucketNotification(req.body.complainantMobile || req.body.patientMobile, req.body.patientName, refNumber, 'New Case');
 
         // Generate customer upload link and send via SMS
         try {
