@@ -87,7 +87,7 @@ const bucketNotificationMessages = {
 // rejects with the API error message otherwise.
 function getISTScheduleTime() {
   const now = new Date();
-  const ist = new Date(now.getTime() + 5.5 * 60 * 60 * 1000);
+  const ist = new Date(now.getTime() + 5.5 * 60 * 60 * 1000 + 3 * 60 * 1000);
   const dd = String(ist.getUTCDate()).padStart(2, '0');
   const mm = String(ist.getUTCMonth() + 1).padStart(2, '0');
   const yyyy = ist.getUTCFullYear();
