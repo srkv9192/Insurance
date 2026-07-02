@@ -33,8 +33,5 @@
   "engines": {
     "node": ">=14 <15"
   },
-  "keywords": [],
-  "devDependencies": {
-    "playwright": "^1.61.1"
-  }
+  "keywords": []
 }
