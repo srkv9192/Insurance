@@ -61,26 +61,27 @@ const FAST2SMS_SENDER_ID = process.env.FAST2SMS_SENDER_ID; // DLT-approved heade
 const FAST2SMS_ENTITY_ID = process.env.FAST2SMS_ENTITY_ID; // DLT Principal Entity (PE) ID
 
 // Numeric Message IDs that Fast2SMS assigns to each approved DLT template.
-const FAST2SMS_TEMPLATE_STATUS = process.env.FAST2SMS_TEMPLATE_STATUS; // case-status update
+const FAST2SMS_TEMPLATE_STATUS = process.env.FAST2SMS_TEMPLATE_STATUS; // case-status update (old 3-var, kept as fallback)
+const FAST2SMS_TEMPLATE_STATUS_4VAR = process.env.FAST2SMS_TEMPLATE_STATUS_4VAR || '1207178340203334136'; // status_msg_4_vars
 const FAST2SMS_TEMPLATE_UPLOAD = process.env.FAST2SMS_TEMPLATE_UPLOAD; // document upload link
+const FAST2SMS_TEMPLATE_AUTH = process.env.FAST2SMS_TEMPLATE_AUTH || '1207178340218057400'; // authorization_template
+const FAST2SMS_TEMPLATE_OTP  = process.env.FAST2SMS_TEMPLATE_OTP  || '1207178340493906699'; // otp_template
 
 // Customer-friendly messages for each bucket/status change
 const bucketNotificationMessages = {
-  "Completed": "Your case has been completed. Thank you for choosing Nidaan. For any queries, please contact us.",
-  "Lokpal Pending": "Your case has been escalated to Lokpal. We will keep you updated on further proceedings.",
-  "Escalation Pending": "Your case has been moved to escalation. Our team is working on it and will update you shortly.",
-  "Hold": "Your case has been put on hold. We will notify you once it is resumed.",
-  "Hold Return": "Your case has been resumed from hold. Our team is actively working on it.",
-  "Escalation Query": "There is a query on your escalation case. Our team will reach out to you if any information is needed.",
-  "Reimbursement Query": "There is a query regarding your reimbursement. Our team may reach out for additional details.",
-  "Reimbursement": "Your case has been moved to the reimbursement stage. We are processing it.",
-  "Reimbursement Pending": "Your reimbursement is pending. We will update you once it is processed.",
-  "Pending Doc": "Your case requires additional documents. Please submit the required documents at the earliest.",
-  "Pending Draft": "Your case is now in the draft preparation stage. We will update you once the draft is ready.",
-  "Reject Reconsideration": "Your case is being reconsidered. We will keep you informed of the outcome.",
-  "Disputed Payment": "A payment dispute has been raised on your case. Our team will contact you for resolution.",
-  "Draft Query": "There is a query on your case draft. Our team is reviewing it.",
-  "New Case": "New Case Registered. Our team will contact you shortly."
+  "New Case": "Your case has been registered in Nidaan LLP Thank you for choosing Us.",
+  "Pending Doc": "Your case is in pending docs with Nidaan Kindly contact us immediately",
+  "Reimbursement Pending": "Your MR file with Nidaan is pending under short fall of Docs kindly contact us",
+  "Reimbursement": "Your MR file has been submitted in the company.",
+  "Escalation Pending": "Your case is pending due to some Imp Requirement kindly contact us immediately",
+  "Escalated": "Your case has been escalated to the company thank you for choosing us",
+  "Lokpal Pending": "Your case has been moved for Lokpal Registration our team will contact you",
+  "Annexure5Updated": "Your case is pending with nidaan under Anx 5 reply Kindly contact us.",
+  "Annexure6Updated": "Your case is pending under Anx 6 reply kindly contact us immediately",
+  "HearingDateUpdated": "Your case hearing date is Fixed Kindly contact us immediately.",
+  "Completed": "Your case is completed through Consent/Hearing. Thank you for choosing us.",
+  "Award WON": "Your case is WON Kindly contact us for further details",
+  "Award LOST": "Your case is LOST Kindly contact us for further details",
 };
 
 // Low-level Fast2SMS DLT request. Resolves with the parsed response on success,
@@ -154,9 +155,11 @@ async function sendBucketNotification(phoneNumber, patientName, caseRefNumber, n
   } else {
     const statusText = bucketNotificationMessages[newStatus];
     if (!statusText) return;
-    // Template vars (in order): name | reference number | status text
-    messageId = FAST2SMS_TEMPLATE_STATUS;
-    variablesValues = [name, caseRefNumber, statusText].join('|');
+    // Split into two 40-char chunks for the 4-var status template (var3 + var4 = 80 chars total)
+    const part1 = statusText.substring(0, 40);
+    const part2 = statusText.substring(40, 80);
+    messageId = FAST2SMS_TEMPLATE_STATUS_4VAR;
+    variablesValues = [name, caseRefNumber, part1, part2].join('|');
   }
 
   if (!messageId) {
@@ -172,6 +175,42 @@ async function sendBucketNotification(phoneNumber, patientName, caseRefNumber, n
     console.error(`Notification failed for case ${caseRefNumber}:`, notifErr.message);
   }
 }
+// Send authorization link + OTP SMS to customer when case is moved to pending-auth.
+async function sendAuthAndOtpSms(phoneNumber, patientName, caseRefNumber, authLink, otp) {
+  if (!ENABLE_NOTIFICATIONS || !phoneNumber) return;
+  if (!FAST2SMS_API_KEY || !FAST2SMS_SENDER_ID) {
+    console.error('Fast2SMS not configured - skipping auth/OTP SMS');
+    return;
+  }
+  const digits = String(phoneNumber).replace(/\D/g, '');
+  const mobile = digits.length > 10 ? digits.slice(-10) : digits;
+  if (mobile.length !== 10) {
+    console.error(`Invalid phone number for auth SMS (${phoneNumber}) - skipping`);
+    return;
+  }
+  const name = patientName || 'Customer';
+  try {
+    await sendFast2SmsDlt({
+      messageId: FAST2SMS_TEMPLATE_AUTH,
+      variablesValues: [name, caseRefNumber, authLink].join('|'),
+      numbers: mobile,
+    });
+    console.log(`Auth link SMS sent to ${mobile} for case ${caseRefNumber}`);
+  } catch (e) {
+    console.error(`Auth link SMS failed for case ${caseRefNumber}:`, e.message);
+  }
+  try {
+    await sendFast2SmsDlt({
+      messageId: FAST2SMS_TEMPLATE_OTP,
+      variablesValues: [name, caseRefNumber, otp].join('|'),
+      numbers: mobile,
+    });
+    console.log(`OTP SMS sent to ${mobile} for case ${caseRefNumber}`);
+  } catch (e) {
+    console.error(`OTP SMS failed for case ${caseRefNumber}:`, e.message);
+  }
+}
+
 // ===================== END FAST2SMS NOTIFICATION CONFIG =====================
 
 const upload = multer({ storage: storage });
@@ -753,6 +792,18 @@ const cpSchemaObject = mongoose.model('cpdetails', cpSchema);
 //table to hold customer upload tokens
 const uploadTokenSchemaObject = mongoose.model('uploadtoken', uploadTokenSchema);
 
+// Schema for customer authorization tokens (sent before case goes live)
+const authTokenSchema = new mongoose.Schema({
+  token: { type: String, unique: true, required: true },
+  casereferenceNumber: { type: String, required: true },
+  formData: Object,
+  otp: { type: String },
+  isAccepted: { type: Boolean, default: false },
+  isExpired: { type: Boolean, default: false },
+  createdAt: { type: Date, default: Date.now }
+});
+const authTokenSchemaObject = mongoose.model('authtoken', authTokenSchema);
+
 
 // Parse JSON bodies for POST requests
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -1197,7 +1248,6 @@ app.post('/api/addtcaseremarkandmovetoprospect', async(req, res) => {
       else
       {
         const savedData = newData.save();
-        sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.referencenumber, "Reject Reconsideration");
         res.json({ message: 'success'});
       }
     }
@@ -1221,7 +1271,6 @@ app.post('/api/addcaseremarkandmovetolivefromhold', async(req, res) => {
       else
       {
         const savedData = newData.save();
-        sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.referencenumber, "Hold Return");
         res.json({ message: 'success'});
       }
     }
@@ -1268,7 +1317,6 @@ app.post('/api/adddisputedpaymentremark', async(req, res) => {
       else
       {
         const savedData = newData.save();
-        sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.casereferenceNumber, "Disputed Payment");
         res.json({ message: 'success'});
       }
     }
@@ -1313,7 +1361,6 @@ app.post('/api/addlivecasequeryremark', async(req, res) => {
       else
       {
         const savedData = newData.save();
-        sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.referencenumber, "Draft Query");
         res.json({ message: 'success'});
       }
     }
@@ -1383,7 +1430,9 @@ app.post('/api/movetoescalation', async(req, res) => {
       else
       {
         const savedData = newData.save();
-        sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.referencenumber, "Escalation Pending");
+        if (!newData.caseEmail || !newData.caseEmailPassword) {
+          sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.referencenumber, "Escalation Pending");
+        }
         res.json({ message: 'success'});
       }
     }
@@ -1407,7 +1456,6 @@ app.post('/api/movetohold', async(req, res) => {
       else
       {
         const savedData = newData.save();
-        sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.referencenumber, "Hold");
         res.json({ message: 'success'});
       }
     }
@@ -1432,7 +1480,6 @@ app.post('/api/movetoescalationquery', async(req, res) => {
       else
       {
         const savedData = newData.save();
-        sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.referencenumber, "Escalation Query");
         res.json({ message: 'success'});
       }
     }
@@ -1458,7 +1505,6 @@ app.post('/api/movetoreimbursementquery', async(req, res) => {
       else
       {
         const savedData = newData.save();
-        sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.referencenumber, "Reimbursement Query");
         res.json({ message: 'success'});
       }
     }
@@ -1574,6 +1620,7 @@ app.post('/api/addescalationdetails', async(req, res) => {
       else
       {
         const savedData = newData.save();
+        sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.casereferenceNumber, "Escalated");
         res.json({ message: 'success'});
       }
     }
@@ -1688,6 +1735,7 @@ app.post('/api/addcasesettlementdetails', async(req, res) => {
         else
         {
           const savedData = newData.save();
+          sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.casereferenceNumber, "Award LOST");
           res.json({ message: 'success'});
         }
       }
@@ -1702,6 +1750,7 @@ app.post('/api/addcasesettlementdetails', async(req, res) => {
         else
         {
           const savedData = newData.save();
+          sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.casereferenceNumber, "Award WON");
           res.json({ message: 'success'});
         }
       }
@@ -1982,7 +2031,7 @@ async function addDocURLInDBbycasenum(casenumber , url)
 app.post('/api/addpfremark', upload.fields([{name: 'pdfFile', maxCount: 10}, {name: 'pfScreenshot', maxCount: 1}]), async(req, res) => {
   try{
 
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfTransactionNumber:req.body.pfTransactionNumber, pfpaymentRemarks:req.body.pfpaymentRemarks,  pfpaymentDate:req.body.pfpaymentDate, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,   caseEmail: req.body.caseEmail, caseEmailPassword: req.body.caseEmailPassword, cfBankName: req.body.cfBankName, isLive: "true", newCaseStatus : "Live", liveDate : req.body.liveDate , claimAmount:req.body.claimAmount}});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfTransactionNumber:req.body.pfTransactionNumber, pfpaymentRemarks:req.body.pfpaymentRemarks,  pfpaymentDate:req.body.pfpaymentDate, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,   caseEmail: req.body.caseEmail, caseEmailPassword: req.body.caseEmailPassword, cfBankName: req.body.cfBankName, claimAmount:req.body.claimAmount}});
 
       if(newData == null)
       {
@@ -2175,6 +2224,14 @@ app.post('/api/addlokpaldata', async(req, res) => {
       else
       {
         const savedData = newData.save();
+        const phone = newData.complainantMobile || newData.patientMobile;
+        if (req.body.annexure5ComplaintNumber) {
+          sendBucketNotification(phone, newData.patientName, req.body.casereferenceNumber, "Annexure5Updated");
+        } else if (req.body.lokpalComplaintNumber) {
+          sendBucketNotification(phone, newData.patientName, req.body.casereferenceNumber, "Annexure6Updated");
+        } else if (req.body.dateOfLokpalHearing) {
+          sendBucketNotification(phone, newData.patientName, req.body.casereferenceNumber, "HearingDateUpdated");
+        }
         res.json({ message: 'success'});
       }
     }
@@ -2358,7 +2415,6 @@ app.post('/api/addmedicalofficertocaseandmovetopendingdraft', async(req, res) =>
       else
       {
         const savedData = newData.save();
-        sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.casereferenceNumber, "Pending Draft");
         res.json({ message: 'success'});
       }
     }
@@ -5194,6 +5250,92 @@ app.post('/api/movelegalcasetolegalnotice', async(req, res) => {
 app.get('/viewsenioradvocatereferrals.html', (req, res) => res.sendFile(__dirname+'/viewsenioradvocatereferrals.html'))
 // Customer upload page (public - no login required)
 app.get('/customerupload.html', (req, res) => res.sendFile(__dirname+'/customerupload.html'))
+app.get('/customerauth.html', (req, res) => res.sendFile(__dirname+'/customerauth.html'))
+
+// Ops sends auth link to customer — stores form data for PDF regeneration
+app.post('/api/sendauthlink', async (req, res) => {
+  try {
+    const { casereferenceNumber } = req.body;
+    if (!casereferenceNumber) return res.status(400).json({ error: 'casereferenceNumber required' });
+
+    const caseData = await dataSchemaObject.findOne({ casereferenceNumber });
+    if (!caseData) return res.status(404).json({ error: 'Case not found' });
+
+    // Expire any existing auth tokens for this case
+    await authTokenSchemaObject.updateMany({ casereferenceNumber }, { $set: { isExpired: true } });
+
+    const token = require('crypto').randomBytes(32).toString('hex');
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    const newToken = new authTokenSchemaObject({
+      token,
+      casereferenceNumber,
+      formData: req.body,
+      otp,
+    });
+    await newToken.save();
+
+    const authLink = `${BASE_URL}/customerauth.html?token=${token}`;
+
+    const phone = caseData.complainantMobile || caseData.patientMobile;
+    if (phone) {
+      sendAuthAndOtpSms(phone, caseData.patientName, casereferenceNumber, authLink, otp)
+        .catch(e => console.error('Auth/OTP SMS failed:', e.message));
+    }
+
+    res.json({ message: 'success', authLink });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error generating auth link' });
+  }
+});
+
+// Customer fetches the authorization PDF using their token
+app.get('/api/getauthpdf', async (req, res) => {
+  try {
+    const tokenData = await authTokenSchemaObject.findOne({ token: req.query.token, isExpired: false });
+    if (!tokenData) return res.status(403).json({ error: 'Invalid or expired authorization link.' });
+    if (tokenData.isAccepted) return res.status(400).json({ error: 'This authorization has already been accepted.' });
+
+    const mockReq = { body: tokenData.formData };
+    const pdfBytes = await createPDFNewformat(mockReq);
+
+    res.set('Content-Type', 'application/pdf');
+    res.set('Content-Disposition', 'inline; filename="authorization.pdf"');
+    res.send(Buffer.from(pdfBytes));
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error generating authorization PDF' });
+  }
+});
+
+// Customer accepts the authorization form
+app.post('/api/acceptauth', async (req, res) => {
+  try {
+    const { token, otp } = req.body;
+    const tokenData = await authTokenSchemaObject.findOne({ token, isExpired: false });
+    if (!tokenData) return res.status(403).json({ error: 'Invalid or expired authorization link.' });
+    if (tokenData.isAccepted) return res.status(400).json({ error: 'Already accepted.' });
+    if (tokenData.otp && String(otp) !== tokenData.otp) return res.status(400).json({ error: 'Invalid OTP. Please check the SMS and try again.' });
+
+    // Mark token as accepted
+    await authTokenSchemaObject.findOneAndUpdate(
+      { token },
+      { $set: { isAccepted: true, isExpired: true } }
+    );
+
+    // Move case to live
+    await dataSchemaObject.findOneAndUpdate(
+      { casereferenceNumber: tokenData.casereferenceNumber },
+      { $set: { isLive: 'true', isPendingAuth: 'false', newCaseStatus: 'Live', liveDate: new Date() } }
+    );
+
+    res.json({ message: 'success' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error processing authorization acceptance' });
+  }
+});
 
 app.listen(port, () => console.log(`Insurance app listening on port ${port}!`))
 
@@ -5206,13 +5348,11 @@ app.listen(port, () => console.log(`Insurance app listening on port ${port}!`))
 app.post("/api/getlegalpdf", async (req, res) => {
   try{
 
-    const response = await createPDFNewformat(req);
-    var fileName = 'file.pdf';
-
-      console.log(response);
-      res.set('Content-Type', 'application/pdf');
-      res.set('Content-Disposition', 'attachment; filename="' + fileName + '"');
-      res.download("./Legal.pdf");
+    const pdfBytes = await createPDFNewformat(req);
+    writeFileSync("./Legal.pdf", pdfBytes);
+    res.set('Content-Type', 'application/pdf');
+    res.set('Content-Disposition', 'attachment; filename="file.pdf"');
+    res.download("./Legal.pdf");
     
 
     //res.download("./Legal.pdf");
@@ -5843,9 +5983,7 @@ secondPage.drawText( req.body.witnessName, {
   size: 11,
 });
 //rajat
-  writeFileSync("Legal.pdf", await document.save());
-
-  return true;
+  return await document.save();
 }
 
 

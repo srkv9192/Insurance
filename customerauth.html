@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Authorization Form – Nidaan LLP</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f4f6fb;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      width: 100%;
+      background: #1a3c6e;
+      color: #fff;
+      padding: 18px 32px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    header h1 { font-size: 1.3rem; font-weight: 600; letter-spacing: 0.5px; }
+    header span { font-size: 0.9rem; opacity: 0.75; }
+
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.10);
+      width: 95%;
+      max-width: 860px;
+      margin: 32px auto;
+      padding: 28px 32px 36px;
+    }
+
+    .card h2 { font-size: 1.1rem; color: #1a3c6e; margin-bottom: 6px; }
+    .card p.sub { color: #666; font-size: 0.92rem; margin-bottom: 22px; }
+
+    #loading-state, #error-state, #success-state { display: none; text-align: center; padding: 40px 0; }
+    #loading-state p { color: #555; margin-top: 12px; }
+
+    .spinner {
+      width: 44px; height: 44px;
+      border: 4px solid #dde3f0;
+      border-top-color: #1a3c6e;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+      margin: 0 auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    #error-state .icon { font-size: 2.8rem; }
+    #error-state p { color: #c0392b; margin-top: 10px; font-size: 1rem; }
+
+    #main-content { display: none; }
+
+    .pdf-wrapper {
+      width: 100%;
+      border: 1px solid #dde3f0;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    #pdf-frame {
+      width: 100%;
+      height: 520px;
+      border: none;
+      display: block;
+    }
+
+    .notice {
+      background: #fffbea;
+      border: 1px solid #f0c040;
+      border-radius: 6px;
+      padding: 12px 16px;
+      font-size: 0.9rem;
+      color: #7a5c00;
+      margin-bottom: 22px;
+      line-height: 1.5;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 24px;
+      font-size: 0.95rem;
+      color: #333;
+      cursor: pointer;
+    }
+    .checkbox-row input[type="checkbox"] {
+      margin-top: 3px;
+      width: 17px;
+      height: 17px;
+      cursor: pointer;
+      accent-color: #1a3c6e;
+      flex-shrink: 0;
+    }
+
+    .otp-row {
+      margin-bottom: 24px;
+    }
+    .otp-row label {
+      display: block;
+      font-size: 0.92rem;
+      color: #444;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    .otp-row input[type="text"] {
+      width: 160px;
+      padding: 10px 14px;
+      font-size: 1.1rem;
+      letter-spacing: 4px;
+      border: 2px solid #c9d4e8;
+      border-radius: 6px;
+      outline: none;
+      text-align: center;
+    }
+    .otp-row input[type="text"]:focus { border-color: #1a3c6e; }
+    .otp-row .otp-hint { font-size: 0.82rem; color: #888; margin-top: 6px; }
+
+    #accept-btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background: #1a3c6e;
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 7px;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      transition: background 0.2s;
+    }
+    #accept-btn:hover:not(:disabled) { background: #15315a; }
+    #accept-btn:disabled { background: #a0aec0; cursor: not-allowed; }
+    #accept-btn.loading { background: #15315a; }
+
+    #success-state .icon { font-size: 3rem; color: #27ae60; }
+    #success-state h3 { color: #1a3c6e; font-size: 1.2rem; margin: 14px 0 8px; }
+    #success-state p { color: #555; font-size: 0.95rem; line-height: 1.6; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Nidaan LLP</h1>
+    <span>Customer Authorization Portal</span>
+  </div>
+</header>
+
+<div class="card">
+
+  <div id="loading-state">
+    <div class="spinner"></div>
+    <p>Loading your authorization form…</p>
+  </div>
+
+  <div id="error-state">
+    <div class="icon">⚠️</div>
+    <p id="error-msg">This link is invalid or has expired.</p>
+  </div>
+
+  <div id="main-content">
+    <h2>Authorization Form</h2>
+    <p class="sub">Please read the document below carefully before accepting.</p>
+
+    <div class="pdf-wrapper">
+      <iframe id="pdf-frame" title="Authorization Form"></iframe>
+    </div>
+
+    <div class="notice">
+      📋 Kindly scroll through and read the entire document before accepting. By clicking <strong>I Accept</strong>, you are digitally authorizing Nidaan LLP to proceed with your case on your behalf.
+    </div>
+
+    <label class="checkbox-row">
+      <input type="checkbox" id="agree-check" />
+      I have read and understood the authorization form and I agree to the terms.
+    </label>
+
+    <div class="otp-row">
+      <label for="otp-input">Enter OTP received via SMS</label>
+      <input type="text" id="otp-input" maxlength="6" placeholder="______" inputmode="numeric" autocomplete="one-time-code" />
+      <div class="otp-hint">A 6-digit OTP was sent to your registered mobile number.</div>
+    </div>
+
+    <button id="accept-btn" disabled>I Accept</button>
+  </div>
+
+  <div id="success-state">
+    <div class="icon">✅</div>
+    <h3>Authorization Accepted</h3>
+    <p>Thank you! Your authorization has been recorded successfully.<br>
+    Nidaan LLP will now proceed with your case. Our team will contact you shortly.</p>
+  </div>
+
+</div>
+
+<script>
+  const token = new URLSearchParams(window.location.search).get('token');
+
+  const loadingEl  = document.getElementById('loading-state');
+  const errorEl    = document.getElementById('error-state');
+  const errorMsg   = document.getElementById('error-msg');
+  const mainEl     = document.getElementById('main-content');
+  const successEl  = document.getElementById('success-state');
+  const pdfFrame   = document.getElementById('pdf-frame');
+  const agreeCheck = document.getElementById('agree-check');
+  const otpInput   = document.getElementById('otp-input');
+  const acceptBtn  = document.getElementById('accept-btn');
+
+  function showLoading() { loadingEl.style.display = 'block'; }
+  function showError(msg) {
+    loadingEl.style.display = 'none';
+    errorEl.style.display   = 'block';
+    if (msg) errorMsg.textContent = msg;
+  }
+  function showMain() {
+    loadingEl.style.display = 'none';
+    mainEl.style.display    = 'block';
+  }
+  function showSuccess() {
+    mainEl.style.display    = 'none';
+    successEl.style.display = 'block';
+  }
+
+  async function init() {
+    if (!token) { showError('No authorization token found in the link.'); return; }
+    showLoading();
+
+    // Load the PDF into the iframe
+    pdfFrame.src = `/api/getauthpdf?token=${encodeURIComponent(token)}`;
+
+    pdfFrame.onload = () => showMain();
+    pdfFrame.onerror = () => showError('Could not load the authorization document. Please try again or contact Nidaan LLP.');
+
+    // Fallback: if iframe doesn't fire onerror for non-200 responses
+    setTimeout(() => {
+      if (loadingEl.style.display !== 'none') showMain();
+    }, 5000);
+  }
+
+  function updateAcceptBtn() {
+    acceptBtn.disabled = !(agreeCheck.checked && otpInput.value.trim().length === 6);
+  }
+  agreeCheck.addEventListener('change', updateAcceptBtn);
+  otpInput.addEventListener('input', () => {
+    otpInput.value = otpInput.value.replace(/\D/g, '').substring(0, 6);
+    updateAcceptBtn();
+  });
+
+  acceptBtn.addEventListener('click', async () => {
+    if (!agreeCheck.checked || otpInput.value.trim().length !== 6) return;
+    acceptBtn.disabled = true;
+    acceptBtn.textContent = 'Processing…';
+    acceptBtn.classList.add('loading');
+
+    try {
+      const resp = await fetch('/api/acceptauth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, otp: otpInput.value.trim() }),
+      });
+      const data = await resp.json();
+      if (resp.ok && data.message === 'success') {
+        showSuccess();
+      } else {
+        alert(data.error || 'Something went wrong. Please try again.');
+        acceptBtn.disabled = false;
+        acceptBtn.textContent = 'I Accept';
+        acceptBtn.classList.remove('loading');
+      }
+    } catch (e) {
+      alert('Network error. Please check your connection and try again.');
+      acceptBtn.disabled = false;
+      acceptBtn.textContent = 'I Accept';
+      acceptBtn.classList.remove('loading');
+    }
+  });
+
+  init();
+</script>
+</body>
+</html>
