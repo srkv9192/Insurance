@@ -62,10 +62,10 @@ const FAST2SMS_ENTITY_ID = process.env.FAST2SMS_ENTITY_ID; // DLT Principal Enti
 
 // Numeric Message IDs that Fast2SMS assigns to each approved DLT template.
 const FAST2SMS_TEMPLATE_STATUS = process.env.FAST2SMS_TEMPLATE_STATUS; // case-status update (old 3-var, kept as fallback)
-const FAST2SMS_TEMPLATE_STATUS_4VAR = process.env.FAST2SMS_TEMPLATE_STATUS_4VAR || '1207178340203334136'; // status_msg_4_vars
+const FAST2SMS_TEMPLATE_STATUS_4VAR = process.env.FAST2SMS_TEMPLATE_STATUS_4VAR; // status_msg_4_vars
 const FAST2SMS_TEMPLATE_UPLOAD = process.env.FAST2SMS_TEMPLATE_UPLOAD; // document upload link
-const FAST2SMS_TEMPLATE_AUTH = process.env.FAST2SMS_TEMPLATE_AUTH || '1207178340218057400'; // authorization_template
-const FAST2SMS_TEMPLATE_OTP  = process.env.FAST2SMS_TEMPLATE_OTP  || '1207178340493906699'; // otp_template
+const FAST2SMS_TEMPLATE_AUTH = process.env.FAST2SMS_TEMPLATE_AUTH; // authorization_template
+const FAST2SMS_TEMPLATE_OTP  = process.env.FAST2SMS_TEMPLATE_OTP; // otp_template
 
 // Customer-friendly messages for each bucket/status change
 const bucketNotificationMessages = {
@@ -189,25 +189,35 @@ async function sendAuthAndOtpSms(phoneNumber, patientName, caseRefNumber, authLi
     return;
   }
   const name = patientName || 'Customer';
-  try {
-    await sendFast2SmsDlt({
-      messageId: FAST2SMS_TEMPLATE_AUTH,
-      variablesValues: [name, caseRefNumber, authLink].join('|'),
-      numbers: mobile,
-    });
-    console.log(`Auth link SMS sent to ${mobile} for case ${caseRefNumber}`);
-  } catch (e) {
-    console.error(`Auth link SMS failed for case ${caseRefNumber}:`, e.message);
+
+  if (!FAST2SMS_TEMPLATE_AUTH) {
+    console.error(`No Fast2SMS template Message ID configured for auth link (FAST2SMS_TEMPLATE_AUTH) - skipping`);
+  } else {
+    try {
+      await sendFast2SmsDlt({
+        messageId: FAST2SMS_TEMPLATE_AUTH,
+        variablesValues: [name, caseRefNumber, authLink].join('|'),
+        numbers: mobile,
+      });
+      console.log(`Auth link SMS sent to ${mobile} for case ${caseRefNumber}`);
+    } catch (e) {
+      console.error(`Auth link SMS failed for case ${caseRefNumber}:`, e.message);
+    }
   }
-  try {
-    await sendFast2SmsDlt({
-      messageId: FAST2SMS_TEMPLATE_OTP,
-      variablesValues: [name, caseRefNumber, otp].join('|'),
-      numbers: mobile,
-    });
-    console.log(`OTP SMS sent to ${mobile} for case ${caseRefNumber}`);
-  } catch (e) {
-    console.error(`OTP SMS failed for case ${caseRefNumber}:`, e.message);
+
+  if (!FAST2SMS_TEMPLATE_OTP) {
+    console.error(`No Fast2SMS template Message ID configured for OTP (FAST2SMS_TEMPLATE_OTP) - skipping`);
+  } else {
+    try {
+      await sendFast2SmsDlt({
+        messageId: FAST2SMS_TEMPLATE_OTP,
+        variablesValues: [name, caseRefNumber, otp].join('|'),
+        numbers: mobile,
+      });
+      console.log(`OTP SMS sent to ${mobile} for case ${caseRefNumber}`);
+    } catch (e) {
+      console.error(`OTP SMS failed for case ${caseRefNumber}:`, e.message);
+    }
   }
 }
 
@@ -3901,19 +3911,44 @@ app.post('/api/movecasetolivebyref', upload.single('pdfFile'), async(req, res) =
 
 app.post('/api/movecasetopendingauthbyref', async(req, res) => {
   try{
-    const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, 
+    const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber},
       {  isProspect:"false",
          isPendingAuth:"true",
       }, {new : true});
 
      // await incrementCaseNumberCount();
+
+    if (newData) {
+      // Expire any existing auth tokens for this case, then generate a fresh
+      // authorization link + OTP and text both to the customer.
+      await authTokenSchemaObject.updateMany({ casereferenceNumber: req.body.casereferenceNumber }, { $set: { isExpired: true } });
+
+      const token = require('crypto').randomBytes(32).toString('hex');
+      const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+      const newToken = new authTokenSchemaObject({
+        token,
+        casereferenceNumber: req.body.casereferenceNumber,
+        formData: newData.toObject(),
+        otp,
+      });
+      await newToken.save();
+
+      const authLink = `${BASE_URL}/customerauth.html?token=${token}`;
+      const phone = newData.complainantMobile || newData.patientMobile;
+      if (phone) {
+        sendAuthAndOtpSms(phone, newData.patientName, req.body.casereferenceNumber, authLink, otp)
+          .catch(e => console.error('Auth/OTP SMS failed:', e.message));
+      }
+    }
+
       res.json({ message: 'success', casereferenceNumber: req.body.casereferenceNumber });
   }
   catch(err)
   {
     console.error(err);
     return -1;
-  } 
+  }
 });
 
 
