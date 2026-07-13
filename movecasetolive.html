@@ -370,7 +370,7 @@
           data: formData,
           success: function (response) {
            
-            alert("Case data saved successfully. Case number - " + response.casenumberstring );
+            alert("Case number " + response.casenumberstring + " saved. Authorization link and OTP sent to the customer - case will go live once they approve.");
             document.getElementById('loginForm').reset();
           },
           error: function (error) {

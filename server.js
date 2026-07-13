@@ -476,6 +476,12 @@ const dataSchema = new mongoose.Schema({
   // reference number. Sparse allows legacy rows that pre-date this field.
   casereferenceNumber : { type: String, unique: true, sparse: true },
   caseNumber: String,
+  // Cheque/payment details captured when the case is moved to live
+  processingFee: String,
+  consultationCharge: String,
+  chequeAmount: String,
+  chequeNumber: String,
+  bankName: String,
   directCase: String,
   isProspect: String,
   isPendingAuth: String,
@@ -3765,6 +3771,32 @@ app.get("/api/getescalationcasedetail", async(req, res) => {
 });
 
 
+// Maps a case record onto the field names createPDFNewformat() expects.
+// Fields with no source anywhere on the case (ID number, witness name,
+// client address/phone) are left blank rather than guessed; drawText()
+// requires a string, so every value must be coerced (schema fields like
+// claimAmount are stored as Number).
+function buildAuthPdfFormData(caseDoc) {
+  const str = (v) => (v === undefined || v === null) ? '' : String(v);
+  return {
+    idNumber: '',
+    witnessName: '',
+    clientAddress: str(caseDoc.patientAddress),
+    clientPhone: str(caseDoc.complainantMobile || caseDoc.patientMobile),
+    clientName: str(caseDoc.complainantName || caseDoc.patientName),
+    complainantName: str(caseDoc.complainantName),
+    insuranceCompanyName: str(caseDoc.insuranceCompanyName),
+    claimNumber: str(caseDoc.claimNumber),
+    behalfOf: str(caseDoc.behalfOf),
+    claimAmount: str(caseDoc.claimAmount),
+    processingFee: str(caseDoc.processingFee),
+    consultationCharge: str(caseDoc.consultationCharge),
+    chequeAmount: str(caseDoc.chequeAmount),
+    chequeNumber: str(caseDoc.chequeNumber),
+    bankName: str(caseDoc.bankName),
+  };
+}
+
 app.post('/api/movecasetolivebyref', upload.single('pdfFile'), async(req, res) => {
   try{
     const gencaseNumber= await getCaseNumbereCount();
@@ -3775,18 +3807,43 @@ app.post('/api/movecasetolivebyref', upload.single('pdfFile'), async(req, res) =
     }
     casenumberstring = "CN_" + gencaseNumber;
 
-    const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, 
+    const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber},
       {  processingFee: req.body.processingFee,
         consultationCharge: req.body.consultationCharge,
         chequeAmount : req.body.chequeAmount,
         chequeNumber : req.body.chequeNumber,
         bankName : req.body.bankName,
         caseNumber: casenumberstring,
-        isPendingAuth: "false",
-        isLive: "true",
+        isPendingAuth: "true",
+        isLive: "false",
+        newCaseStatus: "Waiting for Customer Approval",
       }, {new : true});
 
       await incrementCaseNumberCount();
+
+      // Case does not go live yet - send the customer the authorization PDF
+      // link + OTP; /api/acceptauth flips isLive true once they confirm.
+      if (newData) {
+        await authTokenSchemaObject.updateMany({ casereferenceNumber: req.body.casereferenceNumber }, { $set: { isExpired: true } });
+
+        const authToken = require('crypto').randomBytes(32).toString('hex');
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+        const newAuthToken = new authTokenSchemaObject({
+          token: authToken,
+          casereferenceNumber: req.body.casereferenceNumber,
+          formData: buildAuthPdfFormData(newData),
+          otp,
+        });
+        await newAuthToken.save();
+
+        const authLink = `${BASE_URL}/customerauth.html?token=${authToken}`;
+        const phone = newData.complainantMobile || newData.patientMobile;
+        if (phone) {
+          sendAuthAndOtpSms(phone, newData.patientName, req.body.casereferenceNumber, authLink, otp)
+            .catch(e => console.error('Auth/OTP SMS failed:', e.message));
+        }
+      }
 
 /*
       const file = req.file;
@@ -3917,31 +3974,6 @@ app.post('/api/movecasetopendingauthbyref', async(req, res) => {
       }, {new : true});
 
      // await incrementCaseNumberCount();
-
-    if (newData) {
-      // Expire any existing auth tokens for this case, then generate a fresh
-      // authorization link + OTP and text both to the customer.
-      await authTokenSchemaObject.updateMany({ casereferenceNumber: req.body.casereferenceNumber }, { $set: { isExpired: true } });
-
-      const token = require('crypto').randomBytes(32).toString('hex');
-      const otp = Math.floor(100000 + Math.random() * 900000).toString();
-
-      const newToken = new authTokenSchemaObject({
-        token,
-        casereferenceNumber: req.body.casereferenceNumber,
-        formData: newData.toObject(),
-        otp,
-      });
-      await newToken.save();
-
-      const authLink = `${BASE_URL}/customerauth.html?token=${token}`;
-      const phone = newData.complainantMobile || newData.patientMobile;
-      if (phone) {
-        sendAuthAndOtpSms(phone, newData.patientName, req.body.casereferenceNumber, authLink, otp)
-          .catch(e => console.error('Auth/OTP SMS failed:', e.message));
-      }
-    }
-
       res.json({ message: 'success', casereferenceNumber: req.body.casereferenceNumber });
   }
   catch(err)
