@@ -71,15 +71,24 @@ const FAST2SMS_TEMPLATE_OTP  = process.env.FAST2SMS_TEMPLATE_OTP; // otp_templat
 const bucketNotificationMessages = {
   "New Case": "Your case has been registered in Nidaan LLP Thank you for choosing Us.",
   "Pending Doc": "Your case is in pending docs with Nidaan Kindly contact us immediately",
+  "Draft Query": "Your case is pending with Nidaan under draft query. Contact us immediately",
+  "Reimbursement Query": "Your MR case under Query with Insurance Company. Kindly contact us immediately.",
   "Reimbursement Pending": "Your MR file with Nidaan is pending under short fall of Docs kindly contact us",
   "Reimbursement": "Your MR file has been submitted in the company.",
   "Escalation Pending": "Your case is pending due to some Imp Requirement kindly contact us immediately",
+  "Escalation Query": "Your case is pending with Nidaan due to escalation query. Contact us immediately",
   "Escalated": "Your case has been escalated to the company thank you for choosing us",
-  "Lokpal Pending": "Your case has been moved for Lokpal Registration our team will contact you",
-  "Annexure5Updated": "Your case is pending with nidaan under Anx 5 reply Kindly contact us.",
-  "Annexure6Updated": "Your case is pending under Anx 6 reply kindly contact us immediately",
-  "HearingDateUpdated": "Your case hearing date is Fixed Kindly contact us immediately.",
+  "Lokpal Pending": "Your case is pending registration to Competent Authority, Team will contact you.",
+  "Lokpal Registered": "Your case is registered with the Competent Authority. Thank you for choosing Us",
+  "Annexure5 Pending": "Your case is pending with Nidaan under Anx 5 reply. Contact us immediately.",
+  "Annexure5 Replied": "Your case Annexure 5 replied By Nidaan. Thank you for choosing Us",
+  "Annexure 6 Pending": "Your case is pending with Nidaan under Anx 6 reply. Contact Us or Visit Office.",
+  "Annexure 6 Replied": "Your case Annexure 6 replied By Nidaan. Thank you for choosing Us",
+  "Hearing": "Your case hearing date is Fixed Kindly contact us immediately.",
   "Completed": "Your case is completed through Consent/Hearing. Thank you for choosing us.",
+  "Pending Payment": "Your claim settlement is received from Insurer. Pay Nidaan LLP Fees Immediately.",
+  "Nidaan Fee Received": "Your Consultation Fees are Received in Nidaan. Thank You for choosing Us.",
+  "Hold": "Your case is on Hold, Requirement not fulfilled. Contact us immediately.",
   "Award WON": "Your case is WON Kindly contact us for further details",
   "Award LOST": "Your case is LOST Kindly contact us for further details",
 };
@@ -476,12 +485,6 @@ const dataSchema = new mongoose.Schema({
   // reference number. Sparse allows legacy rows that pre-date this field.
   casereferenceNumber : { type: String, unique: true, sparse: true },
   caseNumber: String,
-  // Cheque/payment details captured when the case is moved to live
-  processingFee: String,
-  consultationCharge: String,
-  chequeAmount: String,
-  chequeNumber: String,
-  bankName: String,
   directCase: String,
   isProspect: String,
   isPendingAuth: String,
@@ -1377,6 +1380,7 @@ app.post('/api/addlivecasequeryremark', async(req, res) => {
       else
       {
         const savedData = newData.save();
+        sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.referencenumber, "Draft Query");
         res.json({ message: 'success'});
       }
     }
@@ -1472,6 +1476,7 @@ app.post('/api/movetohold', async(req, res) => {
       else
       {
         const savedData = newData.save();
+        sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.referencenumber, "Hold");
         res.json({ message: 'success'});
       }
     }
@@ -1496,6 +1501,7 @@ app.post('/api/movetoescalationquery', async(req, res) => {
       else
       {
         const savedData = newData.save();
+        sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.referencenumber, "Escalation Query");
         res.json({ message: 'success'});
       }
     }
@@ -1521,6 +1527,7 @@ app.post('/api/movetoreimbursementquery', async(req, res) => {
       else
       {
         const savedData = newData.save();
+        sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.referencenumber, "Reimbursement Query");
         res.json({ message: 'success'});
       }
     }
@@ -1792,6 +1799,7 @@ app.post('/api/addcasecustomerpaymentdetails', async(req, res) => {
       else
       {
         const savedData = newData.save();
+        sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.casereferenceNumber, "Pending Payment");
         res.json({ message: 'success'});
       }
     }
@@ -1799,7 +1807,7 @@ app.post('/api/addcasecustomerpaymentdetails', async(req, res) => {
   {
     console.error(err);
     res.status(500).json({ error: 'Error saving case settlement details' });
-  } 
+  }
 
 });
 
@@ -1846,8 +1854,7 @@ app.post('/api/addcasenidaanpaymentdetails', async(req, res) => {
       {
         const savedData = newData.save();
 
-
-
+        sendBucketNotification(newData.complainantMobile || newData.patientMobile, newData.patientName, req.body.casereferenceNumber, "Nidaan Fee Received");
 
         res.json({ message: 'success'});
       }
@@ -1856,7 +1863,7 @@ app.post('/api/addcasenidaanpaymentdetails', async(req, res) => {
   {
     console.error(err);
     res.status(500).json({ error: 'Error saving case settlement details' });
-  } 
+  }
 
 });
 
@@ -2044,10 +2051,37 @@ async function addDocURLInDBbycasenum(casenumber , url)
 }
 
 
+// Maps a case record onto the field names createPDFNewformat() expects,
+// mirroring the same case->field mapping viewAgreement() already uses to
+// prefill the on-page agreement form. Coerced to string since drawText()
+// requires one (schema fields like claimAmount are stored as Number) and
+// idNumber has no real source - the existing UI reuses the case reference
+// number for it, so we match that rather than leaving it blank.
+function buildAuthPdfFormData(caseDoc) {
+  const str = (v) => (v === undefined || v === null) ? '' : String(v);
+  return {
+    idNumber: str(caseDoc.casereferenceNumber),
+    witnessName: str(caseDoc.caseHandler),
+    clientAddress: str(caseDoc.patientAddress),
+    clientPhone: str(caseDoc.patientMobile),
+    clientName: str(caseDoc.patientName),
+    complainantName: str(caseDoc.complainantName),
+    insuranceCompanyName: str(caseDoc.insuranceCompanyName),
+    claimNumber: str(caseDoc.claimNumber),
+    behalfOf: str(caseDoc.behalfOf),
+    claimAmount: str(caseDoc.claimAmount),
+    processingFee: str(caseDoc.pfAmount),
+    consultationCharge: str(caseDoc.cfPercentage),
+    chequeAmount: str(caseDoc.cfAmount),
+    chequeNumber: str(caseDoc.cfChequeNumber),
+    bankName: str(caseDoc.cfBankName),
+  };
+}
+
 app.post('/api/addpfremark', upload.fields([{name: 'pdfFile', maxCount: 10}, {name: 'pfScreenshot', maxCount: 1}]), async(req, res) => {
   try{
 
-      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfTransactionNumber:req.body.pfTransactionNumber, pfpaymentRemarks:req.body.pfpaymentRemarks,  pfpaymentDate:req.body.pfpaymentDate, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,   caseEmail: req.body.caseEmail, caseEmailPassword: req.body.caseEmailPassword, cfBankName: req.body.cfBankName, claimAmount:req.body.claimAmount}});
+      const newData = await dataSchemaObject.findOneAndUpdate({casereferenceNumber: req.body.casereferenceNumber}, {$set:{ pfAmount:req.body.pfAmount, pfTransactionNumber:req.body.pfTransactionNumber, pfpaymentRemarks:req.body.pfpaymentRemarks,  pfpaymentDate:req.body.pfpaymentDate, pfpaymentMode:req.body.pfpaymentMode, cfPercentage: req.body.cfPercentage, cfAmount: req.body.cfAmount,  cfChequeNumber: req.body.cfChequeNumber,   caseEmail: req.body.caseEmail, caseEmailPassword: req.body.caseEmailPassword, cfBankName: req.body.cfBankName, claimAmount:req.body.claimAmount, isPendingAuth: "true", isLive: "false", newCaseStatus: "Waiting for Customer Approval" }}, {new: true});
 
       if(newData == null)
       {
@@ -2055,7 +2089,6 @@ app.post('/api/addpfremark', upload.fields([{name: 'pdfFile', maxCount: 10}, {na
       }
       else
       {
-        const savedData = newData.save();
         const regularFiles = req.files['pdfFile'] || [];
         const uploadPromises = regularFiles.map(file => {
           const randomString = require('crypto').randomBytes(16).toString('hex');
@@ -2073,6 +2106,28 @@ app.post('/api/addpfremark', upload.fields([{name: 'pdfFile', maxCount: 10}, {na
           const extension = path.extname(screenshotFile.originalname);
           const destination = `uploads/${req.body.casereferenceNumber}-PF_Screenshot-${randomString}${extension}`;
           await uploadFileToGCS(screenshotFile.path, destination, req.body.casereferenceNumber);
+        }
+
+        // Case does not go live yet - send the customer the authorization
+        // PDF link + OTP; /api/acceptauth flips isLive true once they confirm.
+        await authTokenSchemaObject.updateMany({ casereferenceNumber: req.body.casereferenceNumber }, { $set: { isExpired: true } });
+
+        const authToken = require('crypto').randomBytes(32).toString('hex');
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+        const newAuthToken = new authTokenSchemaObject({
+          token: authToken,
+          casereferenceNumber: req.body.casereferenceNumber,
+          formData: buildAuthPdfFormData(newData),
+          otp,
+        });
+        await newAuthToken.save();
+
+        const authLink = `${BASE_URL}/customerauth.html?token=${authToken}`;
+        const phone = newData.complainantMobile || newData.patientMobile;
+        if (phone) {
+          sendAuthAndOtpSms(phone, newData.patientName, req.body.casereferenceNumber, authLink, otp)
+            .catch(e => console.error('Auth/OTP SMS failed:', e.message));
         }
 
         res.json({ message: 'success'});
@@ -2241,12 +2296,19 @@ app.post('/api/addlokpaldata', async(req, res) => {
       {
         const savedData = newData.save();
         const phone = newData.complainantMobile || newData.patientMobile;
-        if (req.body.annexure5ComplaintNumber) {
-          sendBucketNotification(phone, newData.patientName, req.body.casereferenceNumber, "Annexure5Updated");
-        } else if (req.body.lokpalComplaintNumber) {
-          sendBucketNotification(phone, newData.patientName, req.body.casereferenceNumber, "Annexure6Updated");
-        } else if (req.body.dateOfLokpalHearing) {
-          sendBucketNotification(phone, newData.patientName, req.body.casereferenceNumber, "HearingDateUpdated");
+        // newCaseStatus here is one of the precise Lokpal-stage milestones the
+        // form already computed (Lokpal Registered / Annexure5 Pending /
+        // Annexure5 Replied / Annexure 6 Pending / Annexure 6 Replied /
+        // Hearing). "Lokpal Pending" is the default before any of those are
+        // filled in and is already texted once by /api/movetolokpal, so skip
+        // it here to avoid re-sending it on every unrelated edit. Also skip
+        // if the case was already at this exact stage before this save (the
+        // form requires a remark on every submit, so ops re-saving to add a
+        // follow-up remark without new complaint data must not re-text the
+        // same message - newData is the pre-update doc here since {new:true}
+        // isn't passed, so newData.newCaseStatus is the prior stage).
+        if (req.body.newCaseStatus && req.body.newCaseStatus !== 'Lokpal Pending' && req.body.newCaseStatus !== newData.newCaseStatus) {
+          sendBucketNotification(phone, newData.patientName, req.body.casereferenceNumber, req.body.newCaseStatus);
         }
         res.json({ message: 'success'});
       }
@@ -3771,32 +3833,6 @@ app.get("/api/getescalationcasedetail", async(req, res) => {
 });
 
 
-// Maps a case record onto the field names createPDFNewformat() expects.
-// Fields with no source anywhere on the case (ID number, witness name,
-// client address/phone) are left blank rather than guessed; drawText()
-// requires a string, so every value must be coerced (schema fields like
-// claimAmount are stored as Number).
-function buildAuthPdfFormData(caseDoc) {
-  const str = (v) => (v === undefined || v === null) ? '' : String(v);
-  return {
-    idNumber: '',
-    witnessName: '',
-    clientAddress: str(caseDoc.patientAddress),
-    clientPhone: str(caseDoc.complainantMobile || caseDoc.patientMobile),
-    clientName: str(caseDoc.complainantName || caseDoc.patientName),
-    complainantName: str(caseDoc.complainantName),
-    insuranceCompanyName: str(caseDoc.insuranceCompanyName),
-    claimNumber: str(caseDoc.claimNumber),
-    behalfOf: str(caseDoc.behalfOf),
-    claimAmount: str(caseDoc.claimAmount),
-    processingFee: str(caseDoc.processingFee),
-    consultationCharge: str(caseDoc.consultationCharge),
-    chequeAmount: str(caseDoc.chequeAmount),
-    chequeNumber: str(caseDoc.chequeNumber),
-    bankName: str(caseDoc.bankName),
-  };
-}
-
 app.post('/api/movecasetolivebyref', upload.single('pdfFile'), async(req, res) => {
   try{
     const gencaseNumber= await getCaseNumbereCount();
@@ -3814,36 +3850,11 @@ app.post('/api/movecasetolivebyref', upload.single('pdfFile'), async(req, res) =
         chequeNumber : req.body.chequeNumber,
         bankName : req.body.bankName,
         caseNumber: casenumberstring,
-        isPendingAuth: "true",
-        isLive: "false",
-        newCaseStatus: "Waiting for Customer Approval",
+        isPendingAuth: "false",
+        isLive: "true",
       }, {new : true});
 
       await incrementCaseNumberCount();
-
-      // Case does not go live yet - send the customer the authorization PDF
-      // link + OTP; /api/acceptauth flips isLive true once they confirm.
-      if (newData) {
-        await authTokenSchemaObject.updateMany({ casereferenceNumber: req.body.casereferenceNumber }, { $set: { isExpired: true } });
-
-        const authToken = require('crypto').randomBytes(32).toString('hex');
-        const otp = Math.floor(100000 + Math.random() * 900000).toString();
-
-        const newAuthToken = new authTokenSchemaObject({
-          token: authToken,
-          casereferenceNumber: req.body.casereferenceNumber,
-          formData: buildAuthPdfFormData(newData),
-          otp,
-        });
-        await newAuthToken.save();
-
-        const authLink = `${BASE_URL}/customerauth.html?token=${authToken}`;
-        const phone = newData.complainantMobile || newData.patientMobile;
-        if (phone) {
-          sendAuthAndOtpSms(phone, newData.patientName, req.body.casereferenceNumber, authLink, otp)
-            .catch(e => console.error('Auth/OTP SMS failed:', e.message));
-        }
-      }
 
 /*
       const file = req.file;
