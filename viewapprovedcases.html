@@ -207,6 +207,15 @@ div.dataTables_filter {
             <div class="row justify-content-center">
               <div class="col-lg-12">
                 <h2 class="text-center mb-4">Approved Cases</h2>
+                <div class="mb-3" style="max-width: 320px;">
+                  <label for="case-status-filter" class="form-label">Filter by Case Status</label>
+                  <select id="case-status-filter" class="form-control">
+                    <option value="">All</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Waiting for Customer Approval">Waiting for Customer Approval</option>
+                    <option value="Legal Generated">Legal Generated</option>
+                  </select>
+                </div>
                 <div class="table-responsive">
                   <table id ="dataTable" class="table table-dark table-bordered">
                     <thead>
@@ -226,6 +235,7 @@ div.dataTables_filter {
                         <th>Case Of</th>
                         <th>Case Status</th>
                         <th>Case Type</th>
+                        <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
@@ -1315,11 +1325,32 @@ function addCasaddlegalgenerateddetailseVerdict(){
 function movetolive(referencenumber) {
         // Code to generate card
        //alert("Move to live reference number: " + referencenumber);
-       localStorage['casereferencenumber'] = referencenumber; 
+       localStorage['casereferencenumber'] = referencenumber;
 
        window.location.replace("/movecasetolive.html");
 
       }
+
+function resendAuthLink(referencenumber) {
+  if (!confirm("Resend the authorization link and a new OTP to the customer for case " + referencenumber + "?")) return;
+  $.ajax({
+    url: '/api/resendauthlink',
+    type: 'POST',
+    contentType: "application/x-www-form-urlencoded",
+    data: { casereferenceNumber: referencenumber },
+    success: function (response) {
+      if (response.message == "success") {
+        alert("Authorization link and OTP resent to the customer.");
+      } else {
+        alert("Error: " + (response.error || "Could not resend authorization link."));
+      }
+    },
+    error: function (xhr) {
+      var msg = (xhr.responseJSON && xhr.responseJSON.error) || "Error resending authorization link.";
+      alert(msg);
+    }
+  });
+}
 
 
       
@@ -1982,7 +2013,13 @@ function populatereport(refnumber)
      // new $.fn.dataTable.FixedColumns(table, {
      //       leftColumns: 6 // Freeze the first 6 columns
       //  });
-      localStorage['baseurl'] = window.location; 
+      localStorage['baseurl'] = window.location;
+
+      // Case Status is column index 13 - filter the table to an exact match.
+      $('#case-status-filter').on('change', function () {
+        var value = this.value;
+        table.column(13).search(value ? '^' + $.fn.dataTable.util.escapeRegex(value) + '$' : '', true, false).draw();
+      });
 
         $('#dataTable tbody').on('click', 'tr td:first-child', function () {
       var data = table.row(this).data();
@@ -2035,14 +2072,24 @@ function populatereport(refnumber)
 
             var buttonsformovingcasetolive="";
             var buttonsformovingcasetolegal="";
-            if(data[i].caseType == "Legal") 
+            if(data[i].caseType == "Legal")
             {
               buttonsformovingcasetolive =  `<a href="#popup2" style="pointer-events: none"> <button disabled class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Move to Live</button> </a>`;
              buttonsformovingcasetolegal=  `<a href="#popup11" > <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Move to Legal</button> </a>`;
             }
             else
             { buttonsformovingcasetolive =  `<a href="#popup2"> <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Move to Live</button> </a>`;
-            buttonsformovingcasetolegal = `<a href="#popup11"  style="pointer-events: none"> <button  disabled class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Move to Legal</button> </a>`; 
+            buttonsformovingcasetolegal = `<a href="#popup11"  style="pointer-events: none"> <button  disabled class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Move to Legal</button> </a>`;
+            }
+
+            var buttonforresendauth = "";
+            if(data[i].newCaseStatus == "Waiting for Customer Approval")
+            {
+              buttonforresendauth = `<button class="btn btn-primary btn-sm" onclick="resendAuthLink('${rfno}')">Resend OTP &amp; Link</button>`;
+            }
+            else
+            {
+              buttonforresendauth = `<button disabled class="btn btn-primary btn-sm">Resend OTP &amp; Link</button>`;
             }
 
             var rowData = [data[i].casereferenceNumber,
@@ -2065,7 +2112,7 @@ function populatereport(refnumber)
               `<a href="#popup9"><button class="btn btn-primary btn-sm"  onclick="viewremark('${rfno}')" >View Remarks</button> </a>`,
               `<a href="#popup4"><button class="btn btn-primary btn-sm"  onclick="addremark('${rfno}')" >Upload Docs</button> </a>`,
               `<a href="#popup5"><button class="btn btn-primary btn-sm"  onclick="viewdocuments('${rfno}')" >View Documents</button> </a>`,
-              buttonsformovingcasetolive, buttonsformovingcasetolegal];
+              buttonsformovingcasetolive, buttonsformovingcasetolegal, buttonforresendauth];
              // `<a href="#popup2"> <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Move to Live</button> </a>`,
               //`<a href="#popup11" > <button class="btn btn-primary btn-sm" onclick="viewAgreement('${rfno}')">Move to Legal</button> </a>`,];
 

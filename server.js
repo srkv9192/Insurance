@@ -69,26 +69,26 @@ const FAST2SMS_TEMPLATE_OTP  = process.env.FAST2SMS_TEMPLATE_OTP; // otp_templat
 
 // Customer-friendly messages for each bucket/status change
 const bucketNotificationMessages = {
-  "New Case": "Your case has been registered in Nidaan LLP Thank you for choosing Us.",
+  "New Case": "Your case has been registered in Nidaan LLP Thank you for choosing Us",
   "Pending Doc": "Your case is in pending docs with Nidaan Kindly contact us immediately",
   "Draft Query": "Your case is pending with Nidaan under draft query. Contact us immediately",
-  "Reimbursement Query": "Your MR case under Query with Insurance Company. Kindly contact us immediately.",
+  "Reimbursement Query": "Your MR case under Query with Insurance Company. Kindly contact us immediately",
   "Reimbursement Pending": "Your MR file with Nidaan is pending under short fall of Docs kindly contact us",
-  "Reimbursement": "Your MR file has been submitted in the company.",
+  "Reimbursement": "Your MR file has been submitted in the company",
   "Escalation Pending": "Your case is pending due to some Imp Requirement kindly contact us immediately",
   "Escalation Query": "Your case is pending with Nidaan due to escalation query. Contact us immediately",
   "Escalated": "Your case has been escalated to the company thank you for choosing us",
-  "Lokpal Pending": "Your case is pending registration to Competent Authority, Team will contact you.",
+  "Lokpal Pending": "Your case is pending registration to Competent Authority, Team will contact you",
   "Lokpal Registered": "Your case is registered with the Competent Authority. Thank you for choosing Us",
-  "Annexure5 Pending": "Your case is pending with Nidaan under Anx 5 reply. Contact us immediately.",
+  "Annexure5 Pending": "Your case is pending with Nidaan under Anx 5 reply. Contact us immediately",
   "Annexure5 Replied": "Your case Annexure 5 replied By Nidaan. Thank you for choosing Us",
-  "Annexure 6 Pending": "Your case is pending with Nidaan under Anx 6 reply. Contact Us or Visit Office.",
+  "Annexure 6 Pending": "Your case is pending with Nidaan under Anx 6 reply. Contact Us or Visit Office",
   "Annexure 6 Replied": "Your case Annexure 6 replied By Nidaan. Thank you for choosing Us",
-  "Hearing": "Your case hearing date is Fixed Kindly contact us immediately.",
-  "Completed": "Your case is completed through Consent/Hearing. Thank you for choosing us.",
-  "Pending Payment": "Your claim settlement is received from Insurer. Pay Nidaan LLP Fees Immediately.",
-  "Nidaan Fee Received": "Your Consultation Fees are Received in Nidaan. Thank You for choosing Us.",
-  "Hold": "Your case is on Hold, Requirement not fulfilled. Contact us immediately.",
+  "Hearing": "Your case hearing date is Fixed Kindly contact us immediately",
+  "Completed": "Your case is completed through Consent/Hearing. Thank you for choosing us",
+  "Pending Payment": "Your claim settlement is received from Insurer. Pay Nidaan LLP Fees Immediately",
+  "Nidaan Fee Received": "Your consultation fees received in Nidaan. Thank You for choosing Us",
+  "Hold": "Your case is on Hold, Requirement not fulfilled. Contact us immediately",
   "Award WON": "Your case is WON Kindly contact us for further details",
   "Award LOST": "Your case is LOST Kindly contact us for further details",
 };
@@ -2112,7 +2112,10 @@ app.post('/api/addpfremark', upload.fields([{name: 'pdfFile', maxCount: 10}, {na
         // PDF link + OTP; /api/acceptauth flips isLive true once they confirm.
         await authTokenSchemaObject.updateMany({ casereferenceNumber: req.body.casereferenceNumber }, { $set: { isExpired: true } });
 
-        const authToken = require('crypto').randomBytes(32).toString('hex');
+        // Short token: the Fast2SMS DLT variable slot caps at 40 chars, and
+        // "https://claimshield.in/a/" alone is 25 of those, so the token
+        // must stay under ~15 chars. 12 hex chars (37 total) leaves margin.
+        const authToken = require('crypto').randomBytes(6).toString('hex');
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
         const newAuthToken = new authTokenSchemaObject({
@@ -2123,7 +2126,7 @@ app.post('/api/addpfremark', upload.fields([{name: 'pdfFile', maxCount: 10}, {na
         });
         await newAuthToken.save();
 
-        const authLink = `${BASE_URL}/customerauth.html?token=${authToken}`;
+        const authLink = `${BASE_URL}/a/${authToken}`;
         const phone = newData.complainantMobile || newData.patientMobile;
         if (phone) {
           sendAuthAndOtpSms(phone, newData.patientName, req.body.casereferenceNumber, authLink, otp)
@@ -2139,6 +2142,42 @@ app.post('/api/addpfremark', upload.fields([{name: 'pdfFile', maxCount: 10}, {na
     res.status(500).json({ error: 'Error adding pf remark' });
   }
 
+});
+
+// Ops resends the authorization link + OTP for a case already waiting on
+// the customer (e.g. they lost the SMS or it never arrived). Only valid for
+// cases /api/addpfremark already moved into "Waiting for Customer Approval".
+app.post('/api/resendauthlink', async(req, res) => {
+  try {
+    const caseData = await dataSchemaObject.findOne({ casereferenceNumber: req.body.casereferenceNumber });
+    if (!caseData) return res.status(404).json({ error: 'Case not found' });
+    if (caseData.newCaseStatus !== 'Waiting for Customer Approval') {
+      return res.status(400).json({ error: 'Case is not waiting on customer approval' });
+    }
+
+    await authTokenSchemaObject.updateMany({ casereferenceNumber: req.body.casereferenceNumber }, { $set: { isExpired: true } });
+
+    const authToken = require('crypto').randomBytes(6).toString('hex');
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    const newAuthToken = new authTokenSchemaObject({
+      token: authToken,
+      casereferenceNumber: req.body.casereferenceNumber,
+      formData: buildAuthPdfFormData(caseData),
+      otp,
+    });
+    await newAuthToken.save();
+
+    const authLink = `${BASE_URL}/a/${authToken}`;
+    const phone = caseData.complainantMobile || caseData.patientMobile;
+    if (!phone) return res.status(400).json({ error: 'No phone number on file for this case' });
+
+    await sendAuthAndOtpSms(phone, caseData.patientName, req.body.casereferenceNumber, authLink, otp);
+    res.json({ message: 'success' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error resending authorization link' });
+  }
 });
 
 
@@ -3647,7 +3686,7 @@ app.get("/api/getpendingdraftcasedetail", async(req, res) => {
 app.get("/api/getapprovedandlegalgeneratedcasedetail", async(req, res) => {
   try {
     // Retrieve all tpa list from database
-    const users = await  dataSchemaObject.find({  $or: [ { newCaseStatus: "Approved" }, { newCaseStatus: "Legal Generated"} ]});
+    const users = await  dataSchemaObject.find({  $or: [ { newCaseStatus: "Approved" }, { newCaseStatus: "Legal Generated"}, { newCaseStatus: "Waiting for Customer Approval"} ]});
     res.json(users);
   } catch (error) {
     console.error(error);
@@ -5329,6 +5368,10 @@ app.get('/viewsenioradvocatereferrals.html', (req, res) => res.sendFile(__dirnam
 // Customer upload page (public - no login required)
 app.get('/customerupload.html', (req, res) => res.sendFile(__dirname+'/customerupload.html'))
 app.get('/customerauth.html', (req, res) => res.sendFile(__dirname+'/customerauth.html'))
+// Short path-based alias for SMS links - the Fast2SMS DLT template strips
+// query strings (?token=...) from URLs, so the auth link sent to customers
+// puts the token in the path instead: /a/<token>.
+app.get('/a/:token', (req, res) => res.sendFile(__dirname+'/customerauth.html'))
 
 // Ops sends auth link to customer — stores form data for PDF regeneration
 app.post('/api/sendauthlink', async (req, res) => {
@@ -5342,7 +5385,9 @@ app.post('/api/sendauthlink', async (req, res) => {
     // Expire any existing auth tokens for this case
     await authTokenSchemaObject.updateMany({ casereferenceNumber }, { $set: { isExpired: true } });
 
-    const token = require('crypto').randomBytes(32).toString('hex');
+    // Kept short (12 hex chars) so the /a/<token> link stays under the
+    // Fast2SMS DLT 40-char variable cap - see /api/addpfremark for detail.
+    const token = require('crypto').randomBytes(6).toString('hex');
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
     const newToken = new authTokenSchemaObject({
@@ -5353,7 +5398,7 @@ app.post('/api/sendauthlink', async (req, res) => {
     });
     await newToken.save();
 
-    const authLink = `${BASE_URL}/customerauth.html?token=${token}`;
+    const authLink = `${BASE_URL}/a/${token}`;
 
     const phone = caseData.complainantMobile || caseData.patientMobile;
     if (phone) {

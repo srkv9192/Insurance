@@ -205,7 +205,10 @@
 </div>
 
 <script>
-  const token = new URLSearchParams(window.location.search).get('token');
+  // Token normally arrives via the short /a/<token> path (the SMS link) -
+  // fall back to ?token= for direct/manual links.
+  const pathMatch = window.location.pathname.match(/^\/a\/([^\/]+)/);
+  const token = (pathMatch && pathMatch[1]) || new URLSearchParams(window.location.search).get('token');
 
   const loadingEl  = document.getElementById('loading-state');
   const errorEl    = document.getElementById('error-state');
