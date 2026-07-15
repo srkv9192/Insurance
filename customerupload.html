@@ -217,8 +217,11 @@
     let selectedFiles = [];
 
     window.onload = async function () {
+      // Token normally arrives via the short /u/<token> path (the SMS link)
+      // - fall back to ?token= for direct/manual links.
+      const pathMatch = window.location.pathname.match(/^\/u\/([^\/]+)/);
       const params = new URLSearchParams(window.location.search);
-      uploadToken = params.get('token');
+      uploadToken = (pathMatch && pathMatch[1]) || params.get('token');
 
       if (!uploadToken) {
         showExpired();

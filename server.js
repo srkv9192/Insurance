@@ -1066,7 +1066,9 @@ app.post('/api/addprospect', upload.array('pdfFile', 10), async (req, res) => {
 
         // Generate customer upload link and send via SMS
         try {
-          const token = require('crypto').randomBytes(32).toString('hex');
+          // Short token (12 hex chars) kept under the Fast2SMS DLT 40-char
+          // variable cap - see /u/:token route - same fix as the auth link.
+          const token = require('crypto').randomBytes(6).toString('hex');
           const newToken = new uploadTokenSchemaObject({
             token: token,
             casereferenceNumber: refNumber,
@@ -1074,11 +1076,11 @@ app.post('/api/addprospect', upload.array('pdfFile', 10), async (req, res) => {
           });
           await newToken.save();
 
-          const uploadLink = `${BASE_URL}/customerupload.html?token=${token}`;
-          // const customerPhone = req.body.complainantMobile || req.body.patientMobile;
-          // if (customerPhone) {
-          //   sendBucketNotification(customerPhone, req.body.patientName, refNumber, '__UPLOAD_LINK__', uploadLink);
-          // }
+          const uploadLink = `${BASE_URL}/u/${token}`;
+          const customerPhone = req.body.complainantMobile || req.body.patientMobile;
+          if (customerPhone) {
+            sendBucketNotification(customerPhone, req.body.patientName, refNumber, '__UPLOAD_LINK__', uploadLink);
+          }
           res.json({ message: 'success', referencenumber: refNumber, data: savedData, uploadLink: uploadLink });
         } catch (tokenErr) {
           console.error('Error generating upload token:', tokenErr.message);
@@ -5367,6 +5369,8 @@ app.post('/api/movelegalcasetolegalnotice', async(req, res) => {
 app.get('/viewsenioradvocatereferrals.html', (req, res) => res.sendFile(__dirname+'/viewsenioradvocatereferrals.html'))
 // Customer upload page (public - no login required)
 app.get('/customerupload.html', (req, res) => res.sendFile(__dirname+'/customerupload.html'))
+// Short path-based alias for SMS links (see /a/:token below for why).
+app.get('/u/:token', (req, res) => res.sendFile(__dirname+'/customerupload.html'))
 app.get('/customerauth.html', (req, res) => res.sendFile(__dirname+'/customerauth.html'))
 // Short path-based alias for SMS links - the Fast2SMS DLT template strips
 // query strings (?token=...) from URLs, so the auth link sent to customers
