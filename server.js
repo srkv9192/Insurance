@@ -88,6 +88,7 @@ const bucketNotificationMessages = {
   "Completed": "Your case is completed through Consent/Hearing. Thank you for choosing us",
   "Pending Payment": "Your claim settlement is received from Insurer. Pay Nidaan LLP Fees Immediately",
   "Nidaan Fee Received": "Your consultation fees received in Nidaan. Thank You for choosing Us",
+  "Authorization Accepted": "You have accepted all payment T&C of Nidaan LLP by giving Mobile OTP.",
   "Hold": "Your case is on Hold, Requirement not fulfilled. Contact us immediately",
   "Award WON": "Your case is WON Kindly contact us for further details",
   "Award LOST": "Your case is LOST Kindly contact us for further details",
@@ -5452,10 +5453,17 @@ app.post('/api/acceptauth', async (req, res) => {
     );
 
     // Move case to live
-    await dataSchemaObject.findOneAndUpdate(
+    const liveCase = await dataSchemaObject.findOneAndUpdate(
       { casereferenceNumber: tokenData.casereferenceNumber },
-      { $set: { isLive: 'true', isPendingAuth: 'false', newCaseStatus: 'Live', liveDate: new Date() } }
+      { $set: { isLive: 'true', isPendingAuth: 'false', newCaseStatus: 'Live', liveDate: new Date() } },
+      { new: true }
     );
+
+    if (liveCase) {
+      const phone = liveCase.complainantMobile || liveCase.patientMobile;
+      sendBucketNotification(phone, liveCase.patientName, tokenData.casereferenceNumber, 'Authorization Accepted')
+        .catch(e => console.error('Authorization-accepted SMS failed:', e.message));
+    }
 
     res.json({ message: 'success' });
   } catch (err) {
