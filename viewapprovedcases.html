@@ -1332,7 +1332,7 @@ function movetolive(referencenumber) {
       }
 
 function resendAuthLink(referencenumber) {
-  if (!confirm("Resend the authorization link and a new OTP to the customer for case " + referencenumber + "?")) return;
+  if (!confirm("Resend the authorization link to the customer for case " + referencenumber + "?")) return;
   $.ajax({
     url: '/api/resendauthlink',
     type: 'POST',
@@ -1340,7 +1340,7 @@ function resendAuthLink(referencenumber) {
     data: { casereferenceNumber: referencenumber },
     success: function (response) {
       if (response.message == "success") {
-        alert("Authorization link and OTP resent to the customer.");
+        alert("Authorization link resent to the customer.");
       } else {
         alert("Error: " + (response.error || "Could not resend authorization link."));
       }
@@ -1722,7 +1722,7 @@ function populatereport(refnumber)
               {
               // window.location.href = "/index.html"
                 //localStorage['userID'] = username;
-                alert("Saved. Authorization link and OTP sent to the customer - case will go live once they approve.");
+                alert("Saved. Authorization link sent to the customer - case will go live once they accept.");
                 window.location.href = "/viewapprovedcases.html";
                 //localStorage.removeItem("caseNumber");
 
@@ -2085,11 +2085,11 @@ function populatereport(refnumber)
             var buttonforresendauth = "";
             if(data[i].newCaseStatus == "Waiting for Customer Approval")
             {
-              buttonforresendauth = `<button class="btn btn-primary btn-sm" onclick="resendAuthLink('${rfno}')">Resend OTP &amp; Link</button>`;
+              buttonforresendauth = `<button class="btn btn-primary btn-sm" onclick="resendAuthLink('${rfno}')">Resend Link</button>`;
             }
             else
             {
-              buttonforresendauth = `<button disabled class="btn btn-primary btn-sm">Resend OTP &amp; Link</button>`;
+              buttonforresendauth = `<button disabled class="btn btn-primary btn-sm">Resend Link</button>`;
             }
 
             var rowData = [data[i].casereferenceNumber,

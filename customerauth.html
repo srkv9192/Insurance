@@ -102,29 +102,6 @@
       flex-shrink: 0;
     }
 
-    .otp-row {
-      margin-bottom: 24px;
-    }
-    .otp-row label {
-      display: block;
-      font-size: 0.92rem;
-      color: #444;
-      margin-bottom: 8px;
-      font-weight: 600;
-    }
-    .otp-row input[type="text"] {
-      width: 160px;
-      padding: 10px 14px;
-      font-size: 1.1rem;
-      letter-spacing: 4px;
-      border: 2px solid #c9d4e8;
-      border-radius: 6px;
-      outline: none;
-      text-align: center;
-    }
-    .otp-row input[type="text"]:focus { border-color: #1a3c6e; }
-    .otp-row .otp-hint { font-size: 0.82rem; color: #888; margin-top: 6px; }
-
     #accept-btn {
       display: block;
       width: 100%;
@@ -186,12 +163,6 @@
       I have read and understood the authorization form and I agree to the terms.
     </label>
 
-    <div class="otp-row">
-      <label for="otp-input">Enter OTP received via SMS</label>
-      <input type="text" id="otp-input" maxlength="6" placeholder="______" inputmode="numeric" autocomplete="one-time-code" />
-      <div class="otp-hint">A 6-digit OTP was sent to your registered mobile number.</div>
-    </div>
-
     <button id="accept-btn" disabled>I Accept</button>
   </div>
 
@@ -217,7 +188,6 @@
   const successEl  = document.getElementById('success-state');
   const pdfFrame   = document.getElementById('pdf-frame');
   const agreeCheck = document.getElementById('agree-check');
-  const otpInput   = document.getElementById('otp-input');
   const acceptBtn  = document.getElementById('accept-btn');
 
   function showLoading() { loadingEl.style.display = 'block'; }
@@ -252,16 +222,12 @@
   }
 
   function updateAcceptBtn() {
-    acceptBtn.disabled = !(agreeCheck.checked && otpInput.value.trim().length === 6);
+    acceptBtn.disabled = !agreeCheck.checked;
   }
   agreeCheck.addEventListener('change', updateAcceptBtn);
-  otpInput.addEventListener('input', () => {
-    otpInput.value = otpInput.value.replace(/\D/g, '').substring(0, 6);
-    updateAcceptBtn();
-  });
 
   acceptBtn.addEventListener('click', async () => {
-    if (!agreeCheck.checked || otpInput.value.trim().length !== 6) return;
+    if (!agreeCheck.checked) return;
     acceptBtn.disabled = true;
     acceptBtn.textContent = 'Processing…';
     acceptBtn.classList.add('loading');
@@ -270,7 +236,7 @@
       const resp = await fetch('/api/acceptauth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token, otp: otpInput.value.trim() }),
+        body: JSON.stringify({ token }),
       });
       const data = await resp.json();
       if (resp.ok && data.message === 'success') {

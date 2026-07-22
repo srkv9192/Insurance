@@ -88,7 +88,7 @@ const bucketNotificationMessages = {
   "Completed": "Your case is completed through Consent/Hearing. Thank you for choosing us",
   "Pending Payment": "Your claim settlement is received from Insurer. Pay Nidaan LLP Fees Immediately",
   "Nidaan Fee Received": "Your consultation fees received in Nidaan. Thank You for choosing Us",
-  "Authorization Accepted": "You have accepted all payment T&C of Nidaan LLP by giving Mobile OTP.",
+  "Authorization Accepted": "I accepted T&C of Nidaan LLP and ready to pay fees as mentioned in Co legal",
   "Hold": "Your case is on Hold, Requirement not fulfilled. Contact us immediately",
   "Award WON": "Your case is WON Kindly contact us for further details",
   "Award LOST": "Your case is LOST Kindly contact us for further details",
@@ -186,10 +186,12 @@ async function sendBucketNotification(phoneNumber, patientName, caseRefNumber, n
   }
 }
 // Send authorization link + OTP SMS to customer when case is moved to pending-auth.
-async function sendAuthAndOtpSms(phoneNumber, patientName, caseRefNumber, authLink, otp) {
+// Customers were hesitant to enter an OTP, so the auth flow is now just the
+// link - no OTP SMS, no OTP check on accept.
+async function sendAuthLinkSms(phoneNumber, patientName, caseRefNumber, authLink) {
   if (!ENABLE_NOTIFICATIONS || !phoneNumber) return;
   if (!FAST2SMS_API_KEY || !FAST2SMS_SENDER_ID) {
-    console.error('Fast2SMS not configured - skipping auth/OTP SMS');
+    console.error('Fast2SMS not configured - skipping auth link SMS');
     return;
   }
   const digits = String(phoneNumber).replace(/\D/g, '');
@@ -202,32 +204,17 @@ async function sendAuthAndOtpSms(phoneNumber, patientName, caseRefNumber, authLi
 
   if (!FAST2SMS_TEMPLATE_AUTH) {
     console.error(`No Fast2SMS template Message ID configured for auth link (FAST2SMS_TEMPLATE_AUTH) - skipping`);
-  } else {
-    try {
-      await sendFast2SmsDlt({
-        messageId: FAST2SMS_TEMPLATE_AUTH,
-        variablesValues: [name, caseRefNumber, authLink].join('|'),
-        numbers: mobile,
-      });
-      console.log(`Auth link SMS sent to ${mobile} for case ${caseRefNumber}`);
-    } catch (e) {
-      console.error(`Auth link SMS failed for case ${caseRefNumber}:`, e.message);
-    }
+    return;
   }
-
-  if (!FAST2SMS_TEMPLATE_OTP) {
-    console.error(`No Fast2SMS template Message ID configured for OTP (FAST2SMS_TEMPLATE_OTP) - skipping`);
-  } else {
-    try {
-      await sendFast2SmsDlt({
-        messageId: FAST2SMS_TEMPLATE_OTP,
-        variablesValues: [name, caseRefNumber, otp].join('|'),
-        numbers: mobile,
-      });
-      console.log(`OTP SMS sent to ${mobile} for case ${caseRefNumber}`);
-    } catch (e) {
-      console.error(`OTP SMS failed for case ${caseRefNumber}:`, e.message);
-    }
+  try {
+    await sendFast2SmsDlt({
+      messageId: FAST2SMS_TEMPLATE_AUTH,
+      variablesValues: [name, caseRefNumber, authLink].join('|'),
+      numbers: mobile,
+    });
+    console.log(`Auth link SMS sent to ${mobile} for case ${caseRefNumber}`);
+  } catch (e) {
+    console.error(`Auth link SMS failed for case ${caseRefNumber}:`, e.message);
   }
 }
 
@@ -2112,28 +2099,26 @@ app.post('/api/addpfremark', upload.fields([{name: 'pdfFile', maxCount: 10}, {na
         }
 
         // Case does not go live yet - send the customer the authorization
-        // PDF link + OTP; /api/acceptauth flips isLive true once they confirm.
+        // PDF link; /api/acceptauth flips isLive true once they confirm.
         await authTokenSchemaObject.updateMany({ casereferenceNumber: req.body.casereferenceNumber }, { $set: { isExpired: true } });
 
         // Short token: the Fast2SMS DLT variable slot caps at 40 chars, and
         // "https://claimshield.in/a/" alone is 25 of those, so the token
         // must stay under ~15 chars. 12 hex chars (37 total) leaves margin.
         const authToken = require('crypto').randomBytes(6).toString('hex');
-        const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
         const newAuthToken = new authTokenSchemaObject({
           token: authToken,
           casereferenceNumber: req.body.casereferenceNumber,
           formData: buildAuthPdfFormData(newData),
-          otp,
         });
         await newAuthToken.save();
 
         const authLink = `${BASE_URL}/a/${authToken}`;
         const phone = newData.complainantMobile || newData.patientMobile;
         if (phone) {
-          sendAuthAndOtpSms(phone, newData.patientName, req.body.casereferenceNumber, authLink, otp)
-            .catch(e => console.error('Auth/OTP SMS failed:', e.message));
+          sendAuthLinkSms(phone, newData.patientName, req.body.casereferenceNumber, authLink)
+            .catch(e => console.error('Auth link SMS failed:', e.message));
         }
 
         res.json({ message: 'success'});
@@ -2161,13 +2146,11 @@ app.post('/api/resendauthlink', async(req, res) => {
     await authTokenSchemaObject.updateMany({ casereferenceNumber: req.body.casereferenceNumber }, { $set: { isExpired: true } });
 
     const authToken = require('crypto').randomBytes(6).toString('hex');
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
     const newAuthToken = new authTokenSchemaObject({
       token: authToken,
       casereferenceNumber: req.body.casereferenceNumber,
       formData: buildAuthPdfFormData(caseData),
-      otp,
     });
     await newAuthToken.save();
 
@@ -2175,7 +2158,7 @@ app.post('/api/resendauthlink', async(req, res) => {
     const phone = caseData.complainantMobile || caseData.patientMobile;
     if (!phone) return res.status(400).json({ error: 'No phone number on file for this case' });
 
-    await sendAuthAndOtpSms(phone, caseData.patientName, req.body.casereferenceNumber, authLink, otp);
+    await sendAuthLinkSms(phone, caseData.patientName, req.body.casereferenceNumber, authLink);
     res.json({ message: 'success' });
   } catch (err) {
     console.error(err);
@@ -5393,13 +5376,11 @@ app.post('/api/sendauthlink', async (req, res) => {
     // Kept short (12 hex chars) so the /a/<token> link stays under the
     // Fast2SMS DLT 40-char variable cap - see /api/addpfremark for detail.
     const token = require('crypto').randomBytes(6).toString('hex');
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
     const newToken = new authTokenSchemaObject({
       token,
       casereferenceNumber,
       formData: req.body,
-      otp,
     });
     await newToken.save();
 
@@ -5407,8 +5388,8 @@ app.post('/api/sendauthlink', async (req, res) => {
 
     const phone = caseData.complainantMobile || caseData.patientMobile;
     if (phone) {
-      sendAuthAndOtpSms(phone, caseData.patientName, casereferenceNumber, authLink, otp)
-        .catch(e => console.error('Auth/OTP SMS failed:', e.message));
+      sendAuthLinkSms(phone, caseData.patientName, casereferenceNumber, authLink)
+        .catch(e => console.error('Auth link SMS failed:', e.message));
     }
 
     res.json({ message: 'success', authLink });
@@ -5440,11 +5421,10 @@ app.get('/api/getauthpdf', async (req, res) => {
 // Customer accepts the authorization form
 app.post('/api/acceptauth', async (req, res) => {
   try {
-    const { token, otp } = req.body;
+    const { token } = req.body;
     const tokenData = await authTokenSchemaObject.findOne({ token, isExpired: false });
     if (!tokenData) return res.status(403).json({ error: 'Invalid or expired authorization link.' });
     if (tokenData.isAccepted) return res.status(400).json({ error: 'Already accepted.' });
-    if (tokenData.otp && String(otp) !== tokenData.otp) return res.status(400).json({ error: 'Invalid OTP. Please check the SMS and try again.' });
 
     // Mark token as accepted
     await authTokenSchemaObject.findOneAndUpdate(
