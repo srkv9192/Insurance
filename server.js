@@ -1149,7 +1149,7 @@ app.post('/api/partnercreatecase', requirePartnerApiKey, async (req, res) => {
       casereferenceNumber: refNumber,
       prospectDate: new Date(),
       caseNumber: "",
-      newCaseStatus: "Nidaan Partner cases",
+      newCaseStatus: "Nidaan Partner case",
       caseSource: "Nidaan Partner",
       pfReceived: "NO",
       isEmailGenerated: "NO",
@@ -1178,7 +1178,7 @@ app.get('/api/partnercasestatus', requirePartnerApiKey, async (req, res) => {
 
     const caseData = await dataSchemaObject.findOne(
       { casereferenceNumber: String(caseReferenceNumber), caseSource: "Nidaan Partner" },
-      { casereferenceNumber: 1, caseNumber: 1, newCaseStatus: 1, patientName: 1 }
+      { casereferenceNumber: 1, newCaseStatus: 1, patientName: 1 }
     );
     if (!caseData) {
       return res.status(404).json({ error: 'Case not found' });
@@ -1186,7 +1186,6 @@ app.get('/api/partnercasestatus', requirePartnerApiKey, async (req, res) => {
 
     res.json({
       caseReferenceNumber: caseData.casereferenceNumber,
-      caseNumber: caseData.caseNumber || null,
       status: caseData.newCaseStatus,
       patientName: caseData.patientName,
     });
@@ -3744,7 +3743,7 @@ app.get("/api/getrejectedcasedetail", async(req, res) => {
 
 app.get("/api/getnidaanpartnercasedetail", async(req, res) => {
   try {
-    const users = await dataSchemaObject.find({newCaseStatus: "Nidaan Partner cases"});
+    const users = await dataSchemaObject.find({newCaseStatus: "Nidaan Partner case"});
     res.json(users);
   } catch (error) {
     console.error(error);
