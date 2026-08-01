@@ -239,7 +239,6 @@ mongoose.connect(`mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS
   useUnifiedTopology: true,
 });
 
-
 /*
 
 mongoose.connect(`mongodb://127.0.0.1:27017/test`, {
@@ -473,6 +472,10 @@ const dataSchema = new mongoose.Schema({
   // reference number. Sparse allows legacy rows that pre-date this field.
   casereferenceNumber : { type: String, unique: true, sparse: true },
   caseNumber: String,
+  // Set to "Nidaan Partner" for cases created via the partner-portal API
+  // (/api/partnercreatecase) so the partner status API can be scoped to
+  // only ever return cases it created.
+  caseSource: String,
   directCase: String,
   isProspect: String,
   isPendingAuth: String,
@@ -1090,6 +1093,109 @@ app.post('/api/addprospect', upload.array('pdfFile', 10), async (req, res) => {
     }
 
 });
+
+// ===================== NIDAAN PARTNER API =====================
+// Lets an external partner portal create cases here and poll their status.
+// Auth is a single static shared-secret header rather than a full
+// OAuth/session flow - there's exactly one trusted server-to-server
+// caller, so a heavier token scheme would add complexity without adding
+// real security here.
+const PARTNER_API_KEY = process.env.PARTNER_API_KEY;
+
+function requirePartnerApiKey(req, res, next) {
+  if (!PARTNER_API_KEY) {
+    console.error('PARTNER_API_KEY not configured - rejecting partner API request');
+    return res.status(503).json({ error: 'Partner API is not configured' });
+  }
+  if (req.get('x-api-key') !== PARTNER_API_KEY) {
+    return res.status(401).json({ error: 'Invalid or missing API key' });
+  }
+  next();
+}
+
+// Partner creates a case. Returns the new case reference number.
+app.post('/api/partnercreatecase', requirePartnerApiKey, async (req, res) => {
+  try {
+    const { patientName, patientMobile, claimAmount } = req.body;
+    if (!patientName || !patientMobile || !claimAmount) {
+      return res.status(400).json({ error: 'patientName, patientMobile and claimAmount are required' });
+    }
+    const mobileDigits = String(patientMobile).replace(/\D/g, '');
+    if (mobileDigits.length !== 10) {
+      return res.status(400).json({ error: 'patientMobile must be a 10-digit number' });
+    }
+    if (isNaN(Number(claimAmount))) {
+      return res.status(400).json({ error: 'claimAmount must be a number' });
+    }
+
+    // Atomically reserve a unique reference number - same shared counter
+    // internal case creation uses, so partner cases and internal cases
+    // never collide.
+    const counterDoc = await counterSchemaObject.findOneAndUpdate(
+      { searchId: "keywordforsearch" },
+      { $inc: { caseReferenceNumberCount: 1 } }
+    );
+    if (!counterDoc) {
+      return res.status(500).json({ error: 'Error generating case reference number' });
+    }
+    const refNumber = counterDoc.caseReferenceNumberCount;
+
+    const newData = new dataSchemaObject({
+      patientName,
+      patientMobile: mobileDigits,
+      complainantName: patientName,
+      complainantMobile: mobileDigits,
+      claimAmount: Number(claimAmount),
+      casereferenceNumber: refNumber,
+      prospectDate: new Date(),
+      caseNumber: "",
+      newCaseStatus: "Nidaan Partner cases",
+      caseSource: "Nidaan Partner",
+      pfReceived: "NO",
+      isEmailGenerated: "NO",
+      isGistGenerated: "NO",
+      medicalOpinionOfficer: "NONE",
+      operationOfficer: "NONE",
+    });
+    await newData.save();
+
+    res.json({ message: 'success', caseReferenceNumber: refNumber });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error creating case' });
+  }
+});
+
+// Partner checks status of a case - scoped to only cases created via
+// /api/partnercreatecase, so this can never be used to look up any case
+// that came in through another channel.
+app.get('/api/partnercasestatus', requirePartnerApiKey, async (req, res) => {
+  try {
+    const { caseReferenceNumber } = req.query;
+    if (!caseReferenceNumber) {
+      return res.status(400).json({ error: 'caseReferenceNumber is required' });
+    }
+
+    const caseData = await dataSchemaObject.findOne(
+      { casereferenceNumber: String(caseReferenceNumber), caseSource: "Nidaan Partner" },
+      { casereferenceNumber: 1, caseNumber: 1, newCaseStatus: 1, patientName: 1 }
+    );
+    if (!caseData) {
+      return res.status(404).json({ error: 'Case not found' });
+    }
+
+    res.json({
+      caseReferenceNumber: caseData.casereferenceNumber,
+      caseNumber: caseData.caseNumber || null,
+      status: caseData.newCaseStatus,
+      patientName: caseData.patientName,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error fetching case status' });
+  }
+});
+// ===================== END NIDAAN PARTNER API =====================
 
 // Define the API endpoint to save data
 app.post('/api/editprospect', async (req, res) => {
@@ -3636,6 +3742,16 @@ app.get("/api/getrejectedcasedetail", async(req, res) => {
   }
 });
 
+app.get("/api/getnidaanpartnercasedetail", async(req, res) => {
+  try {
+    const users = await dataSchemaObject.find({newCaseStatus: "Nidaan Partner cases"});
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get Nidaan Partner case details' });
+  }
+});
+
 app.get("/api/getholdcasedetail", async(req, res) => {
   try {
     // Retrieve all tpa list from database
@@ -5033,6 +5149,7 @@ app.get('/deleteaccount.html', (req, res) =>{
 app.get('/viewpendingdraftcases.html', (req, res) => res.sendFile(__dirname+'/viewpendingdraftcases.html'))
 app.get('/viewfullcasedetails.html', (req, res) => res.sendFile(__dirname+'/viewfullcasedetails.html'))
 app.get('/viewrejectedcases.html', (req, res) => res.sendFile(__dirname+'/viewrejectedcases.html'))
+app.get('/viewnidaanpartnercases.html', (req, res) => res.sendFile(__dirname+'/viewnidaanpartnercases.html'))
 
 app.get('/viewholdcases.html', (req, res) => res.sendFile(__dirname+'/viewholdcases.html'))
 

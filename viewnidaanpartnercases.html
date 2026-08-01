@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="css/menubar.css">
+<link rel="stylesheet" href="css/nidaan.css">
+  <style>
+    body {
+      background-color: #343a40;
+      color: #fff;
+    }
+
+    .navbar-light .navbar-brand {
+      color: #fff;
+    }
+
+    .navbar-light .navbar-nav .nav-link {
+      color: #fff;
+    }
+
+    .navbar-light .navbar-nav .nav-link:hover,
+    .navbar-light .navbar-nav .nav-link:focus {
+      color: #e9ecef;
+    }
+
+    .navbar-dark .navbar-brand {
+      color: #343a40;
+    }
+
+    .navbar-dark .navbar-nav .nav-link {
+      color: #343a40;
+    }
+
+    .navbar-dark .navbar-nav .nav-link:hover,
+    .navbar-dark .navbar-nav .nav-link:focus {
+      color: #343a40;
+    }
+
+    .table-dark {
+      background-color: #343a40;
+    }
+
+    .table-dark th
+    {
+      color: #fff;
+    }
+    .table-dark td {
+      color: #fff;
+      background-color: #495057;
+    }
+
+    div.dataTables_info {
+  color: white !important;
+
+}
+
+div.dataTables_paginate {
+  color: white !important;
+
+}
+
+div.dataTables_length {
+  color: white !important;
+
+}
+
+div.dataTables_filter {
+  color: white !important;
+
+}
+
+  </style>
+  <title>Nidaan Partner Cases</title></head>
+
+<body>
+
+
+  <div class='dashboard'>
+
+    <div id="navbar-placeholder"></div>
+
+    <div class='dashboard-app'>
+        <header class='dashboard-toolbar'><a href="#!" class="menu-toggle"><i class="fas fa-bars"></i></a></header>
+        <div class='dashboard-content' style="background-image: url('/images/background20.jpg');  background-repeat: repeat;  background-size: cover;">
+          <div class="container mt-5" style="max-width: unset;">
+            <div class="row justify-content-center">
+              <div class="col-lg-12">
+                <h2 class="text-center mb-4">Nidaan Partner Cases</h2>
+                <p class="text-center" style="color:#ccc;">Cases created via the Nidaan Partner API. Action buttons to move these into the Approved bucket are coming soon.</p>
+                <div class="table-responsive">
+                  <table id ="dataTable" class="table table-dark table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Reference Number</th>
+                        <th>Case Inception Date</th>
+                        <th>Case Age</th>
+                        <th>Patient Name</th>
+                        <th>Patient Phone</th>
+                        <th>Claim Amount</th>
+                        <th>Case Status</th>
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+  <script src="https://cdn.datatables.net/2.1.3/js/dataTables.js"></script>
+  <script src="https://cdn.datatables.net/buttons/3.1.1/js/dataTables.buttons.js"></script>
+  <script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.dataTables.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.html5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+  <script>
+
+    $(document).ready(function () {
+
+      fetch('navbar.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('navbar-placeholder').innerHTML = data;
+
+          $.ajax({
+            url: '/api/whoami',
+            type: 'POST',
+            success: function (response) {
+                if(response.message =='admin')
+                {
+                  $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+                  document.getElementById("login-menu").href="/logout.html";
+                  $("#showonlogin").show();
+                  $("#hideonlogin").hide();
+                  localStorage['userName'] = response.username;
+                  localStorage['userType'] = response.message;
+                }
+                else if(response.message =='operation' )
+                {
+                  $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+                  document.getElementById("login-menu").href="/logout.html";
+                  $("#showtooperation").show();
+                  $("#hideonlogin").hide();
+                  localStorage['userName'] = response.username;
+                  localStorage['userType'] = response.message;
+                }
+                else if(response.message =='manager')
+                {
+                  $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+                  document.getElementById("login-menu").href="/logout.html";
+                  $("#showtomanager").show();
+                  $("#hideonlogin").hide();
+                  localStorage['userName'] = response.username;
+                  localStorage['userType'] = response.message;
+                }
+                else if(response.message =='marketing' || response.message =='marketinghandler'  )
+                {
+                  $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+                  document.getElementById("login-menu").href="/logout.html";
+                  $("#showtomarketing").show();
+                  $("#hideonlogin").hide();
+                  localStorage['userName'] = response.username;
+                  localStorage['userType'] = response.message;
+                }
+                else if(response.message =='marketingmanager')
+                {
+                  $('#login-menu').html('<i class="fas  fa-sign-out "></i>'+ 'Logout' )  ;
+                  document.getElementById("login-menu").href="/logout.html";
+                  $("#showtomarketingmanager").show();
+                  $("#hideonlogin").hide();
+                  localStorage['userName'] = response.username;
+                  localStorage['userType'] = response.message;
+                }
+                else
+                {
+                  window.location.href = "/login.html"
+                }
+
+            },
+            error: function (error) {
+              console.error('Error:', error);
+              window.location.href = "/login.html"
+            }
+          });
+
+
+          const mobileScreen = window.matchMedia("(max-width: 990px)");
+
+          $(".dashboard-nav-dropdown-toggle").click(function () {
+            $(this).closest(".dashboard-nav-dropdown")
+                .toggleClass("show")
+                .find(".dashboard-nav-dropdown")
+                .removeClass("show");
+            $(this).parent()
+                .siblings()
+                .removeClass("show");
+          });
+
+          $(".menu-toggle").click(function () {
+            if (mobileScreen.matches) {
+                $(".dashboard-nav").toggleClass("mobile-show");
+            } else {
+                $(".dashboard").toggleClass("dashboard-compact");
+            }
+          });
+
+          $('#dataTable').DataTable({
+            "searching": true,
+            layout: {
+              topStart: {
+                  buttons: ['excel', 'pageLength']
+              }
+            },
+          });
+
+          var table = $('#dataTable').DataTable();
+          localStorage['baseurl'] = window.location;
+
+          // AJAX call on page load to get Nidaan Partner case details
+          $.ajax({
+            url: '/api/getnidaanpartnercasedetail',
+            type: 'GET',
+            success: function (response) {
+              populateDataTable(response);
+            },
+            error: function (error) {
+              console.error('Error:', error);
+            }
+          });
+
+          // populate the data table with JSON data
+          function populateDataTable(data) {
+            $("#dataTable").DataTable().clear();
+            var table = $('#dataTable').DataTable();
+            var length = Object.keys(data).length;
+            for(var i = 0; i < length; i++) {
+              var todaysdate = moment(new Date());
+              var prospectcasedate = moment(data[i].prospectDate);
+              var caseage = todaysdate.diff(prospectcasedate, 'days');
+
+              var rowData = [
+                data[i].casereferenceNumber,
+                data[i].prospectDate ? moment(new Date(data[i].prospectDate)).utc().format('DD-MM-YYYY') : "",
+                `${caseage}`,
+                data[i].patientName ? data[i].patientName : " ",
+                data[i].patientMobile ? data[i].patientMobile : " ",
+                data[i].claimAmount ? data[i].claimAmount : " ",
+                data[i].newCaseStatus ? data[i].newCaseStatus : " ",
+              ];
+
+              table.row.add(rowData);
+            }
+            table.draw(false);
+          }
+
+      });
+
+    });
+  </script>
+  <script src="js/nidaan-table.js"></script>
+</body>
+
+</html>
